@@ -1,18 +1,52 @@
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+const byte ledPin = 13;
+const byte limitJ1 = 2;
+const byte limitJ2 = 3;
+const byte limitJ3 = 4;
+const byte limitJ4 = 5;
+const byte limitJ5 = 6;
+const byte limitJ6 = 7;
+
+const byte limitSwitches[6] = {limitJ1, limitJ2, limitJ3, limitJ4, limitJ5, limitJ6};
+
+//unction declarations here:
+
+void initLimitSwitches();
+void checkLimitSwitches();
+
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  // setup code here:
+
+  initLimitSwitches();
+
+  Serial.begin(9600);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  // main code here:
+
+  checkLimitSwitches();
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+// function definitions here:
+
+void initLimitSwitches() {
+  pinMode(ledPin, OUTPUT);
+  for (byte i = 0; i < 6; i++) {
+    pinMode(limitSwitches[i], INPUT_PULLUP);
+  }
+}
+
+
+void checkLimitSwitches() {
+    for (byte i = 0; i < 6; i++) {
+    if(digitalRead(limitSwitches[i]) == LOW) {
+      digitalWrite(ledPin, HIGH);
+      Serial.println(limitSwitches[i]);
+    } else {
+      digitalWrite(ledPin, LOW);
+    }
+  }
 }
