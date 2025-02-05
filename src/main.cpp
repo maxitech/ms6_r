@@ -10,7 +10,7 @@ const byte limitJ6 = 7;
 
 const byte limitSwitches[6] = {limitJ1, limitJ2, limitJ3, limitJ4, limitJ5, limitJ6};
 
-//unction declarations here:
+//function declarations here:
 
 void initLimitSwitches();
 void checkLimitSwitches();
