@@ -4,3 +4,5 @@
 .vscode/launch.json
 .vscode/ipch
 .vs
+bin
+obj
