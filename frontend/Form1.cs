@@ -5,13 +5,47 @@ namespace frontend
 {
     public partial class Form1 : Form
     {
+        private ManagementEventWatcher watcher;
+
         public Form1()
         {
             InitializeComponent();
 
             // Load and render available ports
             RenderPorts(LoadAvailablePorts());
+
+            // Start listening for device changes
+            StartWmiListener();
         }
+
+        private void StartWmiListener()
+        {
+            string query = "SELECT * FROM Win32_DeviceChangeEvent";
+
+            watcher = new ManagementEventWatcher(new WqlEventQuery(query));
+            watcher.EventArrived += OnDeviceChanged;
+            watcher.Start();
+        }
+
+        private void OnDeviceChanged(object sender, EventArrivedEventArgs e)
+        {
+            Invoke(new Action(() =>
+            {
+                comboBox1.Items.Clear();
+                RenderPorts(LoadAvailablePorts());
+            }));
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (watcher != null)
+            {
+                watcher.Stop();
+                watcher.Dispose();
+            }
+            base.OnFormClosing(e);
+        }
+
         private static List<string> LoadAvailablePorts()
         {
             // If interested in how this works, check out the following link: https://youtu.be/3SQayMiapKQ?si=ZZsX7aso8TKUQ_hf
