@@ -20,11 +20,19 @@ namespace frontend
 
         private void StartWmiListener()
         {
-            string query = "SELECT * FROM Win32_DeviceChangeEvent";
+            try
+            {
 
-            watcher = new ManagementEventWatcher(new WqlEventQuery(query));
-            watcher.EventArrived += OnDeviceChanged;
-            watcher.Start();
+                string query = "SELECT * FROM Win32_DeviceChangeEvent";
+
+                watcher = new ManagementEventWatcher(new WqlEventQuery(query));
+                watcher.EventArrived += OnDeviceChanged;
+                watcher.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error while starting WMI listener:\n {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnDeviceChanged(object sender, EventArrivedEventArgs e)
@@ -40,28 +48,42 @@ namespace frontend
         {
             if (watcher != null)
             {
-                watcher.Stop();
-                watcher.Dispose();
+                try
+                {
+                    watcher.Stop();
+                    watcher.Dispose();
+
+                }
+                catch { /* Ignore */  }
             }
             base.OnFormClosing(e);
         }
 
         private static List<string> LoadAvailablePorts()
         {
-            // If interested in how this works, check out the following link: https://youtu.be/3SQayMiapKQ?si=ZZsX7aso8TKUQ_hf
-            using (var searcher = new ManagementObjectSearcher("SELECT * FROM " +
-                "Win32_PnPEntity WHERE Caption like '%(COM%'"))
+            try
             {
-                // Get port names
-                string[] portnames = SerialPort.GetPortNames();
 
-                // Get caption of each port
-                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
+                // If interested in how this works, check out the following link: https://youtu.be/3SQayMiapKQ?si=ZZsX7aso8TKUQ_hf
+                using (var searcher = new ManagementObjectSearcher("SELECT * FROM " +
+                    "Win32_PnPEntity WHERE Caption like '%(COM%'"))
+                {
+                    // Get port names
+                    string[] portnames = SerialPort.GetPortNames();
 
-                // Combine port names with captions
-                List<string> portList = portnames.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n))).ToList();
+                    // Get caption of each port
+                    var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
 
-                return portList;
+                    // Combine port names with captions
+                    List<string> portList = portnames.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n)) ?? "Unknown").ToList();
+
+                    return portList;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error while loading COM-ports:\n {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return new List<string>();
             }
         }
 
