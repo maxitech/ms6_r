@@ -61,8 +61,17 @@ public partial class MainWindow : Window
     {
         Dispatcher.InvokeAsync(new Action(() =>
         {
+            string selectedPort = comboBoxPorts.SelectedItem?.ToString();
+
             comboBoxPorts.Items.Clear();
-            RenderPorts(LoadAvailablePorts());
+            List<string> availablePorts = LoadAvailablePorts();
+            RenderPorts(availablePorts);
+
+            if (!availablePorts.Contains(selectedPort))
+            {
+                comboBoxPorts.SelectedItem = null;
+                ConnectBtn.IsEnabled = false;
+            }
         }));
     }
 
@@ -117,6 +126,14 @@ public partial class MainWindow : Window
         foreach (string port in availablePorts)
         {
             comboBoxPorts.Items.Add(port);
+        }
+    }
+
+    private void ComboBoxPorts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (comboBoxPorts.SelectedItem != null)
+        {
+            ConnectBtn.IsEnabled = true;
         }
     }
 }

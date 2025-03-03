@@ -32,7 +32,7 @@
                               IsReadOnly="True" 
                               IsEditable="True" Margin="10,36,0,0"
                               HorizontalContentAlignment="Left"
-                              VerticalContentAlignment="Center" Grid.ColumnSpan="3">
+                              VerticalContentAlignment="Center" Grid.ColumnSpan="3" SelectionChanged="ComboBoxPorts_SelectionChanged">
                         <ComboBox.Background>
                             <LinearGradientBrush EndPoint="0,1">
                                 <GradientStop Color="#FFF0F0F0"/>
@@ -40,7 +40,7 @@
                             </LinearGradientBrush>
                         </ComboBox.Background>
                     </ComboBox>
-                    <Button Grid.Column="2" Content="Connect" HorizontalAlignment="Left" Margin="99,36,0,0" VerticalAlignment="Top" Height="30" Width="100" FontWeight="Bold" IsEnabled="False"/>
+                    <Button x:Name="ConnectBtn" Grid.Column="2" Content="Connect" HorizontalAlignment="Left" Margin="99,36,0,0" VerticalAlignment="Top" Height="30" Width="100" FontWeight="Bold" IsEnabled="False"/>
 
                 </Grid>
             </TabItem>
