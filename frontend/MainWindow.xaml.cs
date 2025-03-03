@@ -12,8 +12,8 @@ using System.Windows.Shapes;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
 using System.Management;
+using System.Threading.Tasks;
 
 
 namespace frontend_v2;
@@ -23,7 +23,7 @@ namespace frontend_v2;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private ManagementEventWatcher watcher;
+    private ManagementEventWatcher _watcher;
 
 
     public MainWindow()
@@ -46,9 +46,9 @@ public partial class MainWindow : Window
 
             string query = "SELECT * FROM Win32_DeviceChangeEvent";
 
-            watcher = new ManagementEventWatcher(new WqlEventQuery(query));
-            watcher.EventArrived += OnDeviceChanged;
-            watcher.Start();
+            _watcher = new ManagementEventWatcher(new WqlEventQuery(query));
+            _watcher.EventArrived += OnDeviceChanged;
+            _watcher.Start();
         }
         catch (Exception ex)
         {
@@ -78,12 +78,12 @@ public partial class MainWindow : Window
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
-        if (watcher != null)
+        if (_watcher != null)
         {
             try
             {
-                watcher.Stop();
-                watcher.Dispose();
+                _watcher.Stop();
+                _watcher.Dispose();
 
             }
             catch { /* Ignore */  }
