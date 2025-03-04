@@ -140,6 +140,7 @@ public partial class MainWindow : Window
 
     }
 
+
     private void ComboBoxPorts_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (comboBoxPorts.SelectedItem != null) ConnectBtn.IsEnabled = true;
@@ -163,7 +164,6 @@ public partial class MainWindow : Window
 
         try
         {
-            await Task.Delay(3000);
             _serialPort.Open();
 
             if (_serialPort.IsOpen)
