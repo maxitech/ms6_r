@@ -40,8 +40,9 @@
                             </LinearGradientBrush>
                         </ComboBox.Background>
                     </ComboBox>
-                    <Button x:Name="ConnectBtn" Grid.Column="2" Content="Connect" HorizontalAlignment="Left" Margin="99,36,0,0" VerticalAlignment="Top" Height="30" Width="100" FontWeight="Bold" IsEnabled="False"/>
-
+                    <Button x:Name="ConnectBtn" Grid.Column="2" Content="Connect" HorizontalAlignment="Left" Margin="99,36,0,0" VerticalAlignment="Top" Height="30" Width="100" FontWeight="Bold" IsEnabled="False" Click="ConnectBtn_Click"/>
+                    <Label x:Name="ConnectionStatus" Content="Not Connected" HorizontalAlignment="Left" Margin="90,71,0,0" VerticalAlignment="Top" FontWeight="Bold" Background="Red" Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="28" Grid.ColumnSpan="2" Grid.Column="1" Foreground="Black"/>
+                    <Label Content="Status:" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Height="28" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
 
