@@ -88,6 +88,7 @@ public partial class MainWindow : Window
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
+        // Stop and dispose of the watcher if it exists
         if (_watcher != null)
         {
             try
@@ -98,6 +99,17 @@ public partial class MainWindow : Window
             }
             catch { /* Ignore */  }
         }
+
+        // Close the serial port if it is open
+        if (_serialPort != null && _serialPort.IsOpen)
+        {
+            try
+            {
+                _serialPort.Close();
+            }
+            catch { /* Ignore */ }
+        }
+
         base.OnClosing(e);
     }
 
