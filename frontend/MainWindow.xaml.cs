@@ -41,6 +41,9 @@ public partial class MainWindow : Window
     }
 
 
+    /// <summary>
+    /// Starts the WMI listener to detect device change events.
+    /// </summary>
     private void StartWmiListener()
     {
         try
@@ -59,25 +62,33 @@ public partial class MainWindow : Window
     }
 
 
+    /// <summary>
+    /// Handles device change events by reloading the list of available COM ports.
+    /// If the previously selected port is not available, it disconnects the serial port.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The event data.</param>
     private void OnDeviceChanged(object sender, EventArrivedEventArgs e)
     {
         Dispatcher.InvokeAsync(() =>
         {
             string? selectedPort = comboBoxPorts.SelectedItem?.ToString();
 
+            // Clear the existing list of ports.
             comboBoxPorts.Items.Clear();
 
             List<string> availablePorts = LoadAvailablePorts();
             availablePorts = availablePorts.Distinct().ToList();
             RenderPorts(availablePorts);
 
-            // Check if previously selected port is still available
+            // If the previously selected port is still available, re-select it.
             if (selectedPort != null && availablePorts.Contains(selectedPort))
             {
                 comboBoxPorts.SelectedItem = selectedPort;
             }
             else
             {
+                // Close the serial port if the selected port is no longer available.
                 if (_serialPort != null && _serialPort.IsOpen) _serialPort.Close();
 
                 // Update UI
@@ -88,9 +99,14 @@ public partial class MainWindow : Window
     }
 
 
+    /// <summary>
+    /// Overrides the OnClosing method to clean up resources.
+    /// Stops the WMI watcher and closes the serial port if it is open.
+    /// </summary>
+    /// <param name="e">Provides data for canceling the closing event.</param>
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
-        // Stop and dispose of the watcher if it exists
+        // Stop and dispose of the WMI watcher if it exists.
         if (_watcher != null)
         {
             try
@@ -99,7 +115,7 @@ public partial class MainWindow : Window
                 _watcher.Dispose();
 
             }
-            catch { /* Ignore */  }
+            catch { /* Ignore exceptions on cleanup. */ }
         }
 
         // Close the serial port if it is open
@@ -109,13 +125,18 @@ public partial class MainWindow : Window
             {
                 _serialPort.Close();
             }
-            catch { /* Ignore */ }
+            catch { /* Ignore exceptions on cleanup. */ }
         }
 
         base.OnClosing(e);
     }
 
 
+    /// <summary>
+    /// Loads the available COM ports from the system.
+    /// Combines the port names with their descriptive captions using WMI.
+    /// </summary>
+    /// <returns>A list of strings, each containing the port name and its caption.</returns>
     private static List<string> LoadAvailablePorts()
     {
         try
@@ -125,23 +146,21 @@ public partial class MainWindow : Window
             using (var searcher = new ManagementObjectSearcher("SELECT * FROM " +
                 "Win32_PnPEntity WHERE Caption like '%(COM%'"))
             {
-                // Get port names
+                // Retrieve port names.
                 string[] portNames = SerialPort.GetPortNames();
 
-                // Get caption of each port
+                // Retrieve captions for the ports.
                 var portCaptions = searcher.Get()
                                     .Cast<ManagementBaseObject>()
                                     .ToList()
                                     .Select(p => p["Caption"]
                                     .ToString());
 
-                // Combine port names with captions
-                //List<string> portList = portnames.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n)) ?? "Unknown").ToList();
-
+                // Filter and combine port names with their captions.
                 List<string> filteredPorts = portNames
-                                            .Where(name => portCaptions.Any(caption => caption.Contains(name)))
-                                            .Select(name => $"{name} - {portCaptions.First(caption => caption.Contains(name))}")
-                                            .ToList();
+                    .Where(name => portCaptions.Any(caption => caption != null && caption.Contains(name)))
+                    .Select(name => $"{name} - {portCaptions.First(caption => caption != null && caption.Contains(name))}")
+                    .ToList();
 
                 return filteredPorts;
             }
@@ -154,6 +173,10 @@ public partial class MainWindow : Window
     }
 
 
+    /// <summary>
+    /// Renders the available COM ports in the ComboBox.
+    /// </summary>
+    /// <param name="availablePorts">The list of available COM ports.</param>
     private void RenderPorts(List<string> availablePorts)
     {
         foreach (string port in availablePorts)
@@ -164,18 +187,30 @@ public partial class MainWindow : Window
     }
 
 
+    /// <summary>
+    /// Event handler for the ComboBox selection change.
+    /// Enables the Connect button when a port is selected.
+    /// </summary>
+    /// <param name = "sender" > The source of the event.</param>
+    /// <param name="e">The selection changed event data.</param>
     private void ComboBoxPorts_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (comboBoxPorts.SelectedItem != null) ConnectBtn.IsEnabled = true;
     }
 
 
+    /// <summary>
+    /// Initializes and opens the serial port asynchronously.
+    /// Configures the port settings and updates the UI on a successful connection.
+    /// </summary>
+    /// <param name="portName">The name of the COM port to open.</param>
+    /// <returns>A Task representing the asynchronous operation.</returns>
     private async Task InitSerialPort(string portName)
     {
         if (_serialPort != null && _serialPort.IsOpen) return;
 
 
-        // Create new serial port instance if not already created
+        // Create a new serial port instance with the specified settings.
         _serialPort = new SerialPort(portName, 9600, Parity.None, 8, StopBits.One)
         {
             Handshake = Handshake.None,
@@ -191,7 +226,7 @@ public partial class MainWindow : Window
 
             if (_serialPort.IsOpen)
             {
-                // Update UI
+                // Update the UI to reflect the successful connection.
                 await Dispatcher.BeginInvoke(() =>
                  {
                      ConnectionStatus.Content = "Connected";
@@ -240,6 +275,11 @@ public partial class MainWindow : Window
     }
 
 
+    /// <summary>
+    /// Sends data asynchronously to the connected serial port.
+    /// </summary>
+    /// <param name="data">The string data to send.</param>
+    /// <returns>A Task representing the asynchronous send operation.</returns>
     private async Task SendDataAsync(string data)
     {
         try
@@ -260,6 +300,12 @@ public partial class MainWindow : Window
     }
 
 
+    /// <summary>
+    /// Event handler for receiving data from the serial port.
+    /// Reads available data asynchronously and updates the UI.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The serial data received event data.</param>
     private async void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)
     {
         if (_serialPort == null || !_serialPort.IsOpen) return;
@@ -267,19 +313,25 @@ public partial class MainWindow : Window
         string data = await Task.Run(() => _serialPort.ReadExisting());
         Dispatcher.Invoke(() =>
         {
-            // Update UI here -> show received data
+            // Update the UI to display the received data.
         });
     }
 
 
+    /// <summary>
+    /// Handles the Connect button click event.
+    /// Initiates a connection to the selected COM port or disconnects if already connected.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The routed event data.</param>
     private void ConnectBtn_Click(object sender, RoutedEventArgs e)
     {
         if (_serialPort != null && _serialPort.IsOpen)
         {
-            // Disconnect
+            // Disconnect the serial port.
             _serialPort.Close();
 
-            // Update UI
+            // Update the UI to reflect disconnection.
             ConnectionStatus.Content = "Disconnected";
             ConnectionStatus.Background = Brushes.Red;
             ConnectBtn.Content = "Connect";
@@ -287,11 +339,11 @@ public partial class MainWindow : Window
         }
         else
         {
-            // Connect
+            // Connect to the selected COM port.
             string? selectedPort = comboBoxPorts.SelectedItem?.ToString()?.Split(' ')[0];
             if (selectedPort == null) return;
 
-            // Update UI
+            // Update the UI to indicate connection in progress.
             ConnectionStatus.Content = "Connecting";
             ConnectionStatus.Background = Brushes.Yellow;
             ConnectBtn.IsEnabled = false;
@@ -309,6 +361,9 @@ public partial class MainWindow : Window
     }
 
 
+    /// <summary>
+    /// Resets the UI elements to their default state after a connection failure.
+    /// </summary>
     private void ResetUIOnConnectionFailure()
     {
         Dispatcher.BeginInvoke(() =>
