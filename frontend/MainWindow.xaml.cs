@@ -66,7 +66,9 @@ public partial class MainWindow : Window
             string? selectedPort = comboBoxPorts.SelectedItem?.ToString();
 
             comboBoxPorts.Items.Clear();
+
             List<string> availablePorts = LoadAvailablePorts();
+            availablePorts = availablePorts.Distinct().ToList();
             RenderPorts(availablePorts);
 
             // Check if previously selected port is still available
@@ -124,15 +126,24 @@ public partial class MainWindow : Window
                 "Win32_PnPEntity WHERE Caption like '%(COM%'"))
             {
                 // Get port names
-                string[] portnames = SerialPort.GetPortNames();
+                string[] portNames = SerialPort.GetPortNames();
 
                 // Get caption of each port
-                var ports = searcher.Get().Cast<ManagementBaseObject>().ToList().Select(p => p["Caption"].ToString());
+                var portCaptions = searcher.Get()
+                                    .Cast<ManagementBaseObject>()
+                                    .ToList()
+                                    .Select(p => p["Caption"]
+                                    .ToString());
 
                 // Combine port names with captions
-                List<string> portList = portnames.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n)) ?? "Unknown").ToList();
+                //List<string> portList = portnames.Select(n => n + " - " + ports.FirstOrDefault(s => s.Contains(n)) ?? "Unknown").ToList();
 
-                return portList;
+                List<string> filteredPorts = portNames
+                                            .Where(name => portCaptions.Any(caption => caption.Contains(name)))
+                                            .Select(name => $"{name} - {portCaptions.First(caption => caption.Contains(name))}")
+                                            .ToList();
+
+                return filteredPorts;
             }
         }
         catch (Exception ex)
