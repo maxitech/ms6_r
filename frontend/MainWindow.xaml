@@ -5,7 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:frontend_v2"
         mc:Ignorable="d"
-        Title="MS6_R" Height="600" Width="1000" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        Title="MS6_R"
+        Height="600" 
+        Width="1000" 
+        ResizeMode="CanMinimize" 
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="287*"/>
@@ -26,13 +31,12 @@
                     <ComboBox x:Name="comboBoxPorts" 
                               Width="200" 
                               Height="30"
-                              VerticalAlignment="Top" 
-                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
                               RenderTransformOrigin="0.486,-0.199" 
                               IsReadOnly="True" 
                               IsEditable="True" Margin="10,36,0,0"
                               HorizontalContentAlignment="Left"
-                              VerticalContentAlignment="Center" Grid.ColumnSpan="3" SelectionChanged="ComboBoxPorts_SelectionChanged">
+                              VerticalContentAlignment="Center" Grid.ColumnSpan="3" SelectionChanged="ComboBoxPorts_SelectionChanged" HorizontalAlignment="Left">
                         <ComboBox.Background>
                             <LinearGradientBrush EndPoint="0,1">
                                 <GradientStop Color="#FFF0F0F0"/>
@@ -43,6 +47,14 @@
                     <Button x:Name="ConnectBtn" Grid.Column="2" Content="Connect" HorizontalAlignment="Left" Margin="99,36,0,0" VerticalAlignment="Top" Height="30" Width="100" FontWeight="Bold" IsEnabled="False" Click="ConnectBtn_Click"/>
                     <Label x:Name="ConnectionStatus" Content="Not Connected" HorizontalAlignment="Left" Margin="90,71,0,0" VerticalAlignment="Top" FontWeight="Bold" Background="Red" Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="28" Grid.ColumnSpan="2" Grid.Column="1" Foreground="Black"/>
                     <Label Content="Status:" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Height="28" Grid.ColumnSpan="2"/>
+                    <Button Content="PING" HorizontalAlignment="Left" Margin="267,117,0,0" VerticalAlignment="Top" Height="35" Width="88" Click="Button_Click_Ping" Grid.Column="2"/>
+
+                    <!--Serial COM-->
+                    <RichTextBox x:Name="ComDisplay" IsReadOnly="True" VerticalScrollBarVisibility="Visible" Margin="10,117,616,48" Grid.ColumnSpan="3">
+                        <FlowDocument>
+                            <Paragraph></Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
                 </Grid>
             </TabItem>
 

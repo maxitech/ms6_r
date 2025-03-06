@@ -284,9 +284,13 @@ public partial class MainWindow : Window
     {
         try
         {
-            if (_serialPort != null && !_serialPort.IsOpen)
+            if (_serialPort != null && _serialPort.IsOpen)
             {
                 await Task.Run(() => _serialPort.WriteLine(data));
+                await Dispatcher.BeginInvoke(() =>
+                {
+                    AppendText($"$ {data}", Brushes.DodgerBlue);
+                });
             }
             else
             {
@@ -311,9 +315,10 @@ public partial class MainWindow : Window
         if (_serialPort == null || !_serialPort.IsOpen) return;
 
         string data = await Task.Run(() => _serialPort.ReadExisting());
-        Dispatcher.Invoke(() =>
+        await Dispatcher.BeginInvoke(() =>
         {
             // Update the UI to display the received data.
+            AppendText($"# {data}", Brushes.DarkGreen);
         });
     }
 
@@ -374,5 +379,44 @@ public partial class MainWindow : Window
             ConnectBtn.Content = "Connect";
             comboBoxPorts.IsEnabled = true;
         });
+    }
+
+
+    private async void Button_Click_Ping(object sender, RoutedEventArgs e)
+    {
+        await SendDataAsync("PING");
+    }
+
+
+    /// <summary>
+    /// Appends a message to the ComDisplay with the specified text color.
+    /// </summary>
+    /// <param name="message">The message to be displayed.</param>
+    /// <param name="color">The color of the message text.</param>
+    private void AppendText(string message, Brush color)
+    {
+        Run run = new Run(message + "\n")
+        {
+            Foreground = color
+        };
+
+        if (ComDisplay.Document.Blocks.FirstBlock is Paragraph paragraph)
+        {
+            paragraph.Inlines.Add(run);
+        }
+
+        ComDisplay.ScrollToEnd();
+    }
+
+
+    /// <summary>
+    /// Handles the Window Loaded event.
+    /// Initializes the UI by displaying a header message in red.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">Event data associated with the event.</param>
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        AppendText("**SERIAL COMMUNICATION**", Brushes.Red);
     }
 }
