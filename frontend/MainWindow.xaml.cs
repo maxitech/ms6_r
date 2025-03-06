@@ -277,10 +277,12 @@ public partial class MainWindow : Window
 
     /// <summary>
     /// Sends data asynchronously to the connected serial port.
+    /// Calls the AppendText method for updating the UI.
     /// </summary>
     /// <param name="data">The string data to send.</param>
+    /// <param name="messagePrefix">The prefix to add to the message before sending.</param>
     /// <returns>A Task representing the asynchronous send operation.</returns>
-    private async Task SendDataAsync(string data)
+    private async Task SendDataAsync(string data, string messagePrefix)
     {
         try
         {
@@ -289,7 +291,9 @@ public partial class MainWindow : Window
                 await Task.Run(() => _serialPort.WriteLine(data));
                 await Dispatcher.BeginInvoke(() =>
                 {
-                    AppendText($"$ {data}", Brushes.DodgerBlue);
+                    if (messagePrefix == ">>") AppendText($"{messagePrefix} {data}", Brushes.DodgerBlue);
+                    else
+                        AppendText($"{messagePrefix} Load Program - {data}", Brushes.Blue);
                 });
             }
             else
@@ -318,7 +322,7 @@ public partial class MainWindow : Window
         await Dispatcher.BeginInvoke(() =>
         {
             // Update the UI to display the received data.
-            AppendText($"# {data}", Brushes.DarkGreen);
+            AppendText($">> {data}", Brushes.DarkGreen);
         });
     }
 
@@ -382,9 +386,25 @@ public partial class MainWindow : Window
     }
 
 
-    private async void Button_Click_Ping(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// Handles the button click event for loading a program.
+    /// Validates the user input and sends the program command if valid.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">Event data associated with the event.</param>
+    private async void Button_Click_LoadProgram(object sender, RoutedEventArgs e)
     {
-        await SendDataAsync("PING");
+        var availablePrograms = new List<string> { "PING" }; // Add more programs here! Note:The program names should be in uppercase.
+        string program = ProgramInput.Text.ToUpper();
+
+
+        if (string.IsNullOrEmpty(program) || !availablePrograms.Contains(program))
+        {
+            MessageBox.Show("Please enter a valid program name. You can find the list of available Programs in the README.md file on GitHub. https://github.com/maxitech/ms6_r", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        await SendDataAsync(program, "$");
     }
 
 

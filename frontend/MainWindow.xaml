@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:frontend_v2"
         mc:Ignorable="d"
         Title="MS6_R"
-        Height="600" 
-        Width="1000" 
+        Height="800"
+        Width="1500"
         ResizeMode="CanMinimize" 
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded">
@@ -27,7 +27,7 @@
                     </Grid.ColumnDefinitions>
 
                     <!--Select COM Port-->
-                    <Label Content="Select COM Port:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsEnabled="False" Foreground="#FF020202" Grid.ColumnSpan="3" FontWeight="Bold"/>
+                    <Label Content="Select COM Port:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsEnabled="False" Foreground="#FF020202" Grid.ColumnSpan="2" FontWeight="Bold"/>
                     <ComboBox x:Name="comboBoxPorts" 
                               Width="200" 
                               Height="30"
@@ -44,17 +44,19 @@
                             </LinearGradientBrush>
                         </ComboBox.Background>
                     </ComboBox>
-                    <Button x:Name="ConnectBtn" Grid.Column="2" Content="Connect" HorizontalAlignment="Left" Margin="99,36,0,0" VerticalAlignment="Top" Height="30" Width="100" FontWeight="Bold" IsEnabled="False" Click="ConnectBtn_Click"/>
-                    <Label x:Name="ConnectionStatus" Content="Not Connected" HorizontalAlignment="Left" Margin="90,71,0,0" VerticalAlignment="Top" FontWeight="Bold" Background="Red" Width="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="28" Grid.ColumnSpan="2" Grid.Column="1" Foreground="Black"/>
+                    <Button x:Name="ConnectBtn" Grid.Column="2" Content="Connect" HorizontalAlignment="Left" Margin="40,36,0,0" VerticalAlignment="Top" Height="30" Width="100" FontWeight="Bold" IsEnabled="False" Click="ConnectBtn_Click"/>
+                    <Label x:Name="ConnectionStatus" Content="Not Connected" Margin="77,71,0,0" VerticalAlignment="Top" FontWeight="Bold" Background="Red" Width="103" Height="28" Grid.ColumnSpan="2" Grid.Column="1" Foreground="Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
                     <Label Content="Status:" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" Height="28" Grid.ColumnSpan="2"/>
-                    <Button Content="PING" HorizontalAlignment="Left" Margin="267,117,0,0" VerticalAlignment="Top" Height="35" Width="88" Click="Button_Click_Ping" Grid.Column="2"/>
+                    <Button x:Name="LoadProgramBtn" Content="Load Program" HorizontalAlignment="Left" Margin="30,127,0,0" VerticalAlignment="Top" Height="22" Width="110" Click="Button_Click_LoadProgram" Grid.Column="2" FontWeight="Bold"/>
 
                     <!--Serial COM-->
-                    <RichTextBox x:Name="ComDisplay" IsReadOnly="True" VerticalScrollBarVisibility="Visible" Margin="10,117,616,48" Grid.ColumnSpan="3">
+                    <RichTextBox x:Name="ComDisplay" IsReadOnly="True" VerticalScrollBarVisibility="Visible" Margin="10,214,984,10" Grid.ColumnSpan="3">
                         <FlowDocument>
                             <Paragraph></Paragraph>
                         </FlowDocument>
                     </RichTextBox>
+                    <TextBox x:Name="ProgramInput" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="45,127,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="22" Text="PING"/>
+                    <Label Content="Program:" HorizontalAlignment="Left" Margin="10,123,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="65" FontWeight="Bold"/>
                 </Grid>
             </TabItem>
 
