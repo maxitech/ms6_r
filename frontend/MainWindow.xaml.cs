@@ -322,7 +322,7 @@ public partial class MainWindow : Window
         await Dispatcher.BeginInvoke(() =>
         {
             // Update the UI to display the received data.
-            AppendText($">> {data}", Brushes.DarkGreen);
+            AppendText($">> {data.Trim()}", Brushes.DarkGreen);
         });
     }
 
