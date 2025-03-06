@@ -394,7 +394,7 @@ public partial class MainWindow : Window
     /// <param name="e">Event data associated with the event.</param>
     private async void Button_Click_LoadProgram(object sender, RoutedEventArgs e)
     {
-        var availablePrograms = new List<string> { "PING" }; // Add more programs here! Note:The program names should be in uppercase.
+        var availablePrograms = new List<string> { "PING", "TEST_SWITCHES" }; // Add more programs here! Note:The program names should be in uppercase.
         string program = ProgramInput.Text.ToUpper();
 
 
