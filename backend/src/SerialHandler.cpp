@@ -28,7 +28,7 @@ void SerialHandler::_readSerialInput() {
 void SerialHandler::_forwardInput(const String& input) {
   if(_commandProcessor) {
     Serial.println("Processing command: " + input);
-    _commandProcessor-> processCommand(input);
+    _commandProcessor-> processInput(input);
   } else {
     Serial.println("Error: No CommandProcesor set. Please set one using setCommandProcessor() in main.cpp");
   }
