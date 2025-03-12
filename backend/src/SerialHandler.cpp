@@ -2,27 +2,16 @@
 #include "SerialHandler.h"
 
 
-SerialHandler::SerialHandler() : _command(""), _lastCommand("") {}
+SerialHandler::SerialHandler() {}
 
 
-void SerialHandler::start(){
+void SerialHandler::setCommandProcessor(CommandProcessor* processor) {
+  _commandProcessor = processor;
+}
+
+
+void SerialHandler::listenForSerial(){
   _readSerialInput();
-
-  // Check if the command should be executed repeatedly
-  if (_shouldAlwaysExecuteCommand(_command)) {
-    Serial.println("Executing cmd repeatedly: " + _command);
-    _handleNewCommand();
-    return;
-  }
-
-  // Check if the command is new and not in the whitelist: -> execute once
-  if (_command != _lastCommand) {
-    Serial.println("Executing cmd once: " + _command);
-    _handleNewCommand();
-    _lastCommand = _command;
-  } else {
-    Serial.println("Command already executed: " + _command);
-  }
 }
 
 
@@ -30,19 +19,17 @@ void SerialHandler::_readSerialInput() {
   if (Serial.available() > 0) {
     String input = Serial.readString();
     input.trim();
-    Serial.println("Loaded Program - " + input);
-    _command = input;
+    if (input.length() == 0) return;
+    _forwardInput(input);
   }
 }
 
 
-/* Check if the command is in the list of commands
-that should be executed repeatedly (e.g. "MOVE") */
-bool SerialHandler::_shouldAlwaysExecuteCommand(const String& cmd) {
-  return (cmd == "MOVE");
-}
-
-
-void SerialHandler::_handleNewCommand() {
-  Serial.println("Processing command: " + _command);
+void SerialHandler::_forwardInput(const String& input) {
+  if(_commandProcessor) {
+    Serial.println("Processing command: " + input);
+    _commandProcessor-> processCommand(input);
+  } else {
+    Serial.println("Error: No CommandProcesor set. Please set one using setCommandProcessor() in main.cpp");
+  }
 }
