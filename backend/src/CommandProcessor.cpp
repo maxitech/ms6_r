@@ -34,13 +34,15 @@ bool CommandProcessor::_isInputValid(const String& input) {
 
 bool CommandProcessor::_validateChecksum(const String& data, const String& checksum) {
   uint8_t checksumValue = 0;
+
+  // Calculate checksum by XORing all characters in data -> (8-bit checksum)
   for(size_t i = 0; i < data.length(); i++) {
     checksumValue ^= static_cast<uint8_t>(data[i]);
   }
 
-  String calculatedChecksum = String(checksumValue, HEX);
+  String calculatedChecksum = String(checksumValue, HEX).toUpperCase();
 
-  if(calculatedChecksum.toUpperCase() != checksum) {
+  if(calculatedChecksum != checksum) {
     Serial.println("Checksum Error. Expected: " + checksum + ", Calculated: " + calculatedChecksum.toUpperCase());
     return false;
   }
@@ -51,6 +53,7 @@ bool CommandProcessor::_validateChecksum(const String& data, const String& check
 
 void CommandProcessor::_processCommand(const String& cmd) {
   std::vector<String> parts = _splitString(cmd, ',');
+
   for(const auto& part: parts) {
     Serial.println(part);
   }
@@ -68,6 +71,6 @@ std::vector<String> CommandProcessor::_splitString(const String& str, const char
     end = str.indexOf(delimiter, start);
   }
   
-    tokens.push_back(str.substring(start));
-    return tokens;
+  tokens.push_back(str.substring(start));
+  return tokens;
 }
