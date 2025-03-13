@@ -3,7 +3,9 @@
 
 
 #include <Arduino.h>
-#include "CommandProcessor.h"
+
+
+class CommandProcessor;
 
 
 class SerialHandler {
