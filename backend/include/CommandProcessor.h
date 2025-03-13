@@ -11,18 +11,15 @@
 
 class CommandProcessor {
 public:
-    CommandProcessor(SerialHandler& serialHandler, LimitSwitches& limitSwitches);
-    void processCommand(const String& command);
+    CommandProcessor();
+    void processInput(const String& input);
 
 
 private:
-    SerialHandler& serialHandler;
-    LimitSwitches& limitSwitches;
-    
-    
-    void processPingCmd();
-    void processTestSwitchesCmd();
-
+    bool _isInputValid(const String& input);
+    void _processCommand(const String& cmd);
+    bool _validateChecksum(const String& data, const String& checksum);
+    std::vector<String> _splitString(const String& str, const char delimiter);
 };
 
 
