@@ -1,11 +1,12 @@
 #include "CommandProcessor.h"
-#include "SerialHandler.h"
 
 
 CommandProcessor::CommandProcessor(){}
 
 
 void CommandProcessor::processInput(const String& input) {
+  Serial.println("Processing input: " + input);
+
   if(!_isInputValid(input)) {
     Serial.println("Input is invalid. Expected input: $<cmd>*<checksum>#");
     return;
@@ -20,15 +21,12 @@ void CommandProcessor::processInput(const String& input) {
     return;
   }
 
-  _processCommand(input);
+  _processCommand(data);
 }
 
 
 bool CommandProcessor::_isInputValid(const String& input) {
-  if(!input.startsWith("$") || !input.endsWith("#") || input.indexOf("*") == -1) {
-    Serial.println("Command is invalid");
-    return false;
-  }
+  if(!input.startsWith("$") || !input.endsWith("#") || input.indexOf("*") == -1) return false;
 
   return true;
 }
@@ -52,5 +50,24 @@ bool CommandProcessor::_validateChecksum(const String& data, const String& check
 
 
 void CommandProcessor::_processCommand(const String& cmd) {
-  // process command
+  std::vector<String> parts = _splitString(cmd, ',');
+  for(const auto& part: parts) {
+    Serial.println(part);
+  }
+}
+
+
+std::vector<String> CommandProcessor::_splitString(const String& str, const char delimiter) {
+  std::vector<String> tokens;
+  int start = 0;
+  int end = str.indexOf(delimiter);
+  
+  while (end != -1) {
+    tokens.push_back(str.substring(start, end)); 
+    start = end + 1;
+    end = str.indexOf(delimiter, start);
+  }
+  
+    tokens.push_back(str.substring(start));
+    return tokens;
 }
