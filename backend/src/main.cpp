@@ -1,28 +1,23 @@
 #include <Arduino.h>
 #include "SerialHandler.h"
-#include "LimitSwitches.h"
+#include "CommandProcessor.h"
 
 
-// pin definitions here:
-// function declarations here:
-// global variables here:
+SerialHandler serialHandler;
+CommandProcessor cmdProcessor;
 
 
 void setup() {
   // setup code here:
   Serial.begin(9600);
-  initLimitSwitches();
+  serialHandler.setCommandProcessor(&cmdProcessor);
 }
 
 
 void loop() {
   // main code here:
-  readSerialInput();
-  handleNewCommand();
+  serialHandler.listenForSerial();
 }
-
-
-// function definitions here:
 
 
 
