@@ -1,4 +1,8 @@
 #include "CommandProcessor.h"
+#include "CommandDispatcher.h"
+
+
+CommandDispatcher dispatcher;
 
 
 CommandProcessor::CommandProcessor(){}
@@ -41,9 +45,12 @@ bool CommandProcessor::_validateChecksum(const String& data, const String& check
   }
 
   String calculatedChecksum = String(checksumValue, HEX).toUpperCase();
+  if (calculatedChecksum.length() == 1) {
+    calculatedChecksum = "0" + calculatedChecksum;
+  }
 
   if(calculatedChecksum != checksum) {
-    Serial.println("Checksum Error. Expected: " + checksum + ", Calculated: " + calculatedChecksum.toUpperCase());
+    Serial.println("Checksum Error. Expected: " + checksum + ", Calculated: " + calculatedChecksum);
     return false;
   }
 
@@ -54,9 +61,7 @@ bool CommandProcessor::_validateChecksum(const String& data, const String& check
 void CommandProcessor::_processCommand(const String& cmd) {
   std::vector<String> parts = _splitString(cmd, ',');
 
-  for(const auto& part: parts) {
-    Serial.println(part);
-  }
+  dispatcher.dispatch(parts);
 }
 
 
