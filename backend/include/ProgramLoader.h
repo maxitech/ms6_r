@@ -21,12 +21,11 @@ public:
 
 private:
     void _loadProgram(const String& program);
-
     ProgramState _setState(ProgramState newState);
-    ProgramState _currentProgramState = IDLE;
-
     void _executePing();
     void _executePong();
+
+    ProgramState _currentProgramState = IDLE;
 };
 
 
