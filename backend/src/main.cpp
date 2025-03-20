@@ -1,10 +1,12 @@
 #include <Arduino.h>
 #include "SerialHandler.h"
 #include "CommandProcessor.h"
+#include "ProgramLoader.h"
 
 
+ProgramLoader programLoader;
 SerialHandler serialHandler;
-CommandProcessor cmdProcessor;
+CommandProcessor cmdProcessor(programLoader);
 
 
 void setup() {
@@ -17,6 +19,7 @@ void setup() {
 void loop() {
   // main code here:
   serialHandler.listenForSerial();
+  programLoader.run();
 }
 
 
