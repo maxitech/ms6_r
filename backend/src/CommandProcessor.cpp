@@ -1,16 +1,10 @@
 #include "CommandProcessor.h"
-#include "CommandDispatcher.h"
 
 
-CommandDispatcher dispatcher;
-
-
-CommandProcessor::CommandProcessor(){}
+CommandProcessor::CommandProcessor(ProgramLoader& programLoader) : _dispatcher(programLoader){}
 
 
 void CommandProcessor::processInput(const String& input) {
-  Serial.println("Processing input: " + input);
-
   if(!_isInputValid(input)) {
     Serial.println("Input is invalid. Expected input: $<cmd>*<checksum>#");
     return;
@@ -31,7 +25,7 @@ void CommandProcessor::processInput(const String& input) {
 
 bool CommandProcessor::_isInputValid(const String& input) {
   if(!input.startsWith("$") || !input.endsWith("#") || input.indexOf("*") == -1) return false;
-
+  
   return true;
 }
 
@@ -61,7 +55,7 @@ bool CommandProcessor::_validateChecksum(const String& data, const String& check
 void CommandProcessor::_processCommand(const String& cmd) {
   std::vector<String> parts = _splitString(cmd, ',');
 
-  dispatcher.dispatch(parts);
+  _dispatcher.dispatch(parts);
 }
 
 
