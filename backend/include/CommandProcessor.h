@@ -3,10 +3,8 @@
 
 
 #include <Arduino.h>
-
-
 #include "SerialHandler.h"
-
+#include "CommandDispatcher.h"
 
 /**
  * @brief Handles input commands and processes them, including validation and checksum verification.
@@ -15,8 +13,10 @@ class CommandProcessor {
 public:
     /**
      * @brief Constructor for the CommandProcessor class.
+     * @param programLoader Reference to a ProgramLoader instance used to initialize the dispatcher.
+     * @note Marked as explicit to prevent unintended implicit conversions when passing a single argument.
      */
-    CommandProcessor();
+    explicit CommandProcessor(ProgramLoader& programLoader);
 
     /**
      * @brief Processes an input string, validates it, and if all valid, it forwards the data.
@@ -55,6 +55,12 @@ private:
      * @return A vector of substrings.
      */
     std::vector<String> _splitString(const String& str, const char delimiter);
+
+    /**
+     * @brief Dispatcher used to handle commands internally.
+     * @note Initialized with a reference to the ProgramLoader instance passed to the constructor.
+     */
+    CommandDispatcher _dispatcher;
 };
 
 
