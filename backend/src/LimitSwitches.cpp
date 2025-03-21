@@ -14,12 +14,10 @@ void LimitSwitches::init() {
 
 
 void LimitSwitches::check() {
-    for (byte limitSwitch : _limitSwitches) {
-    if(_isPressed(limitSwitch)) {
-      digitalWrite(_ledPin, HIGH);
-    } else {
-      digitalWrite(_ledPin, LOW);
-    }
+  bool anyPressed = false;
+  for(byte i = 0; i < _limitSwitches.size(); i++) {
+    if(_isPressed(_limitSwitches[i])) anyPressed = true;
+    digitalWrite(_ledPin, anyPressed ? HIGH : LOW);
   }
 }
 
