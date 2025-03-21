@@ -1,7 +1,8 @@
 #include "ProgramLoader.h"
+#include <map>
 
 
-ProgramLoader::ProgramLoader() {};
+ProgramLoader::ProgramLoader(LimitSwitches& limitSwitches) : _limitSwitches(limitSwitches) {};
 
 
 void ProgramLoader::handleCommand(const std::vector<String>& cmdParts) {
@@ -20,22 +21,23 @@ void ProgramLoader::handleCommand(const std::vector<String>& cmdParts) {
 
 
 void ProgramLoader::_loadProgram(const String& program) {
-    if (program == "PING") {
-        if (_currentProgramState == PING) {
-            Serial.println("Reloading...");
-        } else {
-            Serial.println("Loading PING program...");
-        }
-        _setState(PING);
-    } else if (program == "PONG") {
-        if (_currentProgramState == PONG) {
-            Serial.println("Reloading...");
-        } else {
-            Serial.println("Loading PONG program...");
-        }
-        _setState(PONG);
-    } else {
+    static const std::map<String, ProgramState> programMap = {
+        {"PING", PING},
+        {"PONG", PONG},
+        {"TEST_SWITCHES", TEST_SWITCHES}
+    };
+
+    auto it = programMap.find(program);
+    if(it == programMap.end()) {
         Serial.println("Unknown program: " + program);
+        return;
+    }
+
+    if(_currentProgramState == it->second) {
+        Serial.println("Reloaded program: " + program);
+    } else {
+        Serial.println("Loading program: " + program);
+        _setState(it->second);
     }
 }
 
@@ -47,6 +49,9 @@ void ProgramLoader::run() {
       break;
     case PONG:
       _executePong();
+      break;
+    case TEST_SWITCHES:
+      _testSwitches();
       break;
     case IDLE:
     default:
@@ -81,4 +86,9 @@ void ProgramLoader::_executePong() {
         lastPongTime = millis();
         Serial.println("PING");
     }
+}
+
+
+void ProgramLoader::_testSwitches() {
+    _limitSwitches.check();
 }
