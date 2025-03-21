@@ -2,18 +2,20 @@
 #define PROGRAMLOADER_H
 
 #include <Arduino.h>
+#include "LimitSwitches.h"
 
 
 enum ProgramState {
     IDLE,
     PING,
-    PONG
+    PONG, 
+    TEST_SWITCHES
 };
 
 
 class ProgramLoader {
 public: 
-    ProgramLoader();
+    explicit ProgramLoader(LimitSwitches& limitSwitches);
     void handleCommand(const std::vector<String>& cmdParts);
     void run();
     ProgramState getState() const;
@@ -24,8 +26,10 @@ private:
     ProgramState _setState(ProgramState newState);
     void _executePing();
     void _executePong();
+    void _testSwitches();
 
     ProgramState _currentProgramState = IDLE;
+    LimitSwitches& _limitSwitches;
 };
 
 
