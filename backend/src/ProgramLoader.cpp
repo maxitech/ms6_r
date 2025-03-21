@@ -1,4 +1,5 @@
 #include "ProgramLoader.h"
+#include "Utils.h"
 #include <map>
 
 
@@ -73,8 +74,7 @@ ProgramState ProgramLoader::getState() const {
 
 void ProgramLoader::_executePing() {
     static unsigned long lastPingTime = 0;
-    if (millis() - lastPingTime > 1000) {
-        lastPingTime = millis();
+    if (Utils::nonBlockingDelay(1000, lastPingTime)) {
         Serial.println("PONG");
     }
 }
@@ -82,8 +82,7 @@ void ProgramLoader::_executePing() {
 
 void ProgramLoader::_executePong() {
     static unsigned long lastPongTime = 0;
-    if (millis() - lastPongTime > 1000) {
-        lastPongTime = millis();
+    if (Utils::nonBlockingDelay(1000, lastPongTime)) {
         Serial.println("PING");
     }
 }
