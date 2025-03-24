@@ -1,9 +1,3 @@
-/backend/.pio
-/backend/.vscode/.browse.c_cpp.db*
-/backend/.vscode/c_cpp_properties.json
-/backend/.vscode/launch.json
-/backend/.vscode/ipch
-/backend/.vscode/settings.json
 .vs
 bin
 obj
