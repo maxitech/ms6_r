@@ -6,6 +6,8 @@
 #include "teensystep4.h"
 #include "timers/Teensy4/TMR/TMR.h"
 
+#include "Utils.h"
+
 using namespace TS4;
 
 // Init variables
@@ -59,6 +61,9 @@ Stepper motorJ4(motorJ4Step, motorJ4Dir);
 Stepper motorJ5(motorJ5Step, motorJ5Dir);
 Stepper motorJ6(motorJ6Step, motorJ6Dir);
 
+std::vector<byte> getActiveSwitches();
+void handleActiveSwitches();
+bool debounceRead(byte pin);
 
 void setup() { 
   Serial.begin(9600);
@@ -107,13 +112,121 @@ void setup() {
   motorJ6.setAcceleration(500);
   
   limitSwitches.init();
-  serialHandler.setCommandProcessor(&cmdProcessor);
+  // serialHandler.setCommandProcessor(&cmdProcessor);
+  motorJ1.rotateAsync(-200);
+  motorJ2.rotateAsync(-300);
+  motorJ3.rotateAsync(200);
+  motorJ4.rotateAsync(200);
+  motorJ5.rotateAsync(200);
+  motorJ6.rotateAsync(200);
+  Serial.println("Setup done");
+}
+
+static bool j1Active = false;
+static bool j2Active = false;
+static bool j3Active = false;
+static bool j4Active = false;
+static bool j5Active = false;
+static bool j6Active = false;
+
+void loop() {
+  // serialHandler.listenForSerial();
+  // programLoader.run();
+  if (motorJ1.isMoving || motorJ2.isMoving)
+  {
+    delay(10);
+  }
+  
+  handleActiveSwitches();
 }
 
 
-void loop() {
-  serialHandler.listenForSerial();
-  programLoader.run();
+std::vector<byte> getActiveSwitches() {
+  std::vector<byte> activeSwitches;
+  for(byte i = 0; i < limitSwitchPins.size(); i++) {
+    if(debounceRead(limitSwitchPins[i])) {
+      activeSwitches.push_back(i);
+    }
+  }
+  return activeSwitches;
+} 
+
+
+bool debounceRead(byte pin) {
+  //   static unsigned long lastDebounceTime[limitSwitchPins.size()] = {0}; 
+  //   if (digitalRead(pin) == LOW) {
+  //       if(Utils::nonBlockingDelay(100, lastDebounceTime[pin])) {
+  //           return digitalRead(pin) == LOW;
+  //       }
+  //   }
+  //   return false;
+  // }
+  if (digitalRead(pin) == LOW) {
+      delay(5); // debounce time -> adjust if needed (5ms is a good starting point) **curr. blocking fix later if needed**
+      return digitalRead(pin) == LOW;
+  }
+  return false;
+}
+
+
+void handleActiveSwitches() {
+    auto activeSwitches = getActiveSwitches();
+
+    for (auto i : activeSwitches) {
+        switch (i) {
+            case limitJ1:
+                if (!j1Active) {
+                    Serial.println("J1");
+                    motorJ1.emergencyStop();
+                    j1Active = true;
+                }
+                break;
+
+            case limitJ2:
+                if (!j2Active) {
+                    Serial.println("J2");
+                    motorJ2.emergencyStop();
+                    j2Active = true;
+                }
+                break;
+
+            case limitJ3:
+                if (!j3Active) {
+                    Serial.println("J3");
+                    motorJ3.emergencyStop();
+                    j3Active = true;
+                }
+                break;
+
+            case limitJ4:
+                if (!j4Active) {
+                    Serial.println("J4");
+                    motorJ4.emergencyStop();
+                    j4Active = true;
+                }
+                break;
+
+            case limitJ5:
+                if (!j5Active) {
+                    Serial.println("J5");
+                    motorJ5.emergencyStop();
+                    j5Active = true;
+                }
+                break;
+
+            case limitJ6:
+                if (!j6Active) {
+                    Serial.println("J6");
+                    motorJ6.emergencyStop();
+                    j6Active = true;
+                }
+                break;
+
+            default:
+                Serial.println("Unknown switch detected.");
+                break;
+        }
+    }
 }
 
 
