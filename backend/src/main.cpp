@@ -47,10 +47,10 @@ const int motorJ6Dir = 33;
 
 
 // Initialize Classes
-// LimitSwitches limitSwitches(ledPin, limitSwitchPins); // Manages the state of limit switches
-// ProgramLoader programLoader(limitSwitches);           // Controls loading programs and state management
-// CommandProcessor cmdProcessor(programLoader);         // Parses and processes incoming commands
-// SerialHandler serialHandler;                          // Handles serial communication and command routing
+LimitSwitches limitSwitches(ledPin, limitSwitchPins); // Manages the state of limit switches
+ProgramLoader programLoader(limitSwitches);           // Controls loading programs and state management
+CommandProcessor cmdProcessor(programLoader);         // Parses and processes incoming commands
+SerialHandler serialHandler;                          // Handles serial communication and command routing
 
 Stepper motorJ1(motorJ1Step, motorJ1Dir); // int stepPin, int dirPin
 Stepper motorJ2(motorJ2Step, motorJ2Dir);
@@ -83,7 +83,6 @@ void setup() {
   digitalWrite(motorJ4En, LOW);
   digitalWrite(motorJ5En, LOW);
   digitalWrite(motorJ6En, LOW);
-  Stepper::
   
   TS4::begin();
   TimerFactory::attachModule(new TMRModule<0>());
@@ -107,109 +106,14 @@ void setup() {
   motorJ6.setMaxSpeed(200);
   motorJ6.setAcceleration(500);
   
-  // delay(2000);
-  // motorJ1.moveAbs(-500);
-  // delay(500);
-  // motorJ1.moveAbs(500);
-  // delay(500);
-
-  // motorJ2.moveAbs(1000);
-  // delay(500);
-  // motorJ2.moveAbs(-1000);
-  // delay(500);
-
-  // motorJ3.moveAbs(1000);
-  // delay(500);
-  // motorJ3.moveAbs(-1000);
-  // delay(500);
-
-  // motorJ4.moveAbs(1000);
-  // delay(500);
-  // motorJ4.moveAbs(-1000);
-  // delay(500);
-
-  // motorJ5.moveAbs(1000);
-  // delay(500);
-  // motorJ5.moveAbs(-1000);
-  // delay(500);
-
-  // motorJ6.moveAbs(500);
-  // delay(500);
-  // motorJ6.moveAbs(-500);
-  // delay(500);
-  
-  // motorJ1.moveAbsAsync(1000);
-  // motorJ2.moveAbsAsync(2000);
-  // motorJ3.moveAbsAsync(-1000);
-  // motorJ4.moveAbsAsync(1000);
-  // motorJ5.moveAbsAsync(500);
-  // motorJ6.moveAbsAsync(300);
- 
-  
-  
-  // while (motorJ1.isMoving || motorJ2.isMoving || motorJ3.isMoving || motorJ4.isMoving || motorJ5.isMoving || motorJ6.isMoving) {
-  //   delay(500);
-  // }
-  // delay(500);
-  
-  // motorJ1.moveAbsAsync(-1000);
-  // motorJ2.moveAbsAsync(-1000);
-  // motorJ3.moveAbsAsync(-1000);
-  // motorJ4.moveAbsAsync(-1000);
-  // motorJ5.moveAbsAsync(-500);
-  // motorJ6.moveAbsAsync(-300);
-
-  // while (motorJ1.isMoving || motorJ2.isMoving || motorJ3.isMoving || motorJ4.isMoving || motorJ5.isMoving || motorJ6.isMoving) {
-  //   delay(10);
-  // }
-  // delay(500);
-
-
-  // StepperGroup g1{motorJ1, motorJ2, motorJ3, motorJ4, motorJ5, motorJ6};
-  // motorJ1.setTargetAbs(1000);
-  // motorJ2.setTargetAbs(4000);
-  // motorJ3.setTargetAbs(1000);
-  // motorJ4.setTargetAbs(2000);
-  // motorJ5.setTargetAbs(1000);
-  // motorJ6.setTargetAbs(800);
-  // g1.move();
-  // delay(100);
-
-  // motorJ1.setTargetAbs(-1000);
-  // motorJ2.setTargetAbs(-4000);
-  // motorJ3.setTargetAbs(-1000);
-  // motorJ4.setTargetAbs(-2000);
-  // motorJ5.setTargetAbs(-1000);
-  // motorJ6.setTargetAbs(-300);
-  // g1.move();
-  // delay(100);
-  
-  // limitSwitches.init();
-  // serialHandler.setCommandProcessor(&cmdProcessor);
+  limitSwitches.init();
+  serialHandler.setCommandProcessor(&cmdProcessor);
 }
 
 
 void loop() {
-  StepperGroup g1{motorJ1, motorJ2, motorJ3, motorJ4, motorJ5, motorJ6};
-  // serialHandler.listenForSerial();
-  // programLoader.run();
-  // motorJ1.setTargetAbs(2000);
-  // motorJ2.setTargetAbs(4000);
-  // motorJ3.setTargetAbs(1000);
-  // motorJ4.setTargetAbs(2000);
-  // motorJ5.setTargetAbs(1500);
-  // motorJ6.setTargetAbs(300);
-  // g1.move();
-  // delay(1000);
-
-  // motorJ1.setTargetAbs(-2000);
-  // motorJ2.setTargetAbs(-4000);
-  // motorJ3.setTargetAbs(-1000);
-  // motorJ4.setTargetAbs(-2000);
-  // motorJ5.setTargetAbs(-1500);
-  // motorJ6.setTargetAbs(-300);
-  // g1.move();
-  // delay(1000);
+  serialHandler.listenForSerial();
+  programLoader.run();
 }
 
 
