@@ -59,7 +59,6 @@ Stepper motorJ4(motorJ4Step, motorJ4Dir);
 Stepper motorJ5(motorJ5Step, motorJ5Dir);
 Stepper motorJ6(motorJ6Step, motorJ6Dir);
 
-StepperGroup::m
 
 void setup() { 
   Serial.begin(9600);
