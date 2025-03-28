@@ -48,6 +48,15 @@ const int motorJ6Step = 34;
 const int motorJ6Dir = 33;
 
 
+enum Axes {
+    J1 = 0,
+    J2,
+    J3,
+    J4,
+    J5,
+    J6
+};
+
 // Initialize Classes
 LimitSwitches limitSwitches(ledPin, limitSwitchPins); // Manages the state of limit switches
 ProgramLoader programLoader(limitSwitches);           // Controls loading programs and state management
@@ -64,9 +73,12 @@ Stepper motorJ6(motorJ6Step, motorJ6Dir);
 std::vector<byte> getActiveSwitches();
 void handleActiveSwitches();
 bool debounceRead(byte pin);
+void updateSwitchStatus(Axes axis, bool isActive);
+bool isSwitchActive(Axes axis);
+
 
 void setup() { 
-  Serial.begin(9600);
+    Serial.begin(9600);
   while(!Serial);
   pinMode(motorJ1En, OUTPUT);
   pinMode(motorJ2En, OUTPUT);
@@ -122,12 +134,6 @@ void setup() {
   Serial.println("Setup done");
 }
 
-static bool j1Active = false;
-static bool j2Active = false;
-static bool j3Active = false;
-static bool j4Active = false;
-static bool j5Active = false;
-static bool j6Active = false;
 
 void loop() {
   // serialHandler.listenForSerial();
@@ -175,50 +181,50 @@ void handleActiveSwitches() {
     for (auto i : activeSwitches) {
         switch (i) {
             case limitJ1:
-                if (!j1Active) {
+                if (!isSwitchActive(J1)) {
                     Serial.println("J1");
                     motorJ1.emergencyStop();
-                    j1Active = true;
+                    updateSwitchStatus(J1, true);
                 }
                 break;
 
             case limitJ2:
-                if (!j2Active) {
+                if (!isSwitchActive(J2)) {
                     Serial.println("J2");
                     motorJ2.emergencyStop();
-                    j2Active = true;
+                    updateSwitchStatus(J2, true);
                 }
                 break;
 
             case limitJ3:
-                if (!j3Active) {
+                if (!isSwitchActive(J3)) {
                     Serial.println("J3");
                     motorJ3.emergencyStop();
-                    j3Active = true;
+                    updateSwitchStatus(J3, true);
                 }
                 break;
 
             case limitJ4:
-                if (!j4Active) {
+                if (!isSwitchActive(J4)) {
                     Serial.println("J4");
                     motorJ4.emergencyStop();
-                    j4Active = true;
+                    updateSwitchStatus(J4, true);
                 }
                 break;
 
             case limitJ5:
-                if (!j5Active) {
+                if (!isSwitchActive(J5)) {
                     Serial.println("J5");
                     motorJ5.emergencyStop();
-                    j5Active = true;
+                    updateSwitchStatus(J5, true);
                 }
                 break;
 
             case limitJ6:
-                if (!j6Active) {
+                if (!isSwitchActive(J6)) {
                     Serial.println("J6");
                     motorJ6.emergencyStop();
-                    j6Active = true;
+                    updateSwitchStatus(J6, true);
                 }
                 break;
 
@@ -228,6 +234,21 @@ void handleActiveSwitches() {
         }
     }
 }
+
+
+uint8_t switchStatus = 0; // Status for all 6 switches default: 0=(all inactive)
+void updateSwitchStatus(Axes axis, bool active) {
+    if(active) {
+        switchStatus |= (1 << axis);
+    } else {
+        switchStatus &= ~(1 << axis);
+    }
+}
+
+bool isSwitchActive(Axes axis) {
+    return switchStatus & (1 << axis);
+}
+
 
 
 
