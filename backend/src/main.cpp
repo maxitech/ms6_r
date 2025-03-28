@@ -70,7 +70,7 @@ Stepper motorJ4(motorJ4Step, motorJ4Dir);
 Stepper motorJ5(motorJ5Step, motorJ5Dir);
 Stepper motorJ6(motorJ6Step, motorJ6Dir);
 
-std::vector<byte> getActiveSwitches();
+uint8_t getActiveSwitches();
 void handleActiveSwitches();
 bool debounceRead(byte pin);
 void updateSwitchStatus(Axes axis, bool isActive);
@@ -147,11 +147,11 @@ void loop() {
 }
 
 
-std::vector<byte> getActiveSwitches() {
-  std::vector<byte> activeSwitches;
+uint8_t getActiveSwitches() {
+  uint8_t activeSwitches = 0;
   for(byte i = 0; i < limitSwitchPins.size(); i++) {
     if(debounceRead(limitSwitchPins[i])) {
-      activeSwitches.push_back(i);
+        activeSwitches |= (1 << i);
     }
   }
   return activeSwitches;
@@ -176,61 +176,63 @@ bool debounceRead(byte pin) {
 
 
 void handleActiveSwitches() {
-    auto activeSwitches = getActiveSwitches();
+    uint8_t activeSwitches = getActiveSwitches();
 
-    for (auto i : activeSwitches) {
-        switch (i) {
-            case limitJ1:
-                if (!isSwitchActive(J1)) {
-                    Serial.println("J1");
-                    motorJ1.emergencyStop();
-                    updateSwitchStatus(J1, true);
-                }
-                break;
+    for (byte i = 0; i < 8; i++) { // Iterate over all 8 bits
+        if (activeSwitches & (1 << i)) { // Check if bit is set
+            switch (i) {
+                case 0:
+                    if (!isSwitchActive(J1)) {
+                        Serial.println("J1");
+                        motorJ1.emergencyStop();
+                        updateSwitchStatus(J1, true);
+                    }
+                    break;
 
-            case limitJ2:
-                if (!isSwitchActive(J2)) {
-                    Serial.println("J2");
-                    motorJ2.emergencyStop();
-                    updateSwitchStatus(J2, true);
-                }
-                break;
+                case 1:
+                    if (!isSwitchActive(J2)) {
+                        Serial.println("J2");
+                        motorJ2.emergencyStop();
+                        updateSwitchStatus(J2, true);
+                    }
+                    break;
 
-            case limitJ3:
-                if (!isSwitchActive(J3)) {
-                    Serial.println("J3");
-                    motorJ3.emergencyStop();
-                    updateSwitchStatus(J3, true);
-                }
-                break;
+                case 2:
+                    if (!isSwitchActive(J3)) {
+                        Serial.println("J3");
+                        motorJ3.emergencyStop();
+                        updateSwitchStatus(J3, true);
+                    }
+                    break;
 
-            case limitJ4:
-                if (!isSwitchActive(J4)) {
-                    Serial.println("J4");
-                    motorJ4.emergencyStop();
-                    updateSwitchStatus(J4, true);
-                }
-                break;
+                case 3:
+                    if (!isSwitchActive(J4)) {
+                        Serial.println("J4");
+                        motorJ4.emergencyStop();
+                        updateSwitchStatus(J4, true);
+                    }
+                    break;
 
-            case limitJ5:
-                if (!isSwitchActive(J5)) {
-                    Serial.println("J5");
-                    motorJ5.emergencyStop();
-                    updateSwitchStatus(J5, true);
-                }
-                break;
+                case 4:
+                    if (!isSwitchActive(J5)) {
+                        Serial.println("J5");
+                        motorJ5.emergencyStop();
+                        updateSwitchStatus(J5, true);
+                    }
+                    break;
 
-            case limitJ6:
-                if (!isSwitchActive(J6)) {
-                    Serial.println("J6");
-                    motorJ6.emergencyStop();
-                    updateSwitchStatus(J6, true);
-                }
-                break;
+                case 5:
+                    if (!isSwitchActive(J6)) {
+                        Serial.println("J6");
+                        motorJ6.emergencyStop();
+                        updateSwitchStatus(J6, true);
+                    }
+                    break;
 
-            default:
-                Serial.println("Unknown switch detected.");
-                break;
+                default:
+                    Serial.println("Unknown switch detected.");
+                    break;
+            }
         }
     }
 }
