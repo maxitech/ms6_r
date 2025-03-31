@@ -62,7 +62,7 @@ enum HomingState {
     MOVE_AWAY_FROM_SWITCH,
     MOVE_BACK_TO_SWITCH,
     SET_ZERO_POINT,
-    MOVE_TO_OP_POSITION,
+    MOVE_TO_STANDBY_POS,
     COMPLETE
 };
 
@@ -194,11 +194,6 @@ void handleSwitchContact() {
         bool wasPreviouslyActive = previousSwitchStatus & (1 << i); // Previous state
 
         if (i == 0) {
-            if (isCurrentlyActive && homingStateJ1 == MOVE_TO_SWITCH) {
-                Serial.println("J1 already at switch, moving away");
-                homingStateJ1 = MOVE_AWAY_FROM_SWITCH;
-            }
-            
             switch (homingStateJ1) {
                 case MOVE_TO_SWITCH:
                     if(isCurrentlyActive && !wasPreviouslyActive) {
@@ -214,7 +209,7 @@ void handleSwitchContact() {
                 case MOVE_AWAY_FROM_SWITCH:
                     if(!isCurrentlyActive && wasPreviouslyActive) {
                         Serial.println("J1 released");
-                        motorJ1.rotateAsync(-100); // ! Needs a checkup
+                        motorJ1.emergencyStop();
                         updateSwitchStatus(J1, false);
                         homingStateJ1 = MOVE_BACK_TO_SWITCH;    
                     } else {
@@ -237,20 +232,29 @@ void handleSwitchContact() {
                     Serial.println("J1 set zero point");
                     motorJ1.setPosition(0); // Set the current position to zero
                     delay(2000);
-                    homingStateJ1 = MOVE_TO_OP_POSITION;
+                    homingStateJ1 = MOVE_TO_STANDBY_POS;
                     break;
 
-                case MOVE_TO_OP_POSITION:
-                    Serial.println("J1 move to operating position");
-                    motorJ1.moveAbsAsync(40000); // Move to a safe position after homing
-                    if(!isCurrentlyActive && wasPreviouslyActive) {
-                        Serial.println("J1 released after moving to operating position");
-                        updateSwitchStatus(J1, false);
+                case MOVE_TO_STANDBY_POS:
+                    
+                    if(!motorJ1.isMoving) {
+                        if(motorJ1.getPosition() != 40000) {
+                            Serial.println("J1 move to operating position");
+                            motorJ1.moveAbsAsync(40000); // Move to a safe position after homing
+                        } else {
+                        Serial.println("J1 reached operating position");
                         homingStateJ1 = COMPLETE;
+                        }
+                    }
+                    
+                    if (!isCurrentlyActive && wasPreviouslyActive) {
+                        Serial.println("J1 released while moving to operating position");
+                        updateSwitchStatus(J1, false);
                     } 
                     break;
 
                 case COMPLETE:
+                    delay(1000);
                     Serial.println("J1 homing complete");
                     break;
             }
