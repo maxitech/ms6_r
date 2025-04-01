@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <memory>
 #include "SerialHandler.h"
 #include "CommandProcessor.h"
 #include "ProgramLoader.h"
@@ -85,15 +86,40 @@ Stepper motorJ6(motorJ6Step, motorJ6Dir);
 
 
 // Homing parameters for each axis, negative values indicate direction(CCW)
-const int HOMING_VELOCITY_J1 = -5000;
-const int MOVE_AWAY_SPEED_J1 = 200;
-const int MOVE_BACK_SPEED_J1 = -100;
-const int STANDBY_POS_J1 = 40000;
+const int HOMING_VELOCITY_J1 = -2000;
+const int MOVE_AWAY_VELOCITY_J1 = 100;
+const int MOVE_BACK_VELOCITY_J1 = -100;
+const int STANDBY_POS_J1 = 40'000;
 
-const int HOMING_VELOCITY_J2 = -10000;
-const int MOVE_AWAY_SPEED_J2 = 2000;
-const int MOVE_BACK_SPEED_J2 = -1000;
-const int STANDBY_POS_J2 = 40000;
+const int HOMING_VELOCITY_J2 = -10'000;
+const int MOVE_AWAY_VELOCITY_J2 = 2000;
+const int MOVE_BACK_VELOCITY_J2 = -1000;
+const int STANDBY_POS_J2 = 55'000;
+
+const int HOMING_VELOCITY_J3 = 1'000;
+const int MOVE_AWAY_VELOCITY_J3 = -200;
+const int MOVE_BACK_VELOCITY_J3 = 100;
+const int STANDBY_POS_J3 = -20'000;
+
+const int HOMING_VELOCITY_J4 = 2000;
+const int MOVE_AWAY_VELOCITY_J4 = -200;
+const int MOVE_BACK_VELOCITY_J4 = 100;
+const int STANDBY_POS_J4 = -24'000;
+
+const int HOMING_VELOCITY_J5 = 2000;
+const int MOVE_AWAY_VELOCITY_J5 = -200;
+const int MOVE_BACK_VELOCITY_J5 = 100;
+const int STANDBY_POS_J5 = -20'000;
+
+const int HOMING_VELOCITY_J6 = 1000;
+const int MOVE_AWAY_VELOCITY_J6 = -100;
+const int MOVE_BACK_VELOCITY_J6 = 100;
+const int STANDBY_POS_J6 = -6200;
+
+
+
+// Global
+uint8_t PREVIOUS_SWITCH_STATUS = 0; // Holds the previous state of the switches
 
 
 struct AxisData {
@@ -101,34 +127,108 @@ struct AxisData {
     Stepper* motor;
     Axes axis;
     int HOMING_VELOCITY;
-    int MOVE_AWAY_SPEED;
-    int MOVE_BACK_SPEED;
+    int MOVE_AWAY_VELOCITY;
+    int MOVE_BACK_VELOCITY;
     int STANDBY_POS;
-    bool isHomingDone;
+    bool isHomingDone = false;
 };
 
-AxisData axesData[] = {
-    {MOVE_TO_SWITCH, &motorJ1, J1, HOMING_VELOCITY_J1, MOVE_AWAY_SPEED_J1, MOVE_BACK_SPEED_J1, STANDBY_POS_J1, false},
-    {MOVE_TO_SWITCH, &motorJ2, J2, HOMING_VELOCITY_J2, MOVE_AWAY_SPEED_J2, MOVE_BACK_SPEED_J2, STANDBY_POS_J2, false}
-};
+AxisData axis1 = {MOVE_TO_SWITCH, &motorJ1, J1, HOMING_VELOCITY_J1, MOVE_AWAY_VELOCITY_J1, MOVE_BACK_VELOCITY_J1, STANDBY_POS_J1};
+AxisData axis2 = {MOVE_TO_SWITCH, &motorJ2, J2, HOMING_VELOCITY_J2, MOVE_AWAY_VELOCITY_J2, MOVE_BACK_VELOCITY_J2, STANDBY_POS_J2};
+AxisData axis3 = {MOVE_TO_SWITCH, &motorJ3, J3, HOMING_VELOCITY_J3, MOVE_AWAY_VELOCITY_J3, MOVE_BACK_VELOCITY_J3, STANDBY_POS_J3};
+AxisData axis4 = {MOVE_TO_SWITCH, &motorJ4, J4, HOMING_VELOCITY_J4, MOVE_AWAY_VELOCITY_J4, MOVE_BACK_VELOCITY_J4, STANDBY_POS_J4};
+AxisData axis5 = {MOVE_TO_SWITCH, &motorJ5, J5, HOMING_VELOCITY_J5, MOVE_AWAY_VELOCITY_J5, MOVE_BACK_VELOCITY_J5, STANDBY_POS_J5};
+AxisData axis6 = {MOVE_TO_SWITCH, &motorJ6, J6, HOMING_VELOCITY_J6, MOVE_AWAY_VELOCITY_J6, MOVE_BACK_VELOCITY_J6, STANDBY_POS_J6};
+
 
 
 uint8_t getActiveSwitches();
-void handleSwitchContact();
 bool debounceRead(byte pin);
 void updateSwitchStatus(Axes axis, bool isActive);
 void homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive, AxisData& axisData);
 
 
+struct AxisGroup {
+    std::vector<AxisData*> axes;
+    bool isGroupHomed = false;
+    uint8_t groupPreviousSwitchStatus = 0; // Track switches locally for the group
+
+    void addAxis(AxisData* axis) {
+        if(axes.size() < 6) axes.push_back(axis);
+            else Serial.println("Error: Cannot add more than 6 axes!");
+    }
+    
+    void homeGroup(){
+        const uint8_t activeSwitches = getActiveSwitches(); // Get the current state of switches
+        
+        for (auto& axis : axes) {
+            bool isCurrentlyActive = activeSwitches & (1 << axis->axis); // Current state (use axis enum val to check bit position)
+            bool wasPreviouslyActive = groupPreviousSwitchStatus & (1 << axis->axis); // Previous state
+            homeAxis(isCurrentlyActive, wasPreviouslyActive, *axis);
+        }
+        // Once the group is processed, update previousSwitchStatus globally
+        groupPreviousSwitchStatus = activeSwitches; // Update the previous switch status for the next iteration
+        // Check if all axes in the group are homed
+        isGroupHomed = std::all_of(axes.begin(), axes.end(), [](AxisData* axis) {
+            return axis->isHomingDone;
+        });
+    }
+};
+
+struct HomingManager {
+    std::vector<std::unique_ptr<AxisGroup>> groups; // Vector of axis groups
+
+    void addGroup(std::unique_ptr<AxisGroup> group) {
+        if(groups.size() < 6) groups.push_back(std::move(group));
+            else Serial.println("Error: Cannot add more than 6 groups!");
+    }
+
+    void executeHoming() {
+        uint8_t activeSwitches = getActiveSwitches();// Get the current state of switches
+        for (auto& group : groups) {
+            if (!group->isGroupHomed) {
+                group->homeGroup(); // Home current group
+                if(!group->isGroupHomed) break; // Exit after homing one group
+            }
+        }
+        PREVIOUS_SWITCH_STATUS = activeSwitches;    // Update previousSwitchStatus globally after all groups processed
+    }
+};
+
+// Create HomingManager
+HomingManager homingManager;
+
 void setup() { 
   Serial.begin(9600);
-  while(!Serial);
-  pinMode(motorJ1En, OUTPUT);
-  pinMode(motorJ2En, OUTPUT);
-  pinMode(motorJ3En, OUTPUT);
-  pinMode(motorJ4En, OUTPUT);
-  pinMode(motorJ5En, OUTPUT);
+  while(!Serial){};
+    
+  // Create and add groups
+  auto group1 = std::make_unique<AxisGroup>();
+//   group1->addAxis(&axis1);
+//   group1->addAxis(&axis2);
+//   group1->addAxis(&axis3);
+//   group1->addAxis(&axis4);
+//   group1->addAxis(&axis5);
+  group1->addAxis(&axis6);
+
+auto group2 = std::make_unique<AxisGroup>();
+//   group2->addAxis(&axis1);
+//   group2->addAxis(&axis2);
+  
+  homingManager.addGroup(std::move(group1));
+  homingManager.addGroup(std::move(group2));
+
+
+
+
+//   pinMode(motorJ1En, OUTPUT);
+//   pinMode(motorJ2En, OUTPUT);
+//   pinMode(motorJ3En, OUTPUT);
+//   pinMode(motorJ4En, OUTPUT);
+//   pinMode(motorJ5En, OUTPUT);
   pinMode(motorJ6En, OUTPUT);
+
+
 
   // digitalWrite(motorJ1En, HIGH);
   // digitalWrite(motorJ2En, HIGH);
@@ -147,23 +247,23 @@ void setup() {
   TS4::begin();
   TimerFactory::attachModule(new TMRModule<0>());
   
-  motorJ1.setMaxSpeed(10000);
-  motorJ1.setAcceleration(3000);
+  motorJ1.setMaxSpeed(16'000);
+  motorJ1.setAcceleration(10'000);
 
-  motorJ2.setMaxSpeed(20000);
-  motorJ2.setAcceleration(2000);
+  motorJ2.setMaxSpeed(32'000);
+  motorJ2.setAcceleration(25'000);
 
-  motorJ3.setMaxSpeed(800);
-  motorJ3.setAcceleration(500);
+  motorJ3.setMaxSpeed(10'000);
+  motorJ3.setAcceleration(5000);
 
-  motorJ4.setMaxSpeed(800);
-  motorJ4.setAcceleration(500);
+  motorJ4.setMaxSpeed(20'000);
+  motorJ4.setAcceleration(10'000);
 
-  motorJ5.setMaxSpeed(500);
-  motorJ5.setAcceleration(300);
+  motorJ5.setMaxSpeed(10'000);
+  motorJ5.setAcceleration(5000);
 
-  motorJ6.setMaxSpeed(200);
-  motorJ6.setAcceleration(500);
+  motorJ6.setMaxSpeed(5000);
+  motorJ6.setAcceleration(4000);
   
   limitSwitches.init();
   // serialHandler.setCommandProcessor(&cmdProcessor);
@@ -175,12 +275,8 @@ void setup() {
 void loop() {
   // serialHandler.listenForSerial();
   // programLoader.run();
-//   if (motorJ1.isMoving || motorJ2.isMoving)
-//   {
-//     delay(10);
-//   }
-  
-  handleSwitchContact();
+
+    homingManager.executeHoming();
 }
 
 
@@ -212,21 +308,6 @@ bool debounceRead(byte pin) {
 }
 
 
-uint8_t previousSwitchStatus = 0; // Holds the previous state of the switches
-void handleSwitchContact() {
-    uint8_t activeSwitches = getActiveSwitches(); // Aktuelle Schalterzustände
-
-    for (byte i = 0; i < sizeof(axesData) / sizeof(axesData[i]); i++){
-        bool isCurrentlyActive = activeSwitches & (1 << axesData[i].axis); // Current state (use axis enum val to check bit position)
-        bool wasPreviouslyActive = previousSwitchStatus & (1 << axesData[i].axis); // Previous state
-
-        // Pass the data to the homeAxis function
-        homeAxis(isCurrentlyActive, wasPreviouslyActive, axesData[i]);
-    }
-    previousSwitchStatus = activeSwitches; // Update the previous switch status for the next iteration
-}
-
-
 uint8_t switchStatus = 0; // Status for all 6 switches default: 0=(all inactive)
 void updateSwitchStatus(Axes axis, bool active) {
     if(active) {
@@ -243,8 +324,8 @@ void homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive, AxisData& axisDa
     Stepper& motorJ_x = *(axisData.motor);
     Axes axis_x = axisData.axis;
     int HOMING_VELOCITY = axisData.HOMING_VELOCITY;
-    int MOVE_AWAY_SPEED = axisData.MOVE_AWAY_SPEED;
-    int MOVE_BACK_SPEED = axisData.MOVE_BACK_SPEED;
+    int MOVE_AWAY_VELOCITY = axisData.MOVE_AWAY_VELOCITY;
+    int MOVE_BACK_VELOCITY= axisData.MOVE_BACK_VELOCITY;
     int STANDBY_POS = axisData.STANDBY_POS;
     
     
@@ -267,7 +348,7 @@ void homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive, AxisData& axisDa
                 updateSwitchStatus(axis_x, false);
                 homingStateJ_x = MOVE_BACK_TO_SWITCH;    
             } else {
-                motorJ_x.rotateAsync(MOVE_AWAY_SPEED);   // Move away from the switch
+                motorJ_x.rotateAsync(MOVE_AWAY_VELOCITY);   // Move away from the switch
             }
             break;
 
@@ -278,7 +359,7 @@ void homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive, AxisData& axisDa
                 updateSwitchStatus(axis_x, true);
                 homingStateJ_x = SET_ZERO_POINT;
             } else {
-                motorJ_x.rotateAsync(MOVE_BACK_SPEED);  // Move back towards the switch again
+                motorJ_x.rotateAsync(MOVE_BACK_VELOCITY);  // Move back towards the switch again
             }
             break;
 
