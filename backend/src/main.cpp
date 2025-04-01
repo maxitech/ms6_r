@@ -69,6 +69,7 @@ enum HomingState {
 HomingState homingStateJ1 = MOVE_TO_SWITCH;
 HomingState homingStateJ2 = MOVE_TO_SWITCH;
 
+
 // Initialize Classes
 LimitSwitches limitSwitches(ledPin, limitSwitchPins); // Manages the state of limit switches
 ProgramLoader programLoader(limitSwitches);           // Controls loading programs and state management
@@ -82,13 +83,45 @@ Stepper motorJ4(motorJ4Step, motorJ4Dir);
 Stepper motorJ5(motorJ5Step, motorJ5Dir);
 Stepper motorJ6(motorJ6Step, motorJ6Dir);
 
+
+// Homing parameters for each axis, negative values indicate direction(CCW)
+const int HOMING_VELOCITY_J1 = -5000;
+const int MOVE_AWAY_SPEED_J1 = 200;
+const int MOVE_BACK_SPEED_J1 = -100;
+const int STANDBY_POS_J1 = 40000;
+
+const int HOMING_VELOCITY_J2 = -10000;
+const int MOVE_AWAY_SPEED_J2 = 2000;
+const int MOVE_BACK_SPEED_J2 = -1000;
+const int STANDBY_POS_J2 = 40000;
+
+
+struct AxisData {
+    HomingState homingState;
+    Stepper* motor;
+    Axes axis;
+    int HOMING_VELOCITY;
+    int MOVE_AWAY_SPEED;
+    int MOVE_BACK_SPEED;
+    int STANDBY_POS;
+    bool isHomingDone;
+};
+
+AxisData axesData[] = {
+    {MOVE_TO_SWITCH, &motorJ1, J1, HOMING_VELOCITY_J1, MOVE_AWAY_SPEED_J1, MOVE_BACK_SPEED_J1, STANDBY_POS_J1, false},
+    {MOVE_TO_SWITCH, &motorJ2, J2, HOMING_VELOCITY_J2, MOVE_AWAY_SPEED_J2, MOVE_BACK_SPEED_J2, STANDBY_POS_J2, false}
+};
+
+
 uint8_t getActiveSwitches();
 void handleSwitchContact();
 bool debounceRead(byte pin);
 void updateSwitchStatus(Axes axis, bool isActive);
+void homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive, AxisData& axisData);
+
 
 void setup() { 
-    Serial.begin(9600);
+  Serial.begin(9600);
   while(!Serial);
   pinMode(motorJ1En, OUTPUT);
   pinMode(motorJ2En, OUTPUT);
@@ -114,12 +147,11 @@ void setup() {
   TS4::begin();
   TimerFactory::attachModule(new TMRModule<0>());
   
-  
   motorJ1.setMaxSpeed(10000);
-  motorJ1.setAcceleration(5000);
+  motorJ1.setAcceleration(3000);
 
-  motorJ2.setMaxSpeed(2000);
-  motorJ2.setAcceleration(1000);
+  motorJ2.setMaxSpeed(20000);
+  motorJ2.setAcceleration(2000);
 
   motorJ3.setMaxSpeed(800);
   motorJ3.setAcceleration(500);
@@ -135,12 +167,7 @@ void setup() {
   
   limitSwitches.init();
   // serialHandler.setCommandProcessor(&cmdProcessor);
-//   motorJ1.rotateAsync(-800);
-//   motorJ2.rotateAsync(-300);
-//   motorJ3.rotateAsync(200);
-//   motorJ4.rotateAsync(200);
-//   motorJ5.rotateAsync(200);
-//   motorJ6.rotateAsync(200);
+
   Serial.println("Setup done");
 }
 
@@ -148,10 +175,10 @@ void setup() {
 void loop() {
   // serialHandler.listenForSerial();
   // programLoader.run();
-  if (motorJ1.isMoving || motorJ2.isMoving)
-  {
-    delay(10);
-  }
+//   if (motorJ1.isMoving || motorJ2.isMoving)
+//   {
+//     delay(10);
+//   }
   
   handleSwitchContact();
 }
@@ -189,76 +216,12 @@ uint8_t previousSwitchStatus = 0; // Holds the previous state of the switches
 void handleSwitchContact() {
     uint8_t activeSwitches = getActiveSwitches(); // Aktuelle Schalterzustände
 
-    for (byte i = 0; i < 8; i++) { // Iterate over 8 bits
-        bool isCurrentlyActive = activeSwitches & (1 << i); // Current state
-        bool wasPreviouslyActive = previousSwitchStatus & (1 << i); // Previous state
+    for (byte i = 0; i < sizeof(axesData) / sizeof(axesData[i]); i++){
+        bool isCurrentlyActive = activeSwitches & (1 << axesData[i].axis); // Current state (use axis enum val to check bit position)
+        bool wasPreviouslyActive = previousSwitchStatus & (1 << axesData[i].axis); // Previous state
 
-        if (i == 0) {
-            switch (homingStateJ1) {
-                case MOVE_TO_SWITCH:
-                    if(isCurrentlyActive && !wasPreviouslyActive) {
-                        Serial.println("J1 pressed");
-                        motorJ1.emergencyStop();
-                        updateSwitchStatus(J1, true);
-                        homingStateJ1 = MOVE_AWAY_FROM_SWITCH;
-                    } else {
-                        motorJ1.rotateAsync(-1200);  // Move towards the switch
-                    }
-                    break;
-
-                case MOVE_AWAY_FROM_SWITCH:
-                    if(!isCurrentlyActive && wasPreviouslyActive) {
-                        Serial.println("J1 released");
-                        motorJ1.emergencyStop();
-                        updateSwitchStatus(J1, false);
-                        homingStateJ1 = MOVE_BACK_TO_SWITCH;    
-                    } else {
-                        motorJ1.rotateAsync(300);   // Move away from the switch
-                    }
-                    break;
-
-                case MOVE_BACK_TO_SWITCH:
-                    if(isCurrentlyActive && !wasPreviouslyActive) {
-                        Serial.println("J1 pressed again");
-                        motorJ1.emergencyStop();
-                        updateSwitchStatus(J1, true);
-                        homingStateJ1 = SET_ZERO_POINT;
-                    } else {
-                        motorJ1.rotateAsync(-100);  // Move towards the switch again
-                    }
-                    break;
-
-                case SET_ZERO_POINT: 
-                    Serial.println("J1 set zero point");
-                    motorJ1.setPosition(0); // Set the current position to zero
-                    delay(2000);
-                    homingStateJ1 = MOVE_TO_STANDBY_POS;
-                    break;
-
-                case MOVE_TO_STANDBY_POS:
-                    
-                    if(!motorJ1.isMoving) {
-                        if(motorJ1.getPosition() != 40000) {
-                            Serial.println("J1 move to operating position");
-                            motorJ1.moveAbsAsync(40000); // Move to a safe position after homing
-                        } else {
-                        Serial.println("J1 reached operating position");
-                        homingStateJ1 = COMPLETE;
-                        }
-                    }
-                    
-                    if (!isCurrentlyActive && wasPreviouslyActive) {
-                        Serial.println("J1 released while moving to operating position");
-                        updateSwitchStatus(J1, false);
-                    } 
-                    break;
-
-                case COMPLETE:
-                    delay(1000);
-                    Serial.println("J1 homing complete");
-                    break;
-            }
-        }
+        // Pass the data to the homeAxis function
+        homeAxis(isCurrentlyActive, wasPreviouslyActive, axesData[i]);
     }
     previousSwitchStatus = activeSwitches; // Update the previous switch status for the next iteration
 }
@@ -274,8 +237,79 @@ void updateSwitchStatus(Axes axis, bool active) {
 }
 
 
+void homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive, AxisData& axisData) {
+    // Extracting data from the AxisData struct
+    HomingState& homingStateJ_x = axisData.homingState;
+    Stepper& motorJ_x = *(axisData.motor);
+    Axes axis_x = axisData.axis;
+    int HOMING_VELOCITY = axisData.HOMING_VELOCITY;
+    int MOVE_AWAY_SPEED = axisData.MOVE_AWAY_SPEED;
+    int MOVE_BACK_SPEED = axisData.MOVE_BACK_SPEED;
+    int STANDBY_POS = axisData.STANDBY_POS;
+    
+    
+    switch (homingStateJ_x) {
+        case MOVE_TO_SWITCH:
+            if(isCurrentlyActive && !wasPreviouslyActive) {
+                Serial.println(String(axis_x) + " pressed");
+                motorJ_x.emergencyStop();
+                updateSwitchStatus(axis_x, true);
+                homingStateJ_x = MOVE_AWAY_FROM_SWITCH;
+            } else {
+                motorJ_x.rotateAsync(HOMING_VELOCITY);  // Move towards the switch
+            }
+            break;
 
+        case MOVE_AWAY_FROM_SWITCH:
+            if(!isCurrentlyActive && wasPreviouslyActive) {
+                Serial.println(String(axis_x) + " released");
+                motorJ_x.emergencyStop();
+                updateSwitchStatus(axis_x, false);
+                homingStateJ_x = MOVE_BACK_TO_SWITCH;    
+            } else {
+                motorJ_x.rotateAsync(MOVE_AWAY_SPEED);   // Move away from the switch
+            }
+            break;
 
+        case MOVE_BACK_TO_SWITCH:
+            if(isCurrentlyActive && !wasPreviouslyActive) {
+                Serial.println(String(axis_x) + " pressed again");
+                motorJ_x.emergencyStop();
+                updateSwitchStatus(axis_x, true);
+                homingStateJ_x = SET_ZERO_POINT;
+            } else {
+                motorJ_x.rotateAsync(MOVE_BACK_SPEED);  // Move back towards the switch again
+            }
+            break;
 
+        case SET_ZERO_POINT: 
+            Serial.println(String(axis_x) + " set zero point");
+            motorJ_x.setPosition(0); // Set the current position to zero
+            homingStateJ_x = MOVE_TO_STANDBY_POS;
+            break;
 
+        case MOVE_TO_STANDBY_POS:
+            
+            if(!motorJ_x.isMoving) {
+                if(motorJ_x.getPosition() != STANDBY_POS) {
+                    Serial.println(String(axis_x) + " move to operating position");
+                    motorJ_x.moveAbsAsync(STANDBY_POS); // Move to a safe position after homing
+                } else {
+                Serial.println(String(axis_x) + " reached operating position");
+                homingStateJ_x = COMPLETE;
+                }
+            }
+            
+            if (!isCurrentlyActive && wasPreviouslyActive) {
+                Serial.println(String(axis_x) + " released while moving to operating position");
+                updateSwitchStatus(axis_x, false);
+            } 
+            break;
+
+        case COMPLETE:
+            // Serial.println(String(axis_x) + " homing complete");
+            axisData.isHomingDone = true; // Set the homing done flag to true
+            break;
+        }
+}
 
