@@ -1,0 +1,14 @@
+#ifndef HOMINGSTATE_H
+#define HOMINGSTATE_H
+
+enum HomingState
+{
+    MOVE_TO_SWITCH,
+    MOVE_AWAY_FROM_SWITCH,
+    MOVE_BACK_TO_SWITCH,
+    SET_ZERO_POINT,
+    MOVE_TO_STANDBY_POS,
+    COMPLETE
+};
+
+#endif // HOMINGSTATE_H
