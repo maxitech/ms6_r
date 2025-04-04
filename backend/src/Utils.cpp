@@ -1,12 +1,15 @@
 #include "Utils.h"
 
+Utils::Utils()
+{
+}
 
-Utils::Utils() {}
-
-
-bool Utils::nonBlockingDelay(unsigned long interval, unsigned long &lastUpdateTime) {
+bool Utils::nonBlockingDelay(unsigned long  interval,
+                             unsigned long& lastUpdateTime) // Comment
+{
     unsigned long currentTime = millis();
-    if(currentTime - lastUpdateTime >= interval) {
+    if (currentTime - lastUpdateTime >= interval)
+    {
         lastUpdateTime = currentTime;
         return true;
     }

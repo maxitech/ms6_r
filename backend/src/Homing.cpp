@@ -1,7 +1,8 @@
 #include "Homing.h"
 #include "Utils.h"
 
-Homing::Homing(const std::array<byte, 6> &limitSwitches) : _limitSwitches(limitSwitches) {};
+Homing::Homing(const std::array<byte, 6>& limitSwitches)
+    : _limitSwitches(limitSwitches) {};
 
 void Homing::addGroup(std::unique_ptr<AxisGroup> group)
 {
@@ -14,12 +15,12 @@ void Homing::addGroup(std::unique_ptr<AxisGroup> group)
 void Homing::executeHoming()
 {
     const uint8_t activeSwitches = _getActiveSwitches(); // Get the current state of switches
-    for (auto &group : _axisGroups)
+    for (auto& group : _axisGroups)
     {
         if (!group->isGroupHomed)
         {
             // Pass homeAxis as a lambda
-            group->homeGroup(activeSwitches, [this](bool isCurrentlyActive, bool wasPreviouslyActive, AxisData &axisData)
+            group->homeGroup(activeSwitches, [this](bool isCurrentlyActive, bool wasPreviouslyActive, AxisData& axisData)
                              { this->_homeAxis(isCurrentlyActive, wasPreviouslyActive, axisData); });
 
             if (!group->isGroupHomed)
@@ -29,10 +30,10 @@ void Homing::executeHoming()
     _PREVIOUS_SWITCH_STATUS = activeSwitches; // Update previousSwitchStatus globally after all groups processed
 }
 
-void Homing::resetGroup(AxisGroup &group)
+void Homing::resetGroup(AxisGroup& group)
 {
     group.isGroupHomed = false;
-    for (auto *axis : group.axes)
+    for (auto* axis : group.axes)
     {
         axis->isHomingDone = false;
     }
@@ -40,10 +41,10 @@ void Homing::resetGroup(AxisGroup &group)
 
 void Homing::resetAllGroups()
 {
-    for (auto &group : _axisGroups)
+    for (auto& group : _axisGroups)
     {
         group->isGroupHomed = false;
-        for (auto *axis : group->axes)
+        for (auto* axis : group->axes)
         {
             axis->isHomingDone = false;
         }
@@ -95,16 +96,16 @@ void Homing::_updateSwitchStatus(Axes axis, bool active)
 }
 
 void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
-                       AxisData &axisData)
+                       AxisData& axisData)
 {
     // Extracting data from the AxisData struct
-    HomingState &homingStateJ_x = axisData.homingState;
-    Stepper &motorJ_x = *(axisData.motor);
-    Axes axis_x = axisData.axis;
-    int HOMING_VELOCITY = axisData.HOMING_VELOCITY;
-    int MOVE_AWAY_VELOCITY = axisData.MOVE_AWAY_VELOCITY;
-    int MOVE_BACK_VELOCITY = axisData.MOVE_BACK_VELOCITY;
-    int STANDBY_POS = axisData.STANDBY_POS;
+    HomingState& homingStateJ_x     = axisData.homingState;
+    Stepper&     motorJ_x           = *(axisData.motor);
+    Axes         axis_x             = axisData.axis;
+    int          HOMING_VELOCITY    = axisData.HOMING_VELOCITY;
+    int          MOVE_AWAY_VELOCITY = axisData.MOVE_AWAY_VELOCITY;
+    int          MOVE_BACK_VELOCITY = axisData.MOVE_BACK_VELOCITY;
+    int          STANDBY_POS        = axisData.STANDBY_POS;
 
     switch (homingStateJ_x)
     {
@@ -154,12 +155,12 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
         break;
 
     case SET_ZERO_POINT:
-        static bool delayStarted = false;
+        static bool          delayStarted = false;
         static unsigned long lastTime;
 
         if (!delayStarted)
         {
-            lastTime = millis(); // Initialize the timer
+            lastTime     = millis(); // Initialize the timer
             delayStarted = true;
         }
 
@@ -168,7 +169,7 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
             Serial.println(String(axis_x) + " set zero point");
             motorJ_x.setPosition(0); // Set the current position to zero
             homingStateJ_x = MOVE_TO_STANDBY_POS;
-            delayStarted = false;
+            delayStarted   = false;
         }
         break;
 

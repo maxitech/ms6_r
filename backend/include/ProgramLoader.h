@@ -1,36 +1,34 @@
 #ifndef PROGRAMLOADER_H
 #define PROGRAMLOADER_H
 
-#include <Arduino.h>
 #include "LimitSwitches.h"
+#include <Arduino.h>
 
-
-enum ProgramState {
+enum ProgramState
+{
     IDLE,
     PING,
-    PONG, 
+    PONG,
     TEST_SWITCHES
 };
 
-
-class ProgramLoader {
-public: 
+class ProgramLoader
+{
+public:
     explicit ProgramLoader(LimitSwitches& limitSwitches);
-    void handleCommand(const std::vector<String>& cmdParts);
-    void run();
+    void         handleCommand(const std::vector<String>& cmdParts);
+    void         run();
     ProgramState getState() const;
 
-
 private:
-    void _loadProgram(const String& program);
+    void         _loadProgram(const String& program);
     ProgramState _setState(ProgramState newState);
-    void _executePing();
-    void _executePong();
-    void _testSwitches();
+    void         _executePing();
+    void         _executePong();
+    void         _testSwitches();
 
-    ProgramState _currentProgramState = IDLE;
+    ProgramState   _currentProgramState = IDLE;
     LimitSwitches& _limitSwitches;
 };
 
-
-#endif //PROGRAMLOADER_H
+#endif // PROGRAMLOADER_H
