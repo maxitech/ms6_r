@@ -1,0 +1,53 @@
+# Start with LLVM style as the base
+BasedOnStyle: LLVM
+
+# Use spaces instead of tabs for indentation
+UseTab: Never
+
+# Set indentation width to 4 spaces (LLVM default is 2)
+IndentWidth: 4
+
+# Set tab width to 4 spaces (only relevant if tabs are used somewhere)
+TabWidth: 4
+
+# Use Allman brace style (braces on new lines)
+BreakBeforeBraces: Allman
+
+# Force if statements to always use curly braces, even for one-liners
+AllowShortIfStatementsOnASingleLine: false
+
+# Do not indent case labels inside switch statements
+IndentCaseLabels: false
+
+# Disable automatic line breaking at a certain character limit (default is 80)
+ColumnLimit: 0
+
+# Move access specifiers (public, private, protected) to the leftmost column
+AccessModifierOffset: -4
+
+# Indent everything inside namespaces instead of keeping it at root level
+NamespaceIndentation: All
+
+# Do not add automatic comments at the end of namespaces (e.g., // namespace xyz)
+FixNamespaceComments: false
+
+# Align consecutive assignment statements to improve readability
+AlignConsecutiveAssignments: true
+
+# Align consecutive variable declarations for better readability
+AlignConsecutiveDeclarations: true
+
+# Break constructor initializer lists before each comma for better formatting
+BreakConstructorInitializers: BeforeComma
+
+# Sort #include directives alphabetically for better organization
+SortIncludes: true
+
+# Add trailing commas in braced list for better diffs
+Cpp11BracedListStyle: true
+
+# Align pointers with the type (e.g., int* a instead of int *a)
+PointerAlignment: Left
+
+# Ensure consistent spacing before range-based loops and braced lists
+SpaceBeforeCpp11BracedList: true
