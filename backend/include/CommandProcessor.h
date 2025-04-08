@@ -1,3 +1,10 @@
+/**
+ * @file CommandProcessor.h
+ * @brief Declares the CommandProcessor class responsible for validating and dispatching incoming serial commands.
+ * @details This class is a core component of the robot control system, responsible for parsing serial input,
+ *          verifying message integrity through checksums, and delegating commands for execution.
+ */
+
 #ifndef COMMANDPROCESSOR_H
 #define COMMANDPROCESSOR_H
 
@@ -6,6 +13,7 @@
 #include <Arduino.h>
 
 /**
+ * @class CommandProcessor
  * @brief Handles input commands and processes them, including validation and checksum verification.
  */
 class CommandProcessor
@@ -29,6 +37,7 @@ private:
      * @brief Validates the input format.
      * @param input The input string to validate.
      * @return True if the input is valid, false otherwise.
+     * @internal
      */
     bool _isInputValid(const String& input);
 
@@ -38,12 +47,14 @@ private:
      * @param checksum The checksum value to validate against.
      * @return True if the checksum is correct, false otherwise.
      * @note The checksum is calculated using an XOR operation over all characters in `data`.
+     * @internal
      */
     bool _validateChecksum(const String& data, const String& checksum);
 
     /**
      * @brief Processes a valid command.
      * @param cmd The data string (after validation).
+     * @internal
      */
     void _processCommand(const String& cmd);
 
@@ -52,12 +63,14 @@ private:
      * @param str The string to split.
      * @param delimiter The character used to separate the string into parts.
      * @return A vector of substrings.
+     * @internal
      */
     std::vector<String> _splitString(const String& str, const char delimiter);
 
     /**
      * @brief Dispatcher used to handle commands internally.
      * @note Initialized with a reference to the ProgramLoader instance passed to the constructor.
+     * @internal
      */
     CommandDispatcher _dispatcher;
 };

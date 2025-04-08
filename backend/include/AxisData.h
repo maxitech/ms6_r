@@ -1,3 +1,10 @@
+/**
+ * @file AxisData.h
+ * @brief Defines the AxisData structure for managing individual axis properties and states.
+ * @details This structure encapsulates data related to each axis in a robotic system,
+ *          including homing parameters, motor control, and current state information.
+ */
+
 #ifndef AXISDATA_H
 #define AXISDATA_H
 
@@ -7,26 +14,66 @@
 
 using namespace TS4;
 
+/**
+ * @enum Axes
+ * @brief Enumeration representing the individual axes of the robotic system.
+ */
 enum Axes
 {
-    J1,
-    J2,
-    J3,
-    J4,
-    J5,
-    J6
+    J1, ///< Represents axis J1.
+    J2, ///< Represents axis J2.
+    J3, ///< Represents axis J3.
+    J4, ///< Represents axis J4.
+    J5, ///< Represents axis J5.
+    J6  ///< Represents axis J6.
 };
 
+/**
+ * @struct AxisData
+ * @brief Represents the data and state associated with a single axis.
+ */
 struct AxisData
 {
+    /**
+     * @brief The current state of the homing process for this axis.
+     */
     HomingState homingState;
-    Stepper*    motor;
-    Axes        axis;
-    int         HOMING_VELOCITY;
-    int         MOVE_AWAY_VELOCITY;
-    int         MOVE_BACK_VELOCITY;
-    int         STANDBY_POS;
-    bool        isHomingDone = false;
+
+    /**
+     * @brief Pointer to the Stepper motor associated with this axis.
+     */
+    Stepper* motor;
+
+    /**
+     * @brief The identifier for the axis.
+     * @details Uses the Axes enumeration for easy identification.
+     */
+    Axes axis;
+
+    /**
+     * @brief Velocity used during the homing process.
+     */
+    int HOMING_VELOCITY;
+
+    /**
+     * @brief Velocity used when moving away from the limit switch during homing.
+     */
+    int MOVE_AWAY_VELOCITY;
+
+    /**
+     * @brief Velocity used when moving back toward the limit switch during fine adjustment.
+     */
+    int MOVE_BACK_VELOCITY;
+
+    /**
+     * @brief The standby position to move the axis after homing is complete.
+     */
+    int STANDBY_POS;
+
+    /**
+     * @brief Flag indicating whether the homing process for this axis is complete.
+     */
+    bool isHomingDone = false;
 };
 
 #endif // AXISDATA_H
