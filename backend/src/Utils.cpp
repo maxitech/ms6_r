@@ -5,7 +5,7 @@ Utils::Utils()
 }
 
 bool Utils::nonBlockingDelay(unsigned long  interval,
-                             unsigned long& lastUpdateTime) // Comment
+                             unsigned long& lastUpdateTime)
 {
     unsigned long currentTime = millis();
     if (currentTime - lastUpdateTime >= interval)
