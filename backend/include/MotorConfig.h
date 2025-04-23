@@ -1,16 +1,21 @@
 #ifndef MOTORCONFIG_H
 #define MOTORCONFIG_H
+#include "teensystep4.h"
+
+using namespace TS4;
 
 struct MotorConfig
 {
-    int   stepsPerRev;
-    int   microsteps;
-    float driverTeeth;
-    float drivenTeeth;
-    float gearboxRatio;
+    Stepper* motor;
+    int      stepsPerRev;
+    int      microsteps;
+    float    driverTeeth;
+    float    drivenTeeth;
+    float    gearboxRatio;
 
-    MotorConfig(int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
-        : stepsPerRev(spr)
+    MotorConfig(Stepper& motor, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
+        : motor(&motor)
+        , stepsPerRev(spr)
         , microsteps(ms)
         , driverTeeth(drt)
         , drivenTeeth(dnt)
