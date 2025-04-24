@@ -14,13 +14,19 @@ struct DHparam
     // float theta; ///< Joint angle (dynamic parameter)
 };
 
+struct Pose
+{
+    float x, y, z;          ///< Position (mm)
+    float roll, pitch, yaw; ///< Orientation (Euler angles) in degrees
+};
+
 class Kinematics
 {
 public:
     Kinematics(const std::vector<MotorConfig>& motorConfigs, const std::vector<DHparam>& dhParams);
 
     std::vector<float> getJointAnglesInRad() const;
-    std::vector<float> forwardKinematics();
+    Pose               forwardKinematics();
 
 private:
     float _totalRatio(const MotorConfig& motorConfig) const;
