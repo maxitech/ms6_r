@@ -1,7 +1,8 @@
 #include "Kinematics.h"
 
-Kinematics::Kinematics(const std::vector<MotorConfig>& motorConfigs)
-    : _motorConfigs(motorConfigs)
+Kinematics::Kinematics(const std::vector<MotorConfig>& motorConfigs, const std::vector<DHparam>& dhParams)
+    : _dhParams(dhParams)
+    , _motorConfigs(motorConfigs)
 {
 }
 
@@ -47,4 +48,19 @@ std::vector<float> Kinematics::getJointAnglesInRad() const
     }
 
     return angles;
+}
+
+Eigen::Matrix4f Kinematics::_dhToTable(const DHparam& param, const float theta) const
+{
+    float alpha = param.alpha;
+    float a     = param.a;
+    float d     = param.d;
+
+    Eigen::Matrix4f m;
+    m << cos(theta), -sin(theta) * cos(alpha), sin(theta) * sin(alpha), a * cos(theta),
+        sin(theta), cos(theta) * cos(alpha), -cos(theta) * sin(alpha), a * sin(theta),
+        0, sin(alpha), cos(alpha), d,
+        0, 0, 0, 1;
+
+    return m;
 }
