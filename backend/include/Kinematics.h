@@ -20,6 +20,7 @@ public:
     Kinematics(const std::vector<MotorConfig>& motorConfigs, const std::vector<DHparam>& dhParams);
 
     std::vector<float> getJointAnglesInRad() const;
+    std::vector<float> forwardKinematics();
 
 private:
     float _totalRatio(const MotorConfig& motorConfig) const;
@@ -33,6 +34,7 @@ private:
 
     const std::vector<MotorConfig>& _motorConfigs;
     const std::vector<DHparam>&     _dhParams;
+    Eigen::Matrix4f                 _toolFrameMatrix = Eigen::Matrix4f::Identity();
 };
 
 #endif // KINEMATICS_H
