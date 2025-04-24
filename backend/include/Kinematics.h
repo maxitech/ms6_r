@@ -3,12 +3,21 @@
 
 #include "MotorConfig.h"
 #include <Arduino.h>
+#include <ArduinoEigenDense.h>
 #include <cmath>
+
+struct DHparam
+{
+    float a;     ///< Link length
+    float alpha; ///< Link twist
+    float d;     ///< Link offset
+    // float theta; ///< Joint angle (dynamic parameter)
+};
 
 class Kinematics
 {
 public:
-    explicit Kinematics(const std::vector<MotorConfig>& motorConfigs);
+    Kinematics(const std::vector<MotorConfig>& motorConfigs, const std::vector<DHparam>& dhParams);
 
     std::vector<float> getJointAnglesInRad() const;
 
@@ -20,7 +29,10 @@ private:
     float _degToRad(const float deg) const;
     float _radToDeg(const float rad) const;
 
+    Eigen::Matrix4f _dhToTable(const DHparam& param, const float theta) const;
+
     const std::vector<MotorConfig>& _motorConfigs;
+    const std::vector<DHparam>&     _dhParams;
 };
 
 #endif // KINEMATICS_H
