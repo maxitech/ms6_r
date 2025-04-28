@@ -1,9 +1,8 @@
 #ifndef KINEMATICS_H
 #define KINEMATICS_H
 
+#include "Compat.h"
 #include "MotorConfig.h"
-#include <Arduino.h>
-#include <ArduinoEigenDense.h>
 #include <cmath>
 
 struct DHparam
