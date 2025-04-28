@@ -1,6 +1,7 @@
 #ifndef MOTORCONFIG_H
 #define MOTORCONFIG_H
-#include "teensystep4.h"
+
+#include "Compat.h"
 
 using namespace TS4;
 
