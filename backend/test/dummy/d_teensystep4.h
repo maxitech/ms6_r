@@ -7,7 +7,15 @@ namespace TS4
     class Stepper
     {
     public:
-        float getPosition() const {}
+        Stepper()
+            : pos(0)
+        {
+        }
+        float getPosition() const { return pos; }
+        void  setPosition(float p) { pos = p; }
+
+    private:
+        float pos;
     };
 
 } // namespace TS4
