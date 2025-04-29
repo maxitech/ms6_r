@@ -1,9 +1,19 @@
+#include "Compat.h"
 #include <Kinematics.h>
+#include <MotorConfig.h>
+#include <memory>
 #include <unity.h>
+
+std::unique_ptr<MotorConfig> cfg;
+std::unique_ptr<Kinematics>  kin;
+Stepper                      motor;
 
 void setUp(void)
 {
     // set stuff up here
+    cfg                              = std::make_unique<MotorConfig>(motor, 200, 16, 20, 40, 2.0f);
+    std::vector<MotorConfig> configs = {*cfg};
+    kin                              = std::make_unique<Kinematics>(configs, std::vector<DHparam> {});
 }
 
 void tearDown(void)
