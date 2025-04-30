@@ -22,6 +22,8 @@ struct Pose
 class Kinematics
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
     Kinematics(const std::vector<MotorConfig>& motorConfigs, const std::vector<DHparam>& dhParams);
 
     std::vector<float> getJointAnglesInRad() const;
@@ -37,9 +39,9 @@ private:
 
     Eigen::Matrix4f _dhToTable(const DHparam& param, const float theta) const;
 
-    const std::vector<MotorConfig>& _motorConfigs;
-    const std::vector<DHparam>&     _dhParams;
-    Eigen::Matrix4f                 _toolFrameMatrix = Eigen::Matrix4f::Identity();
+    const std::vector<MotorConfig> _motorConfigs;
+    const std::vector<DHparam>     _dhParams;
+    Eigen::Matrix4f                _toolFrameMatrix = Eigen::Matrix4f::Identity();
 };
 
 #endif // KINEMATICS_H
