@@ -39,6 +39,11 @@ float Kinematics::_radToDeg(const float rad) const
 std::vector<float> Kinematics::getJointAnglesInRad() const
 {
     std::vector<float> angles;
+    if (_motorConfigs.size() <= 0 || _motorConfigs.size() > 100)
+    {
+        return {};
+    }
+
     angles.reserve(_motorConfigs.size());
 
     for (const auto& cfg : _motorConfigs)
