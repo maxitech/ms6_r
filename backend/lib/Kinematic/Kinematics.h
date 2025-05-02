@@ -17,6 +17,7 @@ struct Pose
 {
     float x, y, z;          ///< Position (mm)
     float roll, pitch, yaw; ///< Orientation (Euler angles) in degrees
+    bool  inSingularity;    ///< Indicates if the pose is in a singularity
 };
 
 class Kinematics
