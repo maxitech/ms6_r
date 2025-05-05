@@ -93,6 +93,18 @@ void test_getJointAnglesInRad_should_return_correct_angle_in_radians(void)
     TEST_ASSERT_FLOAT_WITHIN(0.001f, expected, actual[0]);
 }
 
+// void test_setToolFrame(void)
+// {
+//     kin->setToolFrame(10.0f, 20.0f, 30.0f, 45.0f, 60.0f, 90.0f);
+//     Pose pose = kin->forwardKinematics();
+//     TEST_ASSERT_FLOAT_WITHIN(0.01f, 235.170f, pose.x);
+//     TEST_ASSERT_FLOAT_WITHIN(0.01f, 20.0f, pose.y);
+//     TEST_ASSERT_FLOAT_WITHIN(0.01f, 300.0f, pose.z);
+//     TEST_ASSERT_FLOAT_WITHIN(0.01f, 157.792f, pose.roll);
+//     TEST_ASSERT_FLOAT_WITHIN(0.01f, 20.705f, pose.pitch);
+//     TEST_ASSERT_FLOAT_WITHIN(0.01f, -139.107f, pose.yaw);
+// }
+
 void test_forwardKinematics_correctPose(void)
 {
     std::vector<DHparam> dhParams = {
@@ -116,32 +128,64 @@ void test_forwardKinematics_correctPose(void)
     float expectedY = 0.0f;     // Replace with expected y
     float expectedZ = 310.3f;   // Replace with expected z
 
-    float expectedRoll  = 45.0f; // Replace with expected roll
-    float expectedPitch = 90.0f; // Replace with expected pitch
     float expectedYaw   = 45.0f; // Replace with expected yaw
+    float expectedPitch = 90.0f; // Replace with expected pitch
+    float expectedRoll  = 45.0f; // Replace with expected roll
 
     // Validate results
     TEST_ASSERT_FLOAT_WITHIN(0.01f, expectedX, result.x);
     TEST_ASSERT_FLOAT_WITHIN(0.01f, expectedY, result.y);
     TEST_ASSERT_FLOAT_WITHIN(0.01f, expectedZ, result.z);
-    TEST_ASSERT_FLOAT_WITHIN(1.0f, expectedRoll, result.roll);
-    TEST_ASSERT_FLOAT_WITHIN(1.0f, expectedPitch, result.pitch);
     TEST_ASSERT_FLOAT_WITHIN(1.0f, expectedYaw, result.yaw);
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, expectedPitch, result.pitch);
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, expectedRoll, result.roll);
 }
 
-void test_dummy(void)
+void test_forwardKinematics_correctPose_w_toolFrame(void)
 {
-    TEST_ASSERT_EQUAL(32, 32);
+    std::vector<DHparam> dhParams = {
+        {37.5f, -1.571f, 135.300f},
+        {160.0f, 0.0f, 0.0f},
+        {-15.0f, 1.571f, 0.0f},
+        {0.0f, -1.571f, 138.400f},
+        {0.0f, 1.571f, 0.0f},
+        {0.0f, 0.0f, 29.270f}};
+
+    motor1->setPosition(0); // Reset for consistent test
+
+    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
+    delete kin;
+    kin = new Kinematics(configs, dhParams);
+
+    kin->setToolFrame(10.0f, 20.0f, 30.0f, 45.0f, 60.0f, 90.0f);
+    Pose result = kin->forwardKinematics();
+
+    // Expected pose vals with tool frame
+    float expectedX = 235.170f;
+    float expectedY = 20.0f;
+    float expectedZ = 300.3f;
+
+    float expectedYaw   = 157.792f;
+    float expectedPitch = 20.705f;
+    float expectedRoll  = -139.107f;
+
+    // Validate results
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, expectedX, result.x);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, expectedY, result.y);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, expectedZ, result.z);
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, expectedYaw, result.yaw);
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, expectedPitch, result.pitch);
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, expectedRoll, result.roll);
 }
 
 int runUnityTests(void)
 {
     UNITY_BEGIN();
-    RUN_TEST(test_dummy);
     RUN_TEST(test_kinematics_initialization);
     RUN_TEST(test_getJointAnglesInRad_returns_vector);
     RUN_TEST(test_getJointAnglesInRad_should_return_correct_angle_in_radians);
     RUN_TEST(test_forwardKinematics_correctPose);
+    RUN_TEST(test_forwardKinematics_correctPose_w_toolFrame);
     return UNITY_END();
 }
 
