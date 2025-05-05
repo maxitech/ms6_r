@@ -28,6 +28,7 @@ public:
     Kinematics(const std::vector<MotorConfig>& motorConfigs, const std::vector<DHparam>& dhParams);
 
     std::vector<float> getJointAnglesInRad() const;
+    void               setToolFrame(float x, float y, float z, float yaw, float pitch, float roll);
     Pose               forwardKinematics();
 
 private:
@@ -39,6 +40,7 @@ private:
     float _radToDeg(const float rad) const;
 
     Eigen::Matrix4f _dhToTable(const DHparam& param, const float theta) const;
+    Eigen::Matrix4f _createToolFrameMatrix(float x, float y, float z, float yaw, float pitch, float roll) const;
 
     const std::vector<MotorConfig> _motorConfigs;
     const std::vector<DHparam>     _dhParams;

@@ -36,6 +36,48 @@ float Kinematics::_radToDeg(const float rad) const
     return rad * (180.0f / M_PI);
 }
 
+Eigen::Matrix4f Kinematics::_dhToTable(const DHparam& param, const float theta) const
+{
+    float alpha = param.alpha;
+    float a     = param.a;
+    float d     = param.d;
+
+    Eigen::Matrix4f m;
+    // clang-format off
+    m << 
+        cos(theta), -sin(theta) * cos(alpha),  sin(theta) * sin(alpha), a * cos(theta),
+        sin(theta),  cos(theta) * cos(alpha), -cos(theta) * sin(alpha), a * sin(theta),
+        0,             sin(alpha),                  cos(alpha),                d,
+        0,             0,                             0,                            1;
+    // clang-format on
+    return m;
+}
+
+Eigen::Matrix4f Kinematics::_createToolFrameMatrix(float x, float y, float z, float yaw, float pitch, float roll) const
+{
+    // Rotation matrix from ZYX Euler angles (yaw-Z, pitch-Y, roll-X)
+    float cy = std::cos(yaw), sy = std::sin(yaw);
+    float cp = std::cos(pitch), sp = std::sin(pitch);
+    float cr = std::cos(roll), sr = std::sin(roll);
+
+    // clang-format off
+    Eigen::Matrix3f R;
+    R << cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr,
+         sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr,
+        -sp, cp * sr, cp * cr;
+    // clang-format on
+
+    // Homogeneous transformation (matrix + translation)
+    Eigen::Matrix4f T   = Eigen::Matrix4f::Identity();
+    T.block<3, 3>(0, 0) = R; // Set rotation part
+    // Set translation part
+    T(0, 3) = x;
+    T(1, 3) = y;
+    T(2, 3) = z;
+
+    return T;
+}
+
 std::vector<float> Kinematics::getJointAnglesInRad() const
 {
     std::vector<float> angles;
@@ -55,21 +97,9 @@ std::vector<float> Kinematics::getJointAnglesInRad() const
     return angles;
 }
 
-Eigen::Matrix4f Kinematics::_dhToTable(const DHparam& param, const float theta) const
+void Kinematics::setToolFrame(float x, float y, float z, float yaw, float pitch, float roll)
 {
-    float alpha = param.alpha;
-    float a     = param.a;
-    float d     = param.d;
-
-    Eigen::Matrix4f m;
-    // clang-format off
-    m << 
-        cos(theta), -sin(theta) * cos(alpha),  sin(theta) * sin(alpha), a * cos(theta),
-        sin(theta),  cos(theta) * cos(alpha), -cos(theta) * sin(alpha), a * sin(theta),
-        0,             sin(alpha),                  cos(alpha),                d,
-        0,             0,                             0,                            1;
-    // clang-format on
-    return m;
+    _toolFrameMatrix = _createToolFrameMatrix(x, y, z, yaw, pitch, roll);
 }
 
 Pose Kinematics::forwardKinematics()
