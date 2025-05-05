@@ -8,14 +8,14 @@ using namespace TS4;
 
 struct MotorConfig
 {
-    std::shared_ptr<Stepper> motor;
-    int                      stepsPerRev;
-    int                      microsteps;
-    float                    driverTeeth;
-    float                    drivenTeeth;
-    float                    gearboxRatio;
+    Stepper* motor;
+    int      stepsPerRev;
+    int      microsteps;
+    float    driverTeeth;
+    float    drivenTeeth;
+    float    gearboxRatio;
 
-    MotorConfig(std::shared_ptr<Stepper> motor, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
+    MotorConfig(Stepper* motor, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
         : motor(motor)
         , stepsPerRev(spr)
         , microsteps(ms)
