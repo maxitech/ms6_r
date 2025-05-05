@@ -55,10 +55,15 @@ Eigen::Matrix4f Kinematics::_dhToTable(const DHparam& param, const float theta) 
 
 Eigen::Matrix4f Kinematics::_createToolFrameMatrix(float x, float y, float z, float yaw, float pitch, float roll) const
 {
+    // Convert angle from deg to rad
+    float yawRad   = _degToRad(yaw);
+    float pitchRad = _degToRad(pitch);
+    float rollRad  = _degToRad(roll);
+
     // Rotation matrix from ZYX Euler angles (yaw-Z, pitch-Y, roll-X)
-    float cy = std::cos(yaw), sy = std::sin(yaw);
-    float cp = std::cos(pitch), sp = std::sin(pitch);
-    float cr = std::cos(roll), sr = std::sin(roll);
+    float cy = std::cos(yawRad), sy = std::sin(yawRad);
+    float cp = std::cos(pitchRad), sp = std::sin(pitchRad);
+    float cr = std::cos(rollRad), sr = std::sin(rollRad);
 
     // clang-format off
     Eigen::Matrix3f R;
