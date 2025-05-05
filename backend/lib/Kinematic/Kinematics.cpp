@@ -80,6 +80,13 @@ Eigen::Matrix4f Kinematics::_createToolFrameMatrix(float x, float y, float z, fl
     T(1, 3) = y;
     T(2, 3) = z;
 
+    // Debug output
+    // std::cout << std::fixed << std::setprecision(3);
+    // std::cout << "Tool-Frame Position (mm): x=" << x << ", y=" << y << ", z=" << z << std::endl;
+    // std::cout << "Tool-Frame Orientation (deg): yaw=" << yaw << ", pitch=" << pitch << ", roll=" << roll << std::endl;
+    // std::cout << "Tool-Frame Transformation Matrix:\n"
+    //           << T << std::endl;
+
     return T;
 }
 
