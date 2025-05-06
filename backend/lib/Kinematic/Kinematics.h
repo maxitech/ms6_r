@@ -20,6 +20,16 @@ struct Pose
     bool  inSingularity;    ///< Indicates if the pose is in a singularity
 };
 
+struct Angles
+{
+    float theta1;
+    float theta2;
+    float theta3;
+    float theta4;
+    float theta5;
+    float theta6;
+};
+
 class Kinematics
 {
 public:
@@ -30,6 +40,7 @@ public:
     std::vector<float> getJointAnglesInRad() const;
     void               setToolFrame(float x, float y, float z, float yaw, float pitch, float roll);
     Pose               forwardKinematics();
+    Angles             inverseKinematics(float x, float y, float z, float yaw, float pitch, float roll);
 
 private:
     float _totalRatio(const MotorConfig& motorConfig) const;
@@ -40,7 +51,7 @@ private:
     float _radToDeg(const float rad) const;
 
     Eigen::Matrix4f _dhToTable(const DHparam& param, const float theta) const;
-    Eigen::Matrix4f _createToolFrameMatrix(float x, float y, float z, float yaw, float pitch, float roll) const;
+    Eigen::Matrix4f _createTransformationMatrix(float x, float y, float z, float yaw, float pitch, float roll) const;
 
     const std::vector<MotorConfig> _motorConfigs;
     const std::vector<DHparam>     _dhParams;
