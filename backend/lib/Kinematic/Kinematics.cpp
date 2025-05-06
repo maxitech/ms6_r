@@ -53,7 +53,7 @@ Eigen::Matrix4f Kinematics::_dhToTable(const DHparam& param, const float theta) 
     return m;
 }
 
-Eigen::Matrix4f Kinematics::_createToolFrameMatrix(float x, float y, float z, float yaw, float pitch, float roll) const
+Eigen::Matrix4f Kinematics::_createTransformationMatrix(float x, float y, float z, float yaw, float pitch, float roll) const
 {
     // Convert angle from deg to rad
     float yawRad   = _degToRad(yaw);
@@ -72,19 +72,19 @@ Eigen::Matrix4f Kinematics::_createToolFrameMatrix(float x, float y, float z, fl
         -sp, cp * sr, cp * cr;
     // clang-format on
 
-    // Homogeneous transformation (matrix + translation)
+    // Construct 4x4 homogeneous transformation matrix
     Eigen::Matrix4f T   = Eigen::Matrix4f::Identity();
     T.block<3, 3>(0, 0) = R; // Set rotation part
-    // Set translation part
+    // Set translation x, y, z
     T(0, 3) = x;
     T(1, 3) = y;
     T(2, 3) = z;
 
     // Debug output
     // std::cout << std::fixed << std::setprecision(3);
-    // std::cout << "Tool-Frame Position (mm): x=" << x << ", y=" << y << ", z=" << z << std::endl;
-    // std::cout << "Tool-Frame Orientation (deg): yaw=" << yaw << ", pitch=" << pitch << ", roll=" << roll << std::endl;
-    // std::cout << "Tool-Frame Transformation Matrix:\n"
+    // std::cout << "Position (mm): x=" << x << ", y=" << y << ", z=" << z << std::endl;
+    // std::cout << "Orientation (deg): yaw=" << yaw << ", pitch=" << pitch << ", roll=" << roll << std::endl;
+    // std::cout << "Transformation Matrix:\n"
     //           << T << std::endl;
 
     return T;
@@ -111,7 +111,7 @@ std::vector<float> Kinematics::getJointAnglesInRad() const
 
 void Kinematics::setToolFrame(float x, float y, float z, float yaw, float pitch, float roll)
 {
-    _toolFrameMatrix = _createToolFrameMatrix(x, y, z, yaw, pitch, roll);
+    _toolFrameMatrix = _createTransformationMatrix(x, y, z, yaw, pitch, roll);
 }
 
 Pose Kinematics::forwardKinematics()
