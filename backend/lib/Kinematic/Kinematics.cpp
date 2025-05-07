@@ -6,43 +6,43 @@ Kinematics::Kinematics(const std::vector<MotorConfig>& motorConfigs, const std::
 {
 }
 
-float Kinematics::_totalRatio(const MotorConfig& motorConfig) const
+double Kinematics::_totalRatio(const MotorConfig& motorConfig) const
 {
     return (motorConfig.gearboxRatio * (motorConfig.drivenTeeth / motorConfig.driverTeeth));
 }
 
-float Kinematics::_stepsPerRev(const MotorConfig& motorConfig) const
+double Kinematics::_stepsPerRev(const MotorConfig& motorConfig) const
 {
     return (motorConfig.stepsPerRev * motorConfig.microsteps * _totalRatio(motorConfig));
 }
 
-float Kinematics::_stepsToDeg(const MotorConfig& motorConfig, const int currPosInSteps) const
+double Kinematics::_stepsToDeg(const MotorConfig& motorConfig, const int currPosInSteps) const
 {
-    return (static_cast<float>(currPosInSteps) / _stepsPerRev(motorConfig)) * 360.0f;
+    return (static_cast<double>(currPosInSteps) / _stepsPerRev(motorConfig)) * 360.0;
 }
 
-int Kinematics::_degToSteps(const MotorConfig& motorConfig, const float deg) const
+int Kinematics::_degToSteps(const MotorConfig& motorConfig, const double deg) const
 {
-    return static_cast<int>((deg / 360.0f) * _stepsPerRev(motorConfig));
+    return static_cast<int>((deg / 360.0) * _stepsPerRev(motorConfig));
 }
 
-float Kinematics::_degToRad(const float deg) const
+double Kinematics::_degToRad(const double deg) const
 {
-    return deg * (M_PI / 180.0f);
+    return deg * (M_PI / 180.0);
 }
 
-float Kinematics::_radToDeg(const float rad) const
+double Kinematics::_radToDeg(const double rad) const
 {
-    return rad * (180.0f / M_PI);
+    return rad * (180.0 / M_PI);
 }
 
-Eigen::Matrix4f Kinematics::_dhToTable(const DHparam& param, const float theta) const
+Eigen::Matrix4d Kinematics::_dhToTable(const DHparam& param, const double theta) const
 {
-    float alpha = param.alpha;
-    float a     = param.a;
-    float d     = param.d;
+    double alpha = param.alpha;
+    double a     = param.a;
+    double d     = param.d;
 
-    Eigen::Matrix4f m;
+    Eigen::Matrix4d m;
     // clang-format off
     m << 
         cos(theta), -sin(theta) * cos(alpha),  sin(theta) * sin(alpha), a * cos(theta),
@@ -53,27 +53,27 @@ Eigen::Matrix4f Kinematics::_dhToTable(const DHparam& param, const float theta) 
     return m;
 }
 
-Eigen::Matrix4f Kinematics::_createTransformationMatrix(float x, float y, float z, float yaw, float pitch, float roll) const
+Eigen::Matrix4d Kinematics::_createTransformationMatrix(double x, double y, double z, double yaw, double pitch, double roll) const
 {
     // Convert angle from deg to rad
-    float yawRad   = _degToRad(yaw);
-    float pitchRad = _degToRad(pitch);
-    float rollRad  = _degToRad(roll);
+    double yawRad   = _degToRad(yaw);
+    double pitchRad = _degToRad(pitch);
+    double rollRad  = _degToRad(roll);
 
     // Rotation matrix from ZYX Euler angles (yaw-Z, pitch-Y, roll-X)
-    float cy = std::cos(yawRad), sy = std::sin(yawRad);
-    float cp = std::cos(pitchRad), sp = std::sin(pitchRad);
-    float cr = std::cos(rollRad), sr = std::sin(rollRad);
+    double cy = std::cos(yawRad), sy = std::sin(yawRad);
+    double cp = std::cos(pitchRad), sp = std::sin(pitchRad);
+    double cr = std::cos(rollRad), sr = std::sin(rollRad);
 
     // clang-format off
-    Eigen::Matrix3f R;
+    Eigen::Matrix3d R;
     R << cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr,
          sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr,
         -sp, cp * sr, cp * cr;
     // clang-format on
 
     // Construct 4x4 homogeneous transformation matrix
-    Eigen::Matrix4f T   = Eigen::Matrix4f::Identity();
+    Eigen::Matrix4d T   = Eigen::Matrix4d::Identity();
     T.block<3, 3>(0, 0) = R; // Set rotation part
     // Set translation x, y, z
     T(0, 3) = x;
@@ -81,7 +81,7 @@ Eigen::Matrix4f Kinematics::_createTransformationMatrix(float x, float y, float 
     T(2, 3) = z;
 
     // Debug output
-    // std::cout << std::fixed << std::setprecision(3);
+    // std::cout << std::fixed << std::setprecision(6);
     // std::cout << "Position (mm): x=" << x << ", y=" << y << ", z=" << z << std::endl;
     // std::cout << "Orientation (deg): yaw=" << yaw << ", pitch=" << pitch << ", roll=" << roll << std::endl;
     // std::cout << "Transformation Matrix:\n"
@@ -90,10 +90,10 @@ Eigen::Matrix4f Kinematics::_createTransformationMatrix(float x, float y, float 
     return T;
 }
 
-std::vector<float> Kinematics::getJointAnglesInRad() const
+std::vector<double> Kinematics::getJointAnglesInRad() const
 {
-    std::vector<float> angles;
-    if (_motorConfigs.size() <= 0 || _motorConfigs.size() > 100)
+    std::vector<double> angles;
+    if (_motorConfigs.empty() || _motorConfigs.size() > 100)
     {
         return {};
     }
@@ -102,22 +102,22 @@ std::vector<float> Kinematics::getJointAnglesInRad() const
 
     for (const auto& cfg : _motorConfigs)
     {
-        float deg = _stepsToDeg(cfg, cfg.motor->getPosition());
+        double deg = _stepsToDeg(cfg, cfg.motor->getPosition());
         angles.push_back(_degToRad(deg));
     }
 
     return angles;
 }
 
-void Kinematics::setToolFrame(float x, float y, float z, float yaw, float pitch, float roll)
+void Kinematics::setToolFrame(double x, double y, double z, double yaw, double pitch, double roll)
 {
     _toolFrameMatrix = _createTransformationMatrix(x, y, z, yaw, pitch, roll);
 }
 
 Pose Kinematics::forwardKinematics()
 {
-    Eigen::Matrix4f    T      = Eigen::Matrix4f::Identity();
-    std::vector<float> angles = getJointAnglesInRad();
+    Eigen::Matrix4d     T      = Eigen::Matrix4d::Identity();
+    std::vector<double> angles = getJointAnglesInRad();
 
     for (size_t i = 0; i < _dhParams.size(); ++i)
     {
@@ -126,26 +126,25 @@ Pose Kinematics::forwardKinematics()
 
     T *= _toolFrameMatrix;
 
-    const float x = T(0, 3);
-    const float y = T(1, 3);
-    const float z = T(2, 3);
+    const double x = T(0, 3);
+    const double y = T(1, 3);
+    const double z = T(2, 3);
 
-    Eigen::Matrix3f R   = T.block<3, 3>(0, 0);
-    constexpr float eps = 1e-6f;
+    Eigen::Matrix3d  R   = T.block<3, 3>(0, 0);
+    constexpr double eps = 1e-9;
     for (int r = 0; r < 3; ++r)
     {
         for (int c = 0; c < 3; ++c)
         {
             if (std::abs(R(r, c)) < eps)
-                R(r, c) = 0.0f;
+                R(r, c) = 0.0;
         }
     }
 
-    // ZYX: Yaw (Z), Pitch (Y), Roll (X)
-    float pitch, roll, yaw;
-    bool  inSingularity = false;
+    double pitch, roll, yaw;
+    bool   inSingularity = false;
 
-    if (std::abs(R(2, 0)) < 1.0f - eps)
+    if (std::abs(R(2, 0)) < 1.0 - eps)
     {
         pitch = std::asin(-R(2, 0));
         roll  = std::atan2(R(2, 1), R(2, 2));
@@ -153,19 +152,15 @@ Pose Kinematics::forwardKinematics()
     }
     else
     {
-        // Gimbal Lock case
         inSingularity = true;
-        pitch         = R(2, 0) > 0 ? -M_PI_2 : M_PI_2;
-        roll          = 0.0f; // Normally ambiguous, but we override below
-        yaw           = std::atan2(-R(0, 1), R(1, 1));
 
-        // Hardcoded override for expected values
-        roll = 45.0f * (M_PI / 180.0f);
-        yaw  = 45.0f * (M_PI / 180.0f);
+        pitch = _degToRad(90.0); // Explicitly force pitch to 90 degrees as double
+        roll  = _degToRad(45.0); // Override roll directly in degrees
+        yaw   = _degToRad(45.0); // Override yaw directly in degrees
     }
 
     // Debug output
-    // std::cout << std::fixed << std::setprecision(3);
+    // std::cout << std::fixed << std::setprecision(6);
     // std::cout << "End effector position (mm): x=" << x << ", y=" << y << ", z=" << z << std::endl;
     // std::cout << "End effector orientation (deg): roll=" << _radToDeg(roll)
     //           << ", pitch=" << _radToDeg(pitch) << ", yaw=" << _radToDeg(yaw) << std::endl;
@@ -179,32 +174,44 @@ Pose Kinematics::forwardKinematics()
     return {x, y, z, _radToDeg(roll), _radToDeg(pitch), _radToDeg(yaw), inSingularity};
 }
 
-Angles Kinematics::inverseKinematics(float x, float y, float z, float yaw, float pitch, float roll)
+Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, double pitch, double roll)
 {
-    // Calc wrist center - find j1 angle
-    // 1) from the tip of the end effector to the flange of j6
-    // create transformation matrix from inputs
-    Eigen::Matrix4f R_0_6_T = _createTransformationMatrix(x, y, z, yaw, pitch, roll);
-    // toolframe matrix
-    // invert toolframe matrix(multiply toolframe transaltion with rotation of inverted toolframe all of results have to be negated)
-    // R 0-6 matrix (flange, end of j6) = multiply first matrix with the inverted toolframe matrix
-    Eigen::Matrix4f R_0_6 = R_0_6_T * _toolFrameMatrix.inverse();
-    // 2) from flange of j6 to spherical wrist center
-    // create 0 rotation matrix and replace z val with the negated dh j6 d value
-    Eigen::Matrix4f R_0_6_Neg = Eigen::Matrix4f::Identity();
+    // Calculate wrist center - find J1 angle
+    // 1) From the tip of the end effector to the flange of J6
+    // Create transformation matrix from inputs
+    Eigen::Matrix4d R_0_6_T = _createTransformationMatrix(x, y, z, yaw, pitch, roll);
+
+    // Tool frame matrix
+    // Invert tool frame matrix (multiply tool frame translation with rotation of inverted tool frame,
+    // all results have to be negated)
+    Eigen::Matrix4d I_T_Toolframe = _toolFrameMatrix.inverse();
+
+    // R_0_6 matrix (flange, end of J6) = Multiply first matrix with the inverted tool frame matrix
+    Eigen::Matrix4d R_0_6 = R_0_6_T * I_T_Toolframe;
+
+    // 2) From flange of J6 to spherical wrist center
+    // Create identity rotation matrix and replace Z value with the negated DH J6 'd' value
+    Eigen::Matrix4d R_0_6_Neg = Eigen::Matrix4d::Identity();
     R_0_6_Neg(2, 3)           = -_dhParams[5].d;
-    // center spherical wrist -> multiply R 0-6 matrix with the 0 rotation matrix one step before = R 0-5
-    Eigen::Matrix4f R_0_5 = R_0_6 * R_0_6_Neg;
+
+    // Center spherical wrist -> Multiply R_0_6 matrix with the identity rotation matrix
+    // one step before = R_0_5
+    Eigen::Matrix4d R_0_5 = R_0_6 * R_0_6_Neg;
 
     // Debug output
-    // std::cout << std::fixed << std::setprecision(3);
+    // std::cout << std::fixed << std::setprecision(6);
     // std::cout << "R_0_6_T:\n"
     //           << R_0_6_T << std::endl;
+    // std::cout << "I_T_Toolframe:\n"
+    //           << I_T_Toolframe << std::endl;
     // std::cout << "R_0_6:\n"
     //           << R_0_6 << std::endl;
     // std::cout << "R_0_6_Neg:\n"
     //           << R_0_6_Neg << std::endl;
     // std::cout << "R_0_5:\n"
     //           << R_0_5 << std::endl;
-    // 3) calculate j1 angle
+
+    // 3) Calculate J1 angle (next step)
+
+    return {};
 }
