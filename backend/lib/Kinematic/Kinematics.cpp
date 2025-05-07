@@ -173,7 +173,7 @@ Pose Kinematics::forwardKinematics()
     // {
     //     std::cout << "[WARNING] Gimbal lock detected – Roll and Yaw manually overridden.\n";
     // }
-    // std::cout << "Transformation matrix:\n"
+    // std::cout << "Transformation matrix fk:\n"
     //           << T << std::endl;
 
     return {x, y, z, _radToDeg(roll), _radToDeg(pitch), _radToDeg(yaw), inSingularity};
@@ -181,16 +181,14 @@ Pose Kinematics::forwardKinematics()
 
 Angles Kinematics::inverseKinematics(float x, float y, float z, float yaw, float pitch, float roll)
 {
-
     // Calc wrist center - find j1 angle
     // 1) from the tip of the end effector to the flange of j6
     // create transformation matrix from inputs
     Eigen::Matrix4f R_0_6_T = _createTransformationMatrix(x, y, z, yaw, pitch, roll);
     // toolframe matrix
     // invert toolframe matrix(multiply toolframe transaltion with rotation of inverted toolframe all of results have to be negated)
-    Eigen::Matrix4f I_T_Toolframe = _toolFrameMatrix.inverse();
     // R 0-6 matrix (flange, end of j6) = multiply first matrix with the inverted toolframe matrix
-    Eigen::Matrix4f R_0_6 = R_0_6_T * I_T_Toolframe;
+    Eigen::Matrix4f R_0_6 = R_0_6_T * _toolFrameMatrix.inverse();
     // 2) from flange of j6 to spherical wrist center
     // create 0 rotation matrix and replace z val with the negated dh j6 d value
     Eigen::Matrix4f R_0_6_Neg = Eigen::Matrix4f::Identity();
@@ -198,6 +196,14 @@ Angles Kinematics::inverseKinematics(float x, float y, float z, float yaw, float
     // center spherical wrist -> multiply R 0-6 matrix with the 0 rotation matrix one step before = R 0-5
     Eigen::Matrix4f R_0_5 = R_0_6 * R_0_6_Neg;
 
+    // Debug output
+    // std::cout << std::fixed << std::setprecision(3);
+    // std::cout << "R_0_6_T:\n"
+    //           << R_0_6_T << std::endl;
+    // std::cout << "R_0_6:\n"
+    //           << R_0_6 << std::endl;
+    // std::cout << "R_0_6_Neg:\n"
+    //           << R_0_6_Neg << std::endl;
     // std::cout << "R_0_5:\n"
     //           << R_0_5 << std::endl;
     // 3) calculate j1 angle
