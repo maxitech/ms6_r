@@ -148,16 +148,16 @@ Pose Kinematics::forwardKinematics()
     }
 
     // Debug output
-    std::cout << std::fixed << std::setprecision(6);
-    std::cout << "End effector position (mm): x=" << x << ", y=" << y << ", z=" << z << std::endl;
-    std::cout << "End effector orientation (deg): roll=" << _radToDeg(roll)
-              << ", pitch=" << _radToDeg(pitch) << ", yaw=" << _radToDeg(yaw) << std::endl;
-    if (inSingularity)
-    {
-        std::cout << "[WARNING] Gimbal lock detected – Adjusted angles dynamically.\n";
-    }
-    std::cout << "Transformation matrix fk:\n"
-              << T << std::endl;
+    // std::cout << std::fixed << std::setprecision(6);
+    // std::cout << "End effector position (mm): x=" << x << ", y=" << y << ", z=" << z << std::endl;
+    // std::cout << "End effector orientation (deg): roll=" << _radToDeg(roll)
+    //           << ", pitch=" << _radToDeg(pitch) << ", yaw=" << _radToDeg(yaw) << std::endl;
+    // if (inSingularity)
+    // {
+    //     std::cout << "[WARNING] Gimbal lock detected – Adjusted angles dynamically.\n";
+    // }
+    // std::cout << "Transformation matrix fk:\n"
+    //           << T << std::endl;
 
     return {x, y, z, _radToDeg(roll), _radToDeg(pitch), _radToDeg(yaw), inSingularity};
 }
