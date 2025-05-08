@@ -186,6 +186,51 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     // one step before = R_0_5
     Eigen::Matrix4d R_0_5 = R_0_6 * R_0_6_Neg;
 
+    // 3) Calculate J1 angle (next step)
+    // calc j1 angle
+    double x_r05 = R_0_5(0, 3);
+    double y_r05 = R_0_5(1, 3);
+
+    double theta1Rad = std::atan2(y_r05, x_r05); // atan2(y, x)
+    double theta1Deg = _radToDeg(theta1Rad);
+
+    // Set J1 angle mathematical zero for further calculations
+    double x_at_j1_zero = x_r05 * sin(theta1Rad) + y_r05 * cos(theta1Rad);
+    double y_at_j1_zero = x_r05 * cos(theta1Rad) - y_r05 * sin(theta1Rad);
+
+    double L1 = std::abs(x_at_j1_zero - _dhParams[0].a);
+    double L4 = R_0_5(2, 3) - _dhParams[0].d;                          // Z value of R_0_5 matrix - d value of J1
+    double L2 = sqrt(pow(L1, 2) + pow(L4, 2));                         // L2 = sqrt(L1^2 + L4^2)
+    double L3 = sqrt(pow(_dhParams[3].d, 2) + pow(_dhParams[2].a, 2)); // L3 = sqrt(d^2 + a^2)
+
+    // theha b = deg(atan(L1/L4)
+    double THETA_B = _radToDeg(std::atan2(L1, L4)); // atan2(L1, L4)
+
+    double THETA_C = _radToDeg(std::acos((pow(_dhParams[1].a, 2) + pow(L2, 2) - pow(L3, 2)) / (2 * _dhParams[1].a * L2)));
+
+    double THETA_D = _radToDeg(std::acos((pow(L3, 2) + pow(_dhParams[1].a, 2) - pow(L2, 2)) / (2 * L3 * _dhParams[1].a)));
+
+    double THETA_E = _radToDeg(std::atan2(_dhParams[2].a, _dhParams[3].d));
+
+    double theta2Deg;
+    if (x_at_j1_zero > _dhParams[0].a)
+    {
+        if (L4 > 0)
+        {
+            theta2Deg = THETA_B - THETA_C;
+        }
+        else
+        {
+            theta2Deg = THETA_B - THETA_C + 180.0f;
+        }
+    }
+    else
+    {
+        theta2Deg = -(THETA_B + THETA_C);
+    }
+
+    double theta3Deg = -(THETA_D + THETA_E) + 90.0f;
+
     // Debug output
     // std::cout << std::fixed << std::setprecision(6);
     // std::cout << "R_0_6_T:\n"
@@ -198,12 +243,23 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     //           << R_0_6_Neg << std::endl;
     // std::cout << "R_0_5:\n"
     //           << R_0_5 << std::endl;
-
-    // 3) Calculate J1 angle (next step)
-    // calc j1 angle
-    double theta1Rad = std::atan2(R_0_5(1, 3), R_0_5(0, 3)); // atan2(y, x)
-    double theta1Deg = _radToDeg(theta1Rad);
+    // -----------------------Geometric values----------------------
+    // std::cout << "L1: " << L1 << std::endl;
+    // std::cout << "L2: " << L2 << std::endl;
+    // std::cout << "L3: " << L3 << std::endl;
+    // std::cout << "L4: " << L4 << std::endl;
+    // std::cout << "x_at_j1_zero: " << x_at_j1_zero << std::endl;
+    // std::cout << "y_at_j1_zero: " << y_at_j1_zero << std::endl;
+    // std::cout << "_dhParams[0].a: " << _dhParams[0].a << std::endl;
+    // std::cout << "_dhParams[0].d: " << _dhParams[0].d << std::endl;
+    // std::cout << "Theta B (deg): " << THETA_B << std::endl;
+    // std::cout << "Theta C (deg): " << THETA_C << std::endl;
+    // std::cout << "Theta D (deg): " << THETA_D << std::endl;
+    // std::cout << "Theta E (deg): " << THETA_E << std::endl;
+    // ------------------------Angles result------------------------
     // std::cout << "Theta1 (deg): " << theta1Deg << std::endl;
+    // std::cout << "Theta2 (deg): " << theta2Deg << std::endl;
+    // std::cout << "Theta3 (deg): " << J3 << std::endl;
 
-    return {theta1Deg, 0.0, 0.0, 0.0, 0.0, 0.0};
+    return {theta1Deg, theta2Deg, theta3Deg, 0.0, 0.0, 0.0};
 }
