@@ -205,5 +205,5 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     double theta1Deg = _radToDeg(theta1Rad);
     // std::cout << "Theta1 (deg): " << theta1Deg << std::endl;
 
-    return {};
+    return {theta1Deg, 0.0, 0.0, 0.0, 0.0, 0.0};
 }
