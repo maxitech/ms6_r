@@ -49,7 +49,7 @@ private:
     double _degToRad(const double deg) const;
     double _radToDeg(const double rad) const;
 
-    Eigen::Matrix4d _dhToTable(const DHparam& param, const double theta) const;
+    Eigen::Matrix4d _dhToTable(const DHparam& param, double theta, double offsetDeg = 0) const;
     Eigen::Matrix4d _createTransformationMatrix(double x, double y, double z, double yaw, double pitch, double roll) const;
 
     const std::vector<MotorConfig> _motorConfigs;
