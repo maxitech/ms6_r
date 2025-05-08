@@ -200,6 +200,10 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     //           << R_0_5 << std::endl;
 
     // 3) Calculate J1 angle (next step)
+    // calc j1 angle
+    double theta1Rad = std::atan2(R_0_5(1, 3), R_0_5(0, 3)); // atan2(y, x)
+    double theta1Deg = _radToDeg(theta1Rad);
+    // std::cout << "Theta1 (deg): " << theta1Deg << std::endl;
 
     return {};
 }
