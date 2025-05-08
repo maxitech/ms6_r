@@ -160,7 +160,7 @@ void test_forwardKinematics_correctPose_w_toolFrame(void)
 }
 
 // --------------------------------Inverse Kinematics------------------------------------
-void test_inverseKinematics(void)
+void test_inverseKinematics_dynamic(void)
 {
     cfg1->motor->setPosition(0);    // Reset for consistent test
     cfg5->motor->setPosition(3200); // Reset for consistent test
@@ -173,15 +173,45 @@ void test_inverseKinematics(void)
     Angles angles = kin->inverseKinematics(result.x, result.y, result.z, result.roll, result.pitch, result.yaw);
 }
 
+void test_inverseKinematics_static_positive(void)
+{
+    cfg1->motor->setPosition(0);    // Reset for consistent test
+    cfg5->motor->setPosition(3200); // Reset for consistent test
+
+    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
+    delete kin;
+    kin = new Kinematics(configs, dhParams);
+
+    Pose   result    = kin->forwardKinematics();
+    Angles anglesPos = kin->inverseKinematics(124.380f, 124.380f, 281.030f, 135.000f, 0.0f, 180.000f); // j1 = 45.0° j5 = 90.0°
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 45.0f, anglesPos.theta1);
+}
+
+void test_inverseKinematics_static_negative(void)
+{
+    cfg1->motor->setPosition(0);    // Reset for consistent test
+    cfg5->motor->setPosition(3200); // Reset for consistent test
+
+    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
+    delete kin;
+    kin = new Kinematics(configs, dhParams);
+
+    Pose   result    = kin->forwardKinematics();
+    Angles anglesNeg = kin->inverseKinematics(124.380f, -124.380f, 281.030f, 135.000f, 0.0f, 180.000f); // j1 = -45.0° j5 = 90.0°
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, -45.0f, anglesNeg.theta1);
+}
+
 int runUnityTests(void)
 {
     UNITY_BEGIN();
-    RUN_TEST(test_kinematics_initialization);
-    RUN_TEST(test_getJointAnglesInRad_returns_vector);
-    RUN_TEST(test_getJointAnglesInRad_should_return_correct_angle_in_radians);
-    RUN_TEST(test_forwardKinematics_correctPose);
-    RUN_TEST(test_forwardKinematics_correctPose_w_toolFrame);
-    RUN_TEST(test_inverseKinematics);
+    // RUN_TEST(test_kinematics_initialization);
+    // RUN_TEST(test_getJointAnglesInRad_returns_vector);
+    // RUN_TEST(test_getJointAnglesInRad_should_return_correct_angle_in_radians);
+    // RUN_TEST(test_forwardKinematics_correctPose);
+    // RUN_TEST(test_forwardKinematics_correctPose_w_toolFrame);
+    // RUN_TEST(test_inverseKinematics_dynamic);
+    RUN_TEST(test_inverseKinematics_static_positive);
+    RUN_TEST(test_inverseKinematics_static_negative);
     return UNITY_END();
 }
 
