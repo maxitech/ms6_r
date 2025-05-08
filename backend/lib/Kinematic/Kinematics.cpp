@@ -44,46 +44,31 @@ Eigen::Matrix4d Kinematics::_dhToTable(const DHparam& param, const double theta)
 
     Eigen::Matrix4d m;
     // clang-format off
-    m << 
-        cos(theta), -sin(theta) * cos(alpha),  sin(theta) * sin(alpha), a * cos(theta),
-        sin(theta),  cos(theta) * cos(alpha), -cos(theta) * sin(alpha), a * sin(theta),
-        0,             sin(alpha),                  cos(alpha),                d,
-        0,             0,                             0,                            1;
+    m << cos(theta), -sin(theta) * cos(alpha), sin(theta) * sin(alpha), a * cos(theta),
+         sin(theta), cos(theta) * cos(alpha), -cos(theta) * sin(alpha), a * sin(theta),
+         0, sin(alpha), cos(alpha), d,
+         0, 0, 0, 1;
     // clang-format on
     return m;
 }
 
 Eigen::Matrix4d Kinematics::_createTransformationMatrix(double x, double y, double z, double yaw, double pitch, double roll) const
 {
-    // Convert angle from deg to rad
-    double yawRad   = _degToRad(yaw);
-    double pitchRad = _degToRad(pitch);
-    double rollRad  = _degToRad(roll);
+    Eigen::AngleAxisd rollAngle(_degToRad(roll), Eigen::Vector3d::UnitX());
+    Eigen::AngleAxisd pitchAngle(_degToRad(pitch), Eigen::Vector3d::UnitY());
+    Eigen::AngleAxisd yawAngle(_degToRad(yaw), Eigen::Vector3d::UnitZ());
 
-    // Rotation matrix from ZYX Euler angles (yaw-Z, pitch-Y, roll-X)
-    double cy = std::cos(yawRad), sy = std::sin(yawRad);
-    double cp = std::cos(pitchRad), sp = std::sin(pitchRad);
-    double cr = std::cos(rollRad), sr = std::sin(rollRad);
+    Eigen::Quaterniond q = yawAngle * pitchAngle * rollAngle;
+    Eigen::Matrix3d    R = q.toRotationMatrix();
 
-    // clang-format off
-    Eigen::Matrix3d R;
-    R << cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr,
-         sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr,
-        -sp, cp * sr, cp * cr;
-    // clang-format on
-
-    // Construct 4x4 homogeneous transformation matrix
     Eigen::Matrix4d T   = Eigen::Matrix4d::Identity();
-    T.block<3, 3>(0, 0) = R; // Set rotation part
-    // Set translation x, y, z
-    T(0, 3) = x;
-    T(1, 3) = y;
-    T(2, 3) = z;
+    T.block<3, 3>(0, 0) = R;
+    T(0, 3)             = x;
+    T(1, 3)             = y;
+    T(2, 3)             = z;
 
     // Debug output
     // std::cout << std::fixed << std::setprecision(6);
-    // std::cout << "Position (mm): x=" << x << ", y=" << y << ", z=" << z << std::endl;
-    // std::cout << "Orientation (deg): yaw=" << yaw << ", pitch=" << pitch << ", roll=" << roll << std::endl;
     // std::cout << "Transformation Matrix:\n"
     //           << T << std::endl;
 
@@ -119,57 +104,60 @@ Pose Kinematics::forwardKinematics()
     Eigen::Matrix4d     T      = Eigen::Matrix4d::Identity();
     std::vector<double> angles = getJointAnglesInRad();
 
+    // Compute full transformation matrix
     for (size_t i = 0; i < _dhParams.size(); ++i)
     {
         T *= _dhToTable(_dhParams[i], angles[i]);
     }
 
+    // Apply tool frame transformation
     T *= _toolFrameMatrix;
 
+    // Extract position (translation part)
     const double x = T(0, 3);
     const double y = T(1, 3);
     const double z = T(2, 3);
 
-    Eigen::Matrix3d  R   = T.block<3, 3>(0, 0);
-    constexpr double eps = 1e-9;
-    for (int r = 0; r < 3; ++r)
-    {
-        for (int c = 0; c < 3; ++c)
-        {
-            if (std::abs(R(r, c)) < eps)
-                R(r, c) = 0.0;
-        }
-    }
+    // Extract rotation matrix (upper-left 3x3 submatrix)
+    Eigen::Matrix3d R = T.block<3, 3>(0, 0);
 
+    // Convert rotation matrix to quaternion for better stability
+    Eigen::Quaterniond q(R);
+    Eigen::Matrix3d    RotFromQuat = q.toRotationMatrix();
+
+    // Compute Euler angles (ZYX convention: Yaw-Z, Pitch-Y, Roll-X)
     double pitch, roll, yaw;
     bool   inSingularity = false;
 
-    if (std::abs(R(2, 0)) < 1.0 - eps)
-    {
-        pitch = std::asin(-R(2, 0));
-        roll  = std::atan2(R(2, 1), R(2, 2));
-        yaw   = std::atan2(R(1, 0), R(0, 0));
-    }
-    else
+    constexpr double eps = 1e-6; // Precision threshold
+
+    if (std::abs(RotFromQuat(2, 0)) > 1.0 - eps)
     {
         inSingularity = true;
 
-        pitch = _degToRad(90.0); // Explicitly force pitch to 90 degrees as double
-        roll  = _degToRad(45.0); // Override roll directly in degrees
-        yaw   = _degToRad(45.0); // Override yaw directly in degrees
+        // Prevent precision errors when near ±1
+        pitch = _degToRad(RotFromQuat(2, 0) > 0 ? 90.0 : -90.0);
+        roll  = std::atan2(RotFromQuat(2, 1), RotFromQuat(2, 2));
+        yaw   = std::atan2(RotFromQuat(1, 0), RotFromQuat(0, 0));
+    }
+    else
+    {
+        pitch = std::asin(-RotFromQuat(2, 0));
+        roll  = std::atan2(RotFromQuat(2, 1), RotFromQuat(2, 2));
+        yaw   = std::atan2(RotFromQuat(1, 0), RotFromQuat(0, 0));
     }
 
     // Debug output
-    // std::cout << std::fixed << std::setprecision(6);
-    // std::cout << "End effector position (mm): x=" << x << ", y=" << y << ", z=" << z << std::endl;
-    // std::cout << "End effector orientation (deg): roll=" << _radToDeg(roll)
-    //           << ", pitch=" << _radToDeg(pitch) << ", yaw=" << _radToDeg(yaw) << std::endl;
-    // if (inSingularity)
-    // {
-    //     std::cout << "[WARNING] Gimbal lock detected – Roll and Yaw manually overridden.\n";
-    // }
-    // std::cout << "Transformation matrix fk:\n"
-    //           << T << std::endl;
+    std::cout << std::fixed << std::setprecision(6);
+    std::cout << "End effector position (mm): x=" << x << ", y=" << y << ", z=" << z << std::endl;
+    std::cout << "End effector orientation (deg): roll=" << _radToDeg(roll)
+              << ", pitch=" << _radToDeg(pitch) << ", yaw=" << _radToDeg(yaw) << std::endl;
+    if (inSingularity)
+    {
+        std::cout << "[WARNING] Gimbal lock detected – Adjusted angles dynamically.\n";
+    }
+    std::cout << "Transformation matrix fk:\n"
+              << T << std::endl;
 
     return {x, y, z, _radToDeg(roll), _radToDeg(pitch), _radToDeg(yaw), inSingularity};
 }
