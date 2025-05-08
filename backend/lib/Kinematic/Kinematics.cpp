@@ -36,16 +36,18 @@ double Kinematics::_radToDeg(const double rad) const
     return rad * (180.0 / M_PI);
 }
 
-Eigen::Matrix4d Kinematics::_dhToTable(const DHparam& param, const double theta) const
+Eigen::Matrix4d Kinematics::_dhToTable(const DHparam& param, double theta, double offsetDeg) const
 {
     double alpha = param.alpha;
     double a     = param.a;
     double d     = param.d;
 
+    double thetaOffset = theta + _degToRad(offsetDeg);
+
     Eigen::Matrix4d m;
     // clang-format off
-    m << cos(theta), -sin(theta) * cos(alpha), sin(theta) * sin(alpha), a * cos(theta),
-         sin(theta), cos(theta) * cos(alpha), -cos(theta) * sin(alpha), a * sin(theta),
+    m << cos(thetaOffset), -sin(thetaOffset) * cos(alpha), sin(thetaOffset) * sin(alpha), a * cos(thetaOffset),
+         sin(thetaOffset), cos(thetaOffset) * cos(alpha), -cos(thetaOffset) * sin(alpha), a * sin(thetaOffset),
          0, sin(alpha), cos(alpha), d,
          0, 0, 0, 1;
     // clang-format on
@@ -231,6 +233,48 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
 
     double theta3Deg = -(THETA_D + THETA_E) + 90.0f;
 
+    // Use J1, J2, J3 angles to find J3 orientation
+    Eigen::Matrix4d DH_J1 = _dhToTable(_dhParams[0], theta1Rad);
+    Eigen::Matrix4d DH_J2 = _dhToTable(_dhParams[1], _degToRad(theta2Deg), -90.0f);
+    Eigen::Matrix4d DH_J3 = _dhToTable(_dhParams[2], _degToRad(theta3Deg), 180.0f);
+
+    Eigen::Matrix4d R_0_3 = DH_J1 * DH_J2 * DH_J3; // R_0_3 matrix
+
+    // Merge overall rotation(R_0_6) with R_0_3 matrix
+    // Transpose R_0_3 matrix and multiply with R_0_6 matrix
+    Eigen::Matrix3d R_0_3_T = R_0_3.block<3, 3>(0, 0).transpose(); // Transpose of the upper-left 3x3 submatrix of R_0_3
+
+    // Calculate R_3_6 matrix (R_0_3_T * R_0_6<3,3>) -> actual rotation of spherical wrist
+    Eigen::Matrix3d R_3_6 = R_0_3_T * R_0_6.block<3, 3>(0, 0);
+    // extract J4, J5, J6 angles from R_3_6 matrix
+
+    double theta5Rad = std::acos(R_3_6(2, 2));
+    double theta4Rad, theta6Rad;
+
+    // Optional: flip_wrist = true → Inverse ik-solution w. J5 negativ
+    bool flip_wrist = false; // !set this from outside or as function parameter
+
+    if (std::abs(theta5Rad) < 1e-6)
+    {
+        // Singularity – choose default
+        theta4Rad = 0;
+        theta6Rad = std::atan2(-R_3_6(0, 1), R_3_6(0, 0));
+    }
+    else
+    {
+        if (!flip_wrist)
+        {
+            theta4Rad = std::atan2(R_3_6(1, 2), R_3_6(0, 2));
+            theta6Rad = std::atan2(R_3_6(2, 1), -R_3_6(2, 0));
+        }
+        else
+        {
+            theta5Rad *= -1;
+            theta4Rad = std::atan2(-R_3_6(1, 2), -R_3_6(0, 2));
+            theta6Rad = std::atan2(-R_3_6(2, 1), R_3_6(2, 0));
+        }
+    }
+
     // Debug output
     // std::cout << std::fixed << std::setprecision(6);
     // std::cout << "R_0_6_T:\n"
@@ -260,6 +304,21 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     // std::cout << "Theta1 (deg): " << theta1Deg << std::endl;
     // std::cout << "Theta2 (deg): " << theta2Deg << std::endl;
     // std::cout << "Theta3 (deg): " << J3 << std::endl;
+    // std::cout << "Theta4 (deg): " << _radToDeg(theta4Rad) << std::endl;
+    // std::cout << "Theta5 (deg): " << _radToDeg(theta5Rad) << std::endl;
+    // std::cout << "Theta6 (deg): " << _radToDeg(theta6Rad) << std::endl;
+    // std::cout << "DH_J1\n"
+    //           << DH_J1 << std::endl;
+    // std::cout << "DH_J2\n"
+    //           << DH_J2 << std::endl;
+    // std::cout << "DH_J3\n"
+    //           << DH_J3 << std::endl;
+    // std::cout << "R_0_3:\n"
+    //           << R_0_3 << std::endl;
+    // std::cout << "R_0_3_T:\n"
+    //           << R_0_3_T << std::endl;
+    // std::cout << "R_3_6:\n"
+    //           << R_3_6 << std::endl;
 
-    return {theta1Deg, theta2Deg, theta3Deg, 0.0, 0.0, 0.0};
+    return {theta1Deg, theta2Deg, theta3Deg, _radToDeg(theta4Rad), _radToDeg(theta5Rad), _radToDeg(theta6Rad)};
 }
