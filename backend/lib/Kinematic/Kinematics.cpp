@@ -197,8 +197,8 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     double theta1Deg = _radToDeg(theta1Rad);
 
     // Set J1 angle mathematical zero for further calculations
-    double x_at_j1_zero = x_r05 * sin(theta1Rad) + y_r05 * cos(theta1Rad);
-    double y_at_j1_zero = x_r05 * cos(theta1Rad) - y_r05 * sin(theta1Rad);
+    double x_at_j1_zero = x_r05 * cos(theta1Rad) - y_r05 * sin(theta1Rad);
+    double y_at_j1_zero = x_r05 * sin(theta1Rad) + y_r05 * cos(theta1Rad);
 
     double L1 = std::abs(x_at_j1_zero - _dhParams[0].a);
     double L4 = R_0_5(2, 3) - _dhParams[0].d;                          // Z value of R_0_5 matrix - d value of J1
@@ -297,12 +297,12 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     // std::cout << "R_0_5:\n"
     //           << R_0_5 << std::endl;
     // -----------------------Geometric values----------------------
+    // std::cout << "x_at_j1_zero: " << x_at_j1_zero << std::endl;
+    // std::cout << "y_at_j1_zero: " << y_at_j1_zero << std::endl;
     // std::cout << "L1: " << L1 << std::endl;
     // std::cout << "L2: " << L2 << std::endl;
     // std::cout << "L3: " << L3 << std::endl;
     // std::cout << "L4: " << L4 << std::endl;
-    // std::cout << "x_at_j1_zero: " << x_at_j1_zero << std::endl;
-    // std::cout << "y_at_j1_zero: " << y_at_j1_zero << std::endl;
     // std::cout << "_dhParams[0].a: " << _dhParams[0].a << std::endl;
     // std::cout << "_dhParams[0].d: " << _dhParams[0].d << std::endl;
     // std::cout << "Theta B (deg): " << THETA_B << std::endl;
