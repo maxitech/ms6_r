@@ -196,7 +196,7 @@ void test_inverseKinematics_static_j5_positive(void)
     TEST_ASSERT_FLOAT_WITHIN(0.1f, 111.0f, anglesPos.theta6);
 }
 
-void test_inverseKinematics_static_negative(void)
+void test_inverseKinematics_static_j5_negative(void)
 {
     cfg1->motor->setPosition(0);    // Reset for consistent test
     cfg5->motor->setPosition(3200); // Reset for consistent test
@@ -205,9 +205,16 @@ void test_inverseKinematics_static_negative(void)
     delete kin;
     kin = new Kinematics(configs, dhParams);
 
-    Pose   result    = kin->forwardKinematics();
-    Angles anglesNeg = kin->inverseKinematics(124.380f, -124.380f, 281.030f, 135.000f, 0.0f, 180.000f); // j1 = -45.0° j5 = 90.0°
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, -45.0f, anglesNeg.theta1);
+    Pose result = kin->forwardKinematics();
+    // Inputs values are 45°, 33°, 23°, 170°, -90°, 111°
+    Angles angles = kin->inverseKinematics(138.349f, 131.161f, 147.017f, -49.106f, -22.815f, 126.687f);
+    // test angles are equal to position in space - which are put in the ik function but with different angle solution
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 45.0f, angles.theta1);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 33.0f, angles.theta2);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 23.0f, angles.theta3);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, -10.0f, angles.theta4);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 90.0f, angles.theta5);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, -69.0f, angles.theta6);
 }
 
 int runUnityTests(void)
@@ -218,9 +225,9 @@ int runUnityTests(void)
     // RUN_TEST(test_getJointAnglesInRad_should_return_correct_angle_in_radians);
     // RUN_TEST(test_forwardKinematics_correctPose);
     // RUN_TEST(test_forwardKinematics_correctPose_w_toolFrame);
-    // RUN_TEST(test_inverseKinematics_dynamic);
+    RUN_TEST(test_inverseKinematics_dynamic);
     RUN_TEST(test_inverseKinematics_static_j5_positive);
-    // RUN_TEST(test_inverseKinematics_static_negative);
+    RUN_TEST(test_inverseKinematics_static_j5_negative);
     return UNITY_END();
 }
 
