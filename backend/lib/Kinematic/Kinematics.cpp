@@ -248,30 +248,39 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     Eigen::Matrix3d R_3_6 = R_0_3_T * R_0_6.block<3, 3>(0, 0);
     // extract J4, J5, J6 angles from R_3_6 matrix
 
+    // Determine if the wrist is flipped (J5 angle negative)
+    bool                flipWrist = false;
+    std::vector<double> angles    = getJointAnglesInRad();
+    if (angles.size() >= 6) // ? Avoid out-of-bounds access – update this if more joints are added
+    {
+        flipWrist = angles[4] < 0;
+    }
+
     double theta5Rad = std::acos(R_3_6(2, 2));
     double theta4Rad, theta6Rad;
 
-    // Optional: flip_wrist = true → Inverse ik-solution w. J5 negativ
-    bool flip_wrist = false; // !set this from outside or as function parameter
-
     if (std::abs(theta5Rad) < 1e-6)
     {
-        // Singularity – choose default
+        // Singularity: theta5 is ~0 → wrist is aligned → set default values
         theta4Rad = 0;
         theta6Rad = std::atan2(-R_3_6(0, 1), R_3_6(0, 0));
     }
     else
     {
-        if (!flip_wrist)
+        // Optional: flipWrist = true → Inverse ik-solution w. J5 negative
+        if (!flipWrist)
         {
             theta4Rad = std::atan2(R_3_6(1, 2), R_3_6(0, 2));
             theta6Rad = std::atan2(R_3_6(2, 1), -R_3_6(2, 0));
+            // std::cout << "[INFO] Wrist not flipped – J5 positive.\n";
         }
         else
         {
+            // Flip wrist: invert theta5 and negate directions for theta4/theta6
             theta5Rad *= -1;
             theta4Rad = std::atan2(-R_3_6(1, 2), -R_3_6(0, 2));
             theta6Rad = std::atan2(-R_3_6(2, 1), R_3_6(2, 0));
+            // std::cout << "[INFO] Wrist flipped – J5 negative.\n";
         }
     }
 
@@ -303,7 +312,7 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     // ------------------------Angles result------------------------
     // std::cout << "Theta1 (deg): " << theta1Deg << std::endl;
     // std::cout << "Theta2 (deg): " << theta2Deg << std::endl;
-    // std::cout << "Theta3 (deg): " << J3 << std::endl;
+    // std::cout << "Theta3 (deg): " << theta3Deg << std::endl;
     // std::cout << "Theta4 (deg): " << _radToDeg(theta4Rad) << std::endl;
     // std::cout << "Theta5 (deg): " << _radToDeg(theta5Rad) << std::endl;
     // std::cout << "Theta6 (deg): " << _radToDeg(theta6Rad) << std::endl;
