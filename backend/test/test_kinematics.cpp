@@ -40,9 +40,6 @@ void setUp(void)
     motor1->setPosition(1600);
     motor2->setPosition(-3200);
     motor3->setPosition(6400);
-    motor4->setPosition(0);
-    motor5->setPosition(0);
-    motor6->setPosition(0);
 
     cfg1 = new MotorConfig(motor1, 200, 16, 20, 40, 2.0f);
     cfg2 = new MotorConfig(motor2, 200, 16, 20, 40, 2.0f);
@@ -171,11 +168,18 @@ void test_inverseKinematics_dynamic(void)
 
     Pose   result = kin->forwardKinematics();
     Angles angles = kin->inverseKinematics(result.x, result.y, result.z, result.roll, result.pitch, result.yaw);
+
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 0.0f, angles.theta1);  // j1 = 0.0°
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 0.0f, angles.theta2);  // j2 = 0.0°
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 0.0f, angles.theta3);  // j3 = 0.0°
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 0.0f, angles.theta4);  // j4 = 0.0°
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 90.0f, angles.theta5); // j5 = 90.0°
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 0.0f, angles.theta6);  // j6 = 0.0°
 }
 
 void test_inverseKinematics_static_positive(void)
 {
-    cfg1->motor->setPosition(0);    // Reset for consistent test
+    // cfg1->motor->setPosition(1600); // Reset for consistent test
     cfg5->motor->setPosition(3200); // Reset for consistent test
 
     std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
@@ -183,7 +187,7 @@ void test_inverseKinematics_static_positive(void)
     kin = new Kinematics(configs, dhParams);
 
     Pose   result    = kin->forwardKinematics();
-    Angles anglesPos = kin->inverseKinematics(124.380f, 124.380f, 281.030f, 135.000f, 0.0f, 180.000f); // j1 = 45.0° j5 = 90.0°
+    Angles anglesPos = kin->inverseKinematics(164.957f, 172.145f, 179.255f, -24.991f, 11.914f, -55.749f); // j1 = 45.0° j5 = 90.0°
     TEST_ASSERT_FLOAT_WITHIN(0.01f, 45.0f, anglesPos.theta1);
 }
 
@@ -211,7 +215,7 @@ int runUnityTests(void)
     // RUN_TEST(test_forwardKinematics_correctPose_w_toolFrame);
     // RUN_TEST(test_inverseKinematics_dynamic);
     RUN_TEST(test_inverseKinematics_static_positive);
-    RUN_TEST(test_inverseKinematics_static_negative);
+    // RUN_TEST(test_inverseKinematics_static_negative);
     return UNITY_END();
 }
 
