@@ -334,3 +334,38 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     return {theta1Deg, theta2Deg, theta3Deg, _radToDeg(theta4Rad), _radToDeg(theta5Rad), _radToDeg(theta6Rad)};
 }
 */
+
+std::vector<Angles> Kinematics::calculateAllIKSolutions(double x, double y, double z, double yaw, double pitch, double roll)
+{
+    std::vector<Angles> allSolutions;
+
+    // Create transformation matrix from inputs with tool frame
+    Eigen::Matrix4d T_0_6           = _createTransformationMatrix(x, y, z, yaw, pitch, roll);
+    Eigen::Matrix4d T_TF            = _toolFrameMatrix.inverse();
+    Eigen::Matrix4d T_0_6_corrected = T_0_6 * T_TF;
+
+    // Calculate WCP(R_0_5)
+    // ? maybe put duplicate code into a function
+    Eigen::Matrix4d T_neg_d6 = Eigen::Matrix4d::Identity();
+    T_neg_d6(2, 3)           = -_dhParams[5].d;
+    Eigen::Matrix4d T_0_5    = T_0_6_corrected * T_neg_d6;
+
+    // --- Start calculate all 8 solutions ---
+    for (int shoulder = 0; shoulder < 2; ++shoulder) // J1: left/right
+    {
+        for (int elbow = 0; elbow < 2; ++elbow) // Elbow: up/down
+        {
+            for (int wrist = 0; wrist < 2; ++wrist) // Wrist flip: yes/no
+            {
+                // Combine all three bits: 000 bis 111
+                Angles solution;
+                bool   success = solveIKVariant(T_0_5, T_0_6_corrected, shoulder, elbow, wrist, solution);
+
+                if (success)
+                    allSolutions.push_back(solution);
+            }
+        }
+    }
+
+    return allSolutions;
+}
