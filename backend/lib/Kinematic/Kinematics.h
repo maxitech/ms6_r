@@ -40,7 +40,6 @@ public:
     void                setToolFrame(double x, double y, double z, double yaw, double pitch, double roll);
     Pose                forwardKinematics();
     Angles              inverseKinematics(double x, double y, double z, double yaw, double pitch, double roll);
-    std::vector<Angles> calculateAllIKSolutions(double x, double y, double z, double yaw, double pitch, double roll);
 
 private:
     double _totalRatio(const MotorConfig& motorConfig) const;
