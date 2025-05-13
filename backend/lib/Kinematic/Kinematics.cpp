@@ -164,6 +164,7 @@ Pose Kinematics::forwardKinematics()
     return {x, y, z, _radToDeg(roll), _radToDeg(pitch), _radToDeg(yaw), inSingularity};
 }
 
+/*
 Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, double pitch, double roll)
 {
     // Calculate wrist center - find J1 angle
@@ -332,3 +333,4 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
 
     return {theta1Deg, theta2Deg, theta3Deg, _radToDeg(theta4Rad), _radToDeg(theta5Rad), _radToDeg(theta6Rad)};
 }
+*/
