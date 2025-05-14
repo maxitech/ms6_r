@@ -199,7 +199,7 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     // Set J1 angle mathematical zero for further calculations
     // ? use (-theta1Rad) instead of theta1Rad: why? because we want to rotate back to zero
     double x_at_j1_zero = x_r05 * cos(-theta1Rad) - y_r05 * sin(-theta1Rad);
-    double y_at_j1_zero = y_r05 * cos(-theta1Rad) + x_r05 * sin(-theta1Rad);
+    // double y_at_j1_zero = y_r05 * cos(-theta1Rad) + x_r05 * sin(-theta1Rad);
 
     double L1 = std::abs(x_at_j1_zero - _dhParams[0].a);
     double L4 = R_0_5(2, 3) - _dhParams[0].d;                          // Z value of R_0_5 matrix - d value of J1
