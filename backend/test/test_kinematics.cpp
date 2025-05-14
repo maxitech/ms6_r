@@ -216,12 +216,12 @@ void test_inverseKinematics_static_j5_positive(void)
     //           << original.theta4 << ", " << original.theta5 << ", " << original.theta6 << std::endl;
     // std::cout << "----------------------------------------" << std::endl;
 
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 45.0f, angles.theta1);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 33.0f, angles.theta2);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 23.0f, angles.theta3);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 170.0f, angles.theta4);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 90.0f, angles.theta5);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 111.0f, angles.theta6);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta1, angles.theta1);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta2, angles.theta2);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta3, angles.theta3);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta4, angles.theta4);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta5, angles.theta5);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta6, angles.theta6);
 }
 
 void test_inverseKinematics_static_j5_negative(void)
@@ -247,12 +247,12 @@ void test_inverseKinematics_static_j5_negative(void)
     // std::cout << "----------------------------------------" << std::endl;
 
     // test angles are equal to position in space - which are put in the ik function
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 45.0f, angles.theta1);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 33.0f, angles.theta2);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 23.0f, angles.theta3);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 170.0f, angles.theta4);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, -90.0f, angles.theta5);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 111.0f, angles.theta6);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta1, angles.theta1);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta2, angles.theta2);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta3, angles.theta3);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta4, angles.theta4);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta5, angles.theta5);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta6, angles.theta6);
 }
 
 void test_inverseKinematics_static_j5_positive_w_toolFrame(void)
@@ -277,12 +277,12 @@ void test_inverseKinematics_static_j5_positive_w_toolFrame(void)
     //           << original.theta4 << ", " << original.theta5 << ", " << original.theta6 << std::endl;
     // std::cout << "----------------------------------------" << std::endl;
 
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 45.0f, angles.theta1);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 33.0f, angles.theta2);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 23.0f, angles.theta3);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 170.0f, angles.theta4);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 90.0f, angles.theta5);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 111.0f, angles.theta6);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta1, angles.theta1);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta2, angles.theta2);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta3, angles.theta3);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta4, angles.theta4);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta5, angles.theta5);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta6, angles.theta6);
 }
 
 void test_inverseKinematics_static_j5_negative_w_toolFrame(void)
@@ -307,12 +307,12 @@ void test_inverseKinematics_static_j5_negative_w_toolFrame(void)
     //           << original.theta4 << ", " << original.theta5 << ", " << original.theta6 << std::endl;
     // std::cout << "----------------------------------------" << std::endl;
 
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 45.0f, angles.theta1);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 33.0f, angles.theta2);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 23.0f, angles.theta3);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 170.0f, angles.theta4);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, -90.0f, angles.theta5);
-    TEST_ASSERT_FLOAT_WITHIN(0.1f, 111.0f, angles.theta6);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta1, angles.theta1);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta2, angles.theta2);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta3, angles.theta3);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta4, angles.theta4);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta5, angles.theta5);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, original.theta6, angles.theta6);
 }
 
 int runUnityTests(void)
