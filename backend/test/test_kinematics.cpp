@@ -255,6 +255,36 @@ void test_inverseKinematics_static_j5_negative(void)
     TEST_ASSERT_FLOAT_WITHIN(0.1f, 111.0f, angles.theta6);
 }
 
+void test_inverseKinematics_static_j5_positive_w_toolFrame(void)
+{
+    cfg5->motor->setPosition(3200); // Reset for consistent test
+
+    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
+    delete kin;
+    kin = new Kinematics(configs, dhParams);
+
+    Angles original = {45.0f, 33.0f, 23.0f, 170.0f, 90.0f, 111.0f}; // Represents the expected angles
+    kin->setToolFrame(0.0f, 0.0f, 23.5f, 0.0f, 0.0f, 0.0f);
+    Angles angles = kin->inverseKinematics(175.639f, 188.598f, 192.197f, -24.991f, 11.914f, -55.749f);
+
+    // Debug output
+    // std::cout << "----------------------------------------" << std::endl;
+    // std::cout << std::fixed << std::setprecision(6);
+    // std::cout << "IK Angles: ";
+    // std::cout << "  " << angles.theta1 << ", " << angles.theta2 << ", " << angles.theta3 << ", "
+    //           << angles.theta4 << ", " << angles.theta5 << ", " << angles.theta6 << std::endl;
+    // std::cout << "Original: " << original.theta1 << ", " << original.theta2 << ", " << original.theta3 << ", "
+    //           << original.theta4 << ", " << original.theta5 << ", " << original.theta6 << std::endl;
+    // std::cout << "----------------------------------------" << std::endl;
+
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 45.0f, angles.theta1);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 33.0f, angles.theta2);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 23.0f, angles.theta3);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 170.0f, angles.theta4);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 90.0f, angles.theta5);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, 111.0f, angles.theta6);
+}
+
 int runUnityTests(void)
 {
     UNITY_BEGIN();
@@ -266,6 +296,7 @@ int runUnityTests(void)
     RUN_TEST(test_fk_to_ik_angle_reconstruction);
     RUN_TEST(test_inverseKinematics_static_j5_positive);
     RUN_TEST(test_inverseKinematics_static_j5_negative);
+    RUN_TEST(test_inverseKinematics_static_j5_positive_w_toolFrame);
     return UNITY_END();
 }
 
