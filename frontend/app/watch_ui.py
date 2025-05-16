@@ -21,7 +21,7 @@ class UiFileHandler(FileSystemEventHandler):
         name, _ = os.path.splitext(filename)
         output_path = os.path.join(UI_GEN_DIR, f"{name}_ui.py")
         try:
-            subprocess.run(["pyuic6", "-o", output_path, ui_path], check=True)
+            subprocess.run(["pyside6-uic", "-o", output_path, ui_path], check=True)
             print(f"[✔] Converted {filename} -> {output_path}")
         except subprocess.CalledProcessError as e:
             print(f"[✖] Error converting {filename}: {e}")
