@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
-from PySide6.QtCore import QFile
 from app.ui_gen.main_window_ui import Ui_MainWindow
+from app.controllers.main_window_controller import MainWindowController
 
 
 class MainWindow(QMainWindow):
@@ -9,6 +9,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.controller = MainWindowController(self.ui)
 
 
 if __name__ == "__main__":
