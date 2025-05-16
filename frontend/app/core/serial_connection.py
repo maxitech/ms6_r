@@ -31,7 +31,19 @@ class SerialConnection:
             print(f"Disconnected from {self._port}.")
 
     def is_connected(self):
-        return self._serial and self._serial.is_open
+        if self._serial and self._serial.is_open:
+            available_ports = [
+                port.device for port in serial.tools.list_ports.comports()
+            ]
+            if self._port in available_ports:
+                return True
+            else:
+                print(
+                    f"Warning: {self._port} no longer available, device may be disconnected."
+                )
+                self.disconnect()
+                return False
+        return False
 
     # private methods
     def _load_ports(self):
