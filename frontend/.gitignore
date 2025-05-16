@@ -172,3 +172,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# -----Custom rules-----
+# Ignore all .py files in the ui/ folder
+app/ui/*.py
+
+# But do NOT ignore .ui files
+app/!ui/*.ui
