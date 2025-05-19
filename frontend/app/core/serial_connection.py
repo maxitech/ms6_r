@@ -45,6 +45,12 @@ class SerialConnection:
                 return False
         return False
 
+    def send_data(self, data):
+        if self.is_connected():
+            if isinstance(data, str):
+                data = bytes(data, "utf-8")
+            self._serial.write(data)
+
     # private methods
     def _load_ports(self):
         self._ports = serial.tools.list_ports.comports()
