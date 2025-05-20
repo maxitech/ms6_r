@@ -12,12 +12,14 @@ class SerialWorker(QThread):
         self._running = True
 
     def run(self):
+        print("SerialWorker started!")
         while self._running:
             try:
                 if self._serial_port and self._serial_port.in_waiting:
                     data = self._serial_port.read(self._serial_port.in_waiting).decode(
                         "utf-8"
                     )
+                    print(f"Received Data: {data}")
                     self.data_received.emit(data)  # send data to ui
             except serial.SerialException as e:
                 print(f"Serial error: {e}")
