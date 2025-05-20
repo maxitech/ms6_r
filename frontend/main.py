@@ -11,6 +11,11 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
         self.controller = MainWindowController(self.ui)
 
+    def closeEvent(self, event):
+        print("Closing application... Stopping SerialWorker")
+        self.controller._serial.disconnect()
+        event.accept()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
