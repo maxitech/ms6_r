@@ -8,5 +8,4 @@ class Helper:
             checksumVal ^= ord(char)
 
         hex_checksum = format(checksumVal, "X").zfill(2)
-        print(hex_checksum)
         return hex_checksum
