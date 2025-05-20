@@ -9,7 +9,7 @@ void CommandProcessor::processInput(const String& input)
 {
     if (!_isInputValid(input))
     {
-        Serial.println("Input is invalid. Expected input: $<cmd>*<checksum>#");
+        Serial.println("Input is invalid. Expected input: $<cmd_pt1, cmd_pt2, etc.>*<checksum>#");
         return;
     }
 
