@@ -15,7 +15,6 @@ class SerialConnection:
     def getPorts(self):
         self._load_ports()
         devices = [port.device for port in self._ports]
-        print(f"Available ports: {devices}")
         return devices
 
     def setPort(self, port):
