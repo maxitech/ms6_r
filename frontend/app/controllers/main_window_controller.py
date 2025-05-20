@@ -1,11 +1,13 @@
 from PySide6.QtCore import QTimer
 from app.core.serial_connection import SerialConnection
+from app.utils.helper import Helper
 
 
 class MainWindowController:
     def __init__(self, ui):
         self._ui = ui
         self._serial = SerialConnection()
+        self._helper = Helper()
         self._current_ports = []
 
         self._check_ports()
@@ -61,3 +63,16 @@ class MainWindowController:
         self._ui.con_connect_btn.setText(btn_text)
         self._ui.con_device_comboBox.setEnabled(is_enabled)
         self._ui.con_status_label2.setText(status_text)
+
+    def _send_data(self):
+        text_input = self._ui.prog_textEdit.toPlainText()
+        if isinstance(text_input, str and text_input > 0):
+            checksum = self._helper.calc_checksum(text_input)
+            data_str = f"${text_input}*{checksum}#"
+
+        if (
+            data_str.startswith("#")
+            and data_str.find("*") != -1
+            and data_str.endswith("#")
+        ):
+            self._serial.send_data(data_str)
