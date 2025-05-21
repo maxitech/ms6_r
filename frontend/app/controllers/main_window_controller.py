@@ -40,17 +40,62 @@ class MainWindowController:
         # Prog Clear btn
         self._ui.prog_clear_btn.clicked.connect(self._handle_clear_btn_click)
 
-    # private methods
+    # *************************Private Methods****************************
     def _check_ports(self):
         _ports = self._serial.getPorts()
         if _ports != self._current_ports:
             self._current_ports = _ports
             self._update_combo_box()
 
-    def _update_combo_box(self):
-        self._ui.con_device_comboBox.clear()
-        self._ui.con_device_comboBox.addItems(self._current_ports)
+    def _connect(self):
+        selected_port = self._ui.con_device_comboBox.currentText()
+        self._serial.setPort(selected_port)
+        self._serial.connect(self._process_received_data)
+        if self._serial.is_connected() and not None:
+            self._update_ui_based_on_connection_status(
+                "Disconnect", f"Connected to {selected_port}", False
+            )
+            self._fmt_log_monitor("[INFO]", "Connection established", "lightblue")
+        else:
+            self._ui.con_status_label2.setText(f"Failed to connect to {selected_port}")
+            self._fmt_log_monitor("[ERROR]", "Failed to connect", "red")
 
+    def _disconnect(self):
+        self._serial.disconnect()
+        if not self._serial.is_connected():
+            self._update_ui_based_on_connection_status("Connect", "Disconnected", True)
+            self._fmt_log_monitor("[INFO]", "Disconnected", "lightblue")
+        else:
+            self._ui.con_status_label2.setText("Failed to disconnect")
+            self._fmt_log_monitor("[ERROR]", "Failed to disconnect", "red")
+
+    def _check_status(self):
+        if not self._serial.is_connected():
+            self._update_ui_based_on_connection_status("Connect", "Disconnected", True)
+        else:
+            return
+
+    def _send_data(self, data):
+        # ! change later
+        # text_input = self._ui.prog_textEdit.toPlainText()
+        text_input = data
+        if isinstance(text_input, str) and len(text_input) > 0:
+            checksum = self._helper.calc_checksum(text_input)
+            data_str = f"${text_input}*{checksum}#"
+
+            if (
+                data_str.startswith("$")
+                and data_str.find("*") != -1
+                and data_str.endswith("#")
+            ):
+                self._serial.send_data(data_str)
+
+    def _process_received_data(self, data):
+        # ? make ui updates which in relation to received serial data here
+        # print(f"Received in UI: {data}")
+        self._update_log_monitor_with_serial(data)
+
+    # ***************Handlers*******************
     def _handle_con_btn_click(self):
         if self._ui.con_connect_btn.text() == "Connect":
             self._connect()
@@ -81,55 +126,17 @@ class MainWindowController:
         self._program = None
         self._ui.btn_load_prog_btn.setEnabled(False)
 
-    def _connect(self):
-        selected_port = self._ui.con_device_comboBox.currentText()
-        self._serial.setPort(selected_port)
-        self._serial.connect(self._process_received_data)
-        if self._serial.is_connected() and not None:
-            self._update_ui_based_on_connection_status(
-                "Disconnect", f"Connected to {selected_port}", False
-            )
-            self._fmt_log_monitor("[INFO]", "Connection established", "lightblue")
-        else:
-            self._ui.con_status_label2.setText(f"Failed to connect to {selected_port}")
-            self._fmt_log_monitor("[ERROR]", "Failed to connect", "red")
-
-    def _disconnect(self):
-        self._serial.disconnect()
-        if not self._serial.is_connected():
-            self._update_ui_based_on_connection_status("Connect", "Disconnected", True)
-            self._fmt_log_monitor("[INFO]", "Disconnected", "lightblue")
-        else:
-            self._ui.con_status_label2.setText("Failed to disconnect")
-            self._fmt_log_monitor("[ERROR]", "Failed to disconnect", "red")
-
-    def _check_status(self):
-        if not self._serial.is_connected():
-            self._update_ui_based_on_connection_status("Connect", "Disconnected", True)
-        else:
-            return
+    # *****************Update UI*********************
+    def _update_combo_box(self):
+        self._ui.con_device_comboBox.clear()
+        self._ui.con_device_comboBox.addItems(self._current_ports)
 
     def _update_ui_based_on_connection_status(self, btn_text, status_text, is_enabled):
         self._ui.con_connect_btn.setText(btn_text)
         self._ui.con_device_comboBox.setEnabled(is_enabled)
         self._ui.con_status_label2.setText(status_text)
 
-    def _send_data(self, data):
-        print("_send_run")
-        # ! change later
-        # text_input = self._ui.prog_textEdit.toPlainText()
-        text_input = data
-        if isinstance(text_input, str) and len(text_input) > 0:
-            checksum = self._helper.calc_checksum(text_input)
-            data_str = f"${text_input}*{checksum}#"
-
-            if (
-                data_str.startswith("$")
-                and data_str.find("*") != -1
-                and data_str.endswith("#")
-            ):
-                self._serial.send_data(data_str)
-
+    # *Program Monitor
     def _fmt_program_monitor(self, cmd, txt_color, bracket_color):
         self._ui.prog_textEdit.clear()
         cursor = self._ui.prog_textEdit.textCursor()
@@ -154,11 +161,7 @@ class MainWindowController:
 
         self._ui.prog_textEdit.setTextCursor(cursor)
 
-    def _process_received_data(self, data):
-        # ? make ui updates which in relation to received serial data here
-        # print(f"Received in UI: {data}")
-        self._update_log_monitor_with_serial(data)
-
+    # *Log Monitor
     def _update_log_monitor_with_serial(self, data):
         self._fmt_log_monitor("[LOG]", data, "red")
 
