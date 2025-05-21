@@ -120,7 +120,6 @@ class MainWindowController:
     def _handle_load_btn_click(self):
         if self._program is not None:
             self._send_data(self._program)
-        self._program = None
 
     def _handle_clear_btn_click(self):
         self._program = None
