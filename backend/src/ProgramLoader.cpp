@@ -10,6 +10,7 @@ void ProgramLoader::handleCommand(const std::vector<String>& cmdParts)
     if (cmdParts.size() < 2)
     {
         Serial.println("Error: Not enough arguments.");
+        delay(20);
         return;
     }
 
@@ -33,17 +34,20 @@ void ProgramLoader::_loadProgram(const String& program)
     if (it == programMap.end())
     {
         Serial.println("Unknown program: " + program);
+        delay(20);
         return;
     }
 
     if (_currentProgramState == it->second)
     {
         Serial.println("Reloaded program: " + program);
+        delay(20);
     }
     else
     {
         Serial.println("Loading program: " + program);
         _setState(it->second);
+        delay(20);
     }
 }
 

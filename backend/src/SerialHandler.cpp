@@ -34,5 +34,6 @@ void SerialHandler::_forwardInput(const String& input)
     else
     {
         Serial.println("Error: No CommandProcesor set. Please set one using setCommandProcessor() in main.cpp");
+        delay(20);
     }
 }

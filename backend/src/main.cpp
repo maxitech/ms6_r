@@ -109,6 +109,7 @@ void setup()
     {
     };
     Serial.println("Setup started");
+    delay(20);
 
     pinMode(motorJ1En, OUTPUT);
     pinMode(motorJ2En, OUTPUT);
@@ -169,14 +170,16 @@ void setup()
     homingManager.addGroup(std::move(group3));
 
     limitSwitches.init();
-    // serialHandler.setCommandProcessor(&cmdProcessor);
+    serialHandler.setCommandProcessor(&cmdProcessor);
 
     Serial.println("Setup done");
+    delay(20);
 }
 
 void loop()
 {
-    // serialHandler.listenForSerial();
-    // programLoader.run();
-    homingManager.executeHoming();
+
+    serialHandler.listenForSerial();
+    programLoader.run();
+    // homingManager.executeHoming();
 }

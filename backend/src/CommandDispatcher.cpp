@@ -17,5 +17,6 @@ void CommandDispatcher::dispatch(const std::vector<String>& cmdParts)
     else
     {
         Serial.println("Unknown command: " + command);
+        delay(20);
     }
 }
