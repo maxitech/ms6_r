@@ -8,7 +8,7 @@ from app.utils.helper import Helper
 class MainWindowController:
     def __init__(self, ui):
         self._ui = ui
-        self._serial = SerialConnection()
+        self._serial = SerialConnection(controller=self)
         self._helper = Helper()
         self._current_ports = []
 
@@ -39,6 +39,12 @@ class MainWindowController:
 
         # Prog Clear btn
         self._ui.prog_clear_btn.clicked.connect(self._handle_clear_btn_click)
+
+    # *************************Public Methods****************************
+    def handle_unexpected_disconnect(self):
+        self._fmt_log_monitor(
+            "[ERROR]", "Connection lost! Device may be disconnected.", "red"
+        )
 
     # *************************Private Methods****************************
     def _check_ports(self):
