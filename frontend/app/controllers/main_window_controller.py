@@ -1,3 +1,4 @@
+from PySide6.QtGui import QTextCharFormat, QColor, QTextCursor
 from PySide6.QtCore import QTimer
 from app.core.serial_connection import SerialConnection
 from app.utils.helper import Helper
@@ -16,7 +17,19 @@ class MainWindowController:
         self._port_timer.timeout.connect(self._check_status)
         self._port_timer.start(2000)
 
+        # Connect btn
         self._ui.con_connect_btn.clicked.connect(self._handle_con_btn_click)
+
+        # Cmd btn's
+        self._ui.cmd_ping_btn.clicked.connect(
+            lambda: self._handle_cmd_btn_click(self._ui.cmd_ping_btn)
+        )
+        self._ui.cmd_pong_btn.clicked.connect(
+            lambda: self._handle_cmd_btn_click(self._ui.cmd_pong_btn)
+        )
+        self._ui.cmd_switches_btn.clicked.connect(
+            lambda: self._handle_cmd_btn_click(self._ui.cmd_switches_btn)
+        )
 
     # private methods
     def _check_ports(self):
@@ -35,10 +48,23 @@ class MainWindowController:
         else:
             self._disconnect()
 
+    def _handle_cmd_btn_click(self, clicked_button):
+        cmd_map = {
+            self._ui.cmd_ping_btn: ("Ping", "LOAD,PING"),
+            self._ui.cmd_pong_btn: ("Pong", "LOAD,PONG"),
+            self._ui.cmd_switches_btn: ("TestSwitches", "LOAD,TEST_SWITCHES"),
+        }
+
+        if clicked_button in cmd_map:
+            name, command = cmd_map[clicked_button]
+            print(f"Clicked button: {name}")
+            self._fmt_program_monitor(name, "lightblue", "white")
+            self._send_data(command)
+
     def _connect(self):
         selected_port = self._ui.con_device_comboBox.currentText()
         self._serial.setPort(selected_port)
-        self._serial.connect()
+        self._serial.connect(self._process_received_data)
         if self._serial.is_connected() and not None:
             self._update_ui_based_on_connection_status(
                 "Disconnect", f"Connected to {selected_port}", False
@@ -64,15 +90,46 @@ class MainWindowController:
         self._ui.con_device_comboBox.setEnabled(is_enabled)
         self._ui.con_status_label2.setText(status_text)
 
-    def _send_data(self):
-        text_input = self._ui.prog_textEdit.toPlainText()
-        if isinstance(text_input, str and text_input > 0):
+    def _send_data(self, data):
+        print("_send_run")
+        # ! change later
+        # text_input = self._ui.prog_textEdit.toPlainText()
+        text_input = data
+        if isinstance(text_input, str) and len(text_input) > 0:
             checksum = self._helper.calc_checksum(text_input)
             data_str = f"${text_input}*{checksum}#"
 
-        if (
-            data_str.startswith("#")
-            and data_str.find("*") != -1
-            and data_str.endswith("#")
-        ):
-            self._serial.send_data(data_str)
+            if (
+                data_str.startswith("$")
+                and data_str.find("*") != -1
+                and data_str.endswith("#")
+            ):
+                self._serial.send_data(data_str)
+
+    def _fmt_program_monitor(self, cmd, txt_color, bracket_color):
+        self._ui.prog_textEdit.clear()
+        cursor = self._ui.prog_textEdit.textCursor()
+        cursor.movePosition(QTextCursor.End)
+
+        # Format <cmd>
+        fmt_cmd = QTextCharFormat()
+        fmt_cmd.setForeground(QColor(txt_color))
+        fmt_cmd.setFontWeight(600)
+        fmt_cmd.setFontPointSize(11)
+
+        # Format for "()"
+        fmt_brackets = QTextCharFormat()
+        fmt_brackets.setForeground(QColor(bracket_color))
+        fmt_brackets.setFontWeight(600)
+        fmt_brackets.setFontPointSize(11)
+
+        # Insert text
+        cursor.insertText(cmd, fmt_cmd)
+        cursor.insertText("()", fmt_brackets)
+        cursor.insertText("\n")
+
+        self._ui.prog_textEdit.setTextCursor(cursor)
+
+    def _process_received_data(self):
+        # ? make ui updates which in relation to received serial data here
+        pass
