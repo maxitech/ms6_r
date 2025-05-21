@@ -1,3 +1,4 @@
+import datetime
 from PySide6.QtGui import QTextCharFormat, QColor, QTextCursor
 from PySide6.QtCore import QTimer
 from app.core.serial_connection import SerialConnection
@@ -17,6 +18,8 @@ class MainWindowController:
         self._port_timer.timeout.connect(self._check_status)
         self._port_timer.start(2000)
 
+        self._program_queue = []
+
         # Connect btn
         self._ui.con_connect_btn.clicked.connect(self._handle_con_btn_click)
 
@@ -30,6 +33,9 @@ class MainWindowController:
         self._ui.cmd_switches_btn.clicked.connect(
             lambda: self._handle_cmd_btn_click(self._ui.cmd_switches_btn)
         )
+
+        # button container
+        self._ui.btn_load_prog_btn.clicked.connect(self._handle_load_btn_click)
 
     # private methods
     def _check_ports(self):
@@ -59,7 +65,12 @@ class MainWindowController:
             name, command = cmd_map[clicked_button]
             print(f"Clicked button: {name}")
             self._fmt_program_monitor(name, "lightblue", "white")
-            self._send_data(command)
+            self._program_queue.append(command)
+
+    def _handle_load_btn_click(self):
+        for cmd in self._program_queue:
+            self._send_data(cmd)
+        self._program_queue.clear()
 
     def _connect(self):
         selected_port = self._ui.con_device_comboBox.currentText()
@@ -69,15 +80,19 @@ class MainWindowController:
             self._update_ui_based_on_connection_status(
                 "Disconnect", f"Connected to {selected_port}", False
             )
+            self._fmt_log_monitor("[INFO]", "Connection established", "lightblue")
         else:
             self._ui.con_status_label2.setText(f"Failed to connect to {selected_port}")
+            self._fmt_log_monitor("[ERROR]", "Failed to connect", "red")
 
     def _disconnect(self):
         self._serial.disconnect()
         if not self._serial.is_connected():
             self._update_ui_based_on_connection_status("Connect", "Disconnected", True)
+            self._fmt_log_monitor("[INFO]", "Disconnected", "lightblue")
         else:
             self._ui.con_status_label2.setText("Failed to disconnect")
+            self._fmt_log_monitor("[ERROR]", "Failed to disconnect", "red")
 
     def _check_status(self):
         if not self._serial.is_connected():
@@ -130,6 +145,36 @@ class MainWindowController:
 
         self._ui.prog_textEdit.setTextCursor(cursor)
 
-    def _process_received_data(self):
+    def _process_received_data(self, data):
         # ? make ui updates which in relation to received serial data here
-        pass
+        # print(f"Received in UI: {data}")
+        self._update_log_monitor_with_serial(data)
+
+    def _update_log_monitor_with_serial(self, data):
+        self._fmt_log_monitor("[LOG]", data, "red")
+
+    def _fmt_log_monitor(self, log_prefix, data, prefix_color):
+        date = str(datetime.datetime.now().date())
+        time = str(datetime.datetime.now().time()).split(".")[0]
+        dt_time_str = f"{date} {time} - "
+
+        cursor = self._ui.log_textEdit.textCursor()
+        cursor.movePosition(QTextCursor.End)
+
+        fmt_prefix = QTextCharFormat()
+        fmt_prefix.setForeground(QColor(prefix_color))
+        fmt_prefix.setFontWeight(400)
+        fmt_prefix.setFontPointSize(9)
+
+        fmt_dt_time = QTextCharFormat()
+        fmt_dt_time.setForeground(QColor("white"))
+        fmt_dt_time.setFontWeight(400)
+        fmt_dt_time.setFontPointSize(9)
+
+        # Insert text
+        cursor.insertText(log_prefix, fmt_prefix)
+        cursor.insertText(" ")
+        cursor.insertText(dt_time_str, fmt_dt_time)
+        cursor.insertText(data + ("\n" if "\n" not in data else ""))
+
+        self._ui.log_textEdit.setTextCursor(cursor)
