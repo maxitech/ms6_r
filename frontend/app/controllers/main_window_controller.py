@@ -18,7 +18,7 @@ class MainWindowController:
         self._port_timer.timeout.connect(self._check_status)
         self._port_timer.start(2000)
 
-        self._program_queue = []
+        self._program = None
 
         # Connect btn
         self._ui.con_connect_btn.clicked.connect(self._handle_con_btn_click)
@@ -34,8 +34,11 @@ class MainWindowController:
             lambda: self._handle_cmd_btn_click(self._ui.cmd_switches_btn)
         )
 
-        # button container
+        # Button container
         self._ui.btn_load_prog_btn.clicked.connect(self._handle_load_btn_click)
+
+        # Prog Clear btn
+        self._ui.prog_clear_btn.clicked.connect(self._handle_clear_btn_click)
 
     # private methods
     def _check_ports(self):
@@ -63,14 +66,20 @@ class MainWindowController:
 
         if clicked_button in cmd_map:
             name, command = cmd_map[clicked_button]
-            print(f"Clicked button: {name}")
+            if self._program == command:
+                return
             self._fmt_program_monitor(name, "lightblue", "white")
-            self._program_queue.append(command)
+            self._program = command
+            self._ui.btn_load_prog_btn.setEnabled(True)
 
     def _handle_load_btn_click(self):
-        for cmd in self._program_queue:
-            self._send_data(cmd)
-        self._program_queue.clear()
+        if self._program is not None:
+            self._send_data(self._program)
+        self._program = None
+
+    def _handle_clear_btn_click(self):
+        self._program = None
+        self._ui.btn_load_prog_btn.setEnabled(False)
 
     def _connect(self):
         selected_port = self._ui.con_device_comboBox.currentText()
