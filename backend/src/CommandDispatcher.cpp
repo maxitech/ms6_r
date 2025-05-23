@@ -3,17 +3,17 @@
 CommandDispatcher::CommandDispatcher(ProgramLoader& programLoader)
     : _programLoader(programLoader) {};
 
-void CommandDispatcher::dispatch(const std::vector<String>& cmdParts)
+void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& args)
 {
-    if (cmdParts.empty())
+    if (cmd == "" || args.empty())
         return;
 
-    const String& command = cmdParts[0];
+    const String& command = cmd;
 
     // --------------------This block is use if backend runs main func automatically if JOG of MOVE are the cmd's-------------
     if (command == "LOAD" || command == "JOG" || command == "MOVE")
     {
-        _programLoader.handleCommand(cmdParts);
+        _programLoader.handleCommand(cmd, args);
     }
     else
     {
@@ -24,12 +24,12 @@ void CommandDispatcher::dispatch(const std::vector<String>& cmdParts)
     // -------------------This block can be used if main func running has to be handled by the frontend------------------------
     // if (command == "LOAD")
     // {
-    //     _programLoader.handleCommand(cmdParts);
+    //     _programLoader.handleCommand(args);
     // }
     // else if (command == "JOG" || command == "MOVE")
     //     if (_programLoader.getState() == MAIN)
     //     {
-    //         _programLoader.handleCommand(cmdParts);
+    //         _programLoader.handleCommand(args);
     //     }
     //     else
     //     {

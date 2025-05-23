@@ -26,9 +26,10 @@ public:
 
     /**
      * @brief Dispatches the parsed command parts to the appropriate handler.
-     * @param cmdParts Vector of strings where the first element is the command name.
+     * @param cmd String which is the command.
+     * @param args Vector of strings(arguments for the command)
      */
-    void dispatch(const std::vector<String>& cmdParts);
+    void dispatch(const String& cmd, const std::vector<String>& args);
 
 private:
     /**
