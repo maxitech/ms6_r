@@ -5,17 +5,18 @@
 ProgramLoader::ProgramLoader(LimitSwitches& limitSwitches)
     : _limitSwitches(limitSwitches) {};
 
-void ProgramLoader::handleCommand(const std::vector<String>& cmdParts)
+void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& args)
 {
-    if (cmdParts.size() < 2)
+    if (cmd == "" || args.empty())
     {
-        Serial.println("Error: Not enough arguments.");
+        Serial.println("Error: False command or not enough arguments.");
         delay(20);
         return;
     }
 
-    const String command = cmdParts[0];
-    const String program = cmdParts[1];
+    const String&              command   = cmd;
+    const String&              program   = args[0];
+    const std::vector<String>& arguments = args;
 
     if (command == "LOAD")
     {

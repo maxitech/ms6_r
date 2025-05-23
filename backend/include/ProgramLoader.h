@@ -35,9 +35,10 @@ public:
 
     /**
      * @brief Handles incoming command parts and loads a matching program.
-     * @param cmdParts A vector of strings where cmdParts[1] is expected to be the program name.
+     * @param cmd A string which is the command.
+     * @param args A vector of strings arguments related to the command.
      */
-    void handleCommand(const std::vector<String>& cmdParts);
+    void handleCommand(const String& cmd, const std::vector<String>& args);
 
     /**
      * @brief Executes the current program logic. Should be called repeatedly inside the main loop.
@@ -84,11 +85,15 @@ private:
      */
     void _testSwitches();
 
+    /**
+     * @brief Executes the Main program, run commands like JOG or MOVE.
+     * @internal
+     */
     void _main();
 
     ProgramState   _currentProgramState = IDLE; ///< Current active program state. @internal
     LimitSwitches& _limitSwitches;              ///< Reference to limit switches for diagnostics. @internal
-    String         _cmd = "";
+    String         _cmd = "";                   ///< Current command @internal
 };
 
 #endif // PROGRAMLOADER_H
