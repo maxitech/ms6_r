@@ -81,7 +81,13 @@ std::pair<String, std::vector<String>> CommandProcessor::_splitString(const Stri
     String command  = str.substring(0, firstComma);
     String paramStr = str.substring(firstComma + 1);
 
-    if (paramStr.startsWith("[") && paramStr.endsWith("]"))
+    if (!paramStr.startsWith("[") && !paramStr.endsWith("]"))
+    {
+        Serial.println("Error: Command invalide! Correct format <cmd,[arg, arg, ...]>");
+        delay(20);
+        return {str, tokens};
+    }
+    else
     {
         paramStr = paramStr.substring(1, paramStr.length() - 1); // Remove brackets
     }
