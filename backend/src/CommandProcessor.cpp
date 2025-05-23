@@ -64,24 +64,40 @@ bool CommandProcessor::_validateChecksum(const String& data, const String& check
 
 void CommandProcessor::_processCommand(const String& cmd)
 {
-    std::vector<String> parts = _splitString(cmd, ',');
+    std::pair<String, std::vector<String>> parts = _splitString(cmd);
 
-    _dispatcher.dispatch(parts);
+    _dispatcher.dispatch(parts.first, parts.second);
 }
 
-std::vector<String> CommandProcessor::_splitString(const String& str, const char delimiter)
+std::pair<String, std::vector<String>> CommandProcessor::_splitString(const String& str)
 {
     std::vector<String> tokens;
-    int                 start = 0;
-    int                 end   = str.indexOf(delimiter);
-
-    while (end != -1)
+    int                 firstComma = str.indexOf(',');
+    if (firstComma == -1)
     {
-        tokens.push_back(str.substring(start, end));
-        start = end + 1;
-        end   = str.indexOf(delimiter, start);
+        return {str, tokens};
     }
 
-    tokens.push_back(str.substring(start));
-    return tokens;
+    String command  = str.substring(0, firstComma);
+    String paramStr = str.substring(firstComma + 1);
+
+    if (paramStr.startsWith("[") && paramStr.endsWith("]"))
+    {
+        paramStr = paramStr.substring(1, paramStr.length() - 1); // Remove brackets
+    }
+
+    // Split parameters using comma
+    int start = 0;
+    int end   = paramStr.indexOf(',');
+    while (end != -1)
+    {
+        tokens.push_back(paramStr.substring(start, end));
+        start = end + 1;
+        end   = paramStr.indexOf(',', start);
+    }
+
+    // Push last element
+    tokens.push_back(paramStr.substring(start));
+
+    return {command, tokens};
 }

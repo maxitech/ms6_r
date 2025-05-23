@@ -61,11 +61,11 @@ private:
     /**
      * @brief Splits a string into parts based on a delimiter.
      * @param str The string to split.
-     * @param delimiter The character used to separate the string into parts.
-     * @return A vector of substrings.
+     * @return A pair of String & vector of substrings.
      * @internal
      */
-    std::vector<String> _splitString(const String& str, const char delimiter);
+    // std::vector<String> _splitString(const String& str, const char delimiter);
+    std::pair<String, std::vector<String>> _splitString(const String& str);
 
     /**
      * @brief Dispatcher used to handle commands internally.
