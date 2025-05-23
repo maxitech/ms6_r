@@ -88,7 +88,7 @@ private:
 
     ProgramState   _currentProgramState = IDLE; ///< Current active program state. @internal
     LimitSwitches& _limitSwitches;              ///< Reference to limit switches for diagnostics. @internal
-    String&        _cmd;
+    String         _cmd = "";
 };
 
 #endif // PROGRAMLOADER_H
