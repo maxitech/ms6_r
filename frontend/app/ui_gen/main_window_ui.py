@@ -408,12 +408,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_10.addItem(self.horizontalSpacer_26)
 
-        self.pushButton_15 = QPushButton(self.jog_j6_frame)
-        self.pushButton_15.setObjectName(u"pushButton_15")
-        self.pushButton_15.setMaximumSize(QSize(50, 40))
-        self.pushButton_15.setFont(font3)
+        self.jog_j6_pos_btn = QPushButton(self.jog_j6_frame)
+        self.jog_j6_pos_btn.setObjectName(u"jog_j6_pos_btn")
+        self.jog_j6_pos_btn.setMaximumSize(QSize(50, 40))
+        self.jog_j6_pos_btn.setFont(font3)
 
-        self.horizontalLayout_10.addWidget(self.pushButton_15)
+        self.horizontalLayout_10.addWidget(self.jog_j6_pos_btn)
 
         self.horizontalSpacer_27 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -1086,7 +1086,7 @@ class Ui_MainWindow(object):
         self.label_12.setText(QCoreApplication.translate("MainWindow", u"Joint 6", None))
         self.jog_j6_neg_btn.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.jog_j6_label.setText("")
-        self.pushButton_15.setText(QCoreApplication.translate("MainWindow", u"+", None))
+        self.jog_j6_pos_btn.setText(QCoreApplication.translate("MainWindow", u"+", None))
         self.prog_label.setText(QCoreApplication.translate("MainWindow", u"Program:", None))
         self.prog_clear_btn.setText(QCoreApplication.translate("MainWindow", u"Clear", None))
         self.prog_textEdit.setPlaceholderText("")

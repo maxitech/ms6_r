@@ -1015,7 +1015,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_15">
+              <widget class="QPushButton" name="jog_j6_pos_btn">
                <property name="maximumSize">
                 <size>
                  <width>50</width>
