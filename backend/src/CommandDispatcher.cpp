@@ -6,7 +6,11 @@ CommandDispatcher::CommandDispatcher(ProgramLoader& programLoader)
 void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& args)
 {
     if (cmd == "" || args.empty())
+    {
+        Serial.println("Error: no command or no arguments");
+        delay(20);
         return;
+    }
 
     const String& command = cmd;
 
