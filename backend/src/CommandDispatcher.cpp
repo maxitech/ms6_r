@@ -14,6 +14,16 @@ void CommandDispatcher::dispatch(const std::vector<String>& cmdParts)
     {
         _programLoader.handleCommand(cmdParts);
     }
+    else if (command == "JOG" || command == "MOVE")
+        if (_programLoader.getState() == MAIN)
+        {
+            _programLoader.handleCommand(cmdParts);
+        }
+        else
+        {
+            Serial.println("Error: Main program must be loaded first!");
+            delay(20);
+        }
     else
     {
         Serial.println("Unknown command: " + command);
