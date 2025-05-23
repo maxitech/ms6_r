@@ -14,10 +14,11 @@
  */
 enum ProgramState
 {
-    IDLE,         ///< Default state when no program is active.
-    PING,         ///< Sends "PONG" every second.
-    PONG,         ///< Sends "PING" every second.
-    TEST_SWITCHES ///< Runs limit switch diagnostic.
+    IDLE,          ///< Default state when no program is active.
+    PING,          ///< Sends "PONG" every second.
+    PONG,          ///< Sends "PING" every second.
+    TEST_SWITCHES, ///< Runs limit switch diagnostic.
+    MAIN
 };
 
 /**
@@ -82,6 +83,8 @@ private:
      * @internal
      */
     void _testSwitches();
+
+    void _main();
 
     ProgramState   _currentProgramState = IDLE; ///< Current active program state. @internal
     LimitSwitches& _limitSwitches;              ///< Reference to limit switches for diagnostics. @internal

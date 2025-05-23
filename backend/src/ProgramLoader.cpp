@@ -28,7 +28,8 @@ void ProgramLoader::_loadProgram(const String& program)
     static const std::map<String, ProgramState> programMap = {
         {"PING", PING},
         {"PONG", PONG},
-        {"TEST_SWITCHES", TEST_SWITCHES}};
+        {"TEST_SWITCHES", TEST_SWITCHES},
+        {"MAIN", MAIN}};
 
     auto it = programMap.find(program);
     if (it == programMap.end())
@@ -64,6 +65,8 @@ void ProgramLoader::run()
     case TEST_SWITCHES:
         _testSwitches();
         break;
+    case MAIN:
+        _main();
     case IDLE:
     default:
         break;
@@ -102,4 +105,9 @@ void ProgramLoader::_executePong()
 void ProgramLoader::_testSwitches()
 {
     _limitSwitches.check();
+}
+
+void ProgramLoader::_main()
+{
+    //
 }
