@@ -303,7 +303,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="jog_j2_pos_btn">
+              <widget class="QPushButton" name="jog_j2_neg_btn">
                <property name="maximumSize">
                 <size>
                  <width>50</width>
@@ -379,7 +379,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="jog_j2_pos_btn_2">
+              <widget class="QPushButton" name="jog_j2_pos_btn">
                <property name="maximumSize">
                 <size>
                  <width>50</width>

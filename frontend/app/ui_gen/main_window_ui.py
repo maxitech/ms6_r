@@ -147,12 +147,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_6.addItem(self.horizontalSpacer_8)
 
-        self.jog_j2_pos_btn = QPushButton(self.jog_j2_frame)
-        self.jog_j2_pos_btn.setObjectName(u"jog_j2_pos_btn")
-        self.jog_j2_pos_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j2_pos_btn.setFont(font3)
+        self.jog_j2_neg_btn = QPushButton(self.jog_j2_frame)
+        self.jog_j2_neg_btn.setObjectName(u"jog_j2_neg_btn")
+        self.jog_j2_neg_btn.setMaximumSize(QSize(50, 40))
+        self.jog_j2_neg_btn.setFont(font3)
 
-        self.horizontalLayout_6.addWidget(self.jog_j2_pos_btn)
+        self.horizontalLayout_6.addWidget(self.jog_j2_neg_btn)
 
         self.horizontalSpacer_9 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -172,12 +172,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_6.addItem(self.horizontalSpacer_10)
 
-        self.jog_j2_pos_btn_2 = QPushButton(self.jog_j2_frame)
-        self.jog_j2_pos_btn_2.setObjectName(u"jog_j2_pos_btn_2")
-        self.jog_j2_pos_btn_2.setMaximumSize(QSize(50, 40))
-        self.jog_j2_pos_btn_2.setFont(font3)
+        self.jog_j2_pos_btn = QPushButton(self.jog_j2_frame)
+        self.jog_j2_pos_btn.setObjectName(u"jog_j2_pos_btn")
+        self.jog_j2_pos_btn.setMaximumSize(QSize(50, 40))
+        self.jog_j2_pos_btn.setFont(font3)
 
-        self.horizontalLayout_6.addWidget(self.jog_j2_pos_btn_2)
+        self.horizontalLayout_6.addWidget(self.jog_j2_pos_btn)
 
         self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -1068,9 +1068,9 @@ class Ui_MainWindow(object):
         self.jog_j1_label.setText("")
         self.jog_j1_pos_btn.setText(QCoreApplication.translate("MainWindow", u"+", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Joint 2", None))
-        self.jog_j2_pos_btn.setText(QCoreApplication.translate("MainWindow", u"-", None))
+        self.jog_j2_neg_btn.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.jog_j2_label.setText("")
-        self.jog_j2_pos_btn_2.setText(QCoreApplication.translate("MainWindow", u"+", None))
+        self.jog_j2_pos_btn.setText(QCoreApplication.translate("MainWindow", u"+", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Joint 3", None))
         self.jog_j3_neg_btn.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.jog_j3_label.setText("")
