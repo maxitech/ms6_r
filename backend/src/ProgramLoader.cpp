@@ -21,6 +21,16 @@ void ProgramLoader::handleCommand(const std::vector<String>& cmdParts)
     {
         _loadProgram(program);
     }
+    else if (command == "JOG" || command == "MOVE")
+        if (_currentProgramState != MAIN)
+        {
+            _loadProgram("MAIN");
+            _cmd = command;
+        }
+        else
+        {
+            _cmd = command;
+        }
 }
 
 void ProgramLoader::_loadProgram(const String& program)
@@ -109,5 +119,12 @@ void ProgramLoader::_testSwitches()
 
 void ProgramLoader::_main()
 {
-    //
+    if (_cmd == "JOG")
+    {
+        //
+    }
+    else if (_cmd == "MOVE")
+    {
+        //
+    }
 }
