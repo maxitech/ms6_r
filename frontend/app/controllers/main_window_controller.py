@@ -8,7 +8,7 @@ from app.utils.helper import Helper
 class MainWindowController:
     def __init__(self, ui):
         self._ui = ui
-        self._serial = SerialConnection()
+        self._serial = SerialConnection(controller=self)
         self._helper = Helper()
         self._current_ports = []
 
@@ -18,7 +18,7 @@ class MainWindowController:
         self._port_timer.timeout.connect(self._check_status)
         self._port_timer.start(2000)
 
-        self._program_queue = []
+        self._program = None
 
         # Connect btn
         self._ui.con_connect_btn.clicked.connect(self._handle_con_btn_click)
@@ -34,43 +34,24 @@ class MainWindowController:
             lambda: self._handle_cmd_btn_click(self._ui.cmd_switches_btn)
         )
 
-        # button container
+        # Button container
         self._ui.btn_load_prog_btn.clicked.connect(self._handle_load_btn_click)
 
-    # private methods
+        # Prog Clear btn
+        self._ui.prog_clear_btn.clicked.connect(self._handle_clear_btn_click)
+
+    # *************************Public Methods****************************
+    def handle_unexpected_disconnect(self):
+        self._fmt_log_monitor(
+            "[ERROR]", "Connection lost! Device may be disconnected.", "red"
+        )
+
+    # *************************Private Methods****************************
     def _check_ports(self):
         _ports = self._serial.getPorts()
         if _ports != self._current_ports:
             self._current_ports = _ports
             self._update_combo_box()
-
-    def _update_combo_box(self):
-        self._ui.con_device_comboBox.clear()
-        self._ui.con_device_comboBox.addItems(self._current_ports)
-
-    def _handle_con_btn_click(self):
-        if self._ui.con_connect_btn.text() == "Connect":
-            self._connect()
-        else:
-            self._disconnect()
-
-    def _handle_cmd_btn_click(self, clicked_button):
-        cmd_map = {
-            self._ui.cmd_ping_btn: ("Ping", "LOAD,PING"),
-            self._ui.cmd_pong_btn: ("Pong", "LOAD,PONG"),
-            self._ui.cmd_switches_btn: ("TestSwitches", "LOAD,TEST_SWITCHES"),
-        }
-
-        if clicked_button in cmd_map:
-            name, command = cmd_map[clicked_button]
-            print(f"Clicked button: {name}")
-            self._fmt_program_monitor(name, "lightblue", "white")
-            self._program_queue.append(command)
-
-    def _handle_load_btn_click(self):
-        for cmd in self._program_queue:
-            self._send_data(cmd)
-        self._program_queue.clear()
 
     def _connect(self):
         selected_port = self._ui.con_device_comboBox.currentText()
@@ -100,13 +81,7 @@ class MainWindowController:
         else:
             return
 
-    def _update_ui_based_on_connection_status(self, btn_text, status_text, is_enabled):
-        self._ui.con_connect_btn.setText(btn_text)
-        self._ui.con_device_comboBox.setEnabled(is_enabled)
-        self._ui.con_status_label2.setText(status_text)
-
     def _send_data(self, data):
-        print("_send_run")
         # ! change later
         # text_input = self._ui.prog_textEdit.toPlainText()
         text_input = data
@@ -121,6 +96,52 @@ class MainWindowController:
             ):
                 self._serial.send_data(data_str)
 
+    def _process_received_data(self, data):
+        # ? make ui updates which in relation to received serial data here
+        # print(f"Received in UI: {data}")
+        self._update_log_monitor_with_serial(data)
+
+    # ***************Handlers*******************
+    def _handle_con_btn_click(self):
+        if self._ui.con_connect_btn.text() == "Connect":
+            self._connect()
+        else:
+            self._disconnect()
+
+    def _handle_cmd_btn_click(self, clicked_button):
+        cmd_map = {
+            self._ui.cmd_ping_btn: ("Ping", "LOAD,PING"),
+            self._ui.cmd_pong_btn: ("Pong", "LOAD,PONG"),
+            self._ui.cmd_switches_btn: ("TestSwitches", "LOAD,TEST_SWITCHES"),
+        }
+
+        if clicked_button in cmd_map:
+            name, command = cmd_map[clicked_button]
+            if self._program == command:
+                return
+            self._fmt_program_monitor(name, "lightblue", "white")
+            self._program = command
+            self._ui.btn_load_prog_btn.setEnabled(True)
+
+    def _handle_load_btn_click(self):
+        if self._program is not None:
+            self._send_data(self._program)
+
+    def _handle_clear_btn_click(self):
+        self._program = None
+        self._ui.btn_load_prog_btn.setEnabled(False)
+
+    # *****************Update UI*********************
+    def _update_combo_box(self):
+        self._ui.con_device_comboBox.clear()
+        self._ui.con_device_comboBox.addItems(self._current_ports)
+
+    def _update_ui_based_on_connection_status(self, btn_text, status_text, is_enabled):
+        self._ui.con_connect_btn.setText(btn_text)
+        self._ui.con_device_comboBox.setEnabled(is_enabled)
+        self._ui.con_status_label2.setText(status_text)
+
+    # *Program Monitor
     def _fmt_program_monitor(self, cmd, txt_color, bracket_color):
         self._ui.prog_textEdit.clear()
         cursor = self._ui.prog_textEdit.textCursor()
@@ -145,11 +166,7 @@ class MainWindowController:
 
         self._ui.prog_textEdit.setTextCursor(cursor)
 
-    def _process_received_data(self, data):
-        # ? make ui updates which in relation to received serial data here
-        # print(f"Received in UI: {data}")
-        self._update_log_monitor_with_serial(data)
-
+    # *Log Monitor
     def _update_log_monitor_with_serial(self, data):
         self._fmt_log_monitor("[LOG]", data, "red")
 

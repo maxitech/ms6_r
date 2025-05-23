@@ -4,12 +4,13 @@ from app.core.serial_worker import SerialWorker
 
 
 class SerialConnection:
-    def __init__(self, baudrate=115200):
+    def __init__(self, controller, baudrate=115200):
         self._serial_worker = None
         self._baudrate = baudrate
         self._serial = None
         self._ports = []
         self._port = None
+        self._main_win_controller = controller
 
     # public methods
     def getPorts(self):
@@ -50,6 +51,7 @@ class SerialConnection:
                 print(
                     f"Warning: {self._port} no longer available, device may be disconnected."
                 )
+                self._main_win_controller.handle_unexpected_disconnect()
                 self.disconnect()
                 return False
         return False
