@@ -23,6 +23,8 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
         _loadProgram(program);
     }
     else if (command == "JOG" || command == "MOVE")
+    {
+
         if (_currentProgramState != MAIN)
         {
             _loadProgram("MAIN");
@@ -32,6 +34,7 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
         {
             _cmd = command;
         }
+    }
 }
 
 void ProgramLoader::_loadProgram(const String& program)
