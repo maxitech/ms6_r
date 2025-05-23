@@ -20,6 +20,9 @@ class MainWindowController:
 
         self._program = None
 
+        self._jog_joint = ""
+        self._jog_direction = ""
+
         # Connect btn
         self._ui.con_connect_btn.clicked.connect(self._handle_con_btn_click)
 
@@ -39,6 +42,25 @@ class MainWindowController:
 
         # Prog Clear btn
         self._ui.prog_clear_btn.clicked.connect(self._handle_clear_btn_click)
+
+        # Jog btn's
+        jog_buttons = [
+            (self._ui.jog_j1_pos_btn),
+            (self._ui.jog_j1_neg_btn),
+            (self._ui.jog_j2_pos_btn),
+            (self._ui.jog_j2_neg_btn),
+            (self._ui.jog_j3_pos_btn),
+            (self._ui.jog_j3_neg_btn),
+            (self._ui.jog_j4_pos_btn),
+            (self._ui.jog_j4_neg_btn),
+            (self._ui.jog_j5_pos_btn),
+            (self._ui.jog_j5_neg_btn),
+            (self._ui.jog_j6_pos_btn),
+            (self._ui.jog_j6_neg_btn),
+        ]
+        for button in jog_buttons:
+            button.pressed.connect(lambda btn=button: self._handle_jog_btn_press(btn))
+            button.released.connect(lambda: self._handle_jog_btn_release())
 
     # *************************Public Methods****************************
     def handle_unexpected_disconnect(self):
@@ -82,8 +104,6 @@ class MainWindowController:
             return
 
     def _send_data(self, data):
-        # ! change later
-        # text_input = self._ui.prog_textEdit.toPlainText()
         text_input = data
         if isinstance(text_input, str) and len(text_input) > 0:
             checksum = self._helper.calc_checksum(text_input)
@@ -110,9 +130,9 @@ class MainWindowController:
 
     def _handle_cmd_btn_click(self, clicked_button):
         cmd_map = {
-            self._ui.cmd_ping_btn: ("Ping", "LOAD,PING"),
-            self._ui.cmd_pong_btn: ("Pong", "LOAD,PONG"),
-            self._ui.cmd_switches_btn: ("TestSwitches", "LOAD,TEST_SWITCHES"),
+            self._ui.cmd_ping_btn: ("Ping", "LOAD,[PING]"),
+            self._ui.cmd_pong_btn: ("Pong", "LOAD,[PONG]"),
+            self._ui.cmd_switches_btn: ("TestSwitches", "LOAD,[TEST_SWITCHES]"),
         }
 
         if clicked_button in cmd_map:
@@ -130,6 +150,23 @@ class MainWindowController:
     def _handle_clear_btn_click(self):
         self._program = None
         self._ui.btn_load_prog_btn.setEnabled(False)
+
+    def _handle_jog_btn_press(self, btn):
+        btn_name = btn.objectName()
+        parts = btn_name.split("_")
+        if len(parts) == 4:
+            self._jog_joint = parts[1].upper()
+            self._jog_direction = parts[2].upper()
+            start_data = f"JOG[{self._jog_joint}, {self._jog_direction}, START]"
+            self._send_data(start_data)
+            print(start_data)
+        else:
+            print(f"Error: Object-Name '{btn_name}' has an unexpected structure!")
+
+    def _handle_jog_btn_release(self):
+        stop_data = f"JOG[{self._jog_joint}, {self._jog_direction}, STOP]"
+        self._send_data(stop_data)
+        print(stop_data)
 
     # *****************Update UI*********************
     def _update_combo_box(self):
