@@ -4,6 +4,7 @@
 #include "Homing.h"
 #include "HomingState.h"
 #include "LimitSwitches.h"
+#include "MotorConfig.h"
 #include "ProgramLoader.h"
 #include "SerialHandler.h"
 #include "Utils.h"
@@ -82,13 +83,22 @@ const int MOVE_AWAY_VELOCITY_J6 = -200;
 const int MOVE_BACK_VELOCITY_J6 = 200;
 const int STANDBY_POS_J6        = -6400;
 
+// Initialize MotorConfigs
+MotorConfig               mCfg1        = {&motorJ1, 200, 4, 16.0f, 100.0f, 1.0f};
+MotorConfig               mCfg2        = {&motorJ2, 200, 4, 16.0f, 80.0f, 14.0f};
+MotorConfig               mCfg3        = {&motorJ3, 200, 4, 16.0f, 100.0f, 1.0f};
+MotorConfig               mCfg4        = {&motorJ4, 400, 4, 16.0f, 60.0f, 1.0f};
+MotorConfig               mCfg5        = {&motorJ5, 200, 4, 16.0f, 32.0f, 1.0f};
+MotorConfig               mCfg6        = {&motorJ6, 200, 4, 1.0f, 1.0f, 1.0f};
+std::vector<MotorConfig*> motorConfigs = {&mCfg1, &mCfg2, &mCfg3, &mCfg4, &mCfg5, &mCfg6};
+
 // Initialize Classes
-LimitSwitches    limitSwitches(ledPin, limitSwitchPins); // Manages the state of limit switches
-ProgramLoader    programLoader(limitSwitches);           // Controls loading programs and state management
-CommandProcessor cmdProcessor(programLoader);            // Parses and processes incoming commands
-SerialHandler    serialHandler;                          // Handles serial communication and command routing
-Homing           homingManager(limitSwitchPins);         // Manages the homing process for multiple axes
-Stepper          motorJ1(motorJ1Step, motorJ1Dir);       // int stepPin, int dirPin
+LimitSwitches    limitSwitches(ledPin, limitSwitchPins);     // Manages the state of limit switches
+ProgramLoader    programLoader(motorConfigs, limitSwitches); // Controls loading programs and state management
+CommandProcessor cmdProcessor(programLoader);                // Parses and processes incoming commands
+SerialHandler    serialHandler;                              // Handles serial communication and command routing
+Homing           homingManager(limitSwitchPins);             // Manages the homing process for multiple axes
+Stepper          motorJ1(motorJ1Step, motorJ1Dir);           // int stepPin, int dirPin
 Stepper          motorJ2(motorJ2Step, motorJ2Dir);
 Stepper          motorJ3(motorJ3Step, motorJ3Dir);
 Stepper          motorJ4(motorJ4Step, motorJ4Dir);
