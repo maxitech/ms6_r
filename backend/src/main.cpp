@@ -104,9 +104,9 @@ AxisData axis6 = {MOVE_TO_SWITCH, &motorJ6, J6, HOMING_VELOCITY_J6, MOVE_AWAY_VE
 
 void setup()
 {
-    Serial.begin(9600);
     while (!Serial)
     {
+        // wait
     };
     Serial.println("Setup started");
     delay(20);
