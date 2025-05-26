@@ -14,9 +14,12 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
         return;
     }
 
-    const String&              command   = cmd;
-    const String&              program   = args[0];
-    const std::vector<String>& arguments = args;
+    const String& command = cmd;
+    const String& program = args[0];
+    _arguments            = args;
+
+    for (String& arg : _arguments)
+        arg.trim();
 
     if (command == "LOAD")
     {
@@ -61,7 +64,9 @@ void ProgramLoader::_loadProgram(const String& program)
     else
     {
         Serial.println("Loading program: " + program);
+        delay(20);
         _setState(it->second);
+        Serial.println("Loaded program: " + program);
         delay(20);
     }
 }
@@ -123,12 +128,59 @@ void ProgramLoader::_testSwitches()
 
 void ProgramLoader::_main()
 {
+    if (_arguments.empty())
+    {
+        Serial.println("Warning: _arguments vector is empty!");
+        delay(20);
+        return;
+    }
+    const String& joint     = _arguments[0];
+    const String& direction = _arguments[1];
+    const String& jogState  = _arguments.back();
+
+    static JogState currJogState = IDLE_JOG;
+
     if (_cmd == "JOG")
     {
-        //
+        JogCommand jogCmd = _getJogCommand(jogState);
+
+        switch (jogCmd)
+        {
+        case JOG_START:
+            if (currJogState != JOGGING)
+            {
+                // start
+                currJogState = JOGGING;
+            }
+            break;
+
+        case JOG_STOP:
+            if (currJogState != IDLE_JOG)
+            {
+                // stop
+                currJogState = IDLE_JOG;
+            }
+            break;
+
+        case JOG_UNKNOWN:
+        default:
+            Serial.println("Unknown JOG state: " + jogState);
+            delay(20);
+            break;
+        }
     }
-    else if (_cmd == "MOVE")
+    if (currJogState == IDLE_JOG)
     {
-        //
+        delay(20);
     }
+}
+
+JogCommand ProgramLoader::_getJogCommand(const String& str)
+{
+    if (str == "START")
+        return JOG_START;
+    else if (str == "STOP")
+        return JOG_STOP;
+    else
+        return JOG_UNKNOWN;
 }
