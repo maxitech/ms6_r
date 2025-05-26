@@ -83,6 +83,14 @@ const int MOVE_AWAY_VELOCITY_J6 = -200;
 const int MOVE_BACK_VELOCITY_J6 = 200;
 const int STANDBY_POS_J6        = -6400;
 
+//*********** Initialize Classes *********//
+Stepper motorJ1(motorJ1Step, motorJ1Dir); // int stepPin, int dirPin
+Stepper motorJ2(motorJ2Step, motorJ2Dir);
+Stepper motorJ3(motorJ3Step, motorJ3Dir);
+Stepper motorJ4(motorJ4Step, motorJ4Dir);
+Stepper motorJ5(motorJ5Step, motorJ5Dir);
+Stepper motorJ6(motorJ6Step, motorJ6Dir);
+
 // Initialize MotorConfigs
 MotorConfig               mCfg1        = {&motorJ1, 200, 4, 16.0f, 100.0f, 1.0f};
 MotorConfig               mCfg2        = {&motorJ2, 200, 4, 16.0f, 80.0f, 14.0f};
@@ -92,18 +100,11 @@ MotorConfig               mCfg5        = {&motorJ5, 200, 4, 16.0f, 32.0f, 1.0f};
 MotorConfig               mCfg6        = {&motorJ6, 200, 4, 1.0f, 1.0f, 1.0f};
 std::vector<MotorConfig*> motorConfigs = {&mCfg1, &mCfg2, &mCfg3, &mCfg4, &mCfg5, &mCfg6};
 
-// Initialize Classes
 LimitSwitches    limitSwitches(ledPin, limitSwitchPins);     // Manages the state of limit switches
 ProgramLoader    programLoader(motorConfigs, limitSwitches); // Controls loading programs and state management
 CommandProcessor cmdProcessor(programLoader);                // Parses and processes incoming commands
 SerialHandler    serialHandler;                              // Handles serial communication and command routing
 Homing           homingManager(limitSwitchPins);             // Manages the homing process for multiple axes
-Stepper          motorJ1(motorJ1Step, motorJ1Dir);           // int stepPin, int dirPin
-Stepper          motorJ2(motorJ2Step, motorJ2Dir);
-Stepper          motorJ3(motorJ3Step, motorJ3Dir);
-Stepper          motorJ4(motorJ4Step, motorJ4Dir);
-Stepper          motorJ5(motorJ5Step, motorJ5Dir);
-Stepper          motorJ6(motorJ6Step, motorJ6Dir);
 
 AxisData axis1 = {MOVE_TO_SWITCH, &motorJ1, J1, HOMING_VELOCITY_J1, MOVE_AWAY_VELOCITY_J1, MOVE_BACK_VELOCITY_J1, STANDBY_POS_J1};
 AxisData axis2 = {MOVE_TO_SWITCH, &motorJ2, J2, HOMING_VELOCITY_J2, MOVE_AWAY_VELOCITY_J2, MOVE_BACK_VELOCITY_J2, STANDBY_POS_J2};
