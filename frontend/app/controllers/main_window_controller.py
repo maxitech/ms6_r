@@ -157,14 +157,14 @@ class MainWindowController:
         if len(parts) == 4:
             self._jog_joint = parts[1].upper()
             self._jog_direction = parts[2].upper()
-            start_data = f"JOG[{self._jog_joint}, {self._jog_direction}, START]"
+            start_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, START]"
             self._send_data(start_data)
             print(start_data)
         else:
             print(f"Error: Object-Name '{btn_name}' has an unexpected structure!")
 
     def _handle_jog_btn_release(self):
-        stop_data = f"JOG[{self._jog_joint}, {self._jog_direction}, STOP]"
+        stop_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, STOP]"
         self._send_data(stop_data)
         print(stop_data)
 
