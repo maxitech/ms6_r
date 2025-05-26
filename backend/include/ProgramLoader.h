@@ -91,9 +91,10 @@ private:
      */
     void _main();
 
-    ProgramState   _currentProgramState = IDLE; ///< Current active program state. @internal
-    LimitSwitches& _limitSwitches;              ///< Reference to limit switches for diagnostics. @internal
-    String         _cmd = "";                   ///< Current command @internal
+    ProgramState        _currentProgramState = IDLE; ///< Current active program state. @internal
+    LimitSwitches&      _limitSwitches;              ///< Reference to limit switches for diagnostics. @internal
+    std::vector<String> _arguments = {};
+    String              _cmd       = ""; ///< Current command @internal
 };
 
 #endif // PROGRAMLOADER_H
