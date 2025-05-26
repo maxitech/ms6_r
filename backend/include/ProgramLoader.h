@@ -7,6 +7,8 @@
 #define PROGRAMLOADER_H
 
 #include "LimitSwitches.h"
+#include "MotorConfig.h"
+#include "teensystep4.h"
 #include <Arduino.h>
 
 /**
@@ -21,6 +23,19 @@ enum ProgramState
     MAIN
 };
 
+enum JogState
+{
+    IDLE_JOG, ///< No jog command is active.
+    JOGGING,  ///< Currently executing a jog command.
+};
+
+enum JogCommand
+{
+    JOG_START,  ///< Start jogging in the specified direction.
+    JOG_STOP,   ///< Stop the current jog operation.
+    JOG_UNKNOWN ///< Unknown jog command state.
+};
+
 /**
  * @brief Handles logic for loading and executing robot programs based on input commands.
  */
@@ -29,9 +44,10 @@ class ProgramLoader
 public:
     /**
      * @brief Constructs the ProgramLoader with a reference to LimitSwitches.
+     * @param motorConfigs Reference to a vector of MotorConfig pointers for the robot's motors.
      * @param limitSwitches Reference to a LimitSwitches instance for diagnostic testing.
      */
-    explicit ProgramLoader(LimitSwitches& limitSwitches);
+    ProgramLoader(std::vector<MotorConfig*>& motorConfigs, LimitSwitches& limitSwitches);
 
     /**
      * @brief Handles incoming command parts and loads a matching program.
@@ -91,10 +107,19 @@ private:
      */
     void _main();
 
-    ProgramState        _currentProgramState = IDLE; ///< Current active program state. @internal
-    LimitSwitches&      _limitSwitches;              ///< Reference to limit switches for diagnostics. @internal
-    std::vector<String> _arguments = {};
-    String              _cmd       = ""; ///< Current command @internal
+    /**
+     * @brief Parses the jog command from the input string.
+     * @param str The jog command string.
+     * @return The JogCommand enum value representing the jog command.
+     * @internal
+     */
+    JogCommand _getJogCommand(const String& str);
+
+    std::vector<MotorConfig*>& _motorConfigs;               ///< Vector of motor configurations for the robot.
+    ProgramState               _currentProgramState = IDLE; ///< Current active program state. @internal
+    LimitSwitches&             _limitSwitches;              ///< Reference to limit switches for diagnostics. @internal
+    std::vector<String>        _arguments = {};
+    String                     _cmd       = ""; ///< Current command @internal
 };
 
 #endif // PROGRAMLOADER_H
