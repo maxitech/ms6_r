@@ -21,7 +21,7 @@ void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& a
     }
     else
     {
-        Serial.println("Unknown command: " + command);
+        Serial.println("Error: Unknown command or command invalide! Correct format <$cmd,[arg, arg, ...]>" + command);
         delay(20);
     }
 
