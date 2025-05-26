@@ -2,8 +2,9 @@
 #include "Utils.h"
 #include <map>
 
-ProgramLoader::ProgramLoader(LimitSwitches& limitSwitches)
-    : _limitSwitches(limitSwitches) {};
+ProgramLoader::ProgramLoader(std::vector<MotorConfig*>& configs, LimitSwitches& limitSwitches)
+    : _motorConfigs(configs)
+    , _limitSwitches(limitSwitches) {};
 
 void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& args)
 {
@@ -135,7 +136,9 @@ void ProgramLoader::_main()
         return;
     }
     const String& joint     = _arguments[0];
-    const String& direction = _arguments[1];
+    String&       direction = _arguments[1];
+    int           motorIdx  = joint.substring(1).toInt() - 1;
+    const int     velocity  = 1000;
     const String& jogState  = _arguments.back();
 
     static JogState currJogState = IDLE_JOG;
@@ -151,6 +154,17 @@ void ProgramLoader::_main()
             {
                 // start
                 currJogState = JOGGING;
+                if (direction != "POS" && direction != "NEG")
+                {
+                    Serial.println("Invalid direction string: " + direction);
+                    delay(20);
+                    return;
+                }
+
+                int dir    = (direction == "POS") ? 1 : -1;
+                int dirVel = velocity * dir;
+
+                _motorConfigs[motorIdx]->motor->rotateAsync(dirVel);
             }
             break;
 
@@ -158,6 +172,7 @@ void ProgramLoader::_main()
             if (currJogState != IDLE_JOG)
             {
                 // stop
+                _motorConfigs[motorIdx]->motor->emergencyStop();
                 currJogState = IDLE_JOG;
             }
             break;
