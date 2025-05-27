@@ -3,6 +3,7 @@
 #include "CommandProcessor.h"
 #include "Homing.h"
 #include "HomingState.h"
+#include "Kinematics.h"
 #include "LimitSwitches.h"
 #include "MotorConfig.h"
 #include "ProgramLoader.h"
@@ -92,19 +93,29 @@ Stepper motorJ5(motorJ5Step, motorJ5Dir);
 Stepper motorJ6(motorJ6Step, motorJ6Dir);
 
 // Initialize MotorConfigs
-MotorConfig               mCfg1        = {&motorJ1, 200, 4, 16.0f, 100.0f, 1.0f};
-MotorConfig               mCfg2        = {&motorJ2, 200, 4, 16.0f, 80.0f, 14.0f};
-MotorConfig               mCfg3        = {&motorJ3, 200, 4, 16.0f, 100.0f, 1.0f};
-MotorConfig               mCfg4        = {&motorJ4, 400, 4, 16.0f, 60.0f, 1.0f};
-MotorConfig               mCfg5        = {&motorJ5, 200, 4, 16.0f, 32.0f, 1.0f};
-MotorConfig               mCfg6        = {&motorJ6, 200, 4, 1.0f, 1.0f, 1.0f};
-std::vector<MotorConfig*> motorConfigs = {&mCfg1, &mCfg2, &mCfg3, &mCfg4, &mCfg5, &mCfg6};
+MotorConfig              mCfg1        = {&motorJ1, 200, 4, 16.0f, 100.0f, 1.0f};
+MotorConfig              mCfg2        = {&motorJ2, 200, 4, 16.0f, 80.0f, 14.0f};
+MotorConfig              mCfg3        = {&motorJ3, 200, 4, 16.0f, 100.0f, 1.0f};
+MotorConfig              mCfg4        = {&motorJ4, 400, 4, 16.0f, 60.0f, 1.0f};
+MotorConfig              mCfg5        = {&motorJ5, 200, 4, 16.0f, 32.0f, 1.0f};
+MotorConfig              mCfg6        = {&motorJ6, 200, 4, 1.0f, 1.0f, 1.0f};
+std::vector<MotorConfig> motorConfigs = {mCfg1, mCfg2, mCfg3, mCfg4, mCfg5, mCfg6};
+
+// Initialize Kinematics with DH parameters
+std::vector<DHparam> dhParams = {
+    {37.5f, -1.571f, 135.300f},
+    {160.0f, 0.0f, 0.0f, -90.0f},
+    {-15.0f, 1.571f, 0.0f, 180.0f},
+    {0.0f, -1.571f, 138.400f},
+    {0.0f, 1.571f, 0.0f},
+    {0.0f, 0.0f, 29.270f}};
 
 LimitSwitches    limitSwitches(ledPin, limitSwitchPins);     // Manages the state of limit switches
 ProgramLoader    programLoader(motorConfigs, limitSwitches); // Controls loading programs and state management
 CommandProcessor cmdProcessor(programLoader);                // Parses and processes incoming commands
 SerialHandler    serialHandler;                              // Handles serial communication and command routing
 Homing           homingManager(limitSwitchPins);             // Manages the homing process for multiple axes
+Kinematics       kin(motorConfigs, dhParams);                // Kinematics calculations for the robot arm
 
 AxisData axis1 = {MOVE_TO_SWITCH, &motorJ1, J1, HOMING_VELOCITY_J1, MOVE_AWAY_VELOCITY_J1, MOVE_BACK_VELOCITY_J1, STANDBY_POS_J1};
 AxisData axis2 = {MOVE_TO_SWITCH, &motorJ2, J2, HOMING_VELOCITY_J2, MOVE_AWAY_VELOCITY_J2, MOVE_BACK_VELOCITY_J2, STANDBY_POS_J2};
