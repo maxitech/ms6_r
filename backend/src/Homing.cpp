@@ -30,6 +30,13 @@ void Homing::executeHoming()
     _PREVIOUS_SWITCH_STATUS = activeSwitches; // Update previousSwitchStatus globally after all groups processed
 }
 
+bool Homing::isHomingDone() const
+{
+    return std::all_of(_axisGroups.begin(), _axisGroups.end(),
+                       [](const std::unique_ptr<AxisGroup>& group)
+                       { return group->isGroupHomed; });
+}
+
 void Homing::resetGroup(AxisGroup& group)
 {
     group.isGroupHomed = false;
@@ -112,7 +119,7 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
     case MOVE_TO_SWITCH:
         if (isCurrentlyActive && !wasPreviouslyActive)
         {
-            Serial.println(String(axis_x) + " pressed");
+            // Serial.println(String(axis_x) + " pressed");
             motorJ_x.emergencyStop();
             _updateSwitchStatus(axis_x, true);
             homingStateJ_x = MOVE_AWAY_FROM_SWITCH;
@@ -127,7 +134,7 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
     case MOVE_AWAY_FROM_SWITCH:
         if (!isCurrentlyActive && wasPreviouslyActive)
         {
-            Serial.println(String(axis_x) + " released");
+            // Serial.println(String(axis_x) + " released");
             motorJ_x.emergencyStop();
             _updateSwitchStatus(axis_x, false);
             homingStateJ_x = MOVE_BACK_TO_SWITCH;
@@ -142,7 +149,7 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
     case MOVE_BACK_TO_SWITCH:
         if (isCurrentlyActive && !wasPreviouslyActive)
         {
-            Serial.println(String(axis_x) + " pressed again");
+            // Serial.println(String(axis_x) + " pressed again");
             motorJ_x.emergencyStop();
             _updateSwitchStatus(axis_x, true);
             homingStateJ_x = SET_ZERO_POINT;
@@ -166,7 +173,7 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
 
         if (Utils::nonBlockingDelay(3000, lastTime))
         {
-            Serial.println(String(axis_x) + " set zero point");
+            // Serial.println(String(axis_x) + " set zero point");
             motorJ_x.setPosition(0); // Set the current position to zero
             homingStateJ_x = MOVE_TO_HOME;
             delayStarted   = false;
@@ -179,8 +186,8 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
         {
             if (motorJ_x.getPosition() != HOME_POS)
             {
-                Serial.println(String(axis_x) +
-                               " move to home position");
+                // Serial.println(String(axis_x) +
+                //                " move to home position");
                 motorJ_x.moveAbsAsync(
                     HOME_POS); // Move to a manual defined pos = HOME_POS
             }
@@ -194,8 +201,8 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
 
         if (!isCurrentlyActive && wasPreviouslyActive)
         {
-            Serial.println(String(axis_x) +
-                           " released while moving to home position");
+            // Serial.println(String(axis_x) +
+            //                " released while moving to home position");
             _updateSwitchStatus(axis_x, false);
         }
         break;

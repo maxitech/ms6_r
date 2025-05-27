@@ -40,6 +40,12 @@ public:
     void executeHoming();
 
     /**
+     * @brief Checks if all axes in all groups have completed the homing process.
+     * @return True if all axes are homed, false otherwise.
+     */
+    bool isHomingDone() const;
+
+    /**
      * @brief Resets the homing status of a single group.
      * @param group The AxisGroup instance to reset.
      */
