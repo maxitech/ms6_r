@@ -15,7 +15,7 @@ void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& a
     const String& command = cmd;
 
     // --------------------This block is use if backend runs main func automatically if JOG of MOVE are the cmd's-------------
-    if (command == "LOAD" || command == "JOG" || command == "MOVE")
+    if (command == "LOAD" || command == "HOME" || command == "JOG" || command == "MOVE")
     {
         _programLoader.handleCommand(cmd, args);
     }
