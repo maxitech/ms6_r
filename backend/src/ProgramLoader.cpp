@@ -2,8 +2,9 @@
 #include "Utils.h"
 #include <map>
 
-ProgramLoader::ProgramLoader(std::vector<MotorConfig>& configs, LimitSwitches& limitSwitches)
-    : _motorConfigs(configs)
+ProgramLoader::ProgramLoader(Homing* homingManager, std::vector<MotorConfig>& configs, LimitSwitches& limitSwitches)
+    : _homingManager(homingManager)
+    , _motorConfigs(configs)
     , _limitSwitches(limitSwitches) {};
 
 void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& args)
@@ -47,7 +48,9 @@ void ProgramLoader::_loadProgram(const String& program)
         {"PING", PING},
         {"PONG", PONG},
         {"TEST_SWITCHES", TEST_SWITCHES},
-        {"MAIN", MAIN}};
+        {"HOME", HOME},
+        {"MAIN", MAIN},
+    };
 
     auto it = programMap.find(program);
     if (it == programMap.end())
@@ -85,8 +88,12 @@ void ProgramLoader::run()
     case TEST_SWITCHES:
         _testSwitches();
         break;
+    case HOME:
+        _home();
+        break;
     case MAIN:
         _main();
+        break;
     case IDLE:
     default:
         break;
@@ -125,6 +132,21 @@ void ProgramLoader::_executePong()
 void ProgramLoader::_testSwitches()
 {
     _limitSwitches.check();
+}
+
+void ProgramLoader::_home()
+{
+    if (!_homingManager->isHomingDone())
+    {
+        _homingManager->executeHoming();
+    }
+    else
+    {
+        // Maybe reset homing state later
+        Serial.println("[INFO] - Homing done going back to IDLE state.");
+        delay(20);
+        _setState(IDLE);
+    }
 }
 
 void ProgramLoader::_main()
