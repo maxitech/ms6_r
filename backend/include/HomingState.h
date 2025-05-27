@@ -18,7 +18,7 @@ enum HomingState
     MOVE_AWAY_FROM_SWITCH, ///< State where the system moves away from the limit switch to reset.
     MOVE_BACK_TO_SWITCH,   ///< State where the system approaches the limit switch again for fine adjustment.
     SET_ZERO_POINT,        ///< State to set the zero point for calibration.
-    MOVE_TO_STANDBY_POS,   ///< State where the system moves to a standby position post-calibration.
+    MOVE_TO_HOME,          ///< State where the system moves to a home position post-calibration.
     COMPLETE               ///< State indicating the homing process is finished.
 };
 

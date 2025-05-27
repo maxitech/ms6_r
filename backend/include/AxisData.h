@@ -66,9 +66,9 @@ struct AxisData
     int MOVE_BACK_VELOCITY;
 
     /**
-     * @brief The standby position to move the axis after homing is complete.
+     * @brief The home position to move the axis after homing is complete.
      */
-    int STANDBY_POS;
+    int HOME_POS;
 
     /**
      * @brief Flag indicating whether the homing process for this axis is complete.

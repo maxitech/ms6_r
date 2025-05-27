@@ -105,7 +105,7 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
     int          HOMING_VELOCITY    = axisData.HOMING_VELOCITY;
     int          MOVE_AWAY_VELOCITY = axisData.MOVE_AWAY_VELOCITY;
     int          MOVE_BACK_VELOCITY = axisData.MOVE_BACK_VELOCITY;
-    int          STANDBY_POS        = axisData.STANDBY_POS;
+    int          HOME_POS           = axisData.HOME_POS;
 
     switch (homingStateJ_x)
     {
@@ -168,26 +168,26 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
         {
             Serial.println(String(axis_x) + " set zero point");
             motorJ_x.setPosition(0); // Set the current position to zero
-            homingStateJ_x = MOVE_TO_STANDBY_POS;
+            homingStateJ_x = MOVE_TO_HOME;
             delayStarted   = false;
         }
         break;
 
-    case MOVE_TO_STANDBY_POS:
+    case MOVE_TO_HOME:
 
         if (!motorJ_x.isMoving)
         {
-            if (motorJ_x.getPosition() != STANDBY_POS)
+            if (motorJ_x.getPosition() != HOME_POS)
             {
                 Serial.println(String(axis_x) +
-                               " move to operating position");
+                               " move to home position");
                 motorJ_x.moveAbsAsync(
-                    STANDBY_POS); // Move to a safe position after homing
+                    HOME_POS); // Move to a manual defined pos = HOME_POS
             }
             else
             {
                 Serial.println(String(axis_x) +
-                               " reached operating position");
+                               " reached home position");
                 homingStateJ_x = COMPLETE;
             }
         }
@@ -195,7 +195,7 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
         if (!isCurrentlyActive && wasPreviouslyActive)
         {
             Serial.println(String(axis_x) +
-                           " released while moving to operating position");
+                           " released while moving to home position");
             _updateSwitchStatus(axis_x, false);
         }
         break;

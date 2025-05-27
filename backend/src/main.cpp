@@ -57,32 +57,32 @@ const int motorJ6Dir  = 33;
 const int HOMING_VELOCITY_J1    = -6000; // 3k
 const int MOVE_AWAY_VELOCITY_J1 = 800;
 const int MOVE_BACK_VELOCITY_J1 = -200;
-const int STANDBY_POS_J1        = 40'000;
+const int HOME_POS_J1           = 40'000;
 
 const int HOMING_VELOCITY_J2    = -20'000;
 const int MOVE_AWAY_VELOCITY_J2 = 4000;
 const int MOVE_BACK_VELOCITY_J2 = -2000;
-const int STANDBY_POS_J2        = 55'000;
+const int HOME_POS_J2           = 55'000;
 
 const int HOMING_VELOCITY_J3    = 5'000;
 const int MOVE_AWAY_VELOCITY_J3 = -800;
 const int MOVE_BACK_VELOCITY_J3 = 400;
-const int STANDBY_POS_J3        = -20'000;
+const int HOME_POS_J3           = -20'000;
 
 const int HOMING_VELOCITY_J4    = 4000;
 const int MOVE_AWAY_VELOCITY_J4 = -800;
 const int MOVE_BACK_VELOCITY_J4 = 400;
-const int STANDBY_POS_J4        = -24'000;
+const int HOME_POS_J4           = -24'000;
 
 const int HOMING_VELOCITY_J5    = 5000;
 const int MOVE_AWAY_VELOCITY_J5 = -400;
 const int MOVE_BACK_VELOCITY_J5 = 200;
-const int STANDBY_POS_J5        = -22'000;
+const int HOME_POS_J5           = -22'000;
 
 const int HOMING_VELOCITY_J6    = 2000;
 const int MOVE_AWAY_VELOCITY_J6 = -200;
 const int MOVE_BACK_VELOCITY_J6 = 200;
-const int STANDBY_POS_J6        = -6400;
+const int HOME_POS_J6           = -6400;
 
 //*********** Initialize Classes *********//
 Stepper motorJ1(motorJ1Step, motorJ1Dir); // int stepPin, int dirPin
@@ -117,12 +117,12 @@ SerialHandler    serialHandler;                              // Handles serial c
 Homing           homingManager(limitSwitchPins);             // Manages the homing process for multiple axes
 Kinematics       kin(motorConfigs, dhParams);                // Kinematics calculations for the robot arm
 
-AxisData axis1 = {MOVE_TO_SWITCH, &motorJ1, J1, HOMING_VELOCITY_J1, MOVE_AWAY_VELOCITY_J1, MOVE_BACK_VELOCITY_J1, STANDBY_POS_J1};
-AxisData axis2 = {MOVE_TO_SWITCH, &motorJ2, J2, HOMING_VELOCITY_J2, MOVE_AWAY_VELOCITY_J2, MOVE_BACK_VELOCITY_J2, STANDBY_POS_J2};
-AxisData axis3 = {MOVE_TO_SWITCH, &motorJ3, J3, HOMING_VELOCITY_J3, MOVE_AWAY_VELOCITY_J3, MOVE_BACK_VELOCITY_J3, STANDBY_POS_J3};
-AxisData axis4 = {MOVE_TO_SWITCH, &motorJ4, J4, HOMING_VELOCITY_J4, MOVE_AWAY_VELOCITY_J4, MOVE_BACK_VELOCITY_J4, STANDBY_POS_J4};
-AxisData axis5 = {MOVE_TO_SWITCH, &motorJ5, J5, HOMING_VELOCITY_J5, MOVE_AWAY_VELOCITY_J5, MOVE_BACK_VELOCITY_J5, STANDBY_POS_J5};
-AxisData axis6 = {MOVE_TO_SWITCH, &motorJ6, J6, HOMING_VELOCITY_J6, MOVE_AWAY_VELOCITY_J6, MOVE_BACK_VELOCITY_J6, STANDBY_POS_J6};
+AxisData axis1 = {MOVE_TO_SWITCH, &motorJ1, J1, HOMING_VELOCITY_J1, MOVE_AWAY_VELOCITY_J1, MOVE_BACK_VELOCITY_J1, HOME_POS_J1};
+AxisData axis2 = {MOVE_TO_SWITCH, &motorJ2, J2, HOMING_VELOCITY_J2, MOVE_AWAY_VELOCITY_J2, MOVE_BACK_VELOCITY_J2, HOME_POS_J2};
+AxisData axis3 = {MOVE_TO_SWITCH, &motorJ3, J3, HOMING_VELOCITY_J3, MOVE_AWAY_VELOCITY_J3, MOVE_BACK_VELOCITY_J3, HOME_POS_J3};
+AxisData axis4 = {MOVE_TO_SWITCH, &motorJ4, J4, HOMING_VELOCITY_J4, MOVE_AWAY_VELOCITY_J4, MOVE_BACK_VELOCITY_J4, HOME_POS_J4};
+AxisData axis5 = {MOVE_TO_SWITCH, &motorJ5, J5, HOMING_VELOCITY_J5, MOVE_AWAY_VELOCITY_J5, MOVE_BACK_VELOCITY_J5, HOME_POS_J5};
+AxisData axis6 = {MOVE_TO_SWITCH, &motorJ6, J6, HOMING_VELOCITY_J6, MOVE_AWAY_VELOCITY_J6, MOVE_BACK_VELOCITY_J6, HOME_POS_J6};
 
 void setup()
 {
@@ -201,7 +201,7 @@ void setup()
 void loop()
 {
 
-    serialHandler.listenForSerial();
-    programLoader.run();
-    // homingManager.executeHoming();
+    // serialHandler.listenForSerial();
+    // programLoader.run();
+    homingManager.executeHoming();
 }
