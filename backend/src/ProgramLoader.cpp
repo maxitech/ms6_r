@@ -2,7 +2,7 @@
 #include "Utils.h"
 #include <map>
 
-ProgramLoader::ProgramLoader(std::vector<MotorConfig*>& configs, LimitSwitches& limitSwitches)
+ProgramLoader::ProgramLoader(std::vector<MotorConfig>& configs, LimitSwitches& limitSwitches)
     : _motorConfigs(configs)
     , _limitSwitches(limitSwitches) {};
 
@@ -164,7 +164,7 @@ void ProgramLoader::_main()
                 int dir    = (direction == "POS") ? 1 : -1;
                 int dirVel = velocity * dir;
 
-                _motorConfigs[motorIdx]->motor->rotateAsync(dirVel);
+                _motorConfigs[motorIdx].motor->rotateAsync(dirVel);
             }
             break;
 
@@ -172,7 +172,7 @@ void ProgramLoader::_main()
             if (currJogState != IDLE_JOG)
             {
                 // stop
-                _motorConfigs[motorIdx]->motor->emergencyStop();
+                _motorConfigs[motorIdx].motor->emergencyStop();
                 currJogState = IDLE_JOG;
             }
             break;

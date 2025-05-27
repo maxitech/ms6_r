@@ -44,10 +44,10 @@ class ProgramLoader
 public:
     /**
      * @brief Constructs the ProgramLoader with a reference to LimitSwitches.
-     * @param motorConfigs Reference to a vector of MotorConfig pointers for the robot's motors.
+     * @param motorConfigs Reference to a vector of MotorConfig's for the robot's motors.
      * @param limitSwitches Reference to a LimitSwitches instance for diagnostic testing.
      */
-    ProgramLoader(std::vector<MotorConfig*>& motorConfigs, LimitSwitches& limitSwitches);
+    ProgramLoader(std::vector<MotorConfig>& motorConfigs, LimitSwitches& limitSwitches);
 
     /**
      * @brief Handles incoming command parts and loads a matching program.
@@ -115,11 +115,11 @@ private:
      */
     JogCommand _getJogCommand(const String& str);
 
-    std::vector<MotorConfig*>& _motorConfigs;               ///< Vector of motor configurations for the robot.
-    ProgramState               _currentProgramState = IDLE; ///< Current active program state. @internal
-    LimitSwitches&             _limitSwitches;              ///< Reference to limit switches for diagnostics. @internal
-    std::vector<String>        _arguments = {};
-    String                     _cmd       = ""; ///< Current command @internal
+    std::vector<MotorConfig>& _motorConfigs;               ///< Vector of motor configurations for the robot.
+    ProgramState              _currentProgramState = IDLE; ///< Current active program state. @internal
+    LimitSwitches&            _limitSwitches;              ///< Reference to limit switches for diagnostics. @internal
+    std::vector<String>       _arguments = {};
+    String                    _cmd       = ""; ///< Current command @internal
 };
 
 #endif // PROGRAMLOADER_H
