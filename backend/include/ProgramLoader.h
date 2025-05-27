@@ -6,6 +6,7 @@
 #ifndef PROGRAMLOADER_H
 #define PROGRAMLOADER_H
 
+#include "Homing.h"
 #include "LimitSwitches.h"
 #include "MotorConfig.h"
 #include "teensystep4.h"
@@ -20,6 +21,7 @@ enum ProgramState
     PING,          ///< Sends "PONG" every second.
     PONG,          ///< Sends "PING" every second.
     TEST_SWITCHES, ///< Runs limit switch diagnostic.
+    HOME,          ///< Executes homing routine for all axes.
     MAIN
 };
 
@@ -47,7 +49,7 @@ public:
      * @param motorConfigs Reference to a vector of MotorConfig's for the robot's motors.
      * @param limitSwitches Reference to a LimitSwitches instance for diagnostic testing.
      */
-    ProgramLoader(std::vector<MotorConfig>& motorConfigs, LimitSwitches& limitSwitches);
+    ProgramLoader(Homing* homingManager, std::vector<MotorConfig>& motorConfigs, LimitSwitches& limitSwitches);
 
     /**
      * @brief Handles incoming command parts and loads a matching program.
@@ -102,6 +104,12 @@ private:
     void _testSwitches();
 
     /**
+     * @brief Executes the HOME program, running the homing routine for all axes.
+     * @internal
+     */
+    void _home();
+
+    /**
      * @brief Executes the Main program, run commands like JOG or MOVE.
      * @internal
      */
@@ -115,6 +123,7 @@ private:
      */
     JogCommand _getJogCommand(const String& str);
 
+    Homing*                   _homingManager;              ///< Pointer to the Homing manager for homing routines.
     std::vector<MotorConfig>& _motorConfigs;               ///< Vector of motor configurations for the robot.
     ProgramState              _currentProgramState = IDLE; ///< Current active program state. @internal
     LimitSwitches&            _limitSwitches;              ///< Reference to limit switches for diagnostics. @internal
