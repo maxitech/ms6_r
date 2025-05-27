@@ -109,7 +109,7 @@ Pose Kinematics::forwardKinematics()
     // Compute full transformation matrix
     for (size_t i = 0; i < _dhParams.size(); ++i)
     {
-        T *= _dhToTable(_dhParams[i], angles[i]);
+        T *= _dhToTable(_dhParams[i], angles[i], _dhParams[i].thetaOffset);
     }
 
     // Apply tool frame transformation

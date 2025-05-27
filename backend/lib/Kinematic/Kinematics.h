@@ -15,9 +15,10 @@
  */
 struct DHparam
 {
-    double a;     ///< Link length
-    double alpha; ///< Link twist (in radians)
-    double d;     ///< Link offset
+    double a;                 ///< Link length
+    double alpha;             ///< Link twist (in radians)
+    double d;                 ///< Link offset
+    double thetaOffset = 0.0; ///< Joint angle offset (in degrees)
 };
 
 /**
