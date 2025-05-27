@@ -110,12 +110,12 @@ std::vector<DHparam> dhParams = {
     {0.0f, 1.571f, 0.0f},
     {0.0f, 0.0f, 29.270f}};
 
-LimitSwitches    limitSwitches(ledPin, limitSwitchPins);     // Manages the state of limit switches
-ProgramLoader    programLoader(motorConfigs, limitSwitches); // Controls loading programs and state management
-CommandProcessor cmdProcessor(programLoader);                // Parses and processes incoming commands
-SerialHandler    serialHandler;                              // Handles serial communication and command routing
-Homing           homingManager(limitSwitchPins);             // Manages the homing process for multiple axes
-Kinematics       kin(motorConfigs, dhParams);                // Kinematics calculations for the robot arm
+LimitSwitches    limitSwitches(ledPin, limitSwitchPins);                     // Manages the state of limit switches
+Homing           homingManager(limitSwitchPins);                             // Manages the homing process for multiple axes
+ProgramLoader    programLoader(&homingManager, motorConfigs, limitSwitches); // Controls loading programs and state management
+CommandProcessor cmdProcessor(programLoader);                                // Parses and processes incoming commands
+SerialHandler    serialHandler;                                              // Handles serial communication and command routing
+Kinematics       kin(motorConfigs, dhParams);                                // Kinematics calculations for the robot arm
 
 AxisData axis1 = {MOVE_TO_SWITCH, &motorJ1, J1, HOMING_VELOCITY_J1, MOVE_AWAY_VELOCITY_J1, MOVE_BACK_VELOCITY_J1, HOME_POS_J1};
 AxisData axis2 = {MOVE_TO_SWITCH, &motorJ2, J2, HOMING_VELOCITY_J2, MOVE_AWAY_VELOCITY_J2, MOVE_BACK_VELOCITY_J2, HOME_POS_J2};
@@ -201,7 +201,7 @@ void setup()
 void loop()
 {
 
-    // serialHandler.listenForSerial();
-    // programLoader.run();
-    homingManager.executeHoming();
+    serialHandler.listenForSerial();
+    programLoader.run();
+    // homingManager.executeHoming();
 }
