@@ -27,6 +27,28 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
     {
         _loadProgram(program);
     }
+    else if (command == "START")
+    {
+        if (_currentProgramState != MAIN)
+        {
+            _start();
+        }
+        else
+        {
+            return;
+        }
+    }
+    else if (command == "STOP")
+    {
+        if (_currentProgramState != MAIN)
+        {
+            _stop();
+        }
+        else
+        {
+            return;
+        }
+    }
     else if (command == "JOG" || command == "MOVE")
     {
 
@@ -70,13 +92,63 @@ void ProgramLoader::_loadProgram(const String& program)
         Serial.println("Loading program: " + program);
         delay(20);
         _setState(it->second);
+        if (it->second == MAIN)
+        {
+            _executionState = EXEC_RUNNING; // Automatically start MAIN program
+        }
+        else
+        {
+            _executionState = EXEC_IDLE; // Set to idle for other programs
+        }
+
         Serial.println("Loaded program: " + program);
         delay(20);
     }
 }
 
+void ProgramLoader::_start()
+{
+    if (_currentProgramState == IDLE)
+    {
+        Serial.println("No program loaded.");
+        delay(20);
+        return;
+    }
+
+    if (_executionState == EXEC_RUNNING)
+    {
+        Serial.println("Program already running.");
+        delay(20);
+        return;
+    }
+
+    Serial.print("Starting program");
+    delay(20);
+    _executionState = EXEC_RUNNING;
+}
+
+void ProgramLoader::_stop()
+{
+    if (_executionState != EXEC_RUNNING)
+    {
+        Serial.println("No program is running.");
+        delay(20);
+        return;
+    }
+
+    Serial.println("Stopping program");
+    delay(20);
+    // Perform any necessary cleanup here
+    _executionState = EXEC_IDLE;
+}
+
 void ProgramLoader::run()
 {
+    if (_currentProgramState == IDLE || _executionState != EXEC_RUNNING)
+    {
+        return;
+    }
+
     switch (_currentProgramState)
     {
     case PING:
