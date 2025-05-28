@@ -36,8 +36,13 @@ class MainWindowController:
         self._ui.cmd_switches_btn.clicked.connect(
             lambda: self._handle_cmd_btn_click(self._ui.cmd_switches_btn)
         )
+        self._ui.cmd_home_axis_btn.clicked.connect(
+            lambda: self._handle_cmd_btn_click(self._ui.cmd_home_axis_btn)
+        )
 
         # Button container
+        self._ui.btn_start.clicked.connect(self._handle_start_btn_click)
+        self._ui.btn_stop.clicked.connect(self._handle_stop_btn_click)
         self._ui.btn_load_prog_btn.clicked.connect(self._handle_load_btn_click)
 
         # Prog Clear btn
@@ -109,12 +114,22 @@ class MainWindowController:
             checksum = self._helper.calc_checksum(text_input)
             data_str = f"${text_input}*{checksum}#"
 
-            if (
-                data_str.startswith("$")
-                and data_str.find("*") != -1
-                and data_str.endswith("#")
-            ):
-                self._serial.send_data(data_str)
+            if self._serial.is_connected():
+                if self._program is not None:
+                    if (
+                        data_str.startswith("$")
+                        and data_str.find("*") != -1
+                        and data_str.endswith("#")
+                    ):
+                        self._serial.send_data(data_str)
+                        print(f"Sent: {data_str}")
+                    else:
+                        self._fmt_log_monitor("[ERROR]", "Invalid data format!", "red")
+                else:
+                    self._fmt_log_monitor("[ERROR]", "No program loaded!", "red")
+            else:
+                self._fmt_log_monitor("[ERROR]", "Not connected!", "red")
+                return
 
     def _process_received_data(self, data):
         # ? make ui updates which in relation to received serial data here
@@ -133,6 +148,7 @@ class MainWindowController:
             self._ui.cmd_ping_btn: ("Ping", "LOAD,[PING]"),
             self._ui.cmd_pong_btn: ("Pong", "LOAD,[PONG]"),
             self._ui.cmd_switches_btn: ("TestSwitches", "LOAD,[TEST_SWITCHES]"),
+            self._ui.cmd_home_axis_btn: ("Home", "LOAD,[HOME]"),
         }
 
         if clicked_button in cmd_map:
@@ -142,14 +158,25 @@ class MainWindowController:
             self._fmt_program_monitor(name, "lightblue", "white")
             self._program = command
             self._ui.btn_load_prog_btn.setEnabled(True)
+            self._ui.btn_start.setEnabled(True)
+            self._ui.btn_stop.setEnabled(True)
 
     def _handle_load_btn_click(self):
-        if self._program is not None:
-            self._send_data(self._program)
+        self._send_data(self._program)
+
+    def _handle_start_btn_click(self):
+        self._send_data("START,[EXEC]")
+
+    def _handle_stop_btn_click(self):
+        self._send_data("STOP,[EXEC]")
 
     def _handle_clear_btn_click(self):
+        self._fmt_log_monitor("[INFO]", "Program cleared", "lightblue")
+        self._send_data("IDLE,[EXEC]")
         self._program = None
         self._ui.btn_load_prog_btn.setEnabled(False)
+        self._ui.btn_start.setEnabled(False)
+        self._ui.btn_stop.setEnabled(False)
 
     def _handle_jog_btn_press(self, btn):
         btn_name = btn.objectName()
@@ -158,6 +185,7 @@ class MainWindowController:
             self._jog_joint = parts[1].upper()
             self._jog_direction = parts[2].upper()
             start_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, START]"
+            self._program = start_data
             self._send_data(start_data)
             print(start_data)
         else:
@@ -165,8 +193,18 @@ class MainWindowController:
 
     def _handle_jog_btn_release(self):
         stop_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, STOP]"
+        self._program = stop_data
         self._send_data(stop_data)
         print(stop_data)
+
+    # ? This is only a prototype function, not complete yet
+    def _handle_home_axis_btn_click(self):
+        if self._serial.is_connected():
+            home_data = "LOAD,[HOME]"
+            self._send_data(home_data)
+            self._fmt_program_monitor("Home", "lightblue", "white")
+        else:
+            self._fmt_log_monitor("[ERROR]", "Cannot home axes, not connected!", "red")
 
     # *****************Update UI*********************
     def _update_combo_box(self):
@@ -205,7 +243,7 @@ class MainWindowController:
 
     # *Log Monitor
     def _update_log_monitor_with_serial(self, data):
-        self._fmt_log_monitor("[LOG]", data, "red")
+        self._fmt_log_monitor("[LOG]", data, "lightgreen")
 
     def _fmt_log_monitor(self, log_prefix, data, prefix_color):
         date = str(datetime.datetime.now().date())
