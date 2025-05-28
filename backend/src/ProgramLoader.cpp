@@ -19,6 +19,7 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
     const String& command = cmd;
     const String& program = args[0];
     _arguments            = args;
+    _cmd                  = command;
 
     for (String& arg : _arguments)
         arg.trim();
@@ -29,24 +30,30 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
     }
     else if (command == "START")
     {
-        if (_currentProgramState != MAIN)
-        {
-            _start();
-        }
-        else
+        if (_currentProgramState == MAIN)
         {
             return;
         }
+        _start();
     }
     else if (command == "STOP")
     {
-        if (_currentProgramState != MAIN)
+        if (_currentProgramState == MAIN)
         {
-            _stop();
+            return;
+        }
+        _stop();
+    }
+    else if (command == "IDLE")
+    {
+        if (_currentProgramState == IDLE)
+        {
+            return;
         }
         else
         {
-            return;
+            _setState(IDLE);
+            _executionState = EXEC_IDLE;
         }
     }
     else if (command == "JOG" || command == "MOVE")
@@ -55,11 +62,6 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
         if (_currentProgramState != MAIN)
         {
             _loadProgram("MAIN");
-            _cmd = command;
-        }
-        else
-        {
-            _cmd = command;
         }
     }
 }
@@ -89,8 +91,6 @@ void ProgramLoader::_loadProgram(const String& program)
     }
     else
     {
-        Serial.println("Loading program: " + program);
-        delay(20);
         _setState(it->second);
         if (it->second == MAIN)
         {
@@ -121,9 +121,6 @@ void ProgramLoader::_start()
         delay(20);
         return;
     }
-
-    Serial.print("Starting program");
-    delay(20);
     _executionState = EXEC_RUNNING;
 }
 
@@ -136,9 +133,8 @@ void ProgramLoader::_stop()
         return;
     }
 
-    Serial.println("Stopping program");
-    delay(20);
-    // Perform any necessary cleanup here
+    // Clean up
+    _stopMotors(); // Stop all motors if they are moving
     _executionState = EXEC_IDLE;
 }
 
@@ -215,8 +211,7 @@ void ProgramLoader::_home()
     else
     {
         // Maybe reset homing state later
-        Serial.println("[INFO] - Homing done going back to IDLE state.");
-        delay(20);
+        _executionState = EXEC_IDLE;
         _setState(IDLE);
     }
 }
@@ -284,6 +279,7 @@ void ProgramLoader::_main()
     }
 }
 
+//  ******************************HELPER FUNCTIONS********************************
 JogCommand ProgramLoader::_getJogCommand(const String& str)
 {
     if (str == "START")
@@ -292,4 +288,15 @@ JogCommand ProgramLoader::_getJogCommand(const String& str)
         return JOG_STOP;
     else
         return JOG_UNKNOWN;
+}
+
+void ProgramLoader::_stopMotors()
+{
+    for (MotorConfig& cfg : _motorConfigs)
+    {
+        if (cfg.motor != nullptr && cfg.motor->isMoving)
+        {
+            cfg.motor->emergencyStop(); // Stop all motors if they are moving
+        }
+    }
 }
