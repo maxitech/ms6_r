@@ -52,6 +52,7 @@ enum JogCommand
 class ProgramLoader
 {
 public:
+    //  ******************************PUBLIC FUNCTIONS********************************
     /**
      * @brief Constructs the ProgramLoader with a reference to LimitSwitches.
      * @param motorConfigs Reference to a vector of MotorConfig's for the robot's motors.
@@ -78,6 +79,7 @@ public:
     ProgramState getState() const;
 
 private:
+    //  ******************************PRIVATE FUNCTIONS********************************
     /**
      * @brief Loads and activates a program by name.
      * @param program The name of the program to load (e.g., "PING", "PONG").
@@ -135,6 +137,7 @@ private:
      */
     void _main();
 
+    //  ******************************HELPER FUNCTIONS********************************
     /**
      * @brief Parses the jog command from the input string.
      * @param str The jog command string.
@@ -143,6 +146,13 @@ private:
      */
     JogCommand _getJogCommand(const String& str);
 
+    /**
+     * @brief Stops all motors if they are currently moving.
+     * @internal
+     */
+    void _stopMotors();
+
+    // ******************************MEMBER VARIABLES********************************
     Homing*                   _homingManager;                   ///< Pointer to the Homing manager for homing routines.
     std::vector<MotorConfig>& _motorConfigs;                    ///< Vector of motor configurations for the robot.
     ProgramState              _currentProgramState = IDLE;      ///< Current active program state. @internal
