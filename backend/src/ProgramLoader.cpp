@@ -52,6 +52,7 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
         }
         else
         {
+            _stop(); // Stop any running program and set to IDLE state
             _setState(IDLE);
             _executionState = EXEC_IDLE;
         }
@@ -68,6 +69,7 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
 
 void ProgramLoader::_loadProgram(const String& program)
 {
+    _stop(); // Stop any running program before loading a new one
     static const std::map<String, ProgramState> programMap = {
         {"PING", PING},
         {"PONG", PONG},
@@ -128,8 +130,6 @@ void ProgramLoader::_stop()
 {
     if (_executionState != EXEC_RUNNING)
     {
-        Serial.println("No program is running.");
-        delay(20);
         return;
     }
 
