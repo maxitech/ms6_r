@@ -1210,7 +1210,7 @@ font-size: 10pt;
             <property name="frameShadow">
              <enum>QFrame::Shadow::Plain</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_6" stretch="0,0,0">
+            <layout class="QVBoxLayout" name="verticalLayout_6" stretch="0,0,0,0">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -1271,6 +1271,13 @@ font-size: 10pt;
                </property>
                <property name="text">
                 <string>Test_Switches</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="cmd_home_axis_btn">
+               <property name="text">
+                <string>Home</string>
                </property>
               </widget>
              </item>
@@ -1977,7 +1984,7 @@ font-size: 10pt;
            </widget>
           </item>
           <item>
-           <widget class="QFrame" name="frame_3">
+           <widget class="QFrame" name="home_frame">
             <property name="frameShape">
              <enum>QFrame::Shape::StyledPanel</enum>
             </property>
@@ -2073,7 +2080,10 @@ font-size: 10pt;
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QPushButton" name="btn_pushButton">
+           <widget class="QPushButton" name="btn_start">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="font">
              <font>
               <pointsize>9</pointsize>
@@ -2086,7 +2096,10 @@ font-size: 10pt;
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="btn_pushButton_2">
+           <widget class="QPushButton" name="btn_stop">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="font">
              <font>
               <pointsize>9</pointsize>

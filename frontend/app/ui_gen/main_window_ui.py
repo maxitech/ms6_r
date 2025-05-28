@@ -538,6 +538,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_6.addWidget(self.cmd_switches_btn)
 
+        self.cmd_home_axis_btn = QPushButton(self.cmd_prog_frame)
+        self.cmd_home_axis_btn.setObjectName(u"cmd_home_axis_btn")
+
+        self.verticalLayout_6.addWidget(self.cmd_home_axis_btn)
+
 
         self.verticalLayout_5.addWidget(self.cmd_prog_frame)
 
@@ -905,12 +910,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_35.addWidget(self.joint_pos_frame)
 
-        self.frame_3 = QFrame(self.frame_6)
-        self.frame_3.setObjectName(u"frame_3")
-        self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_3.setFrameShadow(QFrame.Shadow.Raised)
+        self.home_frame = QFrame(self.frame_6)
+        self.home_frame.setObjectName(u"home_frame")
+        self.home_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.home_frame.setFrameShadow(QFrame.Shadow.Raised)
 
-        self.horizontalLayout_35.addWidget(self.frame_3)
+        self.horizontalLayout_35.addWidget(self.home_frame)
 
 
         self.gridLayout.addWidget(self.frame_6, 11, 0, 3, 4)
@@ -956,17 +961,19 @@ class Ui_MainWindow(object):
         self.btn_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_3 = QHBoxLayout(self.btn_frame)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.btn_pushButton = QPushButton(self.btn_frame)
-        self.btn_pushButton.setObjectName(u"btn_pushButton")
-        self.btn_pushButton.setFont(font6)
+        self.btn_start = QPushButton(self.btn_frame)
+        self.btn_start.setObjectName(u"btn_start")
+        self.btn_start.setEnabled(False)
+        self.btn_start.setFont(font6)
 
-        self.horizontalLayout_3.addWidget(self.btn_pushButton)
+        self.horizontalLayout_3.addWidget(self.btn_start)
 
-        self.btn_pushButton_2 = QPushButton(self.btn_frame)
-        self.btn_pushButton_2.setObjectName(u"btn_pushButton_2")
-        self.btn_pushButton_2.setFont(font6)
+        self.btn_stop = QPushButton(self.btn_frame)
+        self.btn_stop.setObjectName(u"btn_stop")
+        self.btn_stop.setEnabled(False)
+        self.btn_stop.setFont(font6)
 
-        self.horizontalLayout_3.addWidget(self.btn_pushButton_2)
+        self.horizontalLayout_3.addWidget(self.btn_stop)
 
         self.btn_load_prog_btn = QPushButton(self.btn_frame)
         self.btn_load_prog_btn.setObjectName(u"btn_load_prog_btn")
@@ -1094,6 +1101,7 @@ class Ui_MainWindow(object):
         self.cmd_ping_btn.setText(QCoreApplication.translate("MainWindow", u"Ping", None))
         self.cmd_pong_btn.setText(QCoreApplication.translate("MainWindow", u"Pong", None))
         self.cmd_switches_btn.setText(QCoreApplication.translate("MainWindow", u"Test_Switches", None))
+        self.cmd_home_axis_btn.setText(QCoreApplication.translate("MainWindow", u"Home", None))
         self.cmd_condi_menu_pushButton.setText(QCoreApplication.translate("MainWindow", u"Conditional", None))
         self.cmd_begin_pushButton.setText(QCoreApplication.translate("MainWindow", u"Begin", None))
         self.cmd_end_pushButton.setText(QCoreApplication.translate("MainWindow", u"End", None))
@@ -1124,8 +1132,8 @@ class Ui_MainWindow(object):
         self.label_37.setText(QCoreApplication.translate("MainWindow", u"J6:", None))
         self.joint_pos_j6_label.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.log_label.setText(QCoreApplication.translate("MainWindow", u"Response log:", None))
-        self.btn_pushButton.setText(QCoreApplication.translate("MainWindow", u"Start", None))
-        self.btn_pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
+        self.btn_start.setText(QCoreApplication.translate("MainWindow", u"Start", None))
+        self.btn_stop.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
         self.btn_load_prog_btn.setText(QCoreApplication.translate("MainWindow", u"Load Program", None))
         self.select_device_label.setText(QCoreApplication.translate("MainWindow", u"Select Device:", None))
         self.con_connect_btn.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
