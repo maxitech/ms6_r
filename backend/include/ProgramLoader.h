@@ -25,6 +25,14 @@ enum ProgramState
     MAIN
 };
 
+enum ExecutionState
+{
+    EXEC_IDLE,    ///< No program is currently executing.
+    EXEC_RUNNING, ///< A program is currently running.
+    EXEC_STOPPED  ///< The program execution has been stopped.
+
+};
+
 enum JogState
 {
     IDLE_JOG, ///< No jog command is active.
@@ -78,6 +86,18 @@ private:
     void _loadProgram(const String& program);
 
     /**
+     * @brief Executes the current loaded program.
+     * @internal
+     */
+    void _start();
+
+    /**
+     * @brief Stops the currently running program and resets the state to IDLE.
+     * @internal
+     */
+    void _stop();
+
+    /**
      * @brief Changes the current state to a new program.
      * @param newState The new program state to activate.
      * @return The updated ProgramState.
@@ -123,10 +143,11 @@ private:
      */
     JogCommand _getJogCommand(const String& str);
 
-    Homing*                   _homingManager;              ///< Pointer to the Homing manager for homing routines.
-    std::vector<MotorConfig>& _motorConfigs;               ///< Vector of motor configurations for the robot.
-    ProgramState              _currentProgramState = IDLE; ///< Current active program state. @internal
-    LimitSwitches&            _limitSwitches;              ///< Reference to limit switches for diagnostics. @internal
+    Homing*                   _homingManager;                   ///< Pointer to the Homing manager for homing routines.
+    std::vector<MotorConfig>& _motorConfigs;                    ///< Vector of motor configurations for the robot.
+    ProgramState              _currentProgramState = IDLE;      ///< Current active program state. @internal
+    ExecutionState            _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
+    LimitSwitches&            _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
     std::vector<String>       _arguments = {};
     String                    _cmd       = ""; ///< Current command @internal
 };
