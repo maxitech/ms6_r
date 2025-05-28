@@ -115,18 +115,15 @@ class MainWindowController:
             data_str = f"${text_input}*{checksum}#"
 
             if self._serial.is_connected():
-                if self._program is not None:
-                    if (
-                        data_str.startswith("$")
-                        and data_str.find("*") != -1
-                        and data_str.endswith("#")
-                    ):
-                        self._serial.send_data(data_str)
-                        print(f"Sent: {data_str}")
-                    else:
-                        self._fmt_log_monitor("[ERROR]", "Invalid data format!", "red")
+                if (
+                    data_str.startswith("$")
+                    and data_str.find("*") != -1
+                    and data_str.endswith("#")
+                ):
+                    self._serial.send_data(data_str)
+                    print(f"Sent: {data_str}")
                 else:
-                    self._fmt_log_monitor("[ERROR]", "No program loaded!", "red")
+                    self._fmt_log_monitor("[ERROR]", "Invalid data format!", "red")
             else:
                 self._fmt_log_monitor("[ERROR]", "Not connected!", "red")
                 return
@@ -158,17 +155,24 @@ class MainWindowController:
             self._fmt_program_monitor(name, "lightblue", "white")
             self._program = command
             self._ui.btn_load_prog_btn.setEnabled(True)
-            self._ui.btn_start.setEnabled(True)
-            self._ui.btn_stop.setEnabled(True)
 
     def _handle_load_btn_click(self):
-        self._send_data(self._program)
+        if self._check_for_program():
+            self._send_data(self._program)
+            self._ui.btn_start.setEnabled(True)
+            self._ui.btn_stop.setEnabled(False)
 
     def _handle_start_btn_click(self):
-        self._send_data("START,[EXEC]")
+        if self._check_for_program():
+            self._send_data("START,[EXEC]")
+            self._ui.btn_start.setEnabled(False)
+            self._ui.btn_stop.setEnabled(True)
 
     def _handle_stop_btn_click(self):
-        self._send_data("STOP,[EXEC]")
+        if self._check_for_program():
+            self._send_data("STOP,[EXEC]")
+            self._ui.btn_stop.setEnabled(False)
+            self._ui.btn_start.setEnabled(True)
 
     def _handle_clear_btn_click(self):
         self._fmt_log_monitor("[INFO]", "Program cleared", "lightblue")
@@ -185,7 +189,6 @@ class MainWindowController:
             self._jog_joint = parts[1].upper()
             self._jog_direction = parts[2].upper()
             start_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, START]"
-            self._program = start_data
             self._send_data(start_data)
             print(start_data)
         else:
@@ -193,7 +196,6 @@ class MainWindowController:
 
     def _handle_jog_btn_release(self):
         stop_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, STOP]"
-        self._program = stop_data
         self._send_data(stop_data)
         print(stop_data)
 
@@ -270,3 +272,11 @@ class MainWindowController:
         cursor.insertText(data + ("\n" if "\n" not in data else ""))
 
         self._ui.log_textEdit.setTextCursor(cursor)
+
+    # ***********Helper Functions****************
+    def _check_for_program(self):
+        if self._program is not None:
+            return True
+        else:
+            self._fmt_log_monitor("[ERROR]", "No program loaded!", "red")
+            return False
