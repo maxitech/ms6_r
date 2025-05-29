@@ -179,6 +179,7 @@ ProgramState ProgramLoader::getState() const
     return _currentProgramState;
 }
 
+//  ******************************PROGRAMS********************************
 void ProgramLoader::_executePing()
 {
     static unsigned long lastPingTime = 0;
@@ -273,7 +274,20 @@ void ProgramLoader::_main()
             break;
         }
     }
-    if (currJogState == IDLE_JOG)
+
+    if (currJogState == JOGGING && _homingManager->isHomingDone())
+    {
+        static unsigned long lastSendTime = 0;
+        if (Utils::nonBlockingDelay(100, lastSendTime))
+        {
+            const int motorPos = _motorConfigs[motorIdx].motor->getPosition();
+            Serial.print("DATA:MOTOR_POS_STEPS*");
+            Serial.print(motorIdx + 1);
+            Serial.print("#");
+            Serial.println(motorPos);
+        }
+    }
+    else if (currJogState == IDLE_JOG)
     {
         delay(20);
     }
