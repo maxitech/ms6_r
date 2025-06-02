@@ -1,4 +1,5 @@
 import datetime
+import re
 from PySide6.QtGui import QTextCharFormat, QColor, QTextCursor
 from PySide6.QtCore import QTimer
 from app.core.serial_connection import SerialConnection
@@ -131,7 +132,21 @@ class MainWindowController:
     def _process_received_data(self, data):
         # ? make ui updates which in relation to received serial data here
         # print(f"Received in UI: {data}")
-        self._update_log_monitor_with_serial(data)
+        data = data.strip()
+        if not data.startswith("DATA:"):
+            self._update_log_monitor_with_serial(data)
+        else:
+            # Handle data that starts with "DATA:"
+            data_content = data[5:].strip()
+            if "MOTOR_POS_STEPS" in data_content:
+                match = re.search(r"\*(.*?)#(.*)", data_content)
+                if match:
+                    motor = match.group(1)
+                    pos = match.group(2)
+                    label_name = f"jog_j{motor}_label"
+                    label_widget = getattr(self._ui, label_name, None)
+                    if label_widget is not None:
+                        label_widget.setText(pos)
 
     # ***************Handlers*******************
     def _handle_con_btn_click(self):
