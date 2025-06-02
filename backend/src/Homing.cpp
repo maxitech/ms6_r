@@ -43,6 +43,7 @@ void Homing::resetGroup(AxisGroup& group)
     for (auto* axis : group.axes)
     {
         axis->isHomingDone = false;
+        axis->homingState  = MOVE_TO_SWITCH; // Reset homing state to initial state
     }
 }
 
@@ -54,6 +55,7 @@ void Homing::resetAllGroups()
         for (auto* axis : group->axes)
         {
             axis->isHomingDone = false;
+            axis->homingState  = MOVE_TO_SWITCH; // Reset homing state to initial state
         }
     }
 }
@@ -162,21 +164,18 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
         break;
 
     case SET_ZERO_POINT:
-        static bool          delayStarted = false;
-        static unsigned long lastTime;
-
-        if (!delayStarted)
+        if (!axisData.delayStarted)
         {
-            lastTime     = millis(); // Initialize the timer
-            delayStarted = true;
+            axisData.lastDelayTime = millis(); // Initialize the timer
+            axisData.delayStarted  = true;
         }
 
-        if (Utils::nonBlockingDelay(3000, lastTime))
+        if (Utils::nonBlockingDelay(3000, axisData.lastDelayTime))
         {
             // Serial.println(String(axis_x) + " set zero point");
             motorJ_x.setPosition(0); // Set the current position to zero
-            homingStateJ_x = MOVE_TO_HOME;
-            delayStarted   = false;
+            homingStateJ_x        = MOVE_TO_HOME;
+            axisData.delayStarted = false;
         }
         break;
 
@@ -193,8 +192,8 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
             }
             else
             {
-                Serial.println(String(axis_x) +
-                               " reached home position");
+                // Serial.println(String(axis_x) +
+                //                " reached home position");
                 homingStateJ_x = COMPLETE;
             }
         }

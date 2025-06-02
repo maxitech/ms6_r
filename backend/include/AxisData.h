@@ -74,6 +74,19 @@ struct AxisData
      * @brief Flag indicating whether the homing process for this axis is complete.
      */
     bool isHomingDone = false;
+
+    /**
+     * @brief Tracks whether a delay has been initiated for this axis.
+     * @details This flag is used to check if a delay is currently in progress,
+     *          which is particularly important during homing operations.
+     */
+    bool delayStarted = false;
+
+    /**
+     * @brief The last time a delay was initiated for this axis.
+     * @details Used to manage timing for homing operations.
+     */
+    unsigned long lastDelayTime = 0;
 };
 
 #endif // AXISDATA_H
