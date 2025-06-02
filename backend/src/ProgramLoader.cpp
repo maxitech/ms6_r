@@ -212,6 +212,12 @@ void ProgramLoader::_home()
     else
     {
         // Maybe reset homing state later
+        for (size_t i = 0; i < _motorConfigs.size(); ++i)
+        {
+            const int motorPos = _motorConfigs[i].motor->getPosition();
+            Serial.println("DATA:MOTOR_POS_STEPS*" + String(static_cast<int>(i + 1)) + "#" + String(motorPos));
+            delay(50);
+        }
         _executionState = EXEC_IDLE;
         _setState(IDLE);
     }
