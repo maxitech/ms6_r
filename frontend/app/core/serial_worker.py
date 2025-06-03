@@ -16,18 +16,16 @@ class SerialWorker(QThread):
         while self._running:
             try:
                 if self._serial_port and self._serial_port.in_waiting:
-                    data = self._serial_port.read(self._serial_port.in_waiting).decode(
-                        "utf-8"
-                    )
-                    print(f"Received Data: {data}")
-                    self.data_received.emit(data)  # send data to ui
+                    line = self._serial_port.readline().decode("utf-8").strip()
+                    print(f"Received Data: {line}")
+                    self.data_received.emit(line)  # send data to ui
             except serial.SerialException as e:
                 print(f"Serial error: {e}")
                 self._running = False  # stop thread if critical error occoures
                 self.quit()
             except Exception as e:
-                print(f"Serial error: {e}")
-            time.sleep(0.01)  # reduce cpu power
+                print(f"Unhandled error: {e}")
+            time.sleep(0.005)  # reduce cpu power
 
     def stop(self):
         self._running = False
