@@ -158,8 +158,8 @@ private:
     ProgramState              _currentProgramState = IDLE;      ///< Current active program state. @internal
     ExecutionState            _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
     LimitSwitches&            _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
-    std::vector<String>       _arguments = {};
-    String                    _cmd       = ""; ///< Current command @internal
+    std::vector<String>       _arguments;                       ///< Arguments passed with the command. @internal
+    String                    _cmd;                             ///< Current command @internal
 };
 
 #endif // PROGRAMLOADER_H
