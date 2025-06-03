@@ -131,7 +131,6 @@ void setup()
         // wait
     };
     Serial.println("Setup started");
-    delay(20);
 
     pinMode(motorJ1En, OUTPUT);
     pinMode(motorJ2En, OUTPUT);
@@ -195,7 +194,6 @@ void setup()
     serialHandler.setCommandProcessor(&cmdProcessor);
 
     Serial.println("Setup done");
-    delay(20);
 }
 
 void loop()

@@ -12,7 +12,6 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
     if (cmd == "" || args.empty())
     {
         Serial.println("Error: False command or not enough arguments.");
-        delay(20);
         return;
     }
 
@@ -82,14 +81,12 @@ void ProgramLoader::_loadProgram(const String& program)
     if (it == programMap.end())
     {
         Serial.println("Unknown program: " + program);
-        delay(20);
         return;
     }
 
     if (_currentProgramState == it->second)
     {
         Serial.println("Reloaded program: " + program);
-        delay(20);
     }
     else
     {
@@ -104,7 +101,6 @@ void ProgramLoader::_loadProgram(const String& program)
         }
 
         Serial.println("Loaded program: " + program);
-        delay(20);
     }
 }
 
@@ -113,14 +109,12 @@ void ProgramLoader::_start()
     if (_currentProgramState == IDLE)
     {
         Serial.println("No program loaded.");
-        delay(20);
         return;
     }
 
     if (_executionState == EXEC_RUNNING)
     {
         Serial.println("Program already running.");
-        delay(20);
         return;
     }
     _executionState = EXEC_RUNNING;
@@ -215,8 +209,10 @@ void ProgramLoader::_home()
         for (size_t i = 0; i < _motorConfigs.size(); ++i)
         {
             const int motorPos = _motorConfigs[i].motor->getPosition();
-            Serial.println("DATA:MOTOR_POS_STEPS*" + String(static_cast<int>(i + 1)) + "#" + String(motorPos));
-            delay(50);
+            Serial.print("DATA:MOTOR_POS_STEPS*");
+            Serial.print(static_cast<int>(i + 1));
+            Serial.print("#");
+            Serial.println(motorPos);
         }
         _executionState = EXEC_IDLE;
         _setState(IDLE);
@@ -228,7 +224,6 @@ void ProgramLoader::_main()
     if (_arguments.empty())
     {
         Serial.println("Warning: _arguments vector is empty!");
-        delay(20);
         return;
     }
     const String& joint     = _arguments[0];
@@ -253,7 +248,6 @@ void ProgramLoader::_main()
                 if (direction != "POS" && direction != "NEG")
                 {
                     Serial.println("Invalid direction string: " + direction);
-                    delay(20);
                     return;
                 }
 
@@ -276,7 +270,6 @@ void ProgramLoader::_main()
         case JOG_UNKNOWN:
         default:
             Serial.println("Unknown JOG state: " + jogState);
-            delay(20);
             break;
         }
     }

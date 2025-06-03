@@ -8,7 +8,6 @@ void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& a
     if (cmd == "" || args.empty())
     {
         Serial.println("Error: no command or no arguments");
-        delay(20);
         return;
     }
 
@@ -24,7 +23,6 @@ void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& a
     else
     {
         Serial.println("Error: Unknown command or command invalide! Correct format <$cmd,[arg, arg, ...]>" + command);
-        delay(20);
     }
 
     // -------------------This block can be used if main func running has to be handled by the frontend------------------------
