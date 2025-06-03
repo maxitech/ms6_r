@@ -10,7 +10,6 @@ void CommandProcessor::processInput(const String& input)
     if (!_isInputValid(input))
     {
         Serial.println("Input is invalid. Expected input: $<cmd_pt1, cmd_pt2, etc.>*<checksum>#");
-        delay(20);
         return;
     }
 
@@ -21,7 +20,6 @@ void CommandProcessor::processInput(const String& input)
     if (!_validateChecksum(data, checksum))
     {
         Serial.println("Input processing failed: Checksum validation error.");
-        delay(20);
         return;
     }
 
@@ -55,7 +53,6 @@ bool CommandProcessor::_validateChecksum(const String& data, const String& check
     if (calculatedChecksum != checksum)
     {
         Serial.println("Checksum Error. Expected: " + checksum + ", Calculated: " + calculatedChecksum);
-        delay(20);
         return false;
     }
 
@@ -84,7 +81,6 @@ std::pair<String, std::vector<String>> CommandProcessor::_splitString(const Stri
     if (!paramStr.startsWith("[") && !paramStr.endsWith("]"))
     {
         Serial.println("Error: Command invalide! Correct format <cmd,[arg, arg, ...]>");
-        delay(20);
         return {str, tokens};
     }
     else

@@ -13,7 +13,7 @@ void SerialHandler::listenForSerial()
     _readSerialInput();
 }
 
-//************* Old version of _readSerialinput() - commented out for referencej**************//
+//************* Old version of _readSerialinput() - commented out for reference **************//
 // void SerialHandler::_readSerialInput()
 // {
 //     const char DELIMITER = '#';
@@ -71,7 +71,6 @@ void SerialHandler::_readSerialInput()
                 // Buffer overflow, reset index
                 index = 0;
                 Serial.println("Error: Serial buffer overflow");
-                delay(20);
                 return;
             }
         }
@@ -87,6 +86,5 @@ void SerialHandler::_forwardInput(const String& input)
     else
     {
         Serial.println("Error: No CommandProcesor set. Please set one using setCommandProcessor() in main.cpp");
-        delay(20);
     }
 }
