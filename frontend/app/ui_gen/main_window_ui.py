@@ -431,6 +431,7 @@ class Ui_MainWindow(object):
         self.prog_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.prog_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_3 = QVBoxLayout(self.prog_frame)
+        self.verticalLayout_3.setSpacing(6)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.verticalLayout_3.setContentsMargins(-1, 9, -1, -1)
         self.prog_header_frame = QFrame(self.prog_frame)
@@ -926,16 +927,38 @@ class Ui_MainWindow(object):
         self.log_frame.setMaximumSize(QSize(10000, 300))
         self.log_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.log_frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_4 = QVBoxLayout(self.log_frame)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.log_label = QLabel(self.log_frame)
+        self.verticalLayout_8 = QVBoxLayout(self.log_frame)
+        self.verticalLayout_8.setSpacing(6)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.verticalLayout_8.setContentsMargins(-1, 9, -1, 9)
+        self.frame = QFrame(self.log_frame)
+        self.frame.setObjectName(u"frame")
+        self.frame.setFrameShape(QFrame.Shape.NoFrame)
+        self.frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_5 = QHBoxLayout(self.frame)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.log_label = QLabel(self.frame)
         self.log_label.setObjectName(u"log_label")
         font9 = QFont()
         font9.setPointSize(10)
         font9.setBold(True)
         self.log_label.setFont(font9)
 
-        self.verticalLayout_4.addWidget(self.log_label)
+        self.horizontalLayout_5.addWidget(self.log_label)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_5.addItem(self.horizontalSpacer_4)
+
+        self.pushButton = QPushButton(self.frame)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setFont(font6)
+
+        self.horizontalLayout_5.addWidget(self.pushButton)
+
+
+        self.verticalLayout_8.addWidget(self.frame)
 
         self.log_textEdit = QTextEdit(self.log_frame)
         self.log_textEdit.setObjectName(u"log_textEdit")
@@ -949,7 +972,7 @@ class Ui_MainWindow(object):
         self.log_textEdit.setFrameShadow(QFrame.Shadow.Plain)
         self.log_textEdit.setReadOnly(True)
 
-        self.verticalLayout_4.addWidget(self.log_textEdit)
+        self.verticalLayout_8.addWidget(self.log_textEdit)
 
 
         self.gridLayout.addWidget(self.log_frame, 11, 4, 3, 5)
@@ -1038,10 +1061,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.con_frame, 0, 0, 1, 4)
 
+        self.log_frame.raise_()
         self.jog_frame.raise_()
         self.frame_6.raise_()
         self.prog_frame.raise_()
-        self.log_frame.raise_()
         self.cmd_frame.raise_()
         self.btn_frame.raise_()
         self.con_frame.raise_()
@@ -1065,6 +1088,7 @@ class Ui_MainWindow(object):
         self.cmd_prog_menu_pushButton.toggled.connect(self.cmd_prog_frame.setVisible)
         self.cmd_condi_menu_pushButton.toggled.connect(self.cmd_condi_frame.setVisible)
         self.prog_clear_btn.clicked.connect(self.prog_textEdit.clear)
+        self.pushButton.clicked.connect(self.log_textEdit.clear)
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
@@ -1132,6 +1156,7 @@ class Ui_MainWindow(object):
         self.label_37.setText(QCoreApplication.translate("MainWindow", u"J6:", None))
         self.joint_pos_j6_label.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.log_label.setText(QCoreApplication.translate("MainWindow", u"Response log:", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Clear", None))
         self.btn_start.setText(QCoreApplication.translate("MainWindow", u"Start", None))
         self.btn_stop.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
         self.btn_load_prog_btn.setText(QCoreApplication.translate("MainWindow", u"Load Program", None))
