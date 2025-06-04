@@ -19,8 +19,8 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
 from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QComboBox, QFrame,
     QGridLayout, QHBoxLayout, QLabel, QLayout,
     QMainWindow, QMenu, QMenuBar, QPushButton,
-    QSizePolicy, QSpacerItem, QStatusBar, QTextEdit,
-    QVBoxLayout, QWidget)
+    QSizePolicy, QSlider, QSpacerItem, QStatusBar,
+    QTextEdit, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -911,13 +911,63 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_35.addWidget(self.joint_pos_frame)
 
-        self.home_frame = QFrame(self.frame_6)
-        self.home_frame.setObjectName(u"home_frame")
-        self.home_frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.home_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.util_frame = QFrame(self.frame_6)
+        self.util_frame.setObjectName(u"util_frame")
+        self.util_frame.setFrameShape(QFrame.Shape.NoFrame)
+        self.util_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_4 = QVBoxLayout(self.util_frame)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.verticalLayout_4.setContentsMargins(9, 0, 9, -1)
+        self.label = QLabel(self.util_frame)
+        self.label.setObjectName(u"label")
 
-        self.horizontalLayout_35.addWidget(self.home_frame)
+        self.verticalLayout_4.addWidget(self.label)
 
+        self.jog_slider_frame = QFrame(self.util_frame)
+        self.jog_slider_frame.setObjectName(u"jog_slider_frame")
+        self.jog_slider_frame.setFrameShape(QFrame.Shape.NoFrame)
+        self.jog_slider_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_12 = QHBoxLayout(self.jog_slider_frame)
+        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
+        self.horizontalLayout_12.setContentsMargins(0, 0, 0, -1)
+        self.jog_slider = QSlider(self.jog_slider_frame)
+        self.jog_slider.setObjectName(u"jog_slider")
+        self.jog_slider.setMinimum(10)
+        self.jog_slider.setMaximum(100)
+        self.jog_slider.setSingleStep(10)
+        self.jog_slider.setValue(50)
+        self.jog_slider.setSliderPosition(50)
+        self.jog_slider.setOrientation(Qt.Orientation.Horizontal)
+        self.jog_slider.setTickPosition(QSlider.TickPosition.NoTicks)
+        self.jog_slider.setTickInterval(0)
+
+        self.horizontalLayout_12.addWidget(self.jog_slider)
+
+        self.jog_slider_label = QLabel(self.jog_slider_frame)
+        self.jog_slider_label.setObjectName(u"jog_slider_label")
+        self.jog_slider_label.setFont(font6)
+
+        self.horizontalLayout_12.addWidget(self.jog_slider_label)
+
+        self.label_2 = QLabel(self.jog_slider_frame)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setFont(font6)
+
+        self.horizontalLayout_12.addWidget(self.label_2)
+
+
+        self.verticalLayout_4.addWidget(self.jog_slider_frame)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_4.addItem(self.verticalSpacer)
+
+
+        self.horizontalLayout_35.addWidget(self.util_frame)
+
+        self.horizontalLayout_35.setStretch(0, 2)
+        self.horizontalLayout_35.setStretch(1, 2)
+        self.horizontalLayout_35.setStretch(2, 3)
 
         self.gridLayout.addWidget(self.frame_6, 11, 0, 3, 4)
 
@@ -1155,6 +1205,9 @@ class Ui_MainWindow(object):
         self.joint_pos_j5_label_2.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.label_37.setText(QCoreApplication.translate("MainWindow", u"J6:", None))
         self.joint_pos_j6_label.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Jog speed:", None))
+        self.jog_slider_label.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"%", None))
         self.log_label.setText(QCoreApplication.translate("MainWindow", u"Response log:", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Clear", None))
         self.btn_start.setText(QCoreApplication.translate("MainWindow", u"Start", None))
