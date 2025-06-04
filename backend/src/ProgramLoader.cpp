@@ -229,7 +229,7 @@ void ProgramLoader::_main()
     const String& joint     = _arguments[0];
     String&       direction = _arguments[1];
     int           motorIdx  = joint.substring(1).toInt() - 1;
-    const int     velocity  = 1000;
+    const int     velocity  = _arguments[2].toInt();
     const String& jogState  = _arguments.back();
 
     static JogState currJogState = IDLE_JOG;
