@@ -24,6 +24,8 @@ class MainWindowController:
         self._jog_joint = ""
         self._jog_direction = ""
 
+        self._slider_value = self._ui.jog_slider.value()
+
         # Connect btn
         self._ui.con_connect_btn.clicked.connect(self._handle_con_btn_click)
 
@@ -69,11 +71,7 @@ class MainWindowController:
             button.released.connect(lambda: self._handle_jog_btn_release())
 
         # Jog Slider
-        self._ui.jog_slider_label.setText(
-            str(self._ui.jog_slider.value())
-        )  # Initial value
         self._ui.jog_slider.valueChanged.connect(self._handle_jog_slider_change)
-        self._ui.jog_slider.sliderReleased.connect(self._handle_jog_slider_value)
 
     # *************************Public Methods****************************
     def handle_unexpected_disconnect(self):
@@ -210,14 +208,34 @@ class MainWindowController:
         if len(parts) == 4:
             self._jog_joint = parts[1].upper()
             self._jog_direction = parts[2].upper()
-            start_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, START]"
+            gear_factors = [
+                1,
+                14,
+                1,
+                1,
+                1,
+                1,
+            ]  # Factors for J1, J2, J3, J4, J5, J6 - used 14 for J2->gearbox ratio
+            v_min = 500
+            v_max = 4000
+            joint_speeds = self._helper.get_joint_speeds(
+                slider_value=self._slider_value,
+                v_min=v_min,
+                v_max=v_max,
+                gear_factors=gear_factors,
+            )
+            index = (
+                int(self._jog_joint.split("J")[1]) - 1
+            )  # Extract number from J1, J2, etc. to get index
+
+            start_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, {joint_speeds[index]}, START]"
             self._send_data(start_data)
             print(start_data)
         else:
             print(f"Error: Object-Name '{btn_name}' has an unexpected structure!")
 
     def _handle_jog_btn_release(self):
-        stop_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, STOP]"
+        stop_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, 0, STOP]"
         self._send_data(stop_data)
         print(stop_data)
 
@@ -232,11 +250,7 @@ class MainWindowController:
 
     def _handle_jog_slider_change(self):
         self._ui.jog_slider.setValue(round(self._ui.jog_slider.value() / 10) * 10)
-        slider_val = self._ui.jog_slider.value()
-        self._ui.jog_slider_label.setText(str(slider_val))
-
-    def _handle_jog_slider_value(self):
-        print(self._ui.jog_slider.value())  # Temp for debugging
+        self._slider_value = self._ui.jog_slider.value()
 
     # *****************Update UI*********************
     def _update_combo_box(self):
