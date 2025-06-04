@@ -2032,7 +2032,7 @@ font-size: 10pt;
                 <item>
                  <widget class="QSlider" name="jog_slider">
                   <property name="minimum">
-                   <number>10</number>
+                   <number>0</number>
                   </property>
                   <property name="maximum">
                    <number>100</number>
@@ -2053,33 +2053,7 @@ font-size: 10pt;
                    <enum>QSlider::TickPosition::NoTicks</enum>
                   </property>
                   <property name="tickInterval">
-                   <number>0</number>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="jog_slider_label">
-                  <property name="font">
-                   <font>
-                    <pointsize>9</pointsize>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>0</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_2">
-                  <property name="font">
-                   <font>
-                    <pointsize>9</pointsize>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>%</string>
+                   <number>11</number>
                   </property>
                  </widget>
                 </item>

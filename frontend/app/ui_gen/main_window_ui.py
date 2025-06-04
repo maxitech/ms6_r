@@ -932,28 +932,16 @@ class Ui_MainWindow(object):
         self.horizontalLayout_12.setContentsMargins(0, 0, 0, -1)
         self.jog_slider = QSlider(self.jog_slider_frame)
         self.jog_slider.setObjectName(u"jog_slider")
-        self.jog_slider.setMinimum(10)
+        self.jog_slider.setMinimum(0)
         self.jog_slider.setMaximum(100)
         self.jog_slider.setSingleStep(10)
         self.jog_slider.setValue(50)
         self.jog_slider.setSliderPosition(50)
         self.jog_slider.setOrientation(Qt.Orientation.Horizontal)
         self.jog_slider.setTickPosition(QSlider.TickPosition.NoTicks)
-        self.jog_slider.setTickInterval(0)
+        self.jog_slider.setTickInterval(11)
 
         self.horizontalLayout_12.addWidget(self.jog_slider)
-
-        self.jog_slider_label = QLabel(self.jog_slider_frame)
-        self.jog_slider_label.setObjectName(u"jog_slider_label")
-        self.jog_slider_label.setFont(font6)
-
-        self.horizontalLayout_12.addWidget(self.jog_slider_label)
-
-        self.label_2 = QLabel(self.jog_slider_frame)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setFont(font6)
-
-        self.horizontalLayout_12.addWidget(self.label_2)
 
 
         self.verticalLayout_4.addWidget(self.jog_slider_frame)
@@ -1206,8 +1194,6 @@ class Ui_MainWindow(object):
         self.label_37.setText(QCoreApplication.translate("MainWindow", u"J6:", None))
         self.joint_pos_j6_label.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Jog speed:", None))
-        self.jog_slider_label.setText(QCoreApplication.translate("MainWindow", u"0", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"%", None))
         self.log_label.setText(QCoreApplication.translate("MainWindow", u"Response log:", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Clear", None))
         self.btn_start.setText(QCoreApplication.translate("MainWindow", u"Start", None))
