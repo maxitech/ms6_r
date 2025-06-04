@@ -68,6 +68,13 @@ class MainWindowController:
             button.pressed.connect(lambda btn=button: self._handle_jog_btn_press(btn))
             button.released.connect(lambda: self._handle_jog_btn_release())
 
+        # Jog Slider
+        self._ui.jog_slider_label.setText(
+            str(self._ui.jog_slider.value())
+        )  # Initial value
+        self._ui.jog_slider.valueChanged.connect(self._handle_jog_slider_change)
+        self._ui.jog_slider.sliderReleased.connect(self._handle_jog_slider_value)
+
     # *************************Public Methods****************************
     def handle_unexpected_disconnect(self):
         self._fmt_log_monitor(
@@ -222,6 +229,14 @@ class MainWindowController:
             self._fmt_program_monitor("Home", "lightblue", "white")
         else:
             self._fmt_log_monitor("[ERROR]", "Cannot home axes, not connected!", "red")
+
+    def _handle_jog_slider_change(self):
+        self._ui.jog_slider.setValue(round(self._ui.jog_slider.value() / 10) * 10)
+        slider_val = self._ui.jog_slider.value()
+        self._ui.jog_slider_label.setText(str(slider_val))
+
+    def _handle_jog_slider_value(self):
+        print(self._ui.jog_slider.value())  # Temp for debugging
 
     # *****************Update UI*********************
     def _update_combo_box(self):
