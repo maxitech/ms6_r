@@ -2469,8 +2469,8 @@ font-size: 10pt;
        <widget class="QFrame" name="setup_container">
         <property name="geometry">
          <rect>
-          <x>30</x>
-          <y>20</y>
+          <x>0</x>
+          <y>0</y>
           <width>1181</width>
           <height>681</height>
          </rect>
@@ -3019,7 +3019,7 @@ font-size: 10pt;
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QTextEdit" name="textEdit_84">
+             <widget class="QTextEdit" name="dh_j1_theta_off">
               <property name="maximumSize">
                <size>
                 <width>100</width>
@@ -3049,7 +3049,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QTextEdit" name="textEdit_85">
+             <widget class="QTextEdit" name="dh_j2_theta_off">
               <property name="maximumSize">
                <size>
                 <width>100</width>
@@ -3079,7 +3079,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QTextEdit" name="textEdit_89">
+             <widget class="QTextEdit" name="dh_j3_theta_off">
               <property name="maximumSize">
                <size>
                 <width>100</width>
@@ -3109,7 +3109,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QTextEdit" name="textEdit_91">
+             <widget class="QTextEdit" name="dh_j4_theta_off">
               <property name="maximumSize">
                <size>
                 <width>100</width>
@@ -3139,7 +3139,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QTextEdit" name="textEdit_95">
+             <widget class="QTextEdit" name="dh_j5_theta_off">
               <property name="maximumSize">
                <size>
                 <width>100</width>
@@ -3169,7 +3169,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </widget>
             </item>
             <item row="6" column="1">
-             <widget class="QTextEdit" name="textEdit_98">
+             <widget class="QTextEdit" name="dh_j6_theta_off">
               <property name="maximumSize">
                <size>
                 <width>100</width>
@@ -3667,7 +3667,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QTextEdit" name="home_mtr_5_vel_2">
+             <widget class="QTextEdit" name="home_mtr_5_vel">
               <property name="maximumSize">
                <size>
                 <width>100</width>
@@ -4236,6 +4236,19 @@ li.checked::marker { content: &quot;\2612&quot;; }
            </layout>
           </item>
          </layout>
+        </widget>
+        <widget class="QPushButton" name="setup_save_btn">
+         <property name="geometry">
+          <rect>
+           <x>1040</x>
+           <y>600</y>
+           <width>75</width>
+           <height>24</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Save </string>
+         </property>
         </widget>
        </widget>
       </widget>

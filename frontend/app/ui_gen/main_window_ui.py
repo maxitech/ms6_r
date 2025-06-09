@@ -1134,7 +1134,7 @@ class Ui_MainWindow(object):
 "}")
         self.setup_container = QFrame(self.tab_setup)
         self.setup_container.setObjectName(u"setup_container")
-        self.setup_container.setGeometry(QRect(30, 20, 1181, 681))
+        self.setup_container.setGeometry(QRect(0, 0, 1181, 681))
         self.setup_container.setFrameShape(QFrame.Shape.StyledPanel)
         self.setup_container.setFrameShadow(QFrame.Shadow.Raised)
         self.frame_2 = QFrame(self.setup_container)
@@ -1382,59 +1382,59 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.label_53, 0, 1, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
-        self.textEdit_84 = QTextEdit(self.frame_2)
-        self.textEdit_84.setObjectName(u"textEdit_84")
-        self.textEdit_84.setMaximumSize(QSize(100, 30))
-        self.textEdit_84.setFrameShape(QFrame.Shape.WinPanel)
-        self.textEdit_84.setFrameShadow(QFrame.Shadow.Sunken)
-        self.textEdit_84.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.dh_j1_theta_off = QTextEdit(self.frame_2)
+        self.dh_j1_theta_off.setObjectName(u"dh_j1_theta_off")
+        self.dh_j1_theta_off.setMaximumSize(QSize(100, 30))
+        self.dh_j1_theta_off.setFrameShape(QFrame.Shape.WinPanel)
+        self.dh_j1_theta_off.setFrameShadow(QFrame.Shadow.Sunken)
+        self.dh_j1_theta_off.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        self.gridLayout_2.addWidget(self.textEdit_84, 1, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.dh_j1_theta_off, 1, 1, 1, 1)
 
-        self.textEdit_85 = QTextEdit(self.frame_2)
-        self.textEdit_85.setObjectName(u"textEdit_85")
-        self.textEdit_85.setMaximumSize(QSize(100, 30))
-        self.textEdit_85.setFrameShape(QFrame.Shape.WinPanel)
-        self.textEdit_85.setFrameShadow(QFrame.Shadow.Sunken)
-        self.textEdit_85.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.dh_j2_theta_off = QTextEdit(self.frame_2)
+        self.dh_j2_theta_off.setObjectName(u"dh_j2_theta_off")
+        self.dh_j2_theta_off.setMaximumSize(QSize(100, 30))
+        self.dh_j2_theta_off.setFrameShape(QFrame.Shape.WinPanel)
+        self.dh_j2_theta_off.setFrameShadow(QFrame.Shadow.Sunken)
+        self.dh_j2_theta_off.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        self.gridLayout_2.addWidget(self.textEdit_85, 2, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.dh_j2_theta_off, 2, 1, 1, 1)
 
-        self.textEdit_89 = QTextEdit(self.frame_2)
-        self.textEdit_89.setObjectName(u"textEdit_89")
-        self.textEdit_89.setMaximumSize(QSize(100, 30))
-        self.textEdit_89.setFrameShape(QFrame.Shape.WinPanel)
-        self.textEdit_89.setFrameShadow(QFrame.Shadow.Sunken)
-        self.textEdit_89.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.dh_j3_theta_off = QTextEdit(self.frame_2)
+        self.dh_j3_theta_off.setObjectName(u"dh_j3_theta_off")
+        self.dh_j3_theta_off.setMaximumSize(QSize(100, 30))
+        self.dh_j3_theta_off.setFrameShape(QFrame.Shape.WinPanel)
+        self.dh_j3_theta_off.setFrameShadow(QFrame.Shadow.Sunken)
+        self.dh_j3_theta_off.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        self.gridLayout_2.addWidget(self.textEdit_89, 3, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.dh_j3_theta_off, 3, 1, 1, 1)
 
-        self.textEdit_91 = QTextEdit(self.frame_2)
-        self.textEdit_91.setObjectName(u"textEdit_91")
-        self.textEdit_91.setMaximumSize(QSize(100, 30))
-        self.textEdit_91.setFrameShape(QFrame.Shape.WinPanel)
-        self.textEdit_91.setFrameShadow(QFrame.Shadow.Sunken)
-        self.textEdit_91.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.dh_j4_theta_off = QTextEdit(self.frame_2)
+        self.dh_j4_theta_off.setObjectName(u"dh_j4_theta_off")
+        self.dh_j4_theta_off.setMaximumSize(QSize(100, 30))
+        self.dh_j4_theta_off.setFrameShape(QFrame.Shape.WinPanel)
+        self.dh_j4_theta_off.setFrameShadow(QFrame.Shadow.Sunken)
+        self.dh_j4_theta_off.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        self.gridLayout_2.addWidget(self.textEdit_91, 4, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.dh_j4_theta_off, 4, 1, 1, 1)
 
-        self.textEdit_95 = QTextEdit(self.frame_2)
-        self.textEdit_95.setObjectName(u"textEdit_95")
-        self.textEdit_95.setMaximumSize(QSize(100, 30))
-        self.textEdit_95.setFrameShape(QFrame.Shape.WinPanel)
-        self.textEdit_95.setFrameShadow(QFrame.Shadow.Sunken)
-        self.textEdit_95.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.dh_j5_theta_off = QTextEdit(self.frame_2)
+        self.dh_j5_theta_off.setObjectName(u"dh_j5_theta_off")
+        self.dh_j5_theta_off.setMaximumSize(QSize(100, 30))
+        self.dh_j5_theta_off.setFrameShape(QFrame.Shape.WinPanel)
+        self.dh_j5_theta_off.setFrameShadow(QFrame.Shadow.Sunken)
+        self.dh_j5_theta_off.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        self.gridLayout_2.addWidget(self.textEdit_95, 5, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.dh_j5_theta_off, 5, 1, 1, 1)
 
-        self.textEdit_98 = QTextEdit(self.frame_2)
-        self.textEdit_98.setObjectName(u"textEdit_98")
-        self.textEdit_98.setMaximumSize(QSize(100, 30))
-        self.textEdit_98.setFrameShape(QFrame.Shape.WinPanel)
-        self.textEdit_98.setFrameShadow(QFrame.Shadow.Sunken)
-        self.textEdit_98.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.dh_j6_theta_off = QTextEdit(self.frame_2)
+        self.dh_j6_theta_off.setObjectName(u"dh_j6_theta_off")
+        self.dh_j6_theta_off.setMaximumSize(QSize(100, 30))
+        self.dh_j6_theta_off.setFrameShape(QFrame.Shape.WinPanel)
+        self.dh_j6_theta_off.setFrameShadow(QFrame.Shadow.Sunken)
+        self.dh_j6_theta_off.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        self.gridLayout_2.addWidget(self.textEdit_98, 6, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.dh_j6_theta_off, 6, 1, 1, 1)
 
 
         self.verticalLayout_12.addLayout(self.gridLayout_2)
@@ -1656,14 +1656,14 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.home_mtr_5_bck_vel, 5, 3, 1, 1)
 
-        self.home_mtr_5_vel_2 = QTextEdit(self.frame_4)
-        self.home_mtr_5_vel_2.setObjectName(u"home_mtr_5_vel_2")
-        self.home_mtr_5_vel_2.setMaximumSize(QSize(100, 30))
-        self.home_mtr_5_vel_2.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_5_vel_2.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_5_vel_2.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.home_mtr_5_vel = QTextEdit(self.frame_4)
+        self.home_mtr_5_vel.setObjectName(u"home_mtr_5_vel")
+        self.home_mtr_5_vel.setMaximumSize(QSize(100, 30))
+        self.home_mtr_5_vel.setFrameShape(QFrame.Shape.WinPanel)
+        self.home_mtr_5_vel.setFrameShadow(QFrame.Shadow.Sunken)
+        self.home_mtr_5_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        self.gridLayout_5.addWidget(self.home_mtr_5_vel_2, 5, 1, 1, 1)
+        self.gridLayout_5.addWidget(self.home_mtr_5_vel, 5, 1, 1, 1)
 
         self.label_47 = QLabel(self.frame_4)
         self.label_47.setObjectName(u"label_47")
@@ -1923,6 +1923,9 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_14.addLayout(self.gridLayout_6)
 
+        self.setup_save_btn = QPushButton(self.setup_container)
+        self.setup_save_btn.setObjectName(u"setup_save_btn")
+        self.setup_save_btn.setGeometry(QRect(1040, 600, 75, 24))
         self.tabWidget.addTab(self.tab_setup, "")
 
         self.verticalLayout_10.addWidget(self.tabWidget)
@@ -2041,7 +2044,7 @@ class Ui_MainWindow(object):
         self.label_53.setToolTip(QCoreApplication.translate("MainWindow", u"Theta offset (in degrees) default 0", None))
 #endif // QT_CONFIG(tooltip)
         self.label_53.setText(QCoreApplication.translate("MainWindow", u"theta offset", None))
-        self.textEdit_84.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.dh_j1_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
@@ -2050,7 +2053,7 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
-        self.textEdit_85.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.dh_j2_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
@@ -2059,7 +2062,7 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
-        self.textEdit_89.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.dh_j3_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
@@ -2068,7 +2071,7 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
-        self.textEdit_91.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.dh_j4_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
@@ -2077,7 +2080,7 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
-        self.textEdit_95.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.dh_j5_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
@@ -2086,7 +2089,7 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
-        self.textEdit_98.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        self.dh_j6_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
@@ -2120,6 +2123,7 @@ class Ui_MainWindow(object):
         self.label_51.setText(QCoreApplication.translate("MainWindow", u"3", None))
         self.label_54.setText(QCoreApplication.translate("MainWindow", u"1", None))
         self.label_58.setText(QCoreApplication.translate("MainWindow", u"4", None))
+        self.setup_save_btn.setText(QCoreApplication.translate("MainWindow", u"Save ", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_setup), QCoreApplication.translate("MainWindow", u"Setup", None))
         pass
     # retranslateUi
