@@ -182,8 +182,10 @@ class Setup:
 
         self._curr_setup = setup
 
-    def _detect_changes(self):
-        pass
+    def _detect_changes(self, new_setup, old_setup):
+        if not new_setup == old_setup:
+            return True
+        return False
 
     def _write_setup_to_file(self):
         try:
