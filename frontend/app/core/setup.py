@@ -181,8 +181,8 @@ class Setup:
 
         return setup
 
-    def _detect_changes(self, new_setup, old_setup):
-        if not new_setup == old_setup:
+    def _detect_changes(self, current_setup, previous_setup):
+        if not current_setup == previous_setup:
             return True
         return False
 
