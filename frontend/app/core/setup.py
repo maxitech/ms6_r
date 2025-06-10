@@ -10,7 +10,6 @@ class Setup:
         self._parent_dir = os.path.dirname(self._curr_dir)
         self._folder_path = os.path.join(self._parent_dir, "setup_gen")
         self._file_path = os.path.join(self._folder_path, "setup.json")
-        self._curr_setup = self._init_dicts_with_def_val()
 
     # *************************Public Methods****************************
     def save(self):
@@ -180,7 +179,7 @@ class Setup:
                         )
                     sub_value[field] = checked_value
 
-        self._curr_setup = setup
+        return setup
 
     def _detect_changes(self, new_setup, old_setup):
         if not new_setup == old_setup:
