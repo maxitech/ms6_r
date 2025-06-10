@@ -170,13 +170,11 @@ class Setup:
                     )
                     checked_value = field_value.strip()
                     if not checked_value:
-                        raise ValueError(f"Field '{self._field}' cannot be empty.")
+                        print(f"ERROR: Field '{self._field}' cannot be empty.")
                     try:
                         float(checked_value)
                     except ValueError:
-                        raise ValueError(
-                            f"Field '{self._field}' must be a numeric value."
-                        )
+                        print(f"ERROR: Field '{self._field}' must be a numeric value.")
                     sub_value[field] = checked_value
 
         return setup
