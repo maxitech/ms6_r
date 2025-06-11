@@ -23,18 +23,11 @@ class Setup:
     # *************************Private Methods****************************
     def _load_or_init_setup(self):
         if not os.path.exists(self._file_path):
-            print(
-                f"Setup file not found at {self._file_path}, initializing with defaults."
-            )
-            self._init_dicts_with_def_val()
+            print(f"No setup file found.")
+            return self._init_dicts_with_def_val()
         else:
-            try:
-                with open(self._file_path, "r") as f:
-                    print("Setup loaded from file.")
-                    return json.load(f)
-            except Exception as e:
-                self._init_dicts_with_def_val()
-                self._handle_exception(e, "_load_or_init_setup")
+            print("Loading setup from file.")
+            return self._read_setup_from_file()
 
     def _init_dicts_with_def_val(self):
         default_dicts = {
@@ -213,9 +206,12 @@ class Setup:
     def _write_setup_to_file(self):
         try:
             if not os.path.exists(self._folder_path):
+                print(f"Creating setup folder at {self._folder_path}.")
                 os.makedirs(self._folder_path)
             if not os.path.exists(self._file_path):
+                print(f"Creating setup file at {self._file_path}.")
                 with open(self._file_path, "w") as f:
+                    print(f"Initializing setup file with defaults.")
                     json.dump(self._current_setup, f, indent=4)
             else:
                 received_current_setup = self._get_field_vals()
@@ -236,6 +232,7 @@ class Setup:
                     return json.load(f)
         except Exception as e:
             self._handle_exception(e, "_read_setup_from_file")
+            return self._init_dicts_with_def_val()
 
     def _handle_exception(self, e, context):
         if isinstance(e, FileNotFoundError):
