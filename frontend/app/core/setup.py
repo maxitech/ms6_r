@@ -196,8 +196,9 @@ class Setup:
                         float(checked_value)
                         self._is_input_valid = True
 
-                    except ValueError:
+                    except Exception as e:
                         print(f"ERROR: Field '{self._field}' must be a numeric value.")
+                        self._handle_exception(e, "_get_field_vals")
                         self._is_input_valid = False
                         return
                     sub_value[field] = checked_value
@@ -225,7 +226,6 @@ class Setup:
                     print("Changes detected, updating setup file.")
                     with open(self._file_path, "w") as f:
                         json.dump(received_current_setup, f, indent=4)
-
         except Exception as e:
             self._handle_exception(e, "_write_setup_to_file")
 
@@ -244,5 +244,7 @@ class Setup:
             print(f"ERROR: Permission denied in {context}: {self._file_path}.")
         elif isinstance(e, json.JSONDecodeError):
             print(f"ERROR: JSON decode error in {context}: {self._file_path}.")
+        elif isinstance(e, ValueError):
+            print(f"ERROR: Value error in {context}: {e}.")
         else:
             print(f"ERROR: Unexpected error in {context}: {e}")
