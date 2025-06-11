@@ -10,6 +10,8 @@ class Setup:
         self._parent_dir = os.path.dirname(self._curr_dir)
         self._folder_path = os.path.join(self._parent_dir, "setup_gen")
         self._file_path = os.path.join(self._folder_path, "setup.json")
+        self._current_setup = self._init_dicts_with_def_val()
+        self._is_input_valid = False
 
     # *************************Public Methods****************************
     def save(self):
