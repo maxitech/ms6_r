@@ -200,11 +200,17 @@ class Setup:
                 os.makedirs(self._folder_path)
             if not os.path.exists(self._file_path):
                 with open(self._file_path, "w") as f:
-                    json.dump(self._init_dicts_with_def_val(), f, indent=4)
+                    json.dump(self._current_setup, f, indent=4)
             else:
-                with open(self._file_path, "w") as f:
-                    # write current setup values to file
-                    pass
+                received_current_setup = self._get_field_vals()
+                if self._is_input_valid and self._detect_changes(
+                    received_current_setup, self._current_setup
+                ):
+                    self._current_setup = received_current_setup
+                    print("Changes detected, updating setup file.")
+                    with open(self._file_path, "w") as f:
+                        json.dump(received_current_setup, f, indent=4)
+
         except:
             pass
 
