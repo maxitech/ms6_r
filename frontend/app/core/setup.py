@@ -15,7 +15,7 @@ class Setup:
 
     # *************************Public Methods****************************
     def save(self):
-        pass
+        self._write_setup_to_file()
 
     def get_setup(self):
         pass
