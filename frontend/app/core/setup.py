@@ -49,13 +49,15 @@ class Setup:
             },
         }
 
-        return {
+        default_setup = {
             key: {
                 sub_key: {field: self._default_val for field in val}
                 for sub_key, val in values.items()
             }
             for key, values in default_dicts.items()
         }
+        self._current_setup = default_setup
+        self._write_setup_to_file()
 
     def _get_field_vals(self):
         if not self._ui:
