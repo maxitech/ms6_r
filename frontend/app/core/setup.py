@@ -190,9 +190,9 @@ class Setup:
         return setup
 
     def _detect_changes(self, current_setup, previous_setup):
-        if not current_setup == previous_setup:
-            return True
-        return False
+        return json.dumps(current_setup, sort_keys=True) != json.dumps(
+            previous_setup, sort_keys=True
+        )
 
     def _write_setup_to_file(self):
         try:
