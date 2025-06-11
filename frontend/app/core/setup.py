@@ -32,12 +32,9 @@ class Setup:
                 with open(self._file_path, "r") as f:
                     print("Setup loaded from file.")
                     return json.load(f)
-            except json.JSONDecodeError:
-                print(f"ERROR: JSON decode error in file {self._file_path}.")
-                self._init_dicts_with_def_val()
             except Exception as e:
-                print(f"ERROR: Unexpected error while loading setup: {e}")
                 self._init_dicts_with_def_val()
+                self._handle_exception(e, "_load_or_init_setup")
 
     def _init_dicts_with_def_val(self):
         default_dicts = {
@@ -229,14 +226,8 @@ class Setup:
                     with open(self._file_path, "w") as f:
                         json.dump(received_current_setup, f, indent=4)
 
-        except FileNotFoundError:
-            print(f"ERROR: File not found at {self._file_path}.")
-        except PermissionError:
-            print(f"ERROR: Permission denied for file {self._file_path}.")
-        except json.JSONDecodeError:
-            print(f"ERROR: JSON decode error in file {self._file_path}.")
         except Exception as e:
-            print(f"ERROR: Unexpected error in file {self._file_path}: {e}")
+            self._handle_exception(e, "_write_setup_to_file")
 
     def _read_setup_from_file(self):
         try:
