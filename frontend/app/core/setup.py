@@ -222,7 +222,7 @@ class Setup:
                     self._current_setup = received_current_setup
                     print("Changes detected, updating setup file.")
                     with open(self._file_path, "w") as f:
-                        json.dump(received_current_setup, f, indent=4)
+                        json.dump(self._current_setup, f, indent=4)
         except Exception as e:
             self._handle_exception(e, "_write_setup_to_file")
 
