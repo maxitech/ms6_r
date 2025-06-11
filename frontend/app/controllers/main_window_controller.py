@@ -73,6 +73,9 @@ class MainWindowController:
         # Jog Slider
         self._ui.jog_slider.valueChanged.connect(self._handle_jog_slider_change)
 
+        # *************************Setup Tab****************************
+        self._ui.setup_save_btn.clicked.connect(self._handle_setup_save)
+
     # *************************Public Methods****************************
     def handle_unexpected_disconnect(self):
         self._fmt_log_monitor(
@@ -91,6 +94,7 @@ class MainWindowController:
         self._serial.setPort(selected_port)
         self._serial.connect(self._process_received_data)
         if self._serial.is_connected() and not None:
+            self._send_data(json.dumps(self._setup.get_setup()))
             self._update_ui_based_on_connection_status(
                 "Disconnect", f"Connected to {selected_port}", False
             )
@@ -251,6 +255,10 @@ class MainWindowController:
     def _handle_jog_slider_change(self):
         self._ui.jog_slider.setValue(round(self._ui.jog_slider.value() / 10) * 10)
         self._slider_value = self._ui.jog_slider.value()
+
+    # *Setup
+    def _handle_setup_save(self):
+        self._setup.save()
 
     # *****************Update UI*********************
     def _update_combo_box(self):
