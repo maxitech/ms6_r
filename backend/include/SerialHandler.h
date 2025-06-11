@@ -54,6 +54,11 @@ private:
      * @brief Pointer to the CommandProcessor used for input handling.
      */
     CommandProcessor* _commandProcessor = nullptr;
+
+    /**
+     * @brief Maximum size of the serial message buffer.
+     */
+    static constexpr size_t MAX_MESSAGE_SIZE = 2048;
 };
 
 #endif // SERIAL_HANDLER_H

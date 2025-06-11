@@ -38,40 +38,84 @@ void SerialHandler::listenForSerial()
 //     }
 // }
 
+// void SerialHandler::_readSerialInput()
+// {
+//     static char   buffer[256]; // static buffer to hold incoming data
+//     static size_t index = 0;   // current index in the buffer
+
+//     while (Serial.available() > 0)
+//     {
+//         char c = Serial.read();
+
+//         if (c == '#') // end delimeter
+//         {
+//             buffer[index] = '\0'; // Null-terminate the string
+
+//             String input = String(buffer);
+//             input.trim();
+//             input += '#';
+
+//             _forwardInput(input);
+
+//             index = 0; // reset buffer index
+//         }
+//         else
+//         {
+//             // Add char to buffer if there's space
+//             if (index < sizeof(buffer) - 1)
+//             {
+//                 buffer[index++] = c;
+//             }
+//             else
+//             {
+//                 // Buffer overflow, reset index
+//                 index = 0;
+//                 Serial.println("Error: Serial buffer overflow");
+//                 return;
+//             }
+//         }
+//     }
+// }
+
 void SerialHandler::_readSerialInput()
 {
-    static char   buffer[256]; // static buffer to hold incoming data
-    static size_t index = 0;   // current index in the buffer
+    static char   message[MAX_MESSAGE_SIZE];
+    static size_t index     = 0;
+    static bool   receiving = false;
 
     while (Serial.available() > 0)
     {
         char c = Serial.read();
 
-        if (c == '#') // end delimeter
+        if (c == '$') // Start of message
         {
-            buffer[index] = '\0'; // Null-terminate the string
-
-            String input = String(buffer);
-            input.trim();
-            input += '#';
-
-            _forwardInput(input);
-
-            index = 0; // reset buffer index
+            receiving = true;
+            index     = 0; // Reset buffer
         }
-        else
+
+        if (receiving)
         {
-            // Add char to buffer if there's space
-            if (index < sizeof(buffer) - 1)
+            if (index < MAX_MESSAGE_SIZE - 1)
             {
-                buffer[index++] = c;
+                message[index++] = c;
+                if (c == '#') // End of message
+                {
+                    message[index] = '\0';
+                    receiving      = false;
+
+                    String input = String(message);
+                    input.trim();
+
+                    _forwardInput(input); // Process input
+                    index = 0;
+                }
             }
             else
             {
-                // Buffer overflow, reset index
-                index = 0;
-                Serial.println("Error: Serial buffer overflow");
-                return;
+                // Buffer overflow
+                receiving = false;
+                index     = 0;
+                Serial.println("Error: Serial message too long");
             }
         }
     }
