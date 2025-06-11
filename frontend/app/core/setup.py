@@ -18,7 +18,7 @@ class Setup:
         self._write_setup_to_file()
 
     def get_setup(self):
-        pass
+        return self._read_setup_from_file()
 
     # *************************Private Methods****************************
     def _load_or_init_setup(self):
