@@ -3,8 +3,9 @@ import os
 
 
 class Setup:
-    def __init__(self, ui=None):
+    def __init__(self, ui=None, main_window_controller=None):
         self._ui = ui
+        self._main_window_controller = main_window_controller
         self._default_val = 0
         self._curr_dir = os.path.dirname(os.path.abspath(__file__))
         self._parent_dir = os.path.dirname(self._curr_dir)
