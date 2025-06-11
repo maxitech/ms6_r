@@ -10,7 +10,7 @@ class Setup:
         self._parent_dir = os.path.dirname(self._curr_dir)
         self._folder_path = os.path.join(self._parent_dir, "setup_gen")
         self._file_path = os.path.join(self._folder_path, "setup.json")
-        self._current_setup = self._init_dicts_with_def_val()
+        self._current_setup = self._load_or_init_setup()
         self._is_input_valid = False
 
     # *************************Public Methods****************************
@@ -21,6 +21,24 @@ class Setup:
         pass
 
     # *************************Private Methods****************************
+    def _load_or_init_setup(self):
+        if not os.path.exists(self._file_path):
+            print(
+                f"Setup file not found at {self._file_path}, initializing with defaults."
+            )
+            self._init_dicts_with_def_val()
+        else:
+            try:
+                with open(self._file_path, "r") as f:
+                    print("Setup loaded from file.")
+                    return json.load(f)
+            except json.JSONDecodeError:
+                print(f"ERROR: JSON decode error in file {self._file_path}.")
+                self._init_dicts_with_def_val()
+            except Exception as e:
+                print(f"ERROR: Unexpected error while loading setup: {e}")
+                self._init_dicts_with_def_val()
+
     def _init_dicts_with_def_val(self):
         default_dicts = {
             "dh_params": {
