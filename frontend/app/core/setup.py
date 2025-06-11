@@ -175,10 +175,16 @@ class Setup:
                     checked_value = field_value.strip()
                     if not checked_value:
                         print(f"ERROR: Field '{self._field}' cannot be empty.")
+                        self._is_input_valid = False
+                        return
                     try:
                         float(checked_value)
+                        self._is_input_valid = True
+
                     except ValueError:
                         print(f"ERROR: Field '{self._field}' must be a numeric value.")
+                        self._is_input_valid = False
+                        return
                     sub_value[field] = checked_value
 
         return setup
