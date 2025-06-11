@@ -179,3 +179,5 @@ app/ui/*.py
 
 # But do NOT ignore .ui files
 app/!ui/*.ui
+
+setup_gen
