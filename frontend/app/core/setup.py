@@ -240,7 +240,18 @@ class Setup:
 
     def _read_setup_from_file(self):
         try:
-            pass
-        except:
-            pass
-        pass
+            if os.path.exists(self._file_path):
+                with open(self._file_path, "r") as f:
+                    return json.load(f)
+        except Exception as e:
+            self._handle_exception(e, "_read_setup_from_file")
+
+    def _handle_exception(self, e, context):
+        if isinstance(e, FileNotFoundError):
+            print(f"ERROR: File not found in {context}: {self._file_path}.")
+        elif isinstance(e, PermissionError):
+            print(f"ERROR: Permission denied in {context}: {self._file_path}.")
+        elif isinstance(e, json.JSONDecodeError):
+            print(f"ERROR: JSON decode error in {context}: {self._file_path}.")
+        else:
+            print(f"ERROR: Unexpected error in {context}: {e}")
