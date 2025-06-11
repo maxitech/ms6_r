@@ -1,14 +1,17 @@
+import json
 import datetime
 import re
 from PySide6.QtGui import QTextCharFormat, QColor, QTextCursor
 from PySide6.QtCore import QTimer
 from app.core.serial_connection import SerialConnection
+from app.core.setup import Setup
 from app.utils.helper import Helper
 
 
 class MainWindowController:
     def __init__(self, ui):
         self._ui = ui
+        self._setup = Setup(ui=self._ui, main_window_controller=self)
         self._serial = SerialConnection(controller=self)
         self._helper = Helper()
         self._current_ports = []
