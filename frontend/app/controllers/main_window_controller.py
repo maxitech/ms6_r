@@ -68,7 +68,7 @@ class MainWindowController:
         ]
         for button in jog_buttons:
             button.pressed.connect(lambda btn=button: self._handle_jog_btn_press(btn))
-            button.released.connect(lambda: self._handle_jog_btn_release())
+            button.released.connect(self._handle_jog_btn_release)
 
         # Jog Slider
         self._ui.jog_slider.valueChanged.connect(self._handle_jog_slider_change)
