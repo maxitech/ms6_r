@@ -211,8 +211,14 @@ class Setup:
                     with open(self._file_path, "w") as f:
                         json.dump(received_current_setup, f, indent=4)
 
-        except:
-            pass
+        except FileNotFoundError:
+            print(f"ERROR: File not found at {self._file_path}.")
+        except PermissionError:
+            print(f"ERROR: Permission denied for file {self._file_path}.")
+        except json.JSONDecodeError:
+            print(f"ERROR: JSON decode error in file {self._file_path}.")
+        except Exception as e:
+            print(f"ERROR: Unexpected error in file {self._file_path}: {e}")
 
     def _read_setup_from_file(self):
         try:
