@@ -97,7 +97,7 @@ class MainWindowController:
         self._serial.setPort(selected_port)
         self._serial.connect(self._process_received_data)
         if self._serial.is_connected() and not None:
-            self._send_data(json.dumps(self._setup.get_setup()))
+            self._send_data(f"SETUP,[{json.dumps(self._setup.get_setup())}]")
             self._update_ui_based_on_connection_status(
                 "Disconnect", f"Connected to {selected_port}", False
             )

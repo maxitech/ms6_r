@@ -223,6 +223,9 @@ class Setup:
                     print("Changes detected, updating setup file.")
                     with open(self._file_path, "w") as f:
                         json.dump(self._current_setup, f, indent=4)
+                    self._main_window_controller._send_data(
+                        f"SETUP,[{self._current_setup}]"
+                    )
         except Exception as e:
             self._handle_exception(e, "_write_setup_to_file")
 
