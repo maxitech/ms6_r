@@ -15,4 +15,4 @@ private:
     const String _jsonStr;
 };
 
-#endif SETUP_H // SETUP_H
+#endif // SETUP_H
