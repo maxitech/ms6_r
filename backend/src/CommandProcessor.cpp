@@ -78,28 +78,46 @@ std::pair<String, std::vector<String>> CommandProcessor::_splitString(const Stri
     String command  = str.substring(0, firstComma);
     String paramStr = str.substring(firstComma + 1);
 
-    if (!paramStr.startsWith("[") && !paramStr.endsWith("]"))
+    if (!paramStr.startsWith("[") || !paramStr.endsWith("]"))
     {
-        Serial.println("Error: Command invalide! Correct format <cmd,[arg, arg, ...]>");
+        Serial.println("Error: Command invalid! Correct format <cmd,[arg, arg, ...]>");
         return {str, tokens};
     }
-    else
+
+    paramStr = paramStr.substring(1, paramStr.length() - 1); // Remove outer brackets
+
+    // JSON-aware splitting:
+    String current;
+    int    braceDepth   = 0; // {}
+    int    bracketDepth = 0; // []
+
+    for (unsigned int i = 0; i < paramStr.length(); ++i)
     {
-        paramStr = paramStr.substring(1, paramStr.length() - 1); // Remove brackets
+        char c = paramStr[i];
+        if (c == '{')
+            braceDepth++;
+        else if (c == '}')
+            braceDepth--;
+        else if (c == '[')
+            bracketDepth++;
+        else if (c == ']')
+            bracketDepth--;
+
+        if (c == ',' && braceDepth == 0 && bracketDepth == 0)
+        {
+            tokens.push_back(current);
+            current = "";
+        }
+        else
+        {
+            current += c;
+        }
     }
 
-    // Split parameters using comma
-    int start = 0;
-    int end   = paramStr.indexOf(',');
-    while (end != -1)
+    if (current.length() > 0)
     {
-        tokens.push_back(paramStr.substring(start, end));
-        start = end + 1;
-        end   = paramStr.indexOf(',', start);
+        tokens.push_back(current);
     }
-
-    // Push last element
-    tokens.push_back(paramStr.substring(start));
 
     return {command, tokens};
 }
