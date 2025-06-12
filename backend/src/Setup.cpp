@@ -1,12 +1,15 @@
 #include "Setup.h"
 
 Setup::Setup(const String& jsonString)
-    : _jsonStr(jsonString) {};
+    : _jsonStr(jsonString)
+{
+    Setup::_parseDHParams();
+};
 
 std::vector<DHparam> Setup::_parseDHParams()
 {
-    StaticJsonDocument<4096> jsonDoc;
-    DeserializationError     error = deserializeJson(jsonDoc, _jsonStr);
+    JsonDocument         jsonDoc;
+    DeserializationError error = deserializeJson(jsonDoc, _jsonStr);
     if (error)
     {
         Serial.println("Error: JSON Deserialization failed!");
