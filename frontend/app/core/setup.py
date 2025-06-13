@@ -112,39 +112,39 @@ class Setup:
             },
             "homing_params": {
                 "motor1": {
-                    "vel": self._ui.home_mtr_1_vel.toPlainText(),
-                    "away_vel": self._ui.home_mtr_1_aw_vel.toPlainText(),
-                    "back_vel": self._ui.home_mtr_1_bck_vel.toPlainText(),
+                    # "vel": self._ui.home_mtr_1_vel.toPlainText(),
+                    # "away_vel": self._ui.home_mtr_1_aw_vel.toPlainText(),
+                    # "back_vel": self._ui.home_mtr_1_bck_vel.toPlainText(),
                     "home_pos": self._ui.home_mtr_1_h_pos.toPlainText(),
                 },
                 "motor2": {
-                    "vel": self._ui.home_mtr_2_vel.toPlainText(),
-                    "away_vel": self._ui.home_mtr_2_aw_vel.toPlainText(),
-                    "back_vel": self._ui.home_mtr_2_bck_vel.toPlainText(),
+                    # "vel": self._ui.home_mtr_2_vel.toPlainText(),
+                    # "away_vel": self._ui.home_mtr_2_aw_vel.toPlainText(),
+                    # "back_vel": self._ui.home_mtr_2_bck_vel.toPlainText(),
                     "home_pos": self._ui.home_mtr_2_h_pos.toPlainText(),
                 },
                 "motor3": {
-                    "vel": self._ui.home_mtr_3_vel.toPlainText(),
-                    "away_vel": self._ui.home_mtr_3_aw_vel.toPlainText(),
-                    "back_vel": self._ui.home_mtr_3_bck_vel.toPlainText(),
+                    # "vel": self._ui.home_mtr_3_vel.toPlainText(),
+                    # "away_vel": self._ui.home_mtr_3_aw_vel.toPlainText(),
+                    # "back_vel": self._ui.home_mtr_3_bck_vel.toPlainText(),
                     "home_pos": self._ui.home_mtr_3_h_pos.toPlainText(),
                 },
                 "motor4": {
-                    "vel": self._ui.home_mtr_4_vel.toPlainText(),
-                    "away_vel": self._ui.home_mtr_4_aw_vel.toPlainText(),
-                    "back_vel": self._ui.home_mtr_4_bck_vel.toPlainText(),
+                    # "vel": self._ui.home_mtr_4_vel.toPlainText(),
+                    # "away_vel": self._ui.home_mtr_4_aw_vel.toPlainText(),
+                    # "back_vel": self._ui.home_mtr_4_bck_vel.toPlainText(),
                     "home_pos": self._ui.home_mtr_4_h_pos.toPlainText(),
                 },
                 "motor5": {
-                    "vel": self._ui.home_mtr_5_vel.toPlainText(),
-                    "away_vel": self._ui.home_mtr_5_aw_vel.toPlainText(),
-                    "back_vel": self._ui.home_mtr_5_bck_vel.toPlainText(),
+                    # "vel": self._ui.home_mtr_5_vel.toPlainText(),
+                    # "away_vel": self._ui.home_mtr_5_aw_vel.toPlainText(),
+                    # "back_vel": self._ui.home_mtr_5_bck_vel.toPlainText(),
                     "home_pos": self._ui.home_mtr_5_h_pos.toPlainText(),
                 },
                 "motor6": {
-                    "vel": self._ui.home_mtr_6_vel.toPlainText(),
-                    "away_vel": self._ui.home_mtr_6_aw_vel.toPlainText(),
-                    "back_vel": self._ui.home_mtr_6_bck_vel.toPlainText(),
+                    # "vel": self._ui.home_mtr_6_vel.toPlainText(),
+                    # "away_vel": self._ui.home_mtr_6_aw_vel.toPlainText(),
+                    # "back_vel": self._ui.home_mtr_6_bck_vel.toPlainText(),
                     "home_pos": self._ui.home_mtr_6_h_pos.toPlainText(),
                 },
             },
@@ -187,7 +187,10 @@ class Setup:
                         self._is_input_valid = False
                         return
                     try:
-                        float(checked_value)
+                        if field == "home_pos":
+                            int(checked_value)
+                        else:
+                            float(checked_value)
                         self._is_input_valid = True
 
                     except Exception as e:
