@@ -3,43 +3,53 @@
 Setup::Setup(const String& jsonString)
     : _jsonStr(jsonString)
 {
-    Setup::_parseDHParams();
-    Setup::_parseHomingParams();
+    _validateJson();
+    _extractDHParams();
+    _extractHomingParams();
 };
 
-std::vector<DHparam> Setup::_parseDHParams()
+void Setup::_validateJson()
 {
-    JsonDocument         jsonDoc;
-    DeserializationError error = deserializeJson(jsonDoc, _jsonStr);
+    DeserializationError error = deserializeJson(_jsonDoc, _jsonStr);
     if (error)
     {
         Serial.println("Error: JSON Deserialization failed!");
+        _valid = false;
+    }
+    else
+    {
+        _valid = true;
+    }
+}
+
+std::vector<DHparam> Setup::_extractDHParams()
+{
+    if (!_valid)
+    {
+        Serial.println("Error: JSON invalid, cannot parse DH params.");
         return {};
     }
 
-    JsonObject           dh_params = jsonDoc["dh_params"];
+    JsonObjectConst      dh_params = _jsonDoc["dh_params"];
     std::vector<DHparam> result;
 
     for (int i = 1; i <= 6; ++i)
     {
-        std::string jointName = "joint" + std::to_string(i);
-        JsonObject  joint     = dh_params[jointName.c_str()];
+        std::string     jointName = "joint" + std::to_string(i);
+        JsonObjectConst joint     = dh_params[jointName.c_str()];
 
-        if (joint.isNull())
+        if (!_checkExists(joint, jointName.c_str()))
         {
-            Serial.println(("Error: missing joint: " + jointName).c_str());
             return {};
         }
 
-        // Validate: all fields must exist and contain numeric values
         const char* theta_offset_str = joint["theta_offset"];
         const char* alpha_str        = joint["alpha"];
         const char* d_str            = joint["d"];
         const char* a_str            = joint["a"];
 
-        if (!theta_offset_str || !alpha_str || !d_str || !a_str)
+        if (!_checkFields(theta_offset_str, alpha_str, d_str, a_str, jointName.c_str()))
         {
-            Serial.println(("Error: missing field in " + jointName).c_str());
             return {};
         }
 
@@ -51,47 +61,59 @@ std::vector<DHparam> Setup::_parseDHParams()
 
         result.push_back(param);
     }
-
     return result;
 };
 
-std::vector<int> Setup::_parseHomingParams()
+std::vector<int> Setup::_extractHomingParams()
 {
-    JsonDocument         jsonDoc;
-    DeserializationError error = deserializeJson(jsonDoc, _jsonStr);
-    if (error)
+    if (!_valid)
     {
-        Serial.println("Error: JSON Deserialization failed!");
+        Serial.println("Error: JSON invalid, cannot parse homing params.");
         return {};
     }
 
-    JsonObject       homing_params = jsonDoc["homing_params"];
+    JsonObjectConst  homing_params = _jsonDoc["homing_params"];
     std::vector<int> result;
 
     for (int i = 1; i <= 6; ++i)
     {
-        std::string motor     = "motor" + std::to_string(i);
-        JsonObject  motorData = homing_params[motor.c_str()];
+        std::string     motor     = "motor" + std::to_string(i);
+        JsonObjectConst motorData = homing_params[motor.c_str()];
 
-        if (motorData.isNull())
+        if (!_checkExists(motorData, motor.c_str()))
         {
-            Serial.println(("Error: missing motor: " + motor).c_str());
             return {};
         }
 
-        // Validate: all fields must exist and contain numeric values
         const char* home_pos = motorData["home_pos"];
 
         if (!home_pos)
         {
-            Serial.println(("Error: missing field in " + motor).c_str());
+            Serial.println(("Error: missing field in " + String(motor.c_str())));
             return {};
         }
 
-        int home_param;
-        home_param = std::stoi(home_pos);
-
-        result.push_back(home_param);
+        result.push_back(std::stoi(home_pos));
     }
     return result;
 };
+
+bool Setup::_checkExists(const JsonObjectConst& obj, const char* name)
+{
+    if (obj.isNull())
+    {
+        Serial.println(("Error: missing object: " + String(name)));
+        return false;
+    }
+    return true;
+}
+
+bool Setup::_checkFields(const char* f1, const char* f2, const char* f3, const char* f4, const char* context)
+{
+    if (!f1 || !f2 || !f3 || !f4)
+    {
+        Serial.println(("Error: missing field in " + String(context)));
+        return false;
+    }
+    return true;
+}
