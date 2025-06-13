@@ -13,6 +13,7 @@ class Setup:
         self._file_path = os.path.join(self._folder_path, "setup.json")
         self._current_setup = self._load_or_init_setup()
         self._is_input_valid = False
+        self._update_ui()
 
     # *************************Public Methods****************************
     def save(self):
@@ -252,3 +253,39 @@ class Setup:
             print(f"ERROR: Value error in {context}: {e}.")
         else:
             print(f"ERROR: Unexpected error in {context}: {e}")
+
+    def _update_ui(self):
+        if not self._ui:
+            return
+        setup = self.get_setup()
+
+        dh_fields = {
+            "theta_offset": "dh_j{}_theta_off",
+            "alpha": "dh_j{}_aph_v",
+            "d": "dh_j{}_d_v",
+            "a": "dh_j{}_a_v",
+        }
+
+        homing_fields = {
+            "home_pos": "home_mtr_{}_h_pos",
+        }
+
+        speed_accel_fields = {
+            "max_speed": "motor_{}_max_speed",
+            "acc": "motor_{}_acc",
+        }
+
+        self._set_ui_fields(setup.get("dh_params", {}), "joint", dh_fields)
+        self._set_ui_fields(setup.get("homing_params", {}), "motor", homing_fields)
+        self._set_ui_fields(setup.get("speed_a_accel", {}), "motor", speed_accel_fields)
+
+    def _set_ui_fields(self, params, key_prefix, fields):
+        for i in range(1, 7):
+            key = f"{key_prefix}{i}"
+            if key in params:
+                param_data = params[key]
+                for field_name, ui_attr in fields.items():
+                    if field_name in param_data:
+                        getattr(self._ui, ui_attr.format(i)).setPlainText(
+                            param_data[field_name]
+                        )
