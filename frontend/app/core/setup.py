@@ -188,7 +188,11 @@ class Setup:
                         self._is_input_valid = False
                         return
                     try:
-                        if field == "home_pos":
+                        if (
+                            field == "home_pos"
+                            or field == "max_speed"
+                            or field == "acc"
+                        ):
                             int(checked_value)
                         else:
                             float(checked_value)
