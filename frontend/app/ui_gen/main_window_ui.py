@@ -1441,7 +1441,7 @@ class Ui_MainWindow(object):
 
         self.frame_4 = QFrame(self.setup_container)
         self.frame_4.setObjectName(u"frame_4")
-        self.frame_4.setGeometry(QRect(580, 20, 484, 277))
+        self.frame_4.setGeometry(QRect(500, 30, 181, 277))
         self.frame_4.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_4.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout_13 = QVBoxLayout(self.frame_4)
@@ -1454,156 +1454,11 @@ class Ui_MainWindow(object):
         self.gridLayout_5 = QGridLayout()
         self.gridLayout_5.setObjectName(u"gridLayout_5")
         self.gridLayout_5.setContentsMargins(0, -1, -1, -1)
-        self.label_44 = QLabel(self.frame_4)
-        self.label_44.setObjectName(u"label_44")
-        self.label_44.setFont(font9)
+        self.label_47 = QLabel(self.frame_4)
+        self.label_47.setObjectName(u"label_47")
+        self.label_47.setFont(font9)
 
-        self.gridLayout_5.addWidget(self.label_44, 0, 2, 1, 1, Qt.AlignmentFlag.AlignHCenter)
-
-        self.home_mtr_6_bck_vel = QTextEdit(self.frame_4)
-        self.home_mtr_6_bck_vel.setObjectName(u"home_mtr_6_bck_vel")
-        self.home_mtr_6_bck_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_6_bck_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_6_bck_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_6_bck_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_6_bck_vel, 6, 3, 1, 1)
-
-        self.label_48 = QLabel(self.frame_4)
-        self.label_48.setObjectName(u"label_48")
-        self.label_48.setFont(font9)
-
-        self.gridLayout_5.addWidget(self.label_48, 6, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
-
-        self.home_mtr_2_h_pos = QTextEdit(self.frame_4)
-        self.home_mtr_2_h_pos.setObjectName(u"home_mtr_2_h_pos")
-        self.home_mtr_2_h_pos.setMaximumSize(QSize(100, 30))
-        self.home_mtr_2_h_pos.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_2_h_pos.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_2_h_pos.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_2_h_pos, 2, 4, 1, 1)
-
-        self.home_mtr_3_bck_vel = QTextEdit(self.frame_4)
-        self.home_mtr_3_bck_vel.setObjectName(u"home_mtr_3_bck_vel")
-        self.home_mtr_3_bck_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_3_bck_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_3_bck_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_3_bck_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_3_bck_vel, 3, 3, 1, 1)
-
-        self.home_mtr_3_vel = QTextEdit(self.frame_4)
-        self.home_mtr_3_vel.setObjectName(u"home_mtr_3_vel")
-        self.home_mtr_3_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_3_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_3_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_3_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_3_vel, 3, 1, 1, 1)
-
-        self.home_mtr_1_aw_vel = QTextEdit(self.frame_4)
-        self.home_mtr_1_aw_vel.setObjectName(u"home_mtr_1_aw_vel")
-        self.home_mtr_1_aw_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_1_aw_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_1_aw_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_1_aw_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_1_aw_vel, 1, 2, 1, 1)
-
-        self.motor_label = QLabel(self.frame_4)
-        self.motor_label.setObjectName(u"motor_label")
-        self.motor_label.setMaximumSize(QSize(100, 20))
-        self.motor_label.setFont(font9)
-
-        self.gridLayout_5.addWidget(self.motor_label, 0, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
-
-        self.home_mtr_6_vel = QTextEdit(self.frame_4)
-        self.home_mtr_6_vel.setObjectName(u"home_mtr_6_vel")
-        self.home_mtr_6_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_6_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_6_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_6_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_6_vel, 6, 1, 1, 1)
-
-        self.home_mtr_3_aw_vel = QTextEdit(self.frame_4)
-        self.home_mtr_3_aw_vel.setObjectName(u"home_mtr_3_aw_vel")
-        self.home_mtr_3_aw_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_3_aw_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_3_aw_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_3_aw_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_3_aw_vel, 3, 2, 1, 1)
-
-        self.home_mtr_1_vel = QTextEdit(self.frame_4)
-        self.home_mtr_1_vel.setObjectName(u"home_mtr_1_vel")
-        self.home_mtr_1_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_1_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_1_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_1_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_1_vel, 1, 1, 1, 1, Qt.AlignmentFlag.AlignHCenter)
-
-        self.label_41 = QLabel(self.frame_4)
-        self.label_41.setObjectName(u"label_41")
-        self.label_41.setFont(font9)
-
-        self.gridLayout_5.addWidget(self.label_41, 5, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
-
-        self.home_mtr_5_aw_vel = QTextEdit(self.frame_4)
-        self.home_mtr_5_aw_vel.setObjectName(u"home_mtr_5_aw_vel")
-        self.home_mtr_5_aw_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_5_aw_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_5_aw_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_5_aw_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_5_aw_vel, 5, 2, 1, 1)
-
-        self.home_mtr_6_aw_vel = QTextEdit(self.frame_4)
-        self.home_mtr_6_aw_vel.setObjectName(u"home_mtr_6_aw_vel")
-        self.home_mtr_6_aw_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_6_aw_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_6_aw_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_6_aw_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_6_aw_vel, 6, 2, 1, 1)
-
-        self.home_mtr_4_bck_vel = QTextEdit(self.frame_4)
-        self.home_mtr_4_bck_vel.setObjectName(u"home_mtr_4_bck_vel")
-        self.home_mtr_4_bck_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_4_bck_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_4_bck_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_4_bck_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_4_bck_vel, 4, 3, 1, 1)
-
-        self.home_mtr_4_vel = QTextEdit(self.frame_4)
-        self.home_mtr_4_vel.setObjectName(u"home_mtr_4_vel")
-        self.home_mtr_4_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_4_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_4_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_4_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_4_vel, 4, 1, 1, 1)
-
-        self.label_49 = QLabel(self.frame_4)
-        self.label_49.setObjectName(u"label_49")
-        self.label_49.setFont(font9)
-
-        self.gridLayout_5.addWidget(self.label_49, 0, 4, 1, 1)
-
-        self.label_40 = QLabel(self.frame_4)
-        self.label_40.setObjectName(u"label_40")
-        self.label_40.setFont(font9)
-
-        self.gridLayout_5.addWidget(self.label_40, 3, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
-
-        self.label_46 = QLabel(self.frame_4)
-        self.label_46.setObjectName(u"label_46")
-        self.label_46.setFont(font9)
-
-        self.gridLayout_5.addWidget(self.label_46, 0, 1, 1, 1, Qt.AlignmentFlag.AlignHCenter)
+        self.gridLayout_5.addWidget(self.label_47, 4, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.home_mtr_1_h_pos = QTextEdit(self.frame_4)
         self.home_mtr_1_h_pos.setObjectName(u"home_mtr_1_h_pos")
@@ -1612,122 +1467,22 @@ class Ui_MainWindow(object):
         self.home_mtr_1_h_pos.setFrameShadow(QFrame.Shadow.Sunken)
         self.home_mtr_1_h_pos.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        self.gridLayout_5.addWidget(self.home_mtr_1_h_pos, 1, 4, 1, 1)
+        self.gridLayout_5.addWidget(self.home_mtr_1_h_pos, 1, 1, 1, 1)
 
-        self.home_mtr_4_aw_vel = QTextEdit(self.frame_4)
-        self.home_mtr_4_aw_vel.setObjectName(u"home_mtr_4_aw_vel")
-        self.home_mtr_4_aw_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_4_aw_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_4_aw_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_4_aw_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.home_mtr_2_h_pos = QTextEdit(self.frame_4)
+        self.home_mtr_2_h_pos.setObjectName(u"home_mtr_2_h_pos")
+        self.home_mtr_2_h_pos.setMaximumSize(QSize(100, 30))
+        self.home_mtr_2_h_pos.setFrameShape(QFrame.Shape.WinPanel)
+        self.home_mtr_2_h_pos.setFrameShadow(QFrame.Shadow.Sunken)
+        self.home_mtr_2_h_pos.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        self.gridLayout_5.addWidget(self.home_mtr_4_aw_vel, 4, 2, 1, 1)
+        self.gridLayout_5.addWidget(self.home_mtr_2_h_pos, 2, 1, 1, 1)
 
-        self.label_42 = QLabel(self.frame_4)
-        self.label_42.setObjectName(u"label_42")
-        self.label_42.setFont(font9)
+        self.label_41 = QLabel(self.frame_4)
+        self.label_41.setObjectName(u"label_41")
+        self.label_41.setFont(font9)
 
-        self.gridLayout_5.addWidget(self.label_42, 0, 3, 1, 1, Qt.AlignmentFlag.AlignHCenter)
-
-        self.home_mtr_1_bck_vel = QTextEdit(self.frame_4)
-        self.home_mtr_1_bck_vel.setObjectName(u"home_mtr_1_bck_vel")
-        self.home_mtr_1_bck_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_1_bck_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_1_bck_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_1_bck_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_1_bck_vel, 1, 3, 1, 1)
-
-        self.home_mtr_2_aw_vel = QTextEdit(self.frame_4)
-        self.home_mtr_2_aw_vel.setObjectName(u"home_mtr_2_aw_vel")
-        self.home_mtr_2_aw_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_2_aw_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_2_aw_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_2_aw_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_2_aw_vel, 2, 2, 1, 1)
-
-        self.home_mtr_5_bck_vel = QTextEdit(self.frame_4)
-        self.home_mtr_5_bck_vel.setObjectName(u"home_mtr_5_bck_vel")
-        self.home_mtr_5_bck_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_5_bck_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_5_bck_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_5_bck_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_5_bck_vel, 5, 3, 1, 1)
-
-        self.home_mtr_5_vel = QTextEdit(self.frame_4)
-        self.home_mtr_5_vel.setObjectName(u"home_mtr_5_vel")
-        self.home_mtr_5_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_5_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_5_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_5_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_5_vel, 5, 1, 1, 1)
-
-        self.label_47 = QLabel(self.frame_4)
-        self.label_47.setObjectName(u"label_47")
-        self.label_47.setFont(font9)
-
-        self.gridLayout_5.addWidget(self.label_47, 4, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
-
-        self.label_45 = QLabel(self.frame_4)
-        self.label_45.setObjectName(u"label_45")
-        self.label_45.setFont(font9)
-
-        self.gridLayout_5.addWidget(self.label_45, 2, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
-
-        self.home_mtr_2_vel = QTextEdit(self.frame_4)
-        self.home_mtr_2_vel.setObjectName(u"home_mtr_2_vel")
-        self.home_mtr_2_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_2_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_2_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_2_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_2_vel, 2, 1, 1, 1)
-
-        self.home_mtr_2_bck_vel = QTextEdit(self.frame_4)
-        self.home_mtr_2_bck_vel.setObjectName(u"home_mtr_2_bck_vel")
-        self.home_mtr_2_bck_vel.setMaximumSize(QSize(100, 30))
-        self.home_mtr_2_bck_vel.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_2_bck_vel.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_2_bck_vel.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_2_bck_vel, 2, 3, 1, 1)
-
-        self.label_43 = QLabel(self.frame_4)
-        self.label_43.setObjectName(u"label_43")
-        self.label_43.setMaximumSize(QSize(16777215, 20))
-        self.label_43.setFont(font9)
-
-        self.gridLayout_5.addWidget(self.label_43, 1, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
-
-        self.home_mtr_3_h_pos = QTextEdit(self.frame_4)
-        self.home_mtr_3_h_pos.setObjectName(u"home_mtr_3_h_pos")
-        self.home_mtr_3_h_pos.setMaximumSize(QSize(100, 30))
-        self.home_mtr_3_h_pos.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_3_h_pos.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_3_h_pos.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_3_h_pos, 3, 4, 1, 1)
-
-        self.home_mtr_4_h_pos = QTextEdit(self.frame_4)
-        self.home_mtr_4_h_pos.setObjectName(u"home_mtr_4_h_pos")
-        self.home_mtr_4_h_pos.setMaximumSize(QSize(100, 30))
-        self.home_mtr_4_h_pos.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_4_h_pos.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_4_h_pos.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_4_h_pos, 4, 4, 1, 1)
-
-        self.home_mtr_5_h_pos = QTextEdit(self.frame_4)
-        self.home_mtr_5_h_pos.setObjectName(u"home_mtr_5_h_pos")
-        self.home_mtr_5_h_pos.setMaximumSize(QSize(100, 30))
-        self.home_mtr_5_h_pos.setFrameShape(QFrame.Shape.WinPanel)
-        self.home_mtr_5_h_pos.setFrameShadow(QFrame.Shadow.Sunken)
-        self.home_mtr_5_h_pos.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-
-        self.gridLayout_5.addWidget(self.home_mtr_5_h_pos, 5, 4, 1, 1)
+        self.gridLayout_5.addWidget(self.label_41, 5, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.home_mtr_6_h_pos = QTextEdit(self.frame_4)
         self.home_mtr_6_h_pos.setObjectName(u"home_mtr_6_h_pos")
@@ -1736,7 +1491,72 @@ class Ui_MainWindow(object):
         self.home_mtr_6_h_pos.setFrameShadow(QFrame.Shadow.Sunken)
         self.home_mtr_6_h_pos.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        self.gridLayout_5.addWidget(self.home_mtr_6_h_pos, 6, 4, 1, 1)
+        self.gridLayout_5.addWidget(self.home_mtr_6_h_pos, 6, 1, 1, 1)
+
+        self.label_40 = QLabel(self.frame_4)
+        self.label_40.setObjectName(u"label_40")
+        self.label_40.setFont(font9)
+
+        self.gridLayout_5.addWidget(self.label_40, 3, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
+
+        self.label_49 = QLabel(self.frame_4)
+        self.label_49.setObjectName(u"label_49")
+        self.label_49.setFont(font9)
+
+        self.gridLayout_5.addWidget(self.label_49, 0, 1, 1, 1)
+
+        self.home_mtr_4_h_pos = QTextEdit(self.frame_4)
+        self.home_mtr_4_h_pos.setObjectName(u"home_mtr_4_h_pos")
+        self.home_mtr_4_h_pos.setMaximumSize(QSize(100, 30))
+        self.home_mtr_4_h_pos.setFrameShape(QFrame.Shape.WinPanel)
+        self.home_mtr_4_h_pos.setFrameShadow(QFrame.Shadow.Sunken)
+        self.home_mtr_4_h_pos.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+
+        self.gridLayout_5.addWidget(self.home_mtr_4_h_pos, 4, 1, 1, 1)
+
+        self.label_48 = QLabel(self.frame_4)
+        self.label_48.setObjectName(u"label_48")
+        self.label_48.setFont(font9)
+
+        self.gridLayout_5.addWidget(self.label_48, 6, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
+
+        self.home_mtr_3_h_pos = QTextEdit(self.frame_4)
+        self.home_mtr_3_h_pos.setObjectName(u"home_mtr_3_h_pos")
+        self.home_mtr_3_h_pos.setMaximumSize(QSize(100, 30))
+        self.home_mtr_3_h_pos.setFrameShape(QFrame.Shape.WinPanel)
+        self.home_mtr_3_h_pos.setFrameShadow(QFrame.Shadow.Sunken)
+        self.home_mtr_3_h_pos.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+
+        self.gridLayout_5.addWidget(self.home_mtr_3_h_pos, 3, 1, 1, 1)
+
+        self.label_45 = QLabel(self.frame_4)
+        self.label_45.setObjectName(u"label_45")
+        self.label_45.setFont(font9)
+
+        self.gridLayout_5.addWidget(self.label_45, 2, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
+
+        self.label_43 = QLabel(self.frame_4)
+        self.label_43.setObjectName(u"label_43")
+        self.label_43.setMaximumSize(QSize(16777215, 20))
+        self.label_43.setFont(font9)
+
+        self.gridLayout_5.addWidget(self.label_43, 1, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
+
+        self.motor_label = QLabel(self.frame_4)
+        self.motor_label.setObjectName(u"motor_label")
+        self.motor_label.setMaximumSize(QSize(100, 20))
+        self.motor_label.setFont(font9)
+
+        self.gridLayout_5.addWidget(self.motor_label, 0, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
+
+        self.home_mtr_5_h_pos = QTextEdit(self.frame_4)
+        self.home_mtr_5_h_pos.setObjectName(u"home_mtr_5_h_pos")
+        self.home_mtr_5_h_pos.setMaximumSize(QSize(100, 30))
+        self.home_mtr_5_h_pos.setFrameShape(QFrame.Shape.WinPanel)
+        self.home_mtr_5_h_pos.setFrameShadow(QFrame.Shadow.Sunken)
+        self.home_mtr_5_h_pos.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+
+        self.gridLayout_5.addWidget(self.home_mtr_5_h_pos, 5, 1, 1, 1)
 
 
         self.verticalLayout_13.addLayout(self.gridLayout_5)
@@ -2099,20 +1919,14 @@ class Ui_MainWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.label_39.setText(QCoreApplication.translate("MainWindow", u"Homing Params:", None))
-        self.label_44.setText(QCoreApplication.translate("MainWindow", u"away velocity", None))
-        self.label_48.setText(QCoreApplication.translate("MainWindow", u"6", None))
-        self.motor_label.setText(QCoreApplication.translate("MainWindow", u"Motor", None))
-        self.label_41.setText(QCoreApplication.translate("MainWindow", u"5", None))
-        self.label_49.setText(QCoreApplication.translate("MainWindow", u"home position", None))
-        self.label_40.setText(QCoreApplication.translate("MainWindow", u"3", None))
-#if QT_CONFIG(tooltip)
-        self.label_46.setToolTip("")
-#endif // QT_CONFIG(tooltip)
-        self.label_46.setText(QCoreApplication.translate("MainWindow", u"velocity", None))
-        self.label_42.setText(QCoreApplication.translate("MainWindow", u"back velocity", None))
         self.label_47.setText(QCoreApplication.translate("MainWindow", u"4", None))
+        self.label_41.setText(QCoreApplication.translate("MainWindow", u"5", None))
+        self.label_40.setText(QCoreApplication.translate("MainWindow", u"3", None))
+        self.label_49.setText(QCoreApplication.translate("MainWindow", u"home position", None))
+        self.label_48.setText(QCoreApplication.translate("MainWindow", u"6", None))
         self.label_45.setText(QCoreApplication.translate("MainWindow", u"2", None))
         self.label_43.setText(QCoreApplication.translate("MainWindow", u"1", None))
+        self.motor_label.setText(QCoreApplication.translate("MainWindow", u"Motor", None))
         self.label_50.setText(QCoreApplication.translate("MainWindow", u"Speed and Acceleration:", None))
         self.label_52.setText(QCoreApplication.translate("MainWindow", u"5", None))
         self.label_57.setText(QCoreApplication.translate("MainWindow", u"max speed", None))
