@@ -4,6 +4,7 @@ Setup::Setup(const String& jsonString)
     : _jsonStr(jsonString)
 {
     Setup::_parseDHParams();
+    Setup::_parseHomingParams();
 };
 
 std::vector<DHparam> Setup::_parseDHParams()
@@ -51,5 +52,46 @@ std::vector<DHparam> Setup::_parseDHParams()
         result.push_back(param);
     }
 
+    return result;
+};
+
+std::vector<int> Setup::_parseHomingParams()
+{
+    JsonDocument         jsonDoc;
+    DeserializationError error = deserializeJson(jsonDoc, _jsonStr);
+    if (error)
+    {
+        Serial.println("Error: JSON Deserialization failed!");
+        return {};
+    }
+
+    JsonObject       homing_params = jsonDoc["homing_params"];
+    std::vector<int> result;
+
+    for (int i = 1; i <= 6; ++i)
+    {
+        std::string motor     = "motor" + std::to_string(i);
+        JsonObject  motorData = homing_params[motor.c_str()];
+
+        if (motorData.isNull())
+        {
+            Serial.println(("Error: missing motor: " + motor).c_str());
+            return {};
+        }
+
+        // Validate: all fields must exist and contain numeric values
+        const char* home_pos = motorData["home_pos"];
+
+        if (!home_pos)
+        {
+            Serial.println(("Error: missing field in " + motor).c_str());
+            return {};
+        }
+
+        int home_param;
+        home_param = std::stoi(home_pos);
+
+        result.push_back(home_param);
+    }
     return result;
 };
