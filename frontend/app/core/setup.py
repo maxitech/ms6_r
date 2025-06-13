@@ -29,7 +29,7 @@ class Setup:
             return self._init_dicts_with_def_val()
         else:
             print("Loading setup from file.")
-            return self._read_setup_from_file()
+            return self.get_setup()
 
     def _init_dicts_with_def_val(self):
         default_dicts = {
