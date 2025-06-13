@@ -11,6 +11,7 @@ public:
 
 private:
     std::vector<DHparam> _parseDHParams();
+    std::vector<int>     _parseHomingParams();
 
     const String _jsonStr;
 };
