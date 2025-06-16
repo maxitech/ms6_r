@@ -82,35 +82,42 @@ private:
     const int motorJ6Dir  = 33;
 
     // Homing parameters for each axis, negative values indicate direction(CCW)
+
     const int HOMING_VELOCITY_J1    = -6000; // 3k
     const int MOVE_AWAY_VELOCITY_J1 = 800;
     const int MOVE_BACK_VELOCITY_J1 = -200;
-    const int HOME_POS_J1           = 40'000;
+    int       HOME_POS_J1;
+    // const int HOME_POS_J1           = 40'000;
 
     const int HOMING_VELOCITY_J2    = -20'000;
     const int MOVE_AWAY_VELOCITY_J2 = 4000;
     const int MOVE_BACK_VELOCITY_J2 = -2000;
-    const int HOME_POS_J2           = 55'000;
+    int       HOME_POS_J2;
+    // const int HOME_POS_J2           = 55'000;
 
     const int HOMING_VELOCITY_J3    = 5'000;
     const int MOVE_AWAY_VELOCITY_J3 = -800;
     const int MOVE_BACK_VELOCITY_J3 = 400;
-    const int HOME_POS_J3           = -20'000;
+    int       HOME_POS_J3;
+    // const int HOME_POS_J3           = -20'000;
 
     const int HOMING_VELOCITY_J4    = 4000;
     const int MOVE_AWAY_VELOCITY_J4 = -800;
     const int MOVE_BACK_VELOCITY_J4 = 400;
-    const int HOME_POS_J4           = -24'000;
+    int       HOME_POS_J4;
+    // const int HOME_POS_J4           = -24'000;
 
     const int HOMING_VELOCITY_J5    = 5000;
     const int MOVE_AWAY_VELOCITY_J5 = -400;
     const int MOVE_BACK_VELOCITY_J5 = 200;
-    const int HOME_POS_J5           = -22'000;
+    int       HOME_POS_J5;
+    // const int HOME_POS_J5           = -22'000;
 
     const int HOMING_VELOCITY_J6    = 2000;
     const int MOVE_AWAY_VELOCITY_J6 = -200;
     const int MOVE_BACK_VELOCITY_J6 = 200;
-    const int HOME_POS_J6           = -6400;
+    int       HOME_POS_J6;
+    // const int HOME_POS_J6           = -6400;
 
     // //*********** Initialize Classes *********//
     Stepper motorJ1, motorJ2, motorJ3, motorJ4, motorJ5, motorJ6; // int stepPin, int dirPin
