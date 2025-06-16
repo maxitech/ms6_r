@@ -125,13 +125,15 @@ private:
     std::vector<MotorConfig> motorConfigs = {mCfg1, mCfg2, mCfg3, mCfg4, mCfg5, mCfg6};
 
     // Initialize Kinematics with DH parameters
-    std::vector<DHparam> dhParams = {
-        {37.5f, -1.571f, 135.300f},
-        {160.0f, 0.0f, 0.0f, -90.0f},
-        {-15.0f, 1.571f, 0.0f, 180.0f},
-        {0.0f, -1.571f, 138.400f},
-        {0.0f, 1.571f, 0.0f},
-        {0.0f, 0.0f, 29.270f}};
+    std::vector<DHparam> dhParams;
+    // *Default values for L position of MS6R below as reference
+    // std::vector<DHparam> dhParams = {
+    //     {37.5f, -1.571f, 135.300f},
+    //     {160.0f, 0.0f, 0.0f, -90.0f},
+    //     {-15.0f, 1.571f, 0.0f, 180.0f},
+    //     {0.0f, -1.571f, 138.400f},
+    //     {0.0f, 1.571f, 0.0f},
+    //     {0.0f, 0.0f, 29.270f}};
 
     LimitSwitches    limitSwitches; // Manages the state of limit switches
     Homing           homingManager; // Manages the homing process for multiple axes
