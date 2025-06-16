@@ -136,7 +136,13 @@ void Setup::update(const String& jsonString)
     {
         _jsonStr = jsonString;
         _validateJson();
-        _extractDHParams();
+        std::vector<DHparam> extractedParams = _extractDHParams();
+
+        if (extractedParams.size() == 6)
+        {
+            dhParams = extractedParams;
+        }
+
         _extractHomingParams();
         if (kin)
         {
