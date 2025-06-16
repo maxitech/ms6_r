@@ -142,8 +142,17 @@ void Setup::update(const String& jsonString)
         {
             dhParams = extractedParams;
         }
+        std::vector<int> extractedHomePositions = _extractHomingParams(); // Holding all home positions -> set via frontend setup
+        if (extractedHomePositions.size() == 6)
+        {
+            HOME_POS_J1 = extractedHomePositions[0];
+            HOME_POS_J2 = extractedHomePositions[1];
+            HOME_POS_J3 = extractedHomePositions[2];
+            HOME_POS_J4 = extractedHomePositions[3];
+            HOME_POS_J5 = extractedHomePositions[4];
+            HOME_POS_J6 = extractedHomePositions[5];
+        }
 
-        _extractHomingParams();
         if (kin)
         {
             delete kin;
