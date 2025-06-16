@@ -15,8 +15,6 @@ void setup()
 
 void loop()
 {
-
-    serialHandler.listenForSerial();
-    programLoader.run();
-    // homingManager.executeHoming();
+    setupHandler.getSerialHandler().listenForSerial();
+    setupHandler.getProgramLoader().run();
 }
