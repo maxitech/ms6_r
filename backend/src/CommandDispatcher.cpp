@@ -21,7 +21,7 @@ void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& a
     {
         if (cmd == "SETUP")
         {
-            Setup setupInstance(args[0]);
+            Setup::getInstance().update(args[0]);
         }
         else
         {
