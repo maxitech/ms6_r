@@ -1,13 +1,24 @@
 #include "Setup.h"
 using namespace TS4;
 
-Setup::Setup(const String& jsonString)
-    : _jsonStr(jsonString)
+Setup& Setup::getInstance()
 {
-    _validateJson();
-    _extractDHParams();
-    _extractHomingParams();
-};
+    static Setup instance; // Only instance of `Setup`
+    return instance;
+}
+
+Setup::Setup()
+    : // int stepPin, int dirPin
+    motorJ1(motorJ1Step, motorJ1Dir)
+    , motorJ2(motorJ2Step, motorJ2Dir)
+    , motorJ3(motorJ3Step, motorJ3Dir)
+    , motorJ4(motorJ4Step, motorJ4Dir)
+    , motorJ5(motorJ5Step, motorJ5Dir)
+    , motorJ6(motorJ6Step, motorJ6Dir)
+    , limitSwitches(ledPin, limitSwitchPins)
+    , homingManager(limitSwitchPins)
+    , programLoader(&homingManager, motorConfigs, limitSwitches)
+    , cmdProcessor(programLoader) {};
 
 void Setup::_validateJson()
 {
