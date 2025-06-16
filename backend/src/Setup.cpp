@@ -1,4 +1,5 @@
 #include "Setup.h"
+using namespace TS4;
 
 Setup::Setup(const String& jsonString)
     : _jsonStr(jsonString)
