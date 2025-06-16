@@ -21,9 +21,17 @@
 class Setup
 {
 public:
-    explicit Setup(const String& jsonString);
+    static Setup&  getInstance(); // Static method for instance-access
+    void           init();
+    SerialHandler& getSerialHandler() { return serialHandler; }
+    ProgramLoader& getProgramLoader() { return programLoader; }
+    void           update(const String& jsonString);
 
 private:
+    Setup();                                 // Prevents direct object creation
+    Setup(const Setup&)            = delete; // Do not allow copies
+    Setup& operator=(const Setup&) = delete; //  Do not allow assignments
+
     void                 _validateJson();
     std::vector<DHparam> _extractDHParams();
     std::vector<int>     _extractHomingParams();
