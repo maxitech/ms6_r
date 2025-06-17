@@ -228,33 +228,6 @@ void Setup::init()
     // digitalWrite(motorJ5En, HIGH);
     // digitalWrite(motorJ6En, HIGH);
 
-    TS4::begin();
-    TimerFactory::attachModule(new TMRModule<0>());
-
-    motorJ1
-        .setMaxSpeed(50'000)
-        .setAcceleration(26'000);
-
-    motorJ2
-        .setMaxSpeed(160'000)
-        .setAcceleration(50'000);
-
-    motorJ3
-        .setMaxSpeed(60'000)
-        .setAcceleration(30'000);
-
-    motorJ4
-        .setMaxSpeed(40'000)
-        .setAcceleration(30'000);
-
-    motorJ5
-        .setMaxSpeed(40'000)
-        .setAcceleration(20'000);
-
-    motorJ6
-        .setMaxSpeed(15'000)
-        .setAcceleration(8000);
-
     // Create and add groups
     auto group1 = std::make_unique<AxisGroup>();
     group1->addAxis(&axis1);
