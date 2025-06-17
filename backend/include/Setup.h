@@ -18,6 +18,12 @@
 #include "Kinematics.h"
 #include <ArduinoJson.h>
 
+struct MotionProfile
+{
+    int max_speed;
+    int accel;
+};
+
 class Setup
 {
 public:
@@ -32,9 +38,10 @@ private:
     Setup(const Setup&)            = delete; // Do not allow copies
     Setup& operator=(const Setup&) = delete; //  Do not allow assignments
 
-    void                 _validateJson();
-    std::vector<DHparam> _extractDHParams();
-    std::vector<int>     _extractHomingParams();
+    void                       _validateJson();
+    std::vector<DHparam>       _extractDHParams();
+    std::vector<int>           _extractHomingParams();
+    std::vector<MotionProfile> _extractMotionProfiles();
 
     bool _checkExists(const JsonObjectConst& obj, const char* name);
     bool _checkFields(const char* f1, const char* f2, const char* f3, const char* f4, const char* context);
