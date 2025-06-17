@@ -191,6 +191,15 @@ void Setup::update(const String& jsonString)
             HOME_POS_J5 = extractedHomePositions[4];
             HOME_POS_J6 = extractedHomePositions[5];
         }
+        std::vector<MotionProfile> extractedProfiles = _extractMotionProfiles();
+        if (extractedProfiles.size() == 6)
+        {
+            Stepper* motors[] = {&motorJ1, &motorJ2, &motorJ3, &motorJ4, &motorJ5, &motorJ6};
+            for (size_t i = 0; i < extractedProfiles.size(); ++i)
+            {
+                motors[i]->setMaxSpeed(extractedProfiles[i].max_speed).setAcceleration(extractedProfiles[i].accel);
+            }
+        }
 
         if (kin)
         {
