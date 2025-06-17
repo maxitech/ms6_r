@@ -211,6 +211,9 @@ void Setup::update(const String& jsonString)
 
 void Setup::init()
 {
+    TS4::begin();
+    TimerFactory::attachModule(new TMRModule<0>());
+
     pinMode(motorJ1En, OUTPUT);
     pinMode(motorJ2En, OUTPUT);
     pinMode(motorJ3En, OUTPUT);
