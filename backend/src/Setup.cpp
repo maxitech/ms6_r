@@ -110,6 +110,45 @@ std::vector<int> Setup::_extractHomingParams()
     return result;
 };
 
+std::vector<MotionProfile> Setup::_extractMotionProfiles()
+{
+    if (!_valid)
+    {
+        Serial.println("Error: JSON invalid, cannot parse motionProfile params.");
+        return {};
+    }
+
+    JsonObjectConst            speed_a_accel = _jsonDoc["speed_a_accel"];
+    std::vector<MotionProfile> result;
+
+    for (int i = 1; i <= 6; ++i)
+    {
+        std::string     motor         = "motor" + std::to_string(i);
+        JsonObjectConst motionProfile = speed_a_accel[motor.c_str()];
+
+        if (!_checkExists(motionProfile, motor.c_str()))
+        {
+            return {};
+        }
+
+        const char* max_speed = motionProfile["max_speed"];
+        const char* acc       = motionProfile["acc"];
+
+        if (!max_speed || !acc)
+        {
+            Serial.println(("Error: missing field in " + String(motor.c_str())));
+            return {};
+        }
+
+        MotionProfile profile;
+        profile.max_speed = std::stoi(max_speed);
+        profile.accel     = std::stoi(acc);
+
+        result.push_back(profile);
+    }
+    return result;
+}
+
 bool Setup::_checkExists(const JsonObjectConst& obj, const char* name)
 {
     if (obj.isNull())
