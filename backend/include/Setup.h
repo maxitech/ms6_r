@@ -31,6 +31,7 @@ public:
     void           init();
     SerialHandler& getSerialHandler() { return serialHandler; }
     ProgramLoader& getProgramLoader() { return programLoader; }
+    Kinematics*    getKinematics() const { return kin; }
     void           update(const String& jsonString);
 
 private:
