@@ -202,15 +202,57 @@ void Setup::update(const String& jsonString)
         }
 
         if (kin)
-        {
             delete kin;
-        }
+
         kin = new Kinematics(motorConfigs, dhParams);
+
+        if (axis1)
+            delete axis1;
+        if (axis2)
+            delete axis2;
+        if (axis3)
+            delete axis3;
+        if (axis4)
+            delete axis4;
+        if (axis5)
+            delete axis5;
+        if (axis6)
+            delete axis6;
+
+        axis1 = new AxisData {MOVE_TO_SWITCH, &motorJ1, J1, HOMING_VELOCITY_J1, MOVE_AWAY_VELOCITY_J1, MOVE_BACK_VELOCITY_J1, HOME_POS_J1};
+        axis2 = new AxisData {MOVE_TO_SWITCH, &motorJ2, J2, HOMING_VELOCITY_J2, MOVE_AWAY_VELOCITY_J2, MOVE_BACK_VELOCITY_J2, HOME_POS_J2};
+        axis3 = new AxisData {MOVE_TO_SWITCH, &motorJ3, J3, HOMING_VELOCITY_J3, MOVE_AWAY_VELOCITY_J3, MOVE_BACK_VELOCITY_J3, HOME_POS_J3};
+        axis4 = new AxisData {MOVE_TO_SWITCH, &motorJ4, J4, HOMING_VELOCITY_J4, MOVE_AWAY_VELOCITY_J4, MOVE_BACK_VELOCITY_J4, HOME_POS_J4};
+        axis5 = new AxisData {MOVE_TO_SWITCH, &motorJ5, J5, HOMING_VELOCITY_J5, MOVE_AWAY_VELOCITY_J5, MOVE_BACK_VELOCITY_J5, HOME_POS_J5};
+        axis6 = new AxisData {MOVE_TO_SWITCH, &motorJ6, J6, HOMING_VELOCITY_J6, MOVE_AWAY_VELOCITY_J6, MOVE_BACK_VELOCITY_J6, HOME_POS_J6};
+
+        if (!axis1 || !axis2 || !axis3 || !axis4 || !axis5 || !axis6)
+        {
+            Serial.println("Error: Failed to create AxisData objects!");
+            return;
+        }
+        // Create and add groups
+        auto group1 = std::make_unique<AxisGroup>();
+        group1->addAxis(axis1);
+        group1->addAxis(axis2);
+        group1->addAxis(axis4);
+
+        auto group2 = std::make_unique<AxisGroup>();
+        group2->addAxis(axis3);
+
+        auto group3 = std::make_unique<AxisGroup>();
+        group3->addAxis(axis5);
+        group3->addAxis(axis6);
+
+        homingManager.addGroup(std::move(group1));
+        homingManager.addGroup(std::move(group2));
+        homingManager.addGroup(std::move(group3));
     }
 }
 
 void Setup::init()
 {
+    // Runs in setup() of main.cpp
     TS4::begin();
     TimerFactory::attachModule(new TMRModule<0>());
 
@@ -227,23 +269,6 @@ void Setup::init()
     // digitalWrite(motorJ4En, HIGH);
     // digitalWrite(motorJ5En, HIGH);
     // digitalWrite(motorJ6En, HIGH);
-
-    // Create and add groups
-    auto group1 = std::make_unique<AxisGroup>();
-    group1->addAxis(&axis1);
-    group1->addAxis(&axis2);
-    group1->addAxis(&axis4);
-
-    auto group2 = std::make_unique<AxisGroup>();
-    group2->addAxis(&axis3);
-
-    auto group3 = std::make_unique<AxisGroup>();
-    group3->addAxis(&axis5);
-    group3->addAxis(&axis6);
-
-    homingManager.addGroup(std::move(group1));
-    homingManager.addGroup(std::move(group2));
-    homingManager.addGroup(std::move(group3));
 
     limitSwitches.init();
     serialHandler.setCommandProcessor(&cmdProcessor);
