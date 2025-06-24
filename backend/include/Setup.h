@@ -157,12 +157,12 @@ private:
     SerialHandler    serialHandler; // Handles serial communication and command routing
     Kinematics*      kin = nullptr; // Kinematics calculations for the robot arm
 
-    AxisData axis1 = {MOVE_TO_SWITCH, &motorJ1, J1, HOMING_VELOCITY_J1, MOVE_AWAY_VELOCITY_J1, MOVE_BACK_VELOCITY_J1, HOME_POS_J1};
-    AxisData axis2 = {MOVE_TO_SWITCH, &motorJ2, J2, HOMING_VELOCITY_J2, MOVE_AWAY_VELOCITY_J2, MOVE_BACK_VELOCITY_J2, HOME_POS_J2};
-    AxisData axis3 = {MOVE_TO_SWITCH, &motorJ3, J3, HOMING_VELOCITY_J3, MOVE_AWAY_VELOCITY_J3, MOVE_BACK_VELOCITY_J3, HOME_POS_J3};
-    AxisData axis4 = {MOVE_TO_SWITCH, &motorJ4, J4, HOMING_VELOCITY_J4, MOVE_AWAY_VELOCITY_J4, MOVE_BACK_VELOCITY_J4, HOME_POS_J4};
-    AxisData axis5 = {MOVE_TO_SWITCH, &motorJ5, J5, HOMING_VELOCITY_J5, MOVE_AWAY_VELOCITY_J5, MOVE_BACK_VELOCITY_J5, HOME_POS_J5};
-    AxisData axis6 = {MOVE_TO_SWITCH, &motorJ6, J6, HOMING_VELOCITY_J6, MOVE_AWAY_VELOCITY_J6, MOVE_BACK_VELOCITY_J6, HOME_POS_J6};
+    AxisData* axis1 = nullptr;
+    AxisData* axis2 = nullptr;
+    AxisData* axis3 = nullptr;
+    AxisData* axis4 = nullptr;
+    AxisData* axis5 = nullptr;
+    AxisData* axis6 = nullptr;
 };
 
 #endif // SETUP_H
