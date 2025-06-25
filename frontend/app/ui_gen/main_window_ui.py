@@ -849,7 +849,7 @@ class Ui_MainWindow(object):
         self.cmd_pong_btn = QPushButton(self.cmd_prog_frame)
         self.cmd_pong_btn.setObjectName(u"cmd_pong_btn")
         font5 = QFont()
-        font5.setPointSize(13)
+        font5.setPointSize(9)
         font5.setBold(False)
         font5.setStrikeOut(False)
         font5.setKerning(True)
@@ -861,7 +861,13 @@ class Ui_MainWindow(object):
 
         self.cmd_switches_btn = QPushButton(self.cmd_prog_frame)
         self.cmd_switches_btn.setObjectName(u"cmd_switches_btn")
-        self.cmd_switches_btn.setFont(font5)
+        font6 = QFont()
+        font6.setPointSize(8)
+        font6.setBold(False)
+        font6.setStrikeOut(False)
+        font6.setKerning(True)
+        font6.setStyleStrategy(QFont.PreferDefault)
+        self.cmd_switches_btn.setFont(font6)
         self.cmd_switches_btn.setAutoFillBackground(False)
 
         self.verticalLayout_6.addWidget(self.cmd_switches_btn)
@@ -928,12 +934,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.prog_label = QLabel(self.prog_header_frame)
         self.prog_label.setObjectName(u"prog_label")
-        font6 = QFont()
-        font6.setPointSize(10)
-        font6.setBold(True)
-        font6.setItalic(False)
-        font6.setUnderline(False)
-        self.prog_label.setFont(font6)
+        font7 = QFont()
+        font7.setPointSize(10)
+        font7.setBold(True)
+        font7.setItalic(False)
+        font7.setUnderline(False)
+        self.prog_label.setFont(font7)
 
         self.horizontalLayout_4.addWidget(self.prog_label)
 
@@ -944,10 +950,10 @@ class Ui_MainWindow(object):
         self.prog_clear_btn = QPushButton(self.prog_header_frame)
         self.prog_clear_btn.setObjectName(u"prog_clear_btn")
         self.prog_clear_btn.setMaximumSize(QSize(16777211, 16777215))
-        font7 = QFont()
-        font7.setPointSize(9)
-        font7.setBold(True)
-        self.prog_clear_btn.setFont(font7)
+        font8 = QFont()
+        font8.setPointSize(9)
+        font8.setBold(True)
+        self.prog_clear_btn.setFont(font8)
 
         self.horizontalLayout_4.addWidget(self.prog_clear_btn)
 
@@ -956,12 +962,12 @@ class Ui_MainWindow(object):
 
         self.prog_textEdit = QTextEdit(self.prog_frame)
         self.prog_textEdit.setObjectName(u"prog_textEdit")
-        font8 = QFont()
-        font8.setFamilies([u"Arial"])
-        font8.setPointSize(10)
-        font8.setBold(False)
-        font8.setKerning(False)
-        self.prog_textEdit.setFont(font8)
+        font9 = QFont()
+        font9.setFamilies([u"Arial"])
+        font9.setPointSize(10)
+        font9.setBold(False)
+        font9.setKerning(False)
+        self.prog_textEdit.setFont(font9)
         self.prog_textEdit.setStyleSheet(u"background-color: rgb(21, 21, 21);\n"
 "color: #fff;\n"
 "font-size: 10pt;\n"
@@ -995,10 +1001,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.log_label = QLabel(self.frame)
         self.log_label.setObjectName(u"log_label")
-        font9 = QFont()
-        font9.setPointSize(10)
-        font9.setBold(True)
-        self.log_label.setFont(font9)
+        font10 = QFont()
+        font10.setPointSize(10)
+        font10.setBold(True)
+        self.log_label.setFont(font10)
 
         self.horizontalLayout_5.addWidget(self.log_label)
 
@@ -1008,7 +1014,7 @@ class Ui_MainWindow(object):
 
         self.pushButton = QPushButton(self.frame)
         self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setFont(font7)
+        self.pushButton.setFont(font8)
 
         self.horizontalLayout_5.addWidget(self.pushButton)
 
@@ -1042,21 +1048,21 @@ class Ui_MainWindow(object):
         self.btn_start = QPushButton(self.btn_frame)
         self.btn_start.setObjectName(u"btn_start")
         self.btn_start.setEnabled(False)
-        self.btn_start.setFont(font7)
+        self.btn_start.setFont(font8)
 
         self.horizontalLayout_3.addWidget(self.btn_start)
 
         self.btn_stop = QPushButton(self.btn_frame)
         self.btn_stop.setObjectName(u"btn_stop")
         self.btn_stop.setEnabled(False)
-        self.btn_stop.setFont(font7)
+        self.btn_stop.setFont(font8)
 
         self.horizontalLayout_3.addWidget(self.btn_stop)
 
         self.btn_load_prog_btn = QPushButton(self.btn_frame)
         self.btn_load_prog_btn.setObjectName(u"btn_load_prog_btn")
         self.btn_load_prog_btn.setEnabled(False)
-        self.btn_load_prog_btn.setFont(font7)
+        self.btn_load_prog_btn.setFont(font8)
 
         self.horizontalLayout_3.addWidget(self.btn_load_prog_btn)
 
@@ -1071,7 +1077,7 @@ class Ui_MainWindow(object):
         self.con_frame.setObjectName(u"con_frame")
         self.con_frame.setMinimumSize(QSize(500, 50))
         self.con_frame.setMaximumSize(QSize(10000, 50))
-        self.con_frame.setFont(font7)
+        self.con_frame.setFont(font8)
         self.con_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.con_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout = QHBoxLayout(self.con_frame)
@@ -1079,7 +1085,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setContentsMargins(9, -1, 50, -1)
         self.select_device_label = QLabel(self.con_frame)
         self.select_device_label.setObjectName(u"select_device_label")
-        self.select_device_label.setFont(font9)
+        self.select_device_label.setFont(font10)
         self.select_device_label.setFrameShape(QFrame.Shape.NoFrame)
         self.select_device_label.setFrameShadow(QFrame.Shadow.Plain)
 
@@ -1102,14 +1108,14 @@ class Ui_MainWindow(object):
 
         self.con_status_label1 = QLabel(self.con_frame)
         self.con_status_label1.setObjectName(u"con_status_label1")
-        self.con_status_label1.setFont(font9)
+        self.con_status_label1.setFont(font10)
 
         self.horizontalLayout.addWidget(self.con_status_label1)
 
         self.con_status_label2 = QLabel(self.con_frame)
         self.con_status_label2.setObjectName(u"con_status_label2")
         self.con_status_label2.setMinimumSize(QSize(140, 0))
-        self.con_status_label2.setFont(font9)
+        self.con_status_label2.setFont(font10)
 
         self.horizontalLayout.addWidget(self.con_status_label2)
 
@@ -1163,13 +1169,13 @@ class Ui_MainWindow(object):
 
         self.label_15 = QLabel(self.frame_2)
         self.label_15.setObjectName(u"label_15")
-        self.label_15.setFont(font9)
+        self.label_15.setFont(font10)
 
         self.gridLayout_2.addWidget(self.label_15, 3, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_18 = QLabel(self.frame_2)
         self.label_18.setObjectName(u"label_18")
-        self.label_18.setFont(font9)
+        self.label_18.setFont(font10)
 
         self.gridLayout_2.addWidget(self.label_18, 5, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1184,14 +1190,14 @@ class Ui_MainWindow(object):
 
         self.label_11 = QLabel(self.frame_2)
         self.label_11.setObjectName(u"label_11")
-        self.label_11.setFont(font9)
+        self.label_11.setFont(font10)
 
         self.gridLayout_2.addWidget(self.label_11, 0, 4, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_17 = QLabel(self.frame_2)
         self.label_17.setObjectName(u"label_17")
         self.label_17.setMaximumSize(QSize(16777215, 20))
-        self.label_17.setFont(font9)
+        self.label_17.setFont(font10)
 
         self.gridLayout_2.addWidget(self.label_17, 1, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1206,13 +1212,13 @@ class Ui_MainWindow(object):
 
         self.label_9 = QLabel(self.frame_2)
         self.label_9.setObjectName(u"label_9")
-        self.label_9.setFont(font9)
+        self.label_9.setFont(font10)
 
         self.gridLayout_2.addWidget(self.label_9, 0, 3, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_14 = QLabel(self.frame_2)
         self.label_14.setObjectName(u"label_14")
-        self.label_14.setFont(font9)
+        self.label_14.setFont(font10)
 
         self.gridLayout_2.addWidget(self.label_14, 2, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1227,7 +1233,7 @@ class Ui_MainWindow(object):
 
         self.label_7 = QLabel(self.frame_2)
         self.label_7.setObjectName(u"label_7")
-        self.label_7.setFont(font9)
+        self.label_7.setFont(font10)
 
         self.gridLayout_2.addWidget(self.label_7, 0, 2, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1269,7 +1275,7 @@ class Ui_MainWindow(object):
 
         self.label_16 = QLabel(self.frame_2)
         self.label_16.setObjectName(u"label_16")
-        self.label_16.setFont(font9)
+        self.label_16.setFont(font10)
 
         self.gridLayout_2.addWidget(self.label_16, 4, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1284,7 +1290,7 @@ class Ui_MainWindow(object):
 
         self.label_19 = QLabel(self.frame_2)
         self.label_19.setObjectName(u"label_19")
-        self.label_19.setFont(font9)
+        self.label_19.setFont(font10)
 
         self.gridLayout_2.addWidget(self.label_19, 6, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1336,7 +1342,7 @@ class Ui_MainWindow(object):
         self.joint_label = QLabel(self.frame_2)
         self.joint_label.setObjectName(u"joint_label")
         self.joint_label.setMaximumSize(QSize(100, 20))
-        self.joint_label.setFont(font9)
+        self.joint_label.setFont(font10)
 
         self.gridLayout_2.addWidget(self.joint_label, 0, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1378,7 +1384,7 @@ class Ui_MainWindow(object):
 
         self.label_53 = QLabel(self.frame_2)
         self.label_53.setObjectName(u"label_53")
-        self.label_53.setFont(font9)
+        self.label_53.setFont(font10)
 
         self.gridLayout_2.addWidget(self.label_53, 0, 1, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1456,7 +1462,7 @@ class Ui_MainWindow(object):
         self.gridLayout_5.setContentsMargins(0, -1, -1, -1)
         self.label_47 = QLabel(self.frame_4)
         self.label_47.setObjectName(u"label_47")
-        self.label_47.setFont(font9)
+        self.label_47.setFont(font10)
 
         self.gridLayout_5.addWidget(self.label_47, 4, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1480,7 +1486,7 @@ class Ui_MainWindow(object):
 
         self.label_41 = QLabel(self.frame_4)
         self.label_41.setObjectName(u"label_41")
-        self.label_41.setFont(font9)
+        self.label_41.setFont(font10)
 
         self.gridLayout_5.addWidget(self.label_41, 5, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1495,13 +1501,13 @@ class Ui_MainWindow(object):
 
         self.label_40 = QLabel(self.frame_4)
         self.label_40.setObjectName(u"label_40")
-        self.label_40.setFont(font9)
+        self.label_40.setFont(font10)
 
         self.gridLayout_5.addWidget(self.label_40, 3, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_49 = QLabel(self.frame_4)
         self.label_49.setObjectName(u"label_49")
-        self.label_49.setFont(font9)
+        self.label_49.setFont(font10)
 
         self.gridLayout_5.addWidget(self.label_49, 0, 1, 1, 1)
 
@@ -1516,7 +1522,7 @@ class Ui_MainWindow(object):
 
         self.label_48 = QLabel(self.frame_4)
         self.label_48.setObjectName(u"label_48")
-        self.label_48.setFont(font9)
+        self.label_48.setFont(font10)
 
         self.gridLayout_5.addWidget(self.label_48, 6, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1531,21 +1537,21 @@ class Ui_MainWindow(object):
 
         self.label_45 = QLabel(self.frame_4)
         self.label_45.setObjectName(u"label_45")
-        self.label_45.setFont(font9)
+        self.label_45.setFont(font10)
 
         self.gridLayout_5.addWidget(self.label_45, 2, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_43 = QLabel(self.frame_4)
         self.label_43.setObjectName(u"label_43")
         self.label_43.setMaximumSize(QSize(16777215, 20))
-        self.label_43.setFont(font9)
+        self.label_43.setFont(font10)
 
         self.gridLayout_5.addWidget(self.label_43, 1, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.motor_label = QLabel(self.frame_4)
         self.motor_label.setObjectName(u"motor_label")
         self.motor_label.setMaximumSize(QSize(100, 20))
-        self.motor_label.setFont(font9)
+        self.motor_label.setFont(font10)
 
         self.gridLayout_5.addWidget(self.motor_label, 0, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1578,7 +1584,7 @@ class Ui_MainWindow(object):
         self.gridLayout_6.setContentsMargins(0, -1, -1, -1)
         self.label_52 = QLabel(self.frame_5)
         self.label_52.setObjectName(u"label_52")
-        self.label_52.setFont(font9)
+        self.label_52.setFont(font10)
 
         self.gridLayout_6.addWidget(self.label_52, 5, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1611,19 +1617,19 @@ class Ui_MainWindow(object):
 
         self.label_57 = QLabel(self.frame_5)
         self.label_57.setObjectName(u"label_57")
-        self.label_57.setFont(font9)
+        self.label_57.setFont(font10)
 
         self.gridLayout_6.addWidget(self.label_57, 0, 1, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_55 = QLabel(self.frame_5)
         self.label_55.setObjectName(u"label_55")
-        self.label_55.setFont(font9)
+        self.label_55.setFont(font10)
 
         self.gridLayout_6.addWidget(self.label_55, 0, 2, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_59 = QLabel(self.frame_5)
         self.label_59.setObjectName(u"label_59")
-        self.label_59.setFont(font9)
+        self.label_59.setFont(font10)
 
         self.gridLayout_6.addWidget(self.label_59, 6, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1656,14 +1662,14 @@ class Ui_MainWindow(object):
 
         self.label_56 = QLabel(self.frame_5)
         self.label_56.setObjectName(u"label_56")
-        self.label_56.setFont(font9)
+        self.label_56.setFont(font10)
 
         self.gridLayout_6.addWidget(self.label_56, 2, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.motor_label_2 = QLabel(self.frame_5)
         self.motor_label_2.setObjectName(u"motor_label_2")
         self.motor_label_2.setMaximumSize(QSize(100, 20))
-        self.motor_label_2.setFont(font9)
+        self.motor_label_2.setFont(font10)
 
         self.gridLayout_6.addWidget(self.motor_label_2, 0, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1696,20 +1702,20 @@ class Ui_MainWindow(object):
 
         self.label_51 = QLabel(self.frame_5)
         self.label_51.setObjectName(u"label_51")
-        self.label_51.setFont(font9)
+        self.label_51.setFont(font10)
 
         self.gridLayout_6.addWidget(self.label_51, 3, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_54 = QLabel(self.frame_5)
         self.label_54.setObjectName(u"label_54")
         self.label_54.setMaximumSize(QSize(16777215, 20))
-        self.label_54.setFont(font9)
+        self.label_54.setFont(font10)
 
         self.gridLayout_6.addWidget(self.label_54, 1, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_58 = QLabel(self.frame_5)
         self.label_58.setObjectName(u"label_58")
-        self.label_58.setFont(font9)
+        self.label_58.setFont(font10)
 
         self.gridLayout_6.addWidget(self.label_58, 4, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1870,49 +1876,49 @@ class Ui_MainWindow(object):
 "hr { height: 1px; border-width: 0; }\n"
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:9pt;\"><br /></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:9pt;\"><br /></p></body></html>", None))
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.dh_j2_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:9pt;\"><br /></p></body></html>", None))
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.dh_j3_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:9pt;\"><br /></p></body></html>", None))
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.dh_j4_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:9pt;\"><br /></p></body></html>", None))
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.dh_j5_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:9pt;\"><br /></p></body></html>", None))
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.dh_j6_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "hr { height: 1px; border-width: 0; }\n"
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:9pt;\"><br /></p></body></html>", None))
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.label_39.setText(QCoreApplication.translate("MainWindow", u"Homing Params:", None))
         self.label_47.setText(QCoreApplication.translate("MainWindow", u"4", None))
         self.label_41.setText(QCoreApplication.translate("MainWindow", u"5", None))
