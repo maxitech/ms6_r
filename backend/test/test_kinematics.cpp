@@ -67,12 +67,6 @@ void setUp(void)
 void tearDown(void)
 {
     delete kin;
-    delete cfg1;
-    delete cfg2;
-    delete cfg3;
-    delete cfg4;
-    delete cfg5;
-    delete cfg6;
 
     delete motor1;
     delete motor2;
@@ -81,8 +75,12 @@ void tearDown(void)
     delete motor5;
     delete motor6;
 
-    kin  = nullptr;
-    cfg1 = cfg2 = cfg3 = cfg4 = cfg5 = cfg6 = nullptr;
+    for (auto cfg : motorConfigs)
+    {
+        delete cfg;
+    }
+
+    kin    = nullptr;
     motor1 = motor2 = motor3 = motor4 = motor5 = motor6 = nullptr;
 }
 
