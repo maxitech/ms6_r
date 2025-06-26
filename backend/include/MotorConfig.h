@@ -53,22 +53,31 @@ struct MotorConfig
     float gearboxRatio;
 
     /**
+     * @brief Home offset in steps.
+     * This is set to the defined home position and used to calculate the mathmatical 0° position after homing.
+     * Default is 0.
+     */
+    int homeOffsetSteps;
+
+    /**
      * @brief Constructs a new MotorConfig object.
      *
      * @param motor Pointer to the Stepper motor instance.
+     * @param homeOffset Offset in steps from limit switch(=== HOME_POS).
      * @param spr Steps per revolution of the motor.
      * @param ms Microsteps per full step.
      * @param drt Number of teeth on the driving pulley (default 1.0).
      * @param dnt Number of teeth on the driven pulley (default 1.0).
      * @param gr Gearbox ratio applied to the motor (default 1.0).
      */
-    MotorConfig(Stepper* motor, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
+    MotorConfig(Stepper* motor, int homeOffset, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
         : motor(motor)
         , stepsPerRev(spr)
         , microsteps(ms)
         , driverTeeth(drt)
         , drivenTeeth(dnt)
         , gearboxRatio(gr)
+        , homeOffsetSteps(homeOffset)
     {
     }
 };
