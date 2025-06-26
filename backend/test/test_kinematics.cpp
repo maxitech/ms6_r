@@ -46,20 +46,22 @@ void setUp(void)
     motor5 = new TS4::Stepper(10, 11);
     motor6 = new TS4::Stepper(12, 13);
 
-    motor1->setPosition(1600);
-    motor2->setPosition(-3200);
-    motor3->setPosition(6400);
+    motor1->setPosition(20000);  // 45° in steps
+    motor2->setPosition(122000); // 45° in steps
+    motor3->setPosition(20000);  // 45° in steps
+    motor4->setPosition(TEST_HOME_POS_J4);
+    motor5->setPosition(TEST_HOME_POS_J5);
+    motor6->setPosition(TEST_HOME_POS_J6);
 
-    cfg1 = new MotorConfig(motor1, 200, 16, 20, 40, 2.0f);
-    cfg2 = new MotorConfig(motor2, 200, 16, 20, 40, 2.0f);
-    cfg3 = new MotorConfig(motor3, 200, 16, 20, 40, 2.0f);
-    cfg4 = new MotorConfig(motor4, 200, 16, 20, 40, 2.0f);
-    cfg5 = new MotorConfig(motor5, 200, 16, 20, 40, 2.0f);
-    cfg6 = new MotorConfig(motor6, 200, 16, 20, 40, 2.0f);
+    motorConfigs.clear();
+    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
+    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor4, TEST_HOME_POS_J4, 400, 64, 16.0f, 60.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor5, TEST_HOME_POS_J5, 200, 64, 16.0f, 32.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor6, TEST_HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
 
-    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
-
-    kin = new Kinematics(configs, std::vector<DHparam> {});
+    kin = new Kinematics(motorConfigs, std::vector<DHparam> {});
 }
 
 void tearDown(void)
