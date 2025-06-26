@@ -58,7 +58,7 @@ public:
      * @param motorConfigs Reference to a vector of MotorConfig's for the robot's motors.
      * @param limitSwitches Reference to a LimitSwitches instance for diagnostic testing.
      */
-    ProgramLoader(Homing* homingManager, std::vector<MotorConfig>& motorConfigs, LimitSwitches& limitSwitches);
+    ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& motorConfigs, LimitSwitches& limitSwitches);
 
     /**
      * @brief Handles incoming command parts and loads a matching program.
@@ -153,13 +153,13 @@ private:
     void _stopMotors();
 
     // ******************************MEMBER VARIABLES********************************
-    Homing*                   _homingManager;                   ///< Pointer to the Homing manager for homing routines.
-    std::vector<MotorConfig>& _motorConfigs;                    ///< Vector of motor configurations for the robot.
-    ProgramState              _currentProgramState = IDLE;      ///< Current active program state. @internal
-    ExecutionState            _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
-    LimitSwitches&            _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
-    std::vector<String>       _arguments;                       ///< Arguments passed with the command. @internal
-    String                    _cmd;                             ///< Current command @internal
+    Homing*                    _homingManager;                   ///< Pointer to the Homing manager for homing routines.
+    std::vector<MotorConfig*>& _motorConfigs;                    ///< Vector of motor configurations for the robot. Note: Setup class has full ownership of this vector.
+    ProgramState               _currentProgramState = IDLE;      ///< Current active program state. @internal
+    ExecutionState             _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
+    LimitSwitches&             _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
+    std::vector<String>        _arguments;                       ///< Arguments passed with the command. @internal
+    String                     _cmd;                             ///< Current command @internal
 };
 
 #endif // PROGRAMLOADER_H
