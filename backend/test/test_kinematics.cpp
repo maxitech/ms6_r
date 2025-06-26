@@ -212,12 +212,21 @@ void test_forwardKinematics_correctPose_w_toolFrame(void)
 
 void test_fk_to_ik_angle_reconstruction()
 {
-    cfg1->motor->setPosition(0);
-    cfg5->motor->setPosition(3200);
+    motor1->setPosition(10000); // 0° in steps
+    motor2->setPosition(10000); // 0° in steps
+    motor3->setPosition(10000); // 0° in steps
+    motor5->setPosition(16400); // 90° in steps
 
-    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
+    motorConfigs.clear();
+    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
+    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor4, TEST_HOME_POS_J4, 400, 64, 16.0f, 60.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor5, 10000, 200, 64, 16.0f, 32.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor6, TEST_HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
+
     delete kin;
-    kin = new Kinematics(configs, dhParams);
+    kin = new Kinematics(motorConfigs, dhParams);
 
     Angles original = {0, 0, 0, 0, 90.0f, 0};
     Pose   fkPose   = kin->forwardKinematics();
