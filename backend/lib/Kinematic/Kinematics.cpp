@@ -1,28 +1,50 @@
 #include "Kinematics.h"
 
-Kinematics::Kinematics(const std::vector<MotorConfig>& motorConfigs, const std::vector<DHparam>& dhParams)
+Kinematics::Kinematics(const std::vector<MotorConfig*>& motorConfigs, const std::vector<DHparam>& dhParams)
     : _motorConfigs(motorConfigs)
     , _dhParams(dhParams)
 {
 }
 
-double Kinematics::_totalRatio(const MotorConfig& motorConfig) const
+bool Kinematics::_isValidConfig(const MotorConfig* cfg) const
 {
-    return (motorConfig.gearboxRatio * (motorConfig.drivenTeeth / motorConfig.driverTeeth));
+    return cfg != nullptr && cfg->motor != nullptr && cfg->homeOffsetSteps > 0 && cfg->stepsPerRev > 0 && cfg->microsteps > 0;
 }
 
-double Kinematics::_stepsPerRev(const MotorConfig& motorConfig) const
+double Kinematics::_totalRatio(const MotorConfig* motorConfig) const
 {
-    return (motorConfig.stepsPerRev * motorConfig.microsteps * _totalRatio(motorConfig));
+    if (!_isValidConfig(motorConfig))
+    {
+        return 0.0;
+    }
+    return (motorConfig->gearboxRatio * (motorConfig->drivenTeeth / motorConfig->driverTeeth));
 }
 
-double Kinematics::_stepsToDeg(const MotorConfig& motorConfig, const int currPosInSteps) const
+double Kinematics::_stepsPerRev(const MotorConfig* motorConfig) const
 {
-    return (static_cast<double>(currPosInSteps) / _stepsPerRev(motorConfig)) * 360.0;
+    if (!_isValidConfig(motorConfig))
+    {
+        return 0.0;
+    }
+    return (motorConfig->stepsPerRev * motorConfig->microsteps * _totalRatio(motorConfig));
 }
 
-int Kinematics::_degToSteps(const MotorConfig& motorConfig, const double deg) const
+double Kinematics::_stepsToDeg(const MotorConfig* motorConfig, const int currPosInSteps) const
 {
+    if (!_isValidConfig(motorConfig))
+    {
+        return 0.0;
+    }
+    int relativeSteps = currPosInSteps - motorConfig->homeOffsetSteps;
+    return (static_cast<double>(relativeSteps) / _stepsPerRev(motorConfig)) * 360.0;
+}
+
+int Kinematics::_degToSteps(const MotorConfig* motorConfig, const double deg) const
+{
+    if (!_isValidConfig(motorConfig))
+    {
+        return 0;
+    }
     return static_cast<int>((deg / 360.0) * _stepsPerRev(motorConfig));
 }
 
