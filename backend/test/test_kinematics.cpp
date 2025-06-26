@@ -20,6 +20,13 @@ MotorConfig* cfg6 = nullptr;
 
 Kinematics* kin = nullptr;
 
+int TEST_HOME_POS_J1 = 40'000;
+int TEST_HOME_POS_J2 = 55'000;
+int TEST_HOME_POS_J3 = -20'000;
+int TEST_HOME_POS_J4 = -24'000;
+int TEST_HOME_POS_J5 = -22'000;
+int TEST_HOME_POS_J6 = -6'400;
+
 std::vector<DHparam> dhParams = {
     {37.5f, -1.571f, 135.300f},
     {160.0f, 0.0f, 0.0f},
