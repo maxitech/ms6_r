@@ -3,7 +3,7 @@
 #include <MotorConfig.h>
 #include <unity.h>
 
-// Globale Motor- und Config-Objekte
+// Global variables
 TS4::Stepper* motor1 = nullptr;
 TS4::Stepper* motor2 = nullptr;
 TS4::Stepper* motor3 = nullptr;
@@ -34,6 +34,8 @@ std::vector<DHparam> dhParams = {
     {0.0f, -1.571f, 138.400f},
     {0.0f, 1.571f, 0.0f},
     {0.0f, 0.0f, 29.270f}};
+
+std::vector<MotorConfig*> motorConfigs;
 
 void setUp(void)
 {
