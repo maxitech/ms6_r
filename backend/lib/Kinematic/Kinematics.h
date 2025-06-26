@@ -62,9 +62,10 @@ public:
 
     /**
      * @brief Returns current joint angles in radians.
-     * @return Vector of joint angles (rad).
+     * @param radOrDeg 1 for radians, 0 for degrees.
+     * @return Vector of joint angles (rad || deg).
      */
-    std::vector<double> getJointAnglesInRad() const;
+    std::vector<double> getJointAnglesInRadOrDeg(const int radOrDeg) const;
 
     /**
      * @brief Sets the tool frame transformation matrix.
