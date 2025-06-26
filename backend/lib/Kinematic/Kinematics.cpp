@@ -99,23 +99,37 @@ Eigen::Matrix4d Kinematics::_createTransformationMatrix(double x, double y, doub
     return T;
 }
 
-std::vector<double> Kinematics::getJointAnglesInRad() const
+std::vector<double> Kinematics::getJointAnglesInRadOrDeg(const int radOrDeg) const
 {
-    std::vector<double> angles;
-    if (_motorConfigs.empty() || _motorConfigs.size() > 100)
+
+    if (_motorConfigs.empty() || _motorConfigs.size() < 6) // ensure not more than 6 motors
     {
         return {};
     }
+    std::vector<double> anglesRad;
+    std::vector<double> anglesDeg;
 
-    angles.reserve(_motorConfigs.size());
+    anglesRad.reserve(_motorConfigs.size());
+    anglesDeg.reserve(_motorConfigs.size());
 
     for (const auto& cfg : _motorConfigs)
     {
-        double deg = _stepsToDeg(cfg, cfg.motor->getPosition());
-        angles.push_back(_degToRad(deg));
+        double deg = _stepsToDeg(cfg, cfg->motor->getPosition());
+        anglesDeg.push_back(deg);
+        anglesRad.push_back(_degToRad(deg));
     }
-
-    return angles;
+    if (radOrDeg == 1) // 1 for radians, 0 for degrees
+    {
+        return anglesRad; // already in radians
+    }
+    else if (radOrDeg == 0)
+    {
+        return anglesDeg; // return degrees
+    }
+    else
+    {
+        return {};
+    }
 }
 
 void Kinematics::setToolFrame(double x, double y, double z, double yaw, double pitch, double roll)
@@ -126,7 +140,7 @@ void Kinematics::setToolFrame(double x, double y, double z, double yaw, double p
 Pose Kinematics::forwardKinematics()
 {
     Eigen::Matrix4d     T      = Eigen::Matrix4d::Identity();
-    std::vector<double> angles = getJointAnglesInRad();
+    std::vector<double> angles = getJointAnglesInRadOrDeg(1); // Get angles in radians
 
     // Compute full transformation matrix
     for (size_t i = 0; i < _dhParams.size(); ++i)
@@ -273,8 +287,8 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
 
     // Determine if the wrist is flipped (J5 angle negative)
     bool                flipWrist = false;
-    std::vector<double> angles    = getJointAnglesInRad();
-    if (angles.size() >= 6) // ? Avoid out-of-bounds access – update this if more joints are added
+    std::vector<double> angles    = getJointAnglesInRadOrDeg(1); // Get angles in radians
+    if (angles.size() >= 6)                                      // ? Avoid out-of-bounds access – update this if more joints are added
     {
         flipWrist = angles[4] < 0;
     }
