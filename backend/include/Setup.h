@@ -131,13 +131,7 @@ private:
     Stepper motorJ1, motorJ2, motorJ3, motorJ4, motorJ5, motorJ6; // int stepPin, int dirPin
 
     // Initialize MotorConfigs
-    MotorConfig              mCfg1        = {&motorJ1, 200, 4, 16.0f, 100.0f, 1.0f};
-    MotorConfig              mCfg2        = {&motorJ2, 200, 4, 16.0f, 80.0f, 14.0f};
-    MotorConfig              mCfg3        = {&motorJ3, 200, 4, 16.0f, 100.0f, 1.0f};
-    MotorConfig              mCfg4        = {&motorJ4, 400, 4, 16.0f, 60.0f, 1.0f};
-    MotorConfig              mCfg5        = {&motorJ5, 200, 4, 16.0f, 32.0f, 1.0f};
-    MotorConfig              mCfg6        = {&motorJ6, 200, 4, 1.0f, 1.0f, 1.0f};
-    std::vector<MotorConfig> motorConfigs = {mCfg1, mCfg2, mCfg3, mCfg4, mCfg5, mCfg6};
+    std::vector<MotorConfig*> motorConfigs; // Vector of MotorConfig pointers
 
     // Initialize Kinematics with DH parameters
     std::vector<DHparam> dhParams;
