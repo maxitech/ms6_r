@@ -84,20 +84,70 @@ void test_kinematics_initialization(void)
     TEST_ASSERT_NOT_NULL(motor1);
 }
 
-void test_getJointAnglesInRad_returns_vector(void)
+void test_getJointAnglesInRadOrDeg_returns_vector(void)
 {
     TEST_ASSERT_NOT_NULL(kin);
-    std::vector<double> angles = kin->getJointAnglesInRad();
-    TEST_ASSERT_TRUE(angles.size() > 0);
-    TEST_ASSERT_NOT_EQUAL(0.0f, angles[0]);
+    std::vector<double> anglesRad = kin->getJointAnglesInRadOrDeg(1); // 1 for radians
+    std::vector<double> anglesDeg = kin->getJointAnglesInRadOrDeg(0); // 0 for degrees
+    TEST_ASSERT_TRUE(anglesRad.size() > 0);
+    TEST_ASSERT_TRUE(anglesDeg.size() > 0);
+    TEST_ASSERT_TRUE(anglesRad[0] > 0);
+    TEST_ASSERT_TRUE(anglesDeg[0] > 0);
 }
 
-void test_getJointAnglesInRad_should_return_correct_angle_in_radians(void)
+void test_getJointAnglesInRadOrDeg_should_return_correct_angle_in_degree(void)
 {
+    motor1->setPosition(20000);  // 45° in steps
+    motor2->setPosition(122000); // 45° in steps
+    motor3->setPosition(20000);  // 45° in steps
+    motorConfigs.clear();
+    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
+    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor4, TEST_HOME_POS_J4, 400, 64, 16.0f, 60.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor5, TEST_HOME_POS_J5, 200, 64, 16.0f, 32.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor6, TEST_HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
+
+    delete kin;
+    kin = new Kinematics(motorConfigs, dhParams);
     TEST_ASSERT_NOT_NULL(kin);
-    std::vector<double> actual   = kin->getJointAnglesInRad();
-    double              expected = M_PI / 4.0f; // 45°
+    std::vector<double> actual = kin->getJointAnglesInRadOrDeg(0); // 0 for degrees
+    // Debug output
+    // for (size_t i = 0; i < actual.size(); ++i)
+    // {
+    //     std::cout << "Joint " << (i + 1) << " angle in deg: " << actual[i] << std::endl;
+    // }
+    double expected = 45.0; // 45°
     TEST_ASSERT_FLOAT_WITHIN(0.001f, expected, actual[0]);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, expected, actual[1]); // Assuming both motors are set to 45°
+}
+
+void test_getJointAnglesInRadOrDeg_should_return_correct_angle_in_radian(void)
+{
+    motor1->setPosition(30000);  // 1.57 rad (90°) in steps
+    motor2->setPosition(234000); // 1.57 rad (90°) in steps
+    motor3->setPosition(30000);  // 1.57 rad (90°) in steps
+    motorConfigs.clear();
+    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
+    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor4, TEST_HOME_POS_J4, 400, 4, 16.0f, 60.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor5, TEST_HOME_POS_J5, 200, 4, 16.0f, 32.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor6, TEST_HOME_POS_J6, 200, 4, 1.0f, 1.0f, 1.0f});
+
+    delete kin;
+    kin = new Kinematics(motorConfigs, dhParams);
+    TEST_ASSERT_NOT_NULL(kin);
+    std::vector<double> actual = kin->getJointAnglesInRadOrDeg(1); // 1 for radians
+    // Debug output
+    // for (size_t i = 0; i < actual.size(); ++i)
+    // {
+    //     std::cout << "Joint " << (i + 1) << " angle in radian: " << actual[i] << std::endl;
+    // }
+    double expected = 1.57; // 90° in radians
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, expected, actual[0]);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, expected, actual[1]);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, expected, actual[2]);
 }
 
 void test_forwardKinematics_correctPose(void)
