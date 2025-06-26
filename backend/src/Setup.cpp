@@ -201,6 +201,19 @@ void Setup::update(const String& jsonString)
             }
         }
 
+        for (auto cfg : motorConfigs)
+        {
+            delete cfg;
+        }
+        motorConfigs.clear();
+        motorConfigs.reserve(6);
+        motorConfigs.push_back(new MotorConfig {&motorJ1, HOME_POS_J1, 200, 64, 16.0f, 100.0f, 1.0f});
+        motorConfigs.push_back(new MotorConfig {&motorJ2, HOME_POS_J2, 200, 64, 16.0f, 80.0f, 14.0f});
+        motorConfigs.push_back(new MotorConfig {&motorJ3, HOME_POS_J3, 200, 64, 16.0f, 100.0f, 1.0f});
+        motorConfigs.push_back(new MotorConfig {&motorJ4, HOME_POS_J4, 400, 64, 16.0f, 60.0f, 1.0f});
+        motorConfigs.push_back(new MotorConfig {&motorJ5, HOME_POS_J5, 200, 64, 16.0f, 32.0f, 1.0f});
+        motorConfigs.push_back(new MotorConfig {&motorJ6, HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
+
         if (kin)
             delete kin;
 
