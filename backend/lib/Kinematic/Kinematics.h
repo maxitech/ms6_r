@@ -58,7 +58,7 @@ public:
      * @param motorConfigs Motor configuration list.
      * @param dhParams Denavit-Hartenberg parameters.
      */
-    Kinematics(const std::vector<MotorConfig>& motorConfigs, const std::vector<DHparam>& dhParams);
+    Kinematics(const std::vector<MotorConfig*>& motorConfigs, const std::vector<DHparam>& dhParams);
 
     /**
      * @brief Returns current joint angles in radians.
@@ -96,10 +96,10 @@ public:
     Angles inverseKinematics(double x, double y, double z, double yaw, double pitch, double roll);
 
 private:
-    double _totalRatio(const MotorConfig& motorConfig) const;
-    double _stepsPerRev(const MotorConfig& motorConfig) const;
-    double _stepsToDeg(const MotorConfig& motorConfig, const int currPosInSteps) const;
-    int    _degToSteps(const MotorConfig& motorConfig, const double deg) const;
+    double _totalRatio(const MotorConfig* motorConfig) const;
+    double _stepsPerRev(const MotorConfig* motorConfig) const;
+    double _stepsToDeg(const MotorConfig* motorConfig, const int currPosInSteps) const;
+    int    _degToSteps(const MotorConfig* motorConfig, const double deg) const;
     double _degToRad(const double deg) const;
     double _radToDeg(const double rad) const;
 
@@ -124,9 +124,14 @@ private:
      */
     Eigen::Matrix4d _createTransformationMatrix(double x, double y, double z, double yaw, double pitch, double roll) const;
 
-    const std::vector<MotorConfig> _motorConfigs;                                  ///< Motor configuration for each joint
-    const std::vector<DHparam>     _dhParams;                                      ///< DH parameters for each joint
-    Eigen::Matrix4d                _toolFrameMatrix = Eigen::Matrix4d::Identity(); ///< Tool frame transformation matrix
+    // Helper function
+    bool _isValidConfig(const MotorConfig* cfg) const;
+
+    // Note: Kineaatics class does not manage the memory of MotorConfig pointers.
+    // Setup class is responsible for creating and managin MotorConfig objects.
+    const std::vector<MotorConfig*>& _motorConfigs;                                  ///< Motor configuration for each joint
+    const std::vector<DHparam>       _dhParams;                                      ///< DH parameters for each joint
+    Eigen::Matrix4d                  _toolFrameMatrix = Eigen::Matrix4d::Identity(); ///< Tool frame transformation matrix
 };
 
 #endif // KINEMATICS_H
