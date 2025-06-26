@@ -109,17 +109,6 @@ void test_getJointAnglesInRadOrDeg_returns_vector(void)
 
 void test_getJointAnglesInRadOrDeg_should_return_correct_angle_in_degree(void)
 {
-    motor1->setPosition(20000);  // 45° in steps
-    motor2->setPosition(122000); // 45° in steps
-    motor3->setPosition(20000);  // 45° in steps
-    motorConfigs.clear();
-    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
-    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor4, TEST_HOME_POS_J4, 400, 64, 16.0f, 60.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor5, TEST_HOME_POS_J5, 200, 64, 16.0f, 32.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor6, TEST_HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
-
     delete kin;
     kin = new Kinematics(motorConfigs, dhParams);
     TEST_ASSERT_NOT_NULL(kin);
