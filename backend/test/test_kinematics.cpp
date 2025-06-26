@@ -89,7 +89,10 @@ void tearDown(void)
 void test_kinematics_initialization(void)
 {
     TEST_ASSERT_NOT_NULL(kin);
-    TEST_ASSERT_NOT_NULL(cfg1);
+    for (const auto& cfg : motorConfigs)
+    {
+        TEST_ASSERT_NOT_NULL(cfg);
+    }
     TEST_ASSERT_NOT_NULL(motor1);
 }
 
