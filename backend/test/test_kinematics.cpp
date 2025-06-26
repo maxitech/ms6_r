@@ -256,11 +256,23 @@ void test_fk_to_ik_angle_reconstruction()
 
 void test_inverseKinematics_static_j5_positive(void)
 {
-    cfg5->motor->setPosition(3200); // Reset for consistent test
+    motor1->setPosition(20000);  // 45° in steps
+    motor2->setPosition(92133);  // 33° in steps
+    motor3->setPosition(15111);  // 23° in steps
+    motor4->setPosition(55333);  // 170° in steps
+    motor5->setPosition(16400);  // 90° in steps
+    motor6->setPosition(13.947); // 111° in steps
 
-    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
+    motorConfigs.clear();
+    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
+    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor4, 10000, 400, 64, 16.0f, 60.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor5, 10000, 200, 64, 16.0f, 32.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor6, 10000, 200, 64, 1.0f, 1.0f, 1.0f});
+
     delete kin;
-    kin = new Kinematics(configs, dhParams);
+    kin = new Kinematics(motorConfigs, dhParams);
 
     Angles original = {45.0f, 33.0f, 23.0f, 170.0f, 90.0f, 111.0f}; // Represents the expected angles
     Angles angles   = kin->inverseKinematics(164.957f, 172.145f, 179.255f, -24.991f, 11.914f, -55.749f);
@@ -285,12 +297,23 @@ void test_inverseKinematics_static_j5_positive(void)
 
 void test_inverseKinematics_static_j5_negative(void)
 {
-    cfg1->motor->setPosition(0);     // Reset for consistent test
-    cfg5->motor->setPosition(-3200); // Reset for consistent test
+    motor1->setPosition(20000);  // 45° in steps
+    motor2->setPosition(92133);  // 33° in steps
+    motor3->setPosition(15111);  // 23° in steps
+    motor4->setPosition(55333);  // 170° in steps
+    motor5->setPosition(3600);   // -90° in steps
+    motor6->setPosition(13.947); // 111° in steps
 
-    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
+    motorConfigs.clear();
+    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
+    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor4, 10000, 400, 64, 16.0f, 60.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor5, 10000, 200, 64, 16.0f, 32.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor6, 10000, 200, 64, 1.0f, 1.0f, 1.0f});
+
     delete kin;
-    kin = new Kinematics(configs, dhParams);
+    kin = new Kinematics(motorConfigs, dhParams);
 
     Angles original = {45.0f, 33.0f, 23.0f, 170.0f, -90.0f, 111.0f}; // Represents the expected angles
     Angles angles   = kin->inverseKinematics(138.349f, 131.161f, 147.017f, -49.106f, -22.815f, 126.687f);
@@ -316,11 +339,22 @@ void test_inverseKinematics_static_j5_negative(void)
 
 void test_inverseKinematics_static_j5_positive_w_toolFrame(void)
 {
-    cfg5->motor->setPosition(3200); // Reset for consistent test
+    motor1->setPosition(20000);  // 45° in steps
+    motor2->setPosition(92133);  // 33° in steps
+    motor3->setPosition(15111);  // 23° in steps
+    motor4->setPosition(55333);  // 170° in steps
+    motor5->setPosition(16400);  // 90° in steps
+    motor6->setPosition(13.947); // 111° in steps
 
-    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
+    motorConfigs.clear();
+    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
+    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor4, 10000, 400, 64, 16.0f, 60.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor5, 10000, 200, 64, 16.0f, 32.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor6, 10000, 200, 64, 1.0f, 1.0f, 1.0f});
     delete kin;
-    kin = new Kinematics(configs, dhParams);
+    kin = new Kinematics(motorConfigs, dhParams);
 
     Angles original = {45.0f, 33.0f, 23.0f, 170.0f, 90.0f, 111.0f}; // Represents the expected angles
     kin->setToolFrame(0.0f, 0.0f, 23.5f, 0.0f, 0.0f, 0.0f);
@@ -346,11 +380,22 @@ void test_inverseKinematics_static_j5_positive_w_toolFrame(void)
 
 void test_inverseKinematics_static_j5_negative_w_toolFrame(void)
 {
-    cfg5->motor->setPosition(-3200); // Reset for consistent test
+    motor1->setPosition(20000);  // 45° in steps
+    motor2->setPosition(92133);  // 33° in steps
+    motor3->setPosition(15111);  // 23° in steps
+    motor4->setPosition(55333);  // 170° in steps
+    motor5->setPosition(3600);   // -90° in steps
+    motor6->setPosition(13.947); // 111° in steps
 
-    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
+    motorConfigs.clear();
+    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
+    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor4, 10000, 400, 64, 16.0f, 60.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor5, 10000, 200, 64, 16.0f, 32.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig {motor6, 10000, 200, 64, 1.0f, 1.0f, 1.0f});
     delete kin;
-    kin = new Kinematics(configs, dhParams);
+    kin = new Kinematics(motorConfigs, dhParams);
 
     Angles original = {45.0f, 33.0f, 23.0f, 170.0f, -90.0f, 111.0f}; // Represents the expected angles
     kin->setToolFrame(0.0f, 0.0f, 23.5f, 0.0f, 0.0f, 0.0f);
@@ -378,8 +423,9 @@ int runUnityTests(void)
 {
     UNITY_BEGIN();
     RUN_TEST(test_kinematics_initialization);
-    RUN_TEST(test_getJointAnglesInRad_returns_vector);
-    RUN_TEST(test_getJointAnglesInRad_should_return_correct_angle_in_radians);
+    RUN_TEST(test_getJointAnglesInRadOrDeg_returns_vector);
+    RUN_TEST(test_getJointAnglesInRadOrDeg_should_return_correct_angle_in_degree);
+    RUN_TEST(test_getJointAnglesInRadOrDeg_should_return_correct_angle_in_radian);
     RUN_TEST(test_forwardKinematics_correctPose);
     RUN_TEST(test_forwardKinematics_correctPose_w_toolFrame);
     RUN_TEST(test_fk_to_ik_angle_reconstruction);
