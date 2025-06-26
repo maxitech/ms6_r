@@ -1,8 +1,9 @@
 #include "ProgramLoader.h"
+#include "Setup.h"
 #include "Utils.h"
 #include <map>
 
-ProgramLoader::ProgramLoader(Homing* homingManager, std::vector<MotorConfig>& configs, LimitSwitches& limitSwitches)
+ProgramLoader::ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& configs, LimitSwitches& limitSwitches)
     : _homingManager(homingManager)
     , _motorConfigs(configs)
     , _limitSwitches(limitSwitches) {};
@@ -205,10 +206,18 @@ void ProgramLoader::_home()
     }
     else
     {
+        Pose pose = Setup::getInstance().getKinematics()->forwardKinematics();
+        Serial.println(pose.x);
+        Serial.println(pose.y);
+        Serial.println(pose.z);
+        Serial.println(pose.roll);
+        Serial.println(pose.pitch);
+        Serial.println(pose.yaw);
+
         // Maybe reset homing state later
         for (size_t i = 0; i < _motorConfigs.size(); ++i)
         {
-            const int motorPos = _motorConfigs[i].motor->getPosition();
+            const int motorPos = _motorConfigs[i]->motor->getPosition();
             Serial.print("DATA:MOTOR_POS_STEPS*");
             Serial.print(static_cast<int>(i + 1));
             Serial.print("#");
@@ -254,7 +263,7 @@ void ProgramLoader::_main()
                 int dir    = (direction == "POS") ? 1 : -1;
                 int dirVel = velocity * dir;
 
-                _motorConfigs[motorIdx].motor->rotateAsync(dirVel);
+                _motorConfigs[motorIdx]->motor->rotateAsync(dirVel);
             }
             break;
 
@@ -262,7 +271,7 @@ void ProgramLoader::_main()
             if (currJogState != IDLE_JOG)
             {
                 // stop
-                _motorConfigs[motorIdx].motor->emergencyStop();
+                _motorConfigs[motorIdx]->motor->emergencyStop();
                 currJogState = IDLE_JOG;
             }
             break;
@@ -279,7 +288,7 @@ void ProgramLoader::_main()
         static unsigned long lastSendTime = 0;
         if (Utils::nonBlockingDelay(100, lastSendTime))
         {
-            const int motorPos = _motorConfigs[motorIdx].motor->getPosition();
+            const int motorPos = _motorConfigs[motorIdx]->motor->getPosition();
             Serial.print("DATA:MOTOR_POS_STEPS*");
             Serial.print(motorIdx + 1);
             Serial.print("#");
@@ -305,11 +314,11 @@ JogCommand ProgramLoader::_getJogCommand(const String& str)
 
 void ProgramLoader::_stopMotors()
 {
-    for (MotorConfig& cfg : _motorConfigs)
+    for (MotorConfig* cfg : _motorConfigs)
     {
-        if (cfg.motor != nullptr && cfg.motor->isMoving)
+        if (cfg->motor != nullptr && cfg->motor->isMoving)
         {
-            cfg.motor->emergencyStop(); // Stop all motors if they are moving
+            cfg->motor->emergencyStop(); // Stop all motors if they are moving
         }
     }
 }
