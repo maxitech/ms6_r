@@ -153,11 +153,11 @@ void test_getJointAnglesInRadOrDeg_should_return_correct_angle_in_radian(void)
 
 void test_forwardKinematics_correctPose(void)
 {
-    cfg1->motor->setPosition(0);
-
-    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
+    motor1->setPosition(10000); // 0° in steps
+    motor2->setPosition(10000); // 0° in steps
+    motor3->setPosition(10000); // 0° in steps
     delete kin;
-    kin = new Kinematics(configs, dhParams);
+    kin = new Kinematics(motorConfigs, dhParams);
 
     Pose result = kin->forwardKinematics();
 
@@ -181,24 +181,23 @@ void test_forwardKinematics_correctPose(void)
 
 void test_forwardKinematics_correctPose_w_toolFrame(void)
 {
-    cfg1->motor->setPosition(0);
-    cfg5->motor->setPosition(3200);
-
-    std::vector<MotorConfig> configs = {*cfg1, *cfg2, *cfg3, *cfg4, *cfg5, *cfg6};
+    motor1->setPosition(10000); // 0° in steps
+    motor2->setPosition(10000); // 0° in steps
+    motor3->setPosition(10000); // 0° in steps
     delete kin;
-    kin = new Kinematics(configs, dhParams);
+    kin = new Kinematics(motorConfigs, dhParams);
 
     kin->setToolFrame(10.0f, 20.0f, 30.0f, 45.0f, 60.0f, 90.0f);
     Pose result = kin->forwardKinematics();
 
     // Expected pose vals with tool frame
-    float expectedX = 165.90f;
+    float expectedX = 235.170f;
     float expectedY = 20.0f;
-    float expectedZ = 251.030f;
+    float expectedZ = 300.30f;
 
-    float expectedYaw   = 135.0f;
-    float expectedPitch = -60.0f;
-    float expectedRoll  = -90.0f;
+    float expectedYaw   = 157.792f;
+    float expectedPitch = 20.0f;
+    float expectedRoll  = -139.107f;
 
     // Validate results
     TEST_ASSERT_FLOAT_WITHIN(0.1f, expectedX, result.x);
