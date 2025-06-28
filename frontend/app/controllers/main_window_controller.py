@@ -159,6 +159,23 @@ class MainWindowController:
                     label_widget = getattr(self._ui, label_name, None)
                     if label_widget is not None:
                         label_widget.setText(pos)
+            elif "FK_POSE" in data_content:
+                match = re.search(r"\*(.*)", data_content)
+                if match:
+                    pose_values = match.group(1).split(",")
+                    if len(pose_values) == 6:
+                        x, y, z, roll, pitch, yaw = pose_values
+                        self._ui.tool_x_label.setText(x)
+                        self._ui.tool_y_label.setText(y)
+                        self._ui.tool_z_label.setText(z)
+                        self._ui.tool_rx_label.setText(roll)
+                        self._ui.tool_ry_label.setText(pitch)
+                        self._ui.tool_rz_label.setText(yaw)
+                    else:
+                        print(
+                            "[ERROR]: FK_POSE received but did not contain 6 values:",
+                            pose_values,
+                        )
 
     # ***************Handlers*******************
     def _handle_con_btn_click(self):
