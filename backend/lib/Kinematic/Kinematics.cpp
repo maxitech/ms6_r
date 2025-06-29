@@ -8,7 +8,7 @@ Kinematics::Kinematics(const std::vector<MotorConfig*>& motorConfigs, const std:
 
 bool Kinematics::_isValidConfig(const MotorConfig* cfg) const
 {
-    return cfg != nullptr && cfg->motor != nullptr && cfg->homeOffsetSteps > 0 && cfg->stepsPerRev > 0 && cfg->microsteps > 0;
+    return cfg != nullptr && cfg->motor != nullptr && cfg->stepsPerRev > 0 && cfg->microsteps > 0;
 }
 
 double Kinematics::_totalRatio(const MotorConfig* motorConfig) const
