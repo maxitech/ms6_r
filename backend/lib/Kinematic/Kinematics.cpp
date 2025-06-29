@@ -103,7 +103,7 @@ Eigen::Matrix4d Kinematics::_createTransformationMatrix(double x, double y, doub
 std::vector<double> Kinematics::getJointAnglesInRadOrDeg(const int radOrDeg) const
 {
 
-    if (_motorConfigs.empty() || _motorConfigs.size() < 6) // ensure not more than 6 motors
+    if (_motorConfigs.empty() || _motorConfigs.size() != 6) // ensure not more than 6 motors
     {
         return {};
     }
