@@ -142,6 +142,7 @@ Pose Kinematics::forwardKinematics()
 {
     Eigen::Matrix4d     T      = Eigen::Matrix4d::Identity();
     std::vector<double> angles = getJointAnglesInRadOrDeg(1); // Get angles in radians
+    angles[2]                  = -angles[2];                  // Invert angle for J3 to match the DH convention -> not the cleanest solution, but works without changing the DH parameters
 
     // Compute full transformation matrix
     for (size_t i = 0; i < _dhParams.size(); ++i)
