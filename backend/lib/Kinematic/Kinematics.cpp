@@ -33,7 +33,6 @@ double Kinematics::_stepsToDeg(const MotorConfig* motorConfig, const int currPos
 {
     if (!_isValidConfig(motorConfig))
     {
-        Serial.println("[WARN] Invalid motor config in _stepsToDeg()");
         return 0.0;
     }
     int relativeSteps = currPosInSteps - motorConfig->homeOffsetSteps;
