@@ -152,6 +152,19 @@ private:
      */
     void _stopMotors();
 
+    /**
+     * @brief Sends the forward kinematics pose and joint angles to the serial output.
+     * @internal
+     */
+    void _sendFkPoseAndJointAngles();
+
+    /**
+     * @brief Sends the current motor position in steps to the serial output.
+     * @param motorIdx The index of the motor to send the position for.
+     * @internal
+     */
+    void _sendMotorPosInSteps(const int motorIdx);
+
     // ******************************MEMBER VARIABLES********************************
     Homing*                    _homingManager;                   ///< Pointer to the Homing manager for homing routines.
     std::vector<MotorConfig*>& _motorConfigs;                    ///< Vector of motor configurations for the robot. Note: Setup class has full ownership of this vector.
