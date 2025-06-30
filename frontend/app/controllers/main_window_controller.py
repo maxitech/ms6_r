@@ -176,6 +176,23 @@ class MainWindowController:
                             "[ERROR]: FK_POSE received but did not contain 6 values:",
                             pose_values,
                         )
+            elif "JOINT_ANGLES" in data_content:
+                match = re.search(r"\*(.*)", data_content)
+                if match:
+                    angles_values = match.group(1).split(",")
+                    if len(angles_values) == 6:
+                        j1, j2, j3, j4, j5, j6 = angles_values
+                        self._ui.joint_pos_j1_label.setText(j1)
+                        self._ui.joint_pos_j2_label.setText(j2)
+                        self._ui.joint_pos_j3_label.setText(j3)
+                        self._ui.joint_pos_j4_label.setText(j4)
+                        self._ui.joint_pos_j5_label.setText(j5)
+                        self._ui.joint_pos_j6_label.setText(j6)
+                    else:
+                        print(
+                            "[ERROR]: JOINT_ANGLES received but did not contain 6 values:",
+                            angles_values,
+                        )
 
     # ***************Handlers*******************
     def _handle_con_btn_click(self):
