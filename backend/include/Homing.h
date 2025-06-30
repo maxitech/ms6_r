@@ -56,6 +56,11 @@ public:
      */
     void resetAllGroups();
 
+    void clearGroups()
+    {
+        _axisGroups.clear(); // Clear all axis groups
+    }
+
 private:
     /**
      * @brief Reads the current state of all limit switches.
