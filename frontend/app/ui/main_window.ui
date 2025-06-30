@@ -693,7 +693,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QLabel" name="joint_pos_j5_label_2">
+                     <widget class="QLabel" name="joint_pos_j5_label">
                       <property name="frameShape">
                        <enum>QFrame::Shape::NoFrame</enum>
                       </property>

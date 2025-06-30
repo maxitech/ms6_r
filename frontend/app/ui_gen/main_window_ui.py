@@ -362,12 +362,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_33.addWidget(self.label_36)
 
-        self.joint_pos_j5_label_2 = QLabel(self.joint_pos_j5_frame)
-        self.joint_pos_j5_label_2.setObjectName(u"joint_pos_j5_label_2")
-        self.joint_pos_j5_label_2.setFrameShape(QFrame.Shape.NoFrame)
-        self.joint_pos_j5_label_2.setFrameShadow(QFrame.Shadow.Plain)
+        self.joint_pos_j5_label = QLabel(self.joint_pos_j5_frame)
+        self.joint_pos_j5_label.setObjectName(u"joint_pos_j5_label")
+        self.joint_pos_j5_label.setFrameShape(QFrame.Shape.NoFrame)
+        self.joint_pos_j5_label.setFrameShadow(QFrame.Shadow.Plain)
 
-        self.horizontalLayout_33.addWidget(self.joint_pos_j5_label_2)
+        self.horizontalLayout_33.addWidget(self.joint_pos_j5_label)
 
 
         self.verticalLayout_9.addWidget(self.joint_pos_j5_frame)
@@ -1797,7 +1797,7 @@ class Ui_MainWindow(object):
         self.label_35.setText(QCoreApplication.translate("MainWindow", u"J4:", None))
         self.joint_pos_j4_label.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.label_36.setText(QCoreApplication.translate("MainWindow", u"J5:", None))
-        self.joint_pos_j5_label_2.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.joint_pos_j5_label.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.label_37.setText(QCoreApplication.translate("MainWindow", u"J6:", None))
         self.joint_pos_j6_label.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Jog speed:", None))
