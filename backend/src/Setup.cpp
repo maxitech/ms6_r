@@ -210,8 +210,8 @@ void Setup::update(const String& jsonString)
         motorConfigs.push_back(new MotorConfig {&motorJ1, HOME_POS_J1, 200, 64, 16.0f, 100.0f, 1.0f});
         motorConfigs.push_back(new MotorConfig {&motorJ2, HOME_POS_J2, 200, 64, 16.0f, 80.0f, 14.0f});
         motorConfigs.push_back(new MotorConfig {&motorJ3, HOME_POS_J3, 200, 64, 16.0f, 100.0f, 1.0f});
-        motorConfigs.push_back(new MotorConfig {&motorJ4, HOME_POS_J4, 400, 64, 16.0f, 60.0f, 1.0f});
-        motorConfigs.push_back(new MotorConfig {&motorJ5, HOME_POS_J5, 200, 64, 16.0f, 32.0f, 1.0f});
+        motorConfigs.push_back(new MotorConfig {&motorJ4, HOME_POS_J4, 200, 64, 16.0f, 60.0f, 1.0f});
+        motorConfigs.push_back(new MotorConfig {&motorJ5, HOME_POS_J5, 400, 64, 16.0f, 32.0f, 1.0f});
         motorConfigs.push_back(new MotorConfig {&motorJ6, HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
 
         if (kin)
@@ -244,6 +244,10 @@ void Setup::update(const String& jsonString)
             Serial.println("Error: Failed to create AxisData objects!");
             return;
         }
+
+        // Clear existing groups
+        homingManager.clearGroups();
+
         // Create and add groups
         auto group1 = std::make_unique<AxisGroup>();
         group1->addAxis(axis1);
