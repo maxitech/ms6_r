@@ -206,22 +206,12 @@ void ProgramLoader::_home()
     }
     else
     {
-        Pose pose = Setup::getInstance().getKinematics()->forwardKinematics();
-        Serial.println(pose.x);
-        Serial.println(pose.y);
-        Serial.println(pose.z);
-        Serial.println(pose.roll);
-        Serial.println(pose.pitch);
-        Serial.println(pose.yaw);
+        _sendFkPoseAndJointAngles(); // Send FK pose and joint angles after homing is done
 
         // Maybe reset homing state later
         for (size_t i = 0; i < _motorConfigs.size(); ++i)
         {
-            const int motorPos = _motorConfigs[i]->motor->getPosition();
-            Serial.print("DATA:MOTOR_POS_STEPS*");
-            Serial.print(static_cast<int>(i + 1));
-            Serial.print("#");
-            Serial.println(motorPos);
+            _sendMotorPosInSteps(i); // Send motor position in steps
         }
         _executionState = EXEC_IDLE;
         _setState(IDLE);
@@ -237,7 +227,7 @@ void ProgramLoader::_main()
     }
     const String& joint     = _arguments[0];
     String&       direction = _arguments[1];
-    int           motorIdx  = joint.substring(1).toInt() - 1;
+    const int     motorIdx  = joint.substring(1).toInt() - 1;
     const int     velocity  = _arguments[2].toInt();
     const String& jogState  = _arguments.back();
 
@@ -288,11 +278,10 @@ void ProgramLoader::_main()
         static unsigned long lastSendTime = 0;
         if (Utils::nonBlockingDelay(100, lastSendTime))
         {
-            const int motorPos = _motorConfigs[motorIdx]->motor->getPosition();
-            Serial.print("DATA:MOTOR_POS_STEPS*");
-            Serial.print(motorIdx + 1);
-            Serial.print("#");
-            Serial.println(motorPos);
+            // Send motor position in steps
+            _sendMotorPosInSteps(motorIdx);
+            // Send forward kinematics pose and joint angles
+            _sendFkPoseAndJointAngles();
         }
     }
     else if (currJogState == IDLE_JOG)
