@@ -33,7 +33,7 @@ void Setup::_validateJson()
     }
 }
 
-std::vector<DHparam> Setup::_extractDHParams()
+std::array<DHparam, 6> Setup::_extractDHParams()
 {
     if (!_valid)
     {
@@ -41,8 +41,8 @@ std::vector<DHparam> Setup::_extractDHParams()
         return {};
     }
 
-    JsonObjectConst      dh_params = _jsonDoc["dh_params"];
-    std::vector<DHparam> result;
+    JsonObjectConst        dh_params = _jsonDoc["dh_params"];
+    std::array<DHparam, 6> result;
 
     for (int i = 1; i <= 6; ++i)
     {
@@ -70,12 +70,12 @@ std::vector<DHparam> Setup::_extractDHParams()
         param.d           = std::strtod(d_str, nullptr);
         param.a           = std::strtod(a_str, nullptr);
 
-        result.push_back(param);
+        result[i - 1] = param; // Store in array, index 0 corresponds to joint1
     }
     return result;
 };
 
-std::vector<int> Setup::_extractHomingParams()
+std::array<int, 6> Setup::_extractHomingParams()
 {
     if (!_valid)
     {
@@ -83,8 +83,8 @@ std::vector<int> Setup::_extractHomingParams()
         return {};
     }
 
-    JsonObjectConst  homing_params = _jsonDoc["homing_params"];
-    std::vector<int> result;
+    JsonObjectConst    homing_params = _jsonDoc["homing_params"];
+    std::array<int, 6> result;
 
     for (int i = 1; i <= 6; ++i)
     {
@@ -104,12 +104,12 @@ std::vector<int> Setup::_extractHomingParams()
             return {};
         }
 
-        result.push_back(std::stoi(home_pos));
+        result[i - 1] = std::stoi(home_pos); // Store in array, index 0 corresponds to motor1
     }
     return result;
 };
 
-std::vector<MotionProfile> Setup::_extractMotionProfiles()
+std::array<MotionProfile, 6> Setup::_extractMotionProfiles()
 {
     if (!_valid)
     {
@@ -117,8 +117,8 @@ std::vector<MotionProfile> Setup::_extractMotionProfiles()
         return {};
     }
 
-    JsonObjectConst            speed_a_accel = _jsonDoc["speed_a_accel"];
-    std::vector<MotionProfile> result;
+    JsonObjectConst              speed_a_accel = _jsonDoc["speed_a_accel"];
+    std::array<MotionProfile, 6> result;
 
     for (int i = 1; i <= 6; ++i)
     {
@@ -143,7 +143,7 @@ std::vector<MotionProfile> Setup::_extractMotionProfiles()
         profile.max_speed = std::stoi(max_speed);
         profile.accel     = std::stoi(acc);
 
-        result.push_back(profile);
+        result[i - 1] = profile; // Store in array, index 0 corresponds to motor1
     }
     return result;
 }
@@ -174,13 +174,13 @@ void Setup::update(const String& jsonString)
     {
         _jsonStr = jsonString;
         _validateJson();
-        std::vector<DHparam> extractedParams = _extractDHParams();
+        std::array<DHparam, 6> extractedParams = _extractDHParams();
 
         if (extractedParams.size() == 6)
         {
             _dhParams = extractedParams;
         }
-        std::vector<int> extractedHomePositions = _extractHomingParams(); // Holding all home positions -> set via frontend setup
+        std::array<int, 6> extractedHomePositions = _extractHomingParams(); // Holding all home positions -> set via frontend setup
         if (extractedHomePositions.size() == 6)
         {
             _HOME_POS_J1 = extractedHomePositions[0];
@@ -190,7 +190,7 @@ void Setup::update(const String& jsonString)
             _HOME_POS_J5 = extractedHomePositions[4];
             _HOME_POS_J6 = extractedHomePositions[5];
         }
-        std::vector<MotionProfile> extractedProfiles = _extractMotionProfiles();
+        std::array<MotionProfile, 6> extractedProfiles = _extractMotionProfiles();
         if (extractedProfiles.size() == 6)
         {
             Stepper* motors[] = {&_motorJ1, &_motorJ2, &_motorJ3, &_motorJ4, &_motorJ5, &_motorJ6};

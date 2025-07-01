@@ -86,21 +86,21 @@ private:
 
     /**
      * @brief Extracts the dh parameters from the JSON document.
-     * @return A vector of DHparam structs.
+     * @return An array of DHparam structs.
      */
-    std::vector<DHparam> _extractDHParams();
+    std::array<DHparam, 6> _extractDHParams();
 
     /**
      * @brief Extracts the homing parameters(for now only home pos) from the JSON document.
-     * @return A vector of home positions.
+     * @return An array of home positions.
      */
-    std::vector<int> _extractHomingParams();
+    std::array<int, 6> _extractHomingParams();
 
     /**
      * @brief Extracts the motion profiles from the JSON document.
-     * @return A vector of MotionProfile structs.
+     * @return An array of MotionProfile structs.
      */
-    std::vector<MotionProfile> _extractMotionProfiles();
+    std::array<MotionProfile, 6> _extractMotionProfiles();
 
     /**
      * @brief Checks if a given part exists in the JSON object.
@@ -212,7 +212,7 @@ private:
     std::vector<MotorConfig*> _motorConfigs; ///< Vector of MotorConfig pointers @internal
 
     // Initialize Kinematics with DH parameters
-    std::vector<DHparam> _dhParams; ///< Vector of DH parameters for the robot arm
+    std::array<DHparam, 6> _dhParams; ///< Array of DH parameters for the robot arm
     // *Default values for L position of MS6R below as reference
     // std::vector<DHparam> dhParams = {
     //     {37.5f, -1.571f, 135.300f},

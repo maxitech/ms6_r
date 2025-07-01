@@ -27,13 +27,13 @@ int TEST_HOME_POS_J4 = -24'000;
 int TEST_HOME_POS_J5 = -22'000;
 int TEST_HOME_POS_J6 = -6'400;
 
-std::vector<DHparam> dhParams = {
-    {37.5f, -1.571f, 135.300f},
-    {160.0f, 0.0f, 0.0f, -90.0f},
-    {-15.0f, 1.571f, 0.0f, 180.0f},
-    {0.0f, -1.571f, 138.400f},
-    {0.0f, 1.571f, 0.0f},
-    {0.0f, 0.0f, 29.270f}};
+std::array<DHparam, 6> dhParams = {
+    DHparam {37.5, -1.571, 135.300, 0.0},
+    DHparam {160.0, 0.0, 0.0, -90.0},
+    DHparam {-15.0, 1.571, 0.0, 180.0},
+    DHparam {0.0, -1.571, 138.400, 0.0},
+    DHparam {0.0, 1.571, 0.0, 0.0},
+    DHparam {0.0, 0.0, 29.270, 0.0}};
 
 std::vector<MotorConfig*> motorConfigs;
 
@@ -61,7 +61,8 @@ void setUp(void)
     motorConfigs.push_back(new MotorConfig {motor5, TEST_HOME_POS_J5, 200, 64, 16.0f, 32.0f, 1.0f});
     motorConfigs.push_back(new MotorConfig {motor6, TEST_HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
 
-    kin = new Kinematics(motorConfigs, std::vector<DHparam> {});
+    // kin = new Kinematics(motorConfigs, std::vector<DHparam> {});
+    kin = new Kinematics(motorConfigs, dhParams);
 }
 
 void tearDown(void)

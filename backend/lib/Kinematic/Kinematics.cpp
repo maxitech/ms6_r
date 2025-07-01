@@ -1,6 +1,6 @@
 #include "Kinematics.h"
 
-Kinematics::Kinematics(const std::vector<MotorConfig*>& motorConfigs, const std::vector<DHparam>& dhParams)
+Kinematics::Kinematics(const std::vector<MotorConfig*>& motorConfigs, const std::array<DHparam, 6>& dhParams)
     : _motorConfigs(motorConfigs)
     , _dhParams(dhParams)
 {
