@@ -8,9 +8,7 @@ void setup()
     {
         // wait
     };
-    Serial.println("Setup started");
     setupHandler.init();
-    Serial.println("Setup done");
 }
 
 void loop()
