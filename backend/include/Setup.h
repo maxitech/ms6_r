@@ -115,15 +115,15 @@ private:
     int       HOME_POS_J4;
     // const int HOME_POS_J4           = -24'000;
 
-    const int HOMING_VELOCITY_J5    = 5000;
-    const int MOVE_AWAY_VELOCITY_J5 = -400;
-    const int MOVE_BACK_VELOCITY_J5 = 200;
+    const int HOMING_VELOCITY_J5    = 8000;
+    const int MOVE_AWAY_VELOCITY_J5 = -800;
+    const int MOVE_BACK_VELOCITY_J5 = 400;
     int       HOME_POS_J5;
     // const int HOME_POS_J5           = -22'000;
 
-    const int HOMING_VELOCITY_J6    = 2000;
-    const int MOVE_AWAY_VELOCITY_J6 = -200;
-    const int MOVE_BACK_VELOCITY_J6 = 200;
+    const int HOMING_VELOCITY_J6    = 4000;
+    const int MOVE_AWAY_VELOCITY_J6 = -400;
+    const int MOVE_BACK_VELOCITY_J6 = 400;
     int       HOME_POS_J6;
     // const int HOME_POS_J6           = -6400;
 
