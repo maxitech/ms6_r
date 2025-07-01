@@ -181,6 +181,7 @@ private:
     LimitSwitches&             _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
     std::vector<String>        _arguments;                       ///< Arguments passed with the command. @internal
     String                     _cmd;                             ///< Current command @internal
+    bool                       _isHomingDone = false;            ///< Flag to check if homing is done. @internal
 };
 
 #endif // PROGRAMLOADER_H
