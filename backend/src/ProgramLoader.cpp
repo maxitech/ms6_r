@@ -225,52 +225,13 @@ void ProgramLoader::_main()
         Serial.println("Warning: _arguments vector is empty!");
         return;
     }
-    const String& joint     = _arguments[0];
-    String&       direction = _arguments[1];
-    const int     motorIdx  = joint.substring(1).toInt() - 1;
-    const int     velocity  = _arguments[2].toInt();
-    const String& jogState  = _arguments.back();
-
+    const String&   joint        = _arguments[0];                  // e.g. "J1"
+    const int       motorIdx     = joint.substring(1).toInt() - 1; // Convert "J1" extract 1 -> to index 0
     static JogState currJogState = IDLE_JOG;
 
     if (_cmd == "JOG")
     {
-        JogCommand jogCmd = _getJogCommand(jogState);
-
-        switch (jogCmd)
-        {
-        case JOG_START:
-            if (currJogState != JOGGING)
-            {
-                // start
-                currJogState = JOGGING;
-                if (direction != "POS" && direction != "NEG")
-                {
-                    Serial.println("Invalid direction string: " + direction);
-                    return;
-                }
-
-                int dir    = (direction == "POS") ? 1 : -1;
-                int dirVel = velocity * dir;
-
-                _motorConfigs[motorIdx]->motor->rotateAsync(dirVel);
-            }
-            break;
-
-        case JOG_STOP:
-            if (currJogState != IDLE_JOG)
-            {
-                // stop
-                _motorConfigs[motorIdx]->motor->emergencyStop();
-                currJogState = IDLE_JOG;
-            }
-            break;
-
-        case JOG_UNKNOWN:
-        default:
-            Serial.println("Unknown JOG state: " + jogState);
-            break;
-        }
+        _jogJoint(currJogState, motorIdx);
     }
 
     if (currJogState == JOGGING && _homingManager->isHomingDone())
@@ -299,6 +260,50 @@ JogCommand ProgramLoader::_getJogCommand(const String& str)
         return JOG_STOP;
     else
         return JOG_UNKNOWN;
+}
+
+void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
+{
+    String&       direction = _arguments[1];
+    const int     velocity  = _arguments[2].toInt();
+    const String& jogState  = _arguments.back();
+
+    JogCommand jogCmd = _getJogCommand(jogState);
+
+    switch (jogCmd)
+    {
+    case JOG_START:
+        if (currJogState != JOGGING)
+        {
+            // start
+            currJogState = JOGGING;
+            if (direction != "POS" && direction != "NEG")
+            {
+                Serial.println("Invalid direction string: " + direction);
+                return;
+            }
+
+            int dir    = (direction == "POS") ? 1 : -1;
+            int dirVel = velocity * dir;
+
+            _motorConfigs[motorIdx]->motor->rotateAsync(dirVel);
+        }
+        break;
+
+    case JOG_STOP:
+        if (currJogState != IDLE_JOG)
+        {
+            // stop
+            _motorConfigs[motorIdx]->motor->emergencyStop();
+            currJogState = IDLE_JOG;
+        }
+        break;
+
+    case JOG_UNKNOWN:
+    default:
+        Serial.println("Unknown JOG state: " + jogState);
+        break;
+    }
 }
 
 void ProgramLoader::_stopMotors()

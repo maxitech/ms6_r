@@ -147,6 +147,14 @@ private:
     JogCommand _getJogCommand(const String& str);
 
     /**
+     * @brief Executes the jog command for a specific joint.
+     * @param currJogState Reference to the current JogState.
+     * @param motorIdx The index of the motor to jog.
+     * @internal
+     */
+    void _jogJoint(JogState& currJogState, const int motorIdx);
+
+    /**
      * @brief Stops all motors if they are currently moving.
      * @internal
      */
