@@ -9,16 +9,16 @@ Setup& Setup::getInstance()
 
 Setup::Setup()
     : // int stepPin, int dirPin
-    motorJ1(motorJ1Step, motorJ1Dir)
-    , motorJ2(motorJ2Step, motorJ2Dir)
-    , motorJ3(motorJ3Step, motorJ3Dir)
-    , motorJ4(motorJ4Step, motorJ4Dir)
-    , motorJ5(motorJ5Step, motorJ5Dir)
-    , motorJ6(motorJ6Step, motorJ6Dir)
-    , limitSwitches(ledPin, limitSwitchPins)
-    , homingManager(limitSwitchPins)
-    , programLoader(&homingManager, motorConfigs, limitSwitches)
-    , cmdProcessor(programLoader) {};
+    _motorJ1(_motorJ1Step, _motorJ1Dir)
+    , _motorJ2(_motorJ2Step, _motorJ2Dir)
+    , _motorJ3(_motorJ3Step, _motorJ3Dir)
+    , _motorJ4(_motorJ4Step, _motorJ4Dir)
+    , _motorJ5(_motorJ5Step, _motorJ5Dir)
+    , _motorJ6(_motorJ6Step, _motorJ6Dir)
+    , _limitSwitches(_ledPin, _limitSwitchPins)
+    , _homingManager(_limitSwitchPins)
+    , _programLoader(&_homingManager, _motorConfigs, _limitSwitches)
+    , _cmdProcessor(_programLoader) {};
 
 void Setup::_validateJson()
 {
@@ -179,91 +179,89 @@ void Setup::update(const String& jsonString)
 
         if (extractedParams.size() == 6)
         {
-            dhParams = extractedParams;
+            _dhParams = extractedParams;
         }
         std::vector<int> extractedHomePositions = _extractHomingParams(); // Holding all home positions -> set via frontend setup
         if (extractedHomePositions.size() == 6)
         {
-            HOME_POS_J1 = extractedHomePositions[0];
-            HOME_POS_J2 = extractedHomePositions[1];
-            HOME_POS_J3 = extractedHomePositions[2];
-            HOME_POS_J4 = extractedHomePositions[3];
-            HOME_POS_J5 = extractedHomePositions[4];
-            HOME_POS_J6 = extractedHomePositions[5];
+            _HOME_POS_J1 = extractedHomePositions[0];
+            _HOME_POS_J2 = extractedHomePositions[1];
+            _HOME_POS_J3 = extractedHomePositions[2];
+            _HOME_POS_J4 = extractedHomePositions[3];
+            _HOME_POS_J5 = extractedHomePositions[4];
+            _HOME_POS_J6 = extractedHomePositions[5];
         }
         std::vector<MotionProfile> extractedProfiles = _extractMotionProfiles();
         if (extractedProfiles.size() == 6)
         {
-            Stepper* motors[] = {&motorJ1, &motorJ2, &motorJ3, &motorJ4, &motorJ5, &motorJ6};
+            Stepper* motors[] = {&_motorJ1, &_motorJ2, &_motorJ3, &_motorJ4, &_motorJ5, &_motorJ6};
             for (size_t i = 0; i < extractedProfiles.size(); ++i)
             {
                 motors[i]->setMaxSpeed(extractedProfiles[i].max_speed).setAcceleration(extractedProfiles[i].accel);
             }
         }
-
-        for (auto cfg : motorConfigs)
+        for (auto cfg : _motorConfigs)
         {
             delete cfg;
         }
-        motorConfigs.clear();
-        motorConfigs.reserve(6);
-        motorConfigs.push_back(new MotorConfig {&motorJ1, HOME_POS_J1, 200, 64, 16.0f, 100.0f, 1.0f});
-        motorConfigs.push_back(new MotorConfig {&motorJ2, HOME_POS_J2, 200, 64, 16.0f, 80.0f, 14.0f});
-        motorConfigs.push_back(new MotorConfig {&motorJ3, HOME_POS_J3, 200, 64, 16.0f, 100.0f, 1.0f});
-        motorConfigs.push_back(new MotorConfig {&motorJ4, HOME_POS_J4, 200, 64, 16.0f, 60.0f, 1.0f});
-        motorConfigs.push_back(new MotorConfig {&motorJ5, HOME_POS_J5, 400, 64, 16.0f, 32.0f, 1.0f});
-        motorConfigs.push_back(new MotorConfig {&motorJ6, HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
+        _motorConfigs.clear();
+        _motorConfigs.reserve(6);
+        _motorConfigs.push_back(new MotorConfig {&_motorJ1, _HOME_POS_J1, 200, 64, 16.0f, 100.0f, 1.0f});
+        _motorConfigs.push_back(new MotorConfig {&_motorJ2, _HOME_POS_J2, 200, 64, 16.0f, 80.0f, 14.0f});
+        _motorConfigs.push_back(new MotorConfig {&_motorJ3, _HOME_POS_J3, 200, 64, 16.0f, 100.0f, 1.0f});
+        _motorConfigs.push_back(new MotorConfig {&_motorJ4, _HOME_POS_J4, 200, 64, 16.0f, 60.0f, 1.0f});
+        _motorConfigs.push_back(new MotorConfig {&_motorJ5, _HOME_POS_J5, 400, 64, 16.0f, 32.0f, 1.0f});
+        _motorConfigs.push_back(new MotorConfig {&_motorJ6, _HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
 
-        if (kin)
-            delete kin;
+        if (_kin)
+            delete _kin;
 
-        kin = new Kinematics(motorConfigs, dhParams);
+        _kin = new Kinematics(_motorConfigs, _dhParams);
+        if (_axis1)
+            delete _axis1;
+        if (_axis2)
+            delete _axis2;
+        if (_axis3)
+            delete _axis3;
+        if (_axis4)
+            delete _axis4;
+        if (_axis5)
+            delete _axis5;
+        if (_axis6)
+            delete _axis6;
 
-        if (axis1)
-            delete axis1;
-        if (axis2)
-            delete axis2;
-        if (axis3)
-            delete axis3;
-        if (axis4)
-            delete axis4;
-        if (axis5)
-            delete axis5;
-        if (axis6)
-            delete axis6;
+        _axis1 = new AxisData {MOVE_TO_SWITCH, &_motorJ1, J1, _HOMING_VELOCITY_J1, _MOVE_AWAY_VELOCITY_J1, _MOVE_BACK_VELOCITY_J1, _HOME_POS_J1};
+        _axis2 = new AxisData {MOVE_TO_SWITCH, &_motorJ2, J2, _HOMING_VELOCITY_J2, _MOVE_AWAY_VELOCITY_J2, _MOVE_BACK_VELOCITY_J2, _HOME_POS_J2};
+        _axis3 = new AxisData {MOVE_TO_SWITCH, &_motorJ3, J3, _HOMING_VELOCITY_J3, _MOVE_AWAY_VELOCITY_J3, _MOVE_BACK_VELOCITY_J3, _HOME_POS_J3};
+        _axis4 = new AxisData {MOVE_TO_SWITCH, &_motorJ4, J4, _HOMING_VELOCITY_J4, _MOVE_AWAY_VELOCITY_J4, _MOVE_BACK_VELOCITY_J4, _HOME_POS_J4};
+        _axis5 = new AxisData {MOVE_TO_SWITCH, &_motorJ5, J5, _HOMING_VELOCITY_J5, _MOVE_AWAY_VELOCITY_J5, _MOVE_BACK_VELOCITY_J5, _HOME_POS_J5};
+        _axis6 = new AxisData {MOVE_TO_SWITCH, &_motorJ6, J6, _HOMING_VELOCITY_J6, _MOVE_AWAY_VELOCITY_J6, _MOVE_BACK_VELOCITY_J6, _HOME_POS_J6};
 
-        axis1 = new AxisData {MOVE_TO_SWITCH, &motorJ1, J1, HOMING_VELOCITY_J1, MOVE_AWAY_VELOCITY_J1, MOVE_BACK_VELOCITY_J1, HOME_POS_J1};
-        axis2 = new AxisData {MOVE_TO_SWITCH, &motorJ2, J2, HOMING_VELOCITY_J2, MOVE_AWAY_VELOCITY_J2, MOVE_BACK_VELOCITY_J2, HOME_POS_J2};
-        axis3 = new AxisData {MOVE_TO_SWITCH, &motorJ3, J3, HOMING_VELOCITY_J3, MOVE_AWAY_VELOCITY_J3, MOVE_BACK_VELOCITY_J3, HOME_POS_J3};
-        axis4 = new AxisData {MOVE_TO_SWITCH, &motorJ4, J4, HOMING_VELOCITY_J4, MOVE_AWAY_VELOCITY_J4, MOVE_BACK_VELOCITY_J4, HOME_POS_J4};
-        axis5 = new AxisData {MOVE_TO_SWITCH, &motorJ5, J5, HOMING_VELOCITY_J5, MOVE_AWAY_VELOCITY_J5, MOVE_BACK_VELOCITY_J5, HOME_POS_J5};
-        axis6 = new AxisData {MOVE_TO_SWITCH, &motorJ6, J6, HOMING_VELOCITY_J6, MOVE_AWAY_VELOCITY_J6, MOVE_BACK_VELOCITY_J6, HOME_POS_J6};
-
-        if (!axis1 || !axis2 || !axis3 || !axis4 || !axis5 || !axis6)
+        if (!_axis1 || !_axis2 || !_axis3 || !_axis4 || !_axis5 || !_axis6)
         {
             Serial.println("Error: Failed to create AxisData objects!");
             return;
         }
 
         // Clear existing groups
-        homingManager.clearGroups();
+        _homingManager.clearGroups();
 
         // Create and add groups
         auto group1 = std::make_unique<AxisGroup>();
-        group1->addAxis(axis1);
-        group1->addAxis(axis2);
-        group1->addAxis(axis4);
+        group1->addAxis(_axis1);
+        group1->addAxis(_axis2);
+        group1->addAxis(_axis4);
 
         auto group2 = std::make_unique<AxisGroup>();
-        group2->addAxis(axis3);
+        group2->addAxis(_axis3);
 
         auto group3 = std::make_unique<AxisGroup>();
-        group3->addAxis(axis5);
-        group3->addAxis(axis6);
+        group3->addAxis(_axis5);
+        group3->addAxis(_axis6);
 
-        homingManager.addGroup(std::move(group1));
-        homingManager.addGroup(std::move(group2));
-        homingManager.addGroup(std::move(group3));
+        _homingManager.addGroup(std::move(group1));
+        _homingManager.addGroup(std::move(group2));
+        _homingManager.addGroup(std::move(group3));
     }
 }
 
@@ -273,12 +271,12 @@ void Setup::init()
     TS4::begin();
     TimerFactory::attachModule(new TMRModule<0>());
 
-    pinMode(motorJ1En, OUTPUT);
-    pinMode(motorJ2En, OUTPUT);
-    pinMode(motorJ3En, OUTPUT);
-    pinMode(motorJ4En, OUTPUT);
-    pinMode(motorJ5En, OUTPUT);
-    pinMode(motorJ6En, OUTPUT);
+    pinMode(_motorJ1En, OUTPUT);
+    pinMode(_motorJ2En, OUTPUT);
+    pinMode(_motorJ3En, OUTPUT);
+    pinMode(_motorJ4En, OUTPUT);
+    pinMode(_motorJ5En, OUTPUT);
+    pinMode(_motorJ6En, OUTPUT);
 
     // digitalWrite(motorJ1En, HIGH);
     // digitalWrite(motorJ2En, HIGH);
@@ -287,6 +285,6 @@ void Setup::init()
     // digitalWrite(motorJ5En, HIGH);
     // digitalWrite(motorJ6En, HIGH);
 
-    limitSwitches.init();
-    serialHandler.setCommandProcessor(&cmdProcessor);
+    _limitSwitches.init();
+    _serialHandler.setCommandProcessor(&_cmdProcessor);
 }

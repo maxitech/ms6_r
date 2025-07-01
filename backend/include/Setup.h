@@ -29,9 +29,9 @@ class Setup
 public:
     static Setup&  getInstance(); // Static method for instance-access
     void           init();
-    SerialHandler& getSerialHandler() { return serialHandler; }
-    ProgramLoader& getProgramLoader() { return programLoader; }
-    Kinematics*    getKinematics() const { return kin; }
+    SerialHandler& getSerialHandler() { return _serialHandler; }
+    ProgramLoader& getProgramLoader() { return _programLoader; }
+    Kinematics*    getKinematics() const { return _kin; }
     void           update(const String& jsonString);
 
 private:
@@ -53,88 +53,88 @@ private:
 
     // ************Setup*************
     // Init variables
-    const byte ledPin = 13;
+    const byte _ledPin = 13;
 
     // Limit switches
-    const byte                limitJ1         = 0;
-    const byte                limitJ2         = 1;
-    const byte                limitJ3         = 2;
-    const byte                limitJ4         = 3;
-    const byte                limitJ5         = 4;
-    const byte                limitJ6         = 5;
-    const std::array<byte, 6> limitSwitchPins = {limitJ1, limitJ2, limitJ3, limitJ4, limitJ5, limitJ6};
+    const byte                _limitJ1         = 0;
+    const byte                _limitJ2         = 1;
+    const byte                _limitJ3         = 2;
+    const byte                _limitJ4         = 3;
+    const byte                _limitJ5         = 4;
+    const byte                _limitJ6         = 5;
+    const std::array<byte, 6> _limitSwitchPins = {_limitJ1, _limitJ2, _limitJ3, _limitJ4, _limitJ5, _limitJ6};
 
     // Motor pins
-    const int motorJ1En   = 6;
-    const int motorJ1Step = 9;
-    const int motorJ1Dir  = 10;
+    const int _motorJ1En   = 6;
+    const int _motorJ1Step = 9;
+    const int _motorJ1Dir  = 10;
 
-    const int motorJ2En   = 11;
-    const int motorJ2Step = 12;
-    const int motorJ2Dir  = 24;
+    const int _motorJ2En   = 11;
+    const int _motorJ2Step = 12;
+    const int _motorJ2Dir  = 24;
 
-    const int motorJ3En   = 25;
-    const int motorJ3Step = 26;
-    const int motorJ3Dir  = 27;
+    const int _motorJ3En   = 25;
+    const int _motorJ3Step = 26;
+    const int _motorJ3Dir  = 27;
 
-    const int motorJ4En   = 28;
-    const int motorJ4Step = 29;
-    const int motorJ4Dir  = 30;
+    const int _motorJ4En   = 28;
+    const int _motorJ4Step = 29;
+    const int _motorJ4Dir  = 30;
 
-    const int motorJ5En   = 38;
-    const int motorJ5Step = 37;
-    const int motorJ5Dir  = 36;
+    const int _motorJ5En   = 38;
+    const int _motorJ5Step = 37;
+    const int _motorJ5Dir  = 36;
 
-    const int motorJ6En   = 35;
-    const int motorJ6Step = 34;
-    const int motorJ6Dir  = 33;
+    const int _motorJ6En   = 35;
+    const int _motorJ6Step = 34;
+    const int _motorJ6Dir  = 33;
 
     // Homing parameters for each axis, negative values indicate direction(CCW)
 
-    const int HOMING_VELOCITY_J1    = -6000; // 3k
-    const int MOVE_AWAY_VELOCITY_J1 = 800;
-    const int MOVE_BACK_VELOCITY_J1 = -200;
-    int       HOME_POS_J1;
+    const int _HOMING_VELOCITY_J1    = -6000; // 3k
+    const int _MOVE_AWAY_VELOCITY_J1 = 800;
+    const int _MOVE_BACK_VELOCITY_J1 = -200;
+    int       _HOME_POS_J1;
     // const int HOME_POS_J1           = 40'000;
 
-    const int HOMING_VELOCITY_J2    = -20'000;
-    const int MOVE_AWAY_VELOCITY_J2 = 4000;
-    const int MOVE_BACK_VELOCITY_J2 = -2000;
-    int       HOME_POS_J2;
+    const int _HOMING_VELOCITY_J2    = -20'000;
+    const int _MOVE_AWAY_VELOCITY_J2 = 4000;
+    const int _MOVE_BACK_VELOCITY_J2 = -2000;
+    int       _HOME_POS_J2;
     // const int HOME_POS_J2           = 55'000;
 
-    const int HOMING_VELOCITY_J3    = 5'000;
-    const int MOVE_AWAY_VELOCITY_J3 = -800;
-    const int MOVE_BACK_VELOCITY_J3 = 400;
-    int       HOME_POS_J3;
+    const int _HOMING_VELOCITY_J3    = 5'000;
+    const int _MOVE_AWAY_VELOCITY_J3 = -800;
+    const int _MOVE_BACK_VELOCITY_J3 = 400;
+    int       _HOME_POS_J3;
     // const int HOME_POS_J3           = -20'000;
 
-    const int HOMING_VELOCITY_J4    = 4000;
-    const int MOVE_AWAY_VELOCITY_J4 = -800;
-    const int MOVE_BACK_VELOCITY_J4 = 400;
-    int       HOME_POS_J4;
+    const int _HOMING_VELOCITY_J4    = 4000;
+    const int _MOVE_AWAY_VELOCITY_J4 = -800;
+    const int _MOVE_BACK_VELOCITY_J4 = 400;
+    int       _HOME_POS_J4;
     // const int HOME_POS_J4           = -24'000;
 
-    const int HOMING_VELOCITY_J5    = 8000;
-    const int MOVE_AWAY_VELOCITY_J5 = -800;
-    const int MOVE_BACK_VELOCITY_J5 = 400;
-    int       HOME_POS_J5;
+    const int _HOMING_VELOCITY_J5    = 8000;
+    const int _MOVE_AWAY_VELOCITY_J5 = -800;
+    const int _MOVE_BACK_VELOCITY_J5 = 400;
+    int       _HOME_POS_J5;
     // const int HOME_POS_J5           = -22'000;
 
-    const int HOMING_VELOCITY_J6    = 4000;
-    const int MOVE_AWAY_VELOCITY_J6 = -400;
-    const int MOVE_BACK_VELOCITY_J6 = 400;
-    int       HOME_POS_J6;
+    const int _HOMING_VELOCITY_J6    = 4000;
+    const int _MOVE_AWAY_VELOCITY_J6 = -400;
+    const int _MOVE_BACK_VELOCITY_J6 = 400;
+    int       _HOME_POS_J6;
     // const int HOME_POS_J6           = -6400;
 
     // //*********** Initialize Classes *********//
-    Stepper motorJ1, motorJ2, motorJ3, motorJ4, motorJ5, motorJ6; // int stepPin, int dirPin
+    Stepper _motorJ1, _motorJ2, _motorJ3, _motorJ4, _motorJ5, _motorJ6; // int stepPin, int dirPin
 
     // Initialize MotorConfigs
-    std::vector<MotorConfig*> motorConfigs; // Vector of MotorConfig pointers
+    std::vector<MotorConfig*> _motorConfigs; // Vector of MotorConfig pointers
 
     // Initialize Kinematics with DH parameters
-    std::vector<DHparam> dhParams;
+    std::vector<DHparam> _dhParams;
     // *Default values for L position of MS6R below as reference
     // std::vector<DHparam> dhParams = {
     //     {37.5f, -1.571f, 135.300f},
@@ -144,19 +144,19 @@ private:
     //     {0.0f, 1.571f, 0.0f},
     //     {0.0f, 0.0f, 29.270f}};
 
-    LimitSwitches    limitSwitches; // Manages the state of limit switches
-    Homing           homingManager; // Manages the homing process for multiple axes
-    ProgramLoader    programLoader; // Controls loading programs and state management
-    CommandProcessor cmdProcessor;  // Parses and processes incoming commands
-    SerialHandler    serialHandler; // Handles serial communication and command routing
-    Kinematics*      kin = nullptr; // Kinematics calculations for the robot arm
+    LimitSwitches    _limitSwitches; // Manages the state of limit switches
+    Homing           _homingManager; // Manages the homing process for multiple axes
+    ProgramLoader    _programLoader; // Controls loading programs and state management
+    CommandProcessor _cmdProcessor;  // Parses and processes incoming commands
+    SerialHandler    _serialHandler; // Handles serial communication and command routing
+    Kinematics*      _kin = nullptr; // Kinematics calculations for the robot arm
 
-    AxisData* axis1 = nullptr;
-    AxisData* axis2 = nullptr;
-    AxisData* axis3 = nullptr;
-    AxisData* axis4 = nullptr;
-    AxisData* axis5 = nullptr;
-    AxisData* axis6 = nullptr;
+    AxisData* _axis1 = nullptr;
+    AxisData* _axis2 = nullptr;
+    AxisData* _axis3 = nullptr;
+    AxisData* _axis4 = nullptr;
+    AxisData* _axis5 = nullptr;
+    AxisData* _axis6 = nullptr;
 };
 
 #endif // SETUP_H
