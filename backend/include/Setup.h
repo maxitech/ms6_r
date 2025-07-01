@@ -1,3 +1,9 @@
+/**
+ * @file Setup.h
+ * @brief This file contains the Setup class which initializes and manages the robot's hardware and software components.
+ * @details It provides a centralized location for managing the robot's setup and configuration.
+ */
+
 #ifndef SETUP_H
 #define SETUP_H
 
@@ -18,38 +24,106 @@
 #include "Kinematics.h"
 #include <ArduinoJson.h>
 
+/**
+ * @brief This struct represents a motion profile for the robot's motors.
+ */
 struct MotionProfile
 {
-    int max_speed;
-    int accel;
+    int max_speed; ///< Maximum speed for the motor in steps
+    int accel;     ///< Acceleration for the motor in steps
 };
 
+/**
+ * @brief Singleton class for initializing and accessing core robot components
+ */
 class Setup
 {
 public:
-    static Setup&  getInstance(); // Static method for instance-access
-    void           init();
+    /**
+     * @brief Returns the singleton instance of the Setup class.
+     * @return Reference to the Setup instance.
+     */
+    static Setup& getInstance(); // Static method for instance-access
+
+    /**
+     * @brief Initializes hardware and software components.
+     * @details Should be called once from the Arduino `setup()` function.
+     */
+    void init();
+
+    /**
+     * @brief Getter function which returns the SerialHandler instance.
+     * @return Reference to the SerialHandler instance.
+     */
     SerialHandler& getSerialHandler() { return _serialHandler; }
+
+    /**
+     * @brief Getter function which returns the ProgramLoader instance.
+     * @return Reference to the ProgramLoader instance.
+     */
     ProgramLoader& getProgramLoader() { return _programLoader; }
-    Kinematics*    getKinematics() const { return _kin; }
-    void           update(const String& jsonString);
+
+    /**
+     * @brief Returns a pointer to the robot's kinematics instance.
+     * @details Provides access to forward and inverse kinematics computations,
+     * allowing other modules to query or manipulate joint and pose data.
+     * @return Pointer to the Kinematics instance.
+     */
+    Kinematics* getKinematics() const { return _kin; };
+
+    void update(const String& jsonString);
 
 private:
+    // ************Singleton*************
     Setup();                                 // Prevents direct object creation
     Setup(const Setup&)            = delete; // Do not allow copies
     Setup& operator=(const Setup&) = delete; //  Do not allow assignments
 
-    void                       _validateJson();
-    std::vector<DHparam>       _extractDHParams();
-    std::vector<int>           _extractHomingParams();
+    /**
+     * @brief Validates the JSON string.
+     */
+    void _validateJson();
+
+    /**
+     * @brief Extracts the dh parameters from the JSON document.
+     * @return A vector of DHparam structs.
+     */
+    std::vector<DHparam> _extractDHParams();
+
+    /**
+     * @brief Extracts the homing parameters(for now only home pos) from the JSON document.
+     * @return A vector of home positions.
+     */
+    std::vector<int> _extractHomingParams();
+
+    /**
+     * @brief Extracts the motion profiles from the JSON document.
+     * @return A vector of MotionProfile structs.
+     */
     std::vector<MotionProfile> _extractMotionProfiles();
 
+    /**
+     * @brief Checks if a given part exists in the JSON object.
+     * @param obj The JSON object to check.
+     * @param name The name of the field to check.
+     * @return True if the field exists, false otherwise.
+     */
     bool _checkExists(const JsonObjectConst& obj, const char* name);
+
+    /**
+     * @brief Checks if the required fields are present in the JSON object.
+     * @param f1 The name of the first field to check.
+     * @param f2 The name of the second field to check.
+     * @param f3 The name of the third field to check.
+     * @param f4 The name of the fourth field to check.
+     * @param context A string describing the context of the check (for error messages).
+     * @return True if all fields exist, false otherwise.
+     */
     bool _checkFields(const char* f1, const char* f2, const char* f3, const char* f4, const char* context);
 
-    JsonDocument _jsonDoc;
-    bool         _valid = false;
-    String       _jsonStr;
+    JsonDocument _jsonDoc;       ///< JSON document for storing configuration data
+    bool         _valid = false; ///< Flag to indicate if the JSON document is valid
+    String       _jsonStr;       ///< String representation of the JSON document received from the frontend
 
     // ************Setup*************
     // Init variables
@@ -128,13 +202,17 @@ private:
     // const int HOME_POS_J6           = -6400;
 
     // //*********** Initialize Classes *********//
+
+    /**
+     * @brief Stepper motor instances.
+     */
     Stepper _motorJ1, _motorJ2, _motorJ3, _motorJ4, _motorJ5, _motorJ6; // int stepPin, int dirPin
 
     // Initialize MotorConfigs
-    std::vector<MotorConfig*> _motorConfigs; // Vector of MotorConfig pointers
+    std::vector<MotorConfig*> _motorConfigs; ///< Vector of MotorConfig pointers @internal
 
     // Initialize Kinematics with DH parameters
-    std::vector<DHparam> _dhParams;
+    std::vector<DHparam> _dhParams; ///< Vector of DH parameters for the robot arm
     // *Default values for L position of MS6R below as reference
     // std::vector<DHparam> dhParams = {
     //     {37.5f, -1.571f, 135.300f},
@@ -144,19 +222,19 @@ private:
     //     {0.0f, 1.571f, 0.0f},
     //     {0.0f, 0.0f, 29.270f}};
 
-    LimitSwitches    _limitSwitches; // Manages the state of limit switches
-    Homing           _homingManager; // Manages the homing process for multiple axes
-    ProgramLoader    _programLoader; // Controls loading programs and state management
-    CommandProcessor _cmdProcessor;  // Parses and processes incoming commands
-    SerialHandler    _serialHandler; // Handles serial communication and command routing
-    Kinematics*      _kin = nullptr; // Kinematics calculations for the robot arm
+    LimitSwitches    _limitSwitches; ///< Manages the state of limit switches
+    Homing           _homingManager; ///< Manages the homing process for multiple axes
+    ProgramLoader    _programLoader; ///< Controls loading programs and state management
+    CommandProcessor _cmdProcessor;  ///< Parses and processes incoming commands
+    SerialHandler    _serialHandler; ///< Handles serial communication and command routing
+    Kinematics*      _kin = nullptr; ///< Kinematics calculations for the robot arm
 
-    AxisData* _axis1 = nullptr;
-    AxisData* _axis2 = nullptr;
-    AxisData* _axis3 = nullptr;
-    AxisData* _axis4 = nullptr;
-    AxisData* _axis5 = nullptr;
-    AxisData* _axis6 = nullptr;
+    AxisData* _axis1 = nullptr; ///< Data for axis 1
+    AxisData* _axis2 = nullptr; ///< Data for axis 2
+    AxisData* _axis3 = nullptr; ///< Data for axis 3
+    AxisData* _axis4 = nullptr; ///< Data for axis 4
+    AxisData* _axis5 = nullptr; ///< Data for axis 5
+    AxisData* _axis6 = nullptr; ///< Data for axis 6
 };
 
 #endif // SETUP_H

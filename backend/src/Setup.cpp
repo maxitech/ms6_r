@@ -8,8 +8,7 @@ Setup& Setup::getInstance()
 }
 
 Setup::Setup()
-    : // int stepPin, int dirPin
-    _motorJ1(_motorJ1Step, _motorJ1Dir)
+    : _motorJ1(_motorJ1Step, _motorJ1Dir) // int stepPin, int dirPin
     , _motorJ2(_motorJ2Step, _motorJ2Dir)
     , _motorJ3(_motorJ3Step, _motorJ3Dir)
     , _motorJ4(_motorJ4Step, _motorJ4Dir)
