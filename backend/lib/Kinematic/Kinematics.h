@@ -97,11 +97,48 @@ public:
     Angles inverseKinematics(double x, double y, double z, double yaw, double pitch, double roll);
 
 private:
+    /**
+     * @brief Computes the total ratio of the motor configuration.
+     * @param motorConfig Pointer to the MotorConfig object.
+     * @return Total ratio as a double.
+     */
     double _totalRatio(const MotorConfig* motorConfig) const;
+
+    /**
+     * @brief Computes the number of steps per revolution for the given motor configuration.
+     * @param motorConfig Pointer to the MotorConfig object.
+     * @return Steps per revolution as a double.
+     */
     double _stepsPerRev(const MotorConfig* motorConfig) const;
+
+    /**
+     * @brief Converts steps to degrees for the given motor configuration.
+     * @param motorConfig Pointer to the MotorConfig object.
+     * @param currPosInSteps Current position in steps.
+     * @return Position in degrees.
+     */
     double _stepsToDeg(const MotorConfig* motorConfig, const int currPosInSteps) const;
-    int    _degToSteps(const MotorConfig* motorConfig, const double deg) const;
+
+    /**
+     * @brief Converts degrees to steps for the given motor configuration.
+     * @param motorConfig Pointer to the MotorConfig object.
+     * @param deg Angle in degrees.
+     * @return Position in steps.
+     */
+    int _degToSteps(const MotorConfig* motorConfig, const double deg) const;
+
+    /**
+     * @brief Converts degrees to radians.
+     * @param deg Angle in degrees.
+     * @return Angle in radians.
+     */
     double _degToRad(const double deg) const;
+
+    /**
+     * @brief Converts radians to degrees.
+     * @param rad Angle in radians.
+     * @return Angle in degrees.
+     */
     double _radToDeg(const double rad) const;
 
     /**
