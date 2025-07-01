@@ -201,21 +201,30 @@ void ProgramLoader::_testSwitches()
 
 void ProgramLoader::_home()
 {
-    if (!_homingManager->isHomingDone())
+    if (!_isHomingDone)
     {
+
         _homingManager->executeHoming();
+        if (_homingManager->isHomingDone())
+        {
+            _isHomingDone = true;        // Set homing done flag
+            _sendFkPoseAndJointAngles(); // Send FK pose and joint angles after homing is done
+
+            // Maybe reset homing state later
+            for (size_t i = 0; i < _motorConfigs.size(); ++i)
+            {
+                _sendMotorPosInSteps(i); // Send motor position in steps
+            }
+            _executionState = EXEC_IDLE;
+            _setState(IDLE);
+            return;
+        }
     }
     else
     {
-        _sendFkPoseAndJointAngles(); // Send FK pose and joint angles after homing is done
-
-        // Maybe reset homing state later
-        for (size_t i = 0; i < _motorConfigs.size(); ++i)
-        {
-            _sendMotorPosInSteps(i); // Send motor position in steps
-        }
         _executionState = EXEC_IDLE;
         _setState(IDLE);
+        Serial.println("Homing already done, skipping.");
     }
 }
 
