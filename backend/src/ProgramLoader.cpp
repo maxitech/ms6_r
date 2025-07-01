@@ -24,6 +24,7 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
     for (String& arg : _arguments)
         arg.trim();
 
+    // Note: Because of command being a String I cannot use switch-case here. -> could use mapping but not needed atm.
     if (command == "LOAD")
     {
         _loadProgram(program);
