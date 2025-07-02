@@ -168,99 +168,144 @@ bool Setup::_checkFields(const char* f1, const char* f2, const char* f3, const c
     return true;
 }
 
+void Setup::_updateDhParams()
+{
+    std::array<DHparam, 6> extractedParams = _extractDHParams();
+
+    if (extractedParams.size() == 6)
+    {
+        _dhParams = extractedParams;
+    }
+}
+
+void Setup::_updateHomePositions()
+{
+    std::array<int, 6> extractedHomePositions = _extractHomingParams(); // Holding all home positions -> set via frontend setup
+    if (extractedHomePositions.size() == 6)
+    {
+        _HOME_POS_J1 = extractedHomePositions[0];
+        _HOME_POS_J2 = extractedHomePositions[1];
+        _HOME_POS_J3 = extractedHomePositions[2];
+        _HOME_POS_J4 = extractedHomePositions[3];
+        _HOME_POS_J5 = extractedHomePositions[4];
+        _HOME_POS_J6 = extractedHomePositions[5];
+    }
+}
+
+void Setup::_updateMotionProfiles()
+{
+    std::array<MotionProfile, 6> extractedProfiles = _extractMotionProfiles();
+    if (extractedProfiles.size() == 6)
+    {
+        Stepper* motors[] = {&_motorJ1, &_motorJ2, &_motorJ3, &_motorJ4, &_motorJ5, &_motorJ6};
+        for (size_t i = 0; i < extractedProfiles.size(); ++i)
+        {
+            motors[i]->setMaxSpeed(extractedProfiles[i].max_speed).setAcceleration(extractedProfiles[i].accel);
+        }
+    }
+}
+
+void Setup::_updateMotorConfigs()
+{
+    for (auto cfg : _motorConfigs)
+    {
+        delete cfg;
+    }
+    _motorConfigs.clear();
+    _motorConfigs.reserve(6);
+    _motorConfigs.push_back(new MotorConfig {&_motorJ1, _HOME_POS_J1, 200, 64, 16.0f, 100.0f, 1.0f});
+    _motorConfigs.push_back(new MotorConfig {&_motorJ2, _HOME_POS_J2, 200, 64, 16.0f, 80.0f, 14.0f});
+    _motorConfigs.push_back(new MotorConfig {&_motorJ3, _HOME_POS_J3, 200, 64, 16.0f, 100.0f, 1.0f});
+    _motorConfigs.push_back(new MotorConfig {&_motorJ4, _HOME_POS_J4, 200, 64, 16.0f, 60.0f, 1.0f});
+    _motorConfigs.push_back(new MotorConfig {&_motorJ5, _HOME_POS_J5, 400, 64, 16.0f, 32.0f, 1.0f});
+    _motorConfigs.push_back(new MotorConfig {&_motorJ6, _HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
+}
+
+void Setup::_updateKinematics()
+{
+    Kinematics* newKin = new Kinematics(_motorConfigs, _dhParams);
+    if (!newKin)
+    {
+        Serial.println("Error: Failed to allocate Kinematics");
+        return;
+    }
+    delete _kin;
+    _kin = newKin;
+}
+
+void Setup::_updateAxisData()
+{
+    AxisData* newAxis1 = new AxisData {MOVE_TO_SWITCH, &_motorJ1, J1, _HOMING_VELOCITY_J1, _MOVE_AWAY_VELOCITY_J1, _MOVE_BACK_VELOCITY_J1, _HOME_POS_J1};
+    AxisData* newAxis2 = new AxisData {MOVE_TO_SWITCH, &_motorJ2, J2, _HOMING_VELOCITY_J2, _MOVE_AWAY_VELOCITY_J2, _MOVE_BACK_VELOCITY_J2, _HOME_POS_J2};
+    AxisData* newAxis3 = new AxisData {MOVE_TO_SWITCH, &_motorJ3, J3, _HOMING_VELOCITY_J3, _MOVE_AWAY_VELOCITY_J3, _MOVE_BACK_VELOCITY_J3, _HOME_POS_J3};
+    AxisData* newAxis4 = new AxisData {MOVE_TO_SWITCH, &_motorJ4, J4, _HOMING_VELOCITY_J4, _MOVE_AWAY_VELOCITY_J4, _MOVE_BACK_VELOCITY_J4, _HOME_POS_J4};
+    AxisData* newAxis5 = new AxisData {MOVE_TO_SWITCH, &_motorJ5, J5, _HOMING_VELOCITY_J5, _MOVE_AWAY_VELOCITY_J5, _MOVE_BACK_VELOCITY_J5, _HOME_POS_J5};
+    AxisData* newAxis6 = new AxisData {MOVE_TO_SWITCH, &_motorJ6, J6, _HOMING_VELOCITY_J6, _MOVE_AWAY_VELOCITY_J6, _MOVE_BACK_VELOCITY_J6, _HOME_POS_J6};
+
+    if (!newAxis1 || !newAxis2 || !newAxis3 || !newAxis4 || !newAxis5 || !newAxis6)
+    {
+        Serial.println("Error: Failed to allocate AxisData");
+        delete newAxis1;
+        delete newAxis2;
+        delete newAxis3;
+        delete newAxis4;
+        delete newAxis5;
+        delete newAxis6;
+        return;
+    }
+
+    delete _axis1;
+    delete _axis2;
+    delete _axis3;
+    delete _axis4;
+    delete _axis5;
+    delete _axis6;
+
+    _axis1 = newAxis1;
+    _axis2 = newAxis2;
+    _axis3 = newAxis3;
+    _axis4 = newAxis4;
+    _axis5 = newAxis5;
+    _axis6 = newAxis6;
+}
+
+void Setup::_updateHomingManager()
+{
+    // Clear existing groups
+    _homingManager.clearGroups();
+
+    // Used unique_ptr instead of raw pointers only to see if it works. Maybe it would be better to use raw pointers but for now it works fine.
+    // Create and add groups
+    auto group1 = std::make_unique<AxisGroup>();
+    group1->addAxis(_axis1);
+    group1->addAxis(_axis2);
+    group1->addAxis(_axis4);
+
+    auto group2 = std::make_unique<AxisGroup>();
+    group2->addAxis(_axis3);
+
+    auto group3 = std::make_unique<AxisGroup>();
+    group3->addAxis(_axis5);
+    group3->addAxis(_axis6);
+
+    _homingManager.addGroup(std::move(group1));
+    _homingManager.addGroup(std::move(group2));
+    _homingManager.addGroup(std::move(group3));
+}
+
 void Setup::update(const String& jsonString)
 {
     if (jsonString.length() > 0)
     {
         _jsonStr = jsonString;
         _validateJson();
-        std::array<DHparam, 6> extractedParams = _extractDHParams();
-
-        if (extractedParams.size() == 6)
-        {
-            _dhParams = extractedParams;
-        }
-        std::array<int, 6> extractedHomePositions = _extractHomingParams(); // Holding all home positions -> set via frontend setup
-        if (extractedHomePositions.size() == 6)
-        {
-            _HOME_POS_J1 = extractedHomePositions[0];
-            _HOME_POS_J2 = extractedHomePositions[1];
-            _HOME_POS_J3 = extractedHomePositions[2];
-            _HOME_POS_J4 = extractedHomePositions[3];
-            _HOME_POS_J5 = extractedHomePositions[4];
-            _HOME_POS_J6 = extractedHomePositions[5];
-        }
-        std::array<MotionProfile, 6> extractedProfiles = _extractMotionProfiles();
-        if (extractedProfiles.size() == 6)
-        {
-            Stepper* motors[] = {&_motorJ1, &_motorJ2, &_motorJ3, &_motorJ4, &_motorJ5, &_motorJ6};
-            for (size_t i = 0; i < extractedProfiles.size(); ++i)
-            {
-                motors[i]->setMaxSpeed(extractedProfiles[i].max_speed).setAcceleration(extractedProfiles[i].accel);
-            }
-        }
-        for (auto cfg : _motorConfigs)
-        {
-            delete cfg;
-        }
-        _motorConfigs.clear();
-        _motorConfigs.reserve(6);
-        _motorConfigs.push_back(new MotorConfig {&_motorJ1, _HOME_POS_J1, 200, 64, 16.0f, 100.0f, 1.0f});
-        _motorConfigs.push_back(new MotorConfig {&_motorJ2, _HOME_POS_J2, 200, 64, 16.0f, 80.0f, 14.0f});
-        _motorConfigs.push_back(new MotorConfig {&_motorJ3, _HOME_POS_J3, 200, 64, 16.0f, 100.0f, 1.0f});
-        _motorConfigs.push_back(new MotorConfig {&_motorJ4, _HOME_POS_J4, 200, 64, 16.0f, 60.0f, 1.0f});
-        _motorConfigs.push_back(new MotorConfig {&_motorJ5, _HOME_POS_J5, 400, 64, 16.0f, 32.0f, 1.0f});
-        _motorConfigs.push_back(new MotorConfig {&_motorJ6, _HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
-
-        if (_kin)
-            delete _kin;
-
-        _kin = new Kinematics(_motorConfigs, _dhParams);
-        if (_axis1)
-            delete _axis1;
-        if (_axis2)
-            delete _axis2;
-        if (_axis3)
-            delete _axis3;
-        if (_axis4)
-            delete _axis4;
-        if (_axis5)
-            delete _axis5;
-        if (_axis6)
-            delete _axis6;
-
-        _axis1 = new AxisData {MOVE_TO_SWITCH, &_motorJ1, J1, _HOMING_VELOCITY_J1, _MOVE_AWAY_VELOCITY_J1, _MOVE_BACK_VELOCITY_J1, _HOME_POS_J1};
-        _axis2 = new AxisData {MOVE_TO_SWITCH, &_motorJ2, J2, _HOMING_VELOCITY_J2, _MOVE_AWAY_VELOCITY_J2, _MOVE_BACK_VELOCITY_J2, _HOME_POS_J2};
-        _axis3 = new AxisData {MOVE_TO_SWITCH, &_motorJ3, J3, _HOMING_VELOCITY_J3, _MOVE_AWAY_VELOCITY_J3, _MOVE_BACK_VELOCITY_J3, _HOME_POS_J3};
-        _axis4 = new AxisData {MOVE_TO_SWITCH, &_motorJ4, J4, _HOMING_VELOCITY_J4, _MOVE_AWAY_VELOCITY_J4, _MOVE_BACK_VELOCITY_J4, _HOME_POS_J4};
-        _axis5 = new AxisData {MOVE_TO_SWITCH, &_motorJ5, J5, _HOMING_VELOCITY_J5, _MOVE_AWAY_VELOCITY_J5, _MOVE_BACK_VELOCITY_J5, _HOME_POS_J5};
-        _axis6 = new AxisData {MOVE_TO_SWITCH, &_motorJ6, J6, _HOMING_VELOCITY_J6, _MOVE_AWAY_VELOCITY_J6, _MOVE_BACK_VELOCITY_J6, _HOME_POS_J6};
-
-        if (!_axis1 || !_axis2 || !_axis3 || !_axis4 || !_axis5 || !_axis6)
-        {
-            Serial.println("Error: Failed to create AxisData objects!");
-            return;
-        }
-
-        // Clear existing groups
-        _homingManager.clearGroups();
-
-        // Create and add groups
-        auto group1 = std::make_unique<AxisGroup>();
-        group1->addAxis(_axis1);
-        group1->addAxis(_axis2);
-        group1->addAxis(_axis4);
-
-        auto group2 = std::make_unique<AxisGroup>();
-        group2->addAxis(_axis3);
-
-        auto group3 = std::make_unique<AxisGroup>();
-        group3->addAxis(_axis5);
-        group3->addAxis(_axis6);
-
-        _homingManager.addGroup(std::move(group1));
-        _homingManager.addGroup(std::move(group2));
-        _homingManager.addGroup(std::move(group3));
+        _updateDhParams();
+        _updateHomePositions();
+        _updateMotionProfiles();
+        _updateMotorConfigs();
+        _updateKinematics();
+        _updateAxisData();
+        _updateHomingManager();
     }
 }
 
