@@ -234,7 +234,6 @@ class MainWindowController:
 
             start_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, {joint_speeds[index]}, START]"
             self._send_data(start_data)
-            print(start_data)
         else:
             print(f"Error: Object-Name '{btn_name}' has an unexpected structure!")
 
