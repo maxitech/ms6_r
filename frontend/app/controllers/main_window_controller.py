@@ -11,7 +11,7 @@ from app.utils.helper import Helper
 class MainWindowController:
     def __init__(self, ui):
         self._ui = ui
-        self._setup = Setup(ui=self._ui, main_window_controller=self)
+        self._setup = Setup(ui=self._ui)
         self._serial = SerialConnection(controller=self)
         self._helper = Helper()
         self._current_ports = []
