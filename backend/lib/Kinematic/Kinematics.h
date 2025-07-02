@@ -8,6 +8,7 @@
 
 #include "Compat.h"
 #include "MotorConfig.h"
+#include "Utils.h"
 #include <cmath>
 
 /**
@@ -58,7 +59,7 @@ public:
      * @param motorConfigs Motor configuration list.
      * @param dhParams Denavit-Hartenberg parameters.
      */
-    Kinematics(const std::vector<MotorConfig*>& motorConfigs, const std::array<DHparam, 6>& dhParams);
+    Kinematics(const std::vector<MotorConfig*>& motorConfigs, const std::array<DHparam, Utils::NUM_DOF>& dhParams);
 
     /**
      * @brief Returns current joint angles in radians.
@@ -175,9 +176,9 @@ private:
 
     // Note: Kinematics class does not manage the memory of MotorConfig pointers.
     // Setup class is responsible for creating and managing MotorConfig objects.
-    const std::vector<MotorConfig*>& _motorConfigs;                                  ///< Motor configuration for each joint
-    const std::array<DHparam, 6>     _dhParams;                                      ///< DH parameters for each joint
-    Eigen::Matrix4d                  _toolFrameMatrix = Eigen::Matrix4d::Identity(); ///< Tool frame transformation matrix
+    const std::vector<MotorConfig*>&          _motorConfigs;                                  ///< Motor configuration for each joint
+    const std::array<DHparam, Utils::NUM_DOF> _dhParams;                                      ///< DH parameters for each joint
+    Eigen::Matrix4d                           _toolFrameMatrix = Eigen::Matrix4d::Identity(); ///< Tool frame transformation matrix
 };
 
 #endif // KINEMATICS_H
