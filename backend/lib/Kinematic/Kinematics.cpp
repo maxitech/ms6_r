@@ -1,6 +1,6 @@
 #include "Kinematics.h"
 
-Kinematics::Kinematics(const std::vector<MotorConfig*>& motorConfigs, const std::array<DHparam, 6>& dhParams)
+Kinematics::Kinematics(const std::vector<MotorConfig*>& motorConfigs, const std::array<DHparam, Utils::NUM_DOF>& dhParams)
     : _motorConfigs(motorConfigs)
     , _dhParams(dhParams)
 {
@@ -102,15 +102,15 @@ Eigen::Matrix4d Kinematics::_createTransformationMatrix(double x, double y, doub
 std::vector<double> Kinematics::getJointAnglesInRadOrDeg(const int radOrDeg) const
 {
 
-    if (_motorConfigs.empty() || _motorConfigs.size() != 6) // ensure not more than 6 motors
+    if (_motorConfigs.empty() || _motorConfigs.size() != Utils::NUM_DOF) // ensure not more than 6 motors
     {
         return {};
     }
     std::vector<double> anglesRad;
     std::vector<double> anglesDeg;
 
-    anglesRad.reserve(_motorConfigs.size());
-    anglesDeg.reserve(_motorConfigs.size());
+    anglesRad.reserve(Utils::NUM_DOF);
+    anglesDeg.reserve(Utils::NUM_DOF);
 
     for (const auto& cfg : _motorConfigs)
     {
@@ -289,7 +289,7 @@ Angles Kinematics::inverseKinematics(double x, double y, double z, double yaw, d
     // Determine if the wrist is flipped (J5 angle negative)
     bool                flipWrist = false;
     std::vector<double> angles    = getJointAnglesInRadOrDeg(1); // Get angles in radians
-    if (angles.size() >= 6)                                      // ? Avoid out-of-bounds access – update this if more joints are added
+    if (angles.size() == Utils::NUM_DOF)                         // ? Avoid out-of-bounds access – update this if more joints are added
     {
         flipWrist = angles[4] < 0;
     }
