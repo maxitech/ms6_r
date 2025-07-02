@@ -269,7 +269,7 @@ void Setup::_updateAxisData()
     _axis6 = newAxis6;
 }
 
-void Setup::_updateHomingManager()
+void Setup::_updateHomingGroups()
 {
     // Clear existing groups
     _homingManager.clearGroups();
@@ -305,7 +305,7 @@ void Setup::update(const String& jsonString)
         _updateMotorConfigs();
         _updateKinematics();
         _updateAxisData();
-        _updateHomingManager();
+        _updateHomingGroups();
     }
 }
 
