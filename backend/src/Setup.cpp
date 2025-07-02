@@ -44,7 +44,7 @@ std::array<DHparam, Utils::NUM_DOF> Setup::_extractDHParams()
     JsonObjectConst                     dh_params = _jsonDoc["dh_params"];
     std::array<DHparam, Utils::NUM_DOF> result;
 
-    for (int i = 1; i <= Utils::NUM_DOF; ++i)
+    for (size_t i = 1; i <= Utils::NUM_DOF; ++i)
     {
         std::string     jointName = "joint" + std::to_string(i);
         JsonObjectConst joint     = dh_params[jointName.c_str()];
@@ -86,7 +86,7 @@ std::array<int, Utils::NUM_DOF> Setup::_extractHomingParams()
     JsonObjectConst                 homing_params = _jsonDoc["homing_params"];
     std::array<int, Utils::NUM_DOF> result;
 
-    for (int i = 1; i <= Utils::NUM_DOF; ++i)
+    for (size_t i = 1; i <= Utils::NUM_DOF; ++i)
     {
         std::string     motor     = "motor" + std::to_string(i);
         JsonObjectConst motorData = homing_params[motor.c_str()];
@@ -120,7 +120,7 @@ std::array<MotionProfile, Utils::NUM_DOF> Setup::_extractMotionProfiles()
     JsonObjectConst                           speed_a_accel = _jsonDoc["speed_a_accel"];
     std::array<MotionProfile, Utils::NUM_DOF> result;
 
-    for (int i = 1; i <= Utils::NUM_DOF; ++i)
+    for (size_t i = 1; i <= Utils::NUM_DOF; ++i)
     {
         std::string     motor         = "motor" + std::to_string(i);
         JsonObjectConst motionProfile = speed_a_accel[motor.c_str()];

@@ -30,3 +30,8 @@ bool LimitSwitches::_isPressed(const byte limitSwitch)
 {
     return digitalRead(limitSwitch) == LOW;
 }
+
+byte LimitSwitches::getLedPin() const
+{
+    return _ledPin;
+}

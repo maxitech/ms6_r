@@ -35,6 +35,8 @@ public:
      */
     void check();
 
+    byte getLedPin() const; ///< Returns the pin number of the LED.
+
 private:
     /**
      * @brief Checks if a specific limit switch is pressed.
