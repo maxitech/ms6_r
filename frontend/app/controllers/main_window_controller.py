@@ -97,7 +97,7 @@ class MainWindowController:
         self._serial.setPort(selected_port)
         self._serial.connect(self._process_received_data)
         if self._serial.is_connected() and not None:
-            self._send_data(f"SETUP,[{json.dumps(self._setup.get_setup())}]")
+            self.send_data(f"SETUP,[{json.dumps(self._setup.get_setup())}]")
             self._update_ui_based_on_connection_status(
                 "Disconnect", f"Connected to {selected_port}", False
             )
@@ -121,7 +121,7 @@ class MainWindowController:
         else:
             return
 
-    def _send_data(self, data):
+    def send_data(self, data):
         text_input = data
         if isinstance(text_input, str) and len(text_input) > 0:
             checksum = self._helper.calc_checksum(text_input)
@@ -182,25 +182,25 @@ class MainWindowController:
 
     def _handle_load_btn_click(self):
         if self._check_for_program():
-            self._send_data(self._program)
+            self.send_data(self._program)
             self._ui.btn_start.setEnabled(True)
             self._ui.btn_stop.setEnabled(False)
 
     def _handle_start_btn_click(self):
         if self._check_for_program():
-            self._send_data("START,[EXEC]")
+            self.send_data("START,[EXEC]")
             self._ui.btn_start.setEnabled(False)
             self._ui.btn_stop.setEnabled(True)
 
     def _handle_stop_btn_click(self):
         if self._check_for_program():
-            self._send_data("STOP,[EXEC]")
+            self.send_data("STOP,[EXEC]")
             self._ui.btn_stop.setEnabled(False)
             self._ui.btn_start.setEnabled(True)
 
     def _handle_clear_btn_click(self):
         self._fmt_log_monitor("[INFO]", "Program cleared", "lightblue")
-        self._send_data("IDLE,[EXEC]")
+        self.send_data("IDLE,[EXEC]")
         self._program = None
         self._ui.btn_load_prog_btn.setEnabled(False)
         self._ui.btn_start.setEnabled(False)
@@ -233,21 +233,21 @@ class MainWindowController:
             )  # Extract number from J1, J2, etc. to get index
 
             start_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, {joint_speeds[index]}, START]"
-            self._send_data(start_data)
+            self.send_data(start_data)
             print(start_data)
         else:
             print(f"Error: Object-Name '{btn_name}' has an unexpected structure!")
 
     def _handle_jog_btn_release(self):
         stop_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, 0, STOP]"
-        self._send_data(stop_data)
+        self.send_data(stop_data)
         print(stop_data)
 
     # ? This is only a prototype function, not complete yet
     def _handle_home_axis_btn_click(self):
         if self._serial.is_connected():
             home_data = "LOAD,[HOME]"
-            self._send_data(home_data)
+            self.send_data(home_data)
             self._fmt_program_monitor("Home", "lightblue", "white")
         else:
             self._fmt_log_monitor("[ERROR]", "Cannot home axes, not connected!", "red")
@@ -269,6 +269,7 @@ class MainWindowController:
         self._ui.con_connect_btn.setText(btn_text)
         self._ui.con_device_comboBox.setEnabled(is_enabled)
         self._ui.con_status_label2.setText(status_text)
+        self._ui.setup_save_btn.setEnabled(is_enabled)
 
     # *Program Monitor
     def _fmt_program_monitor(self, cmd, txt_color, bracket_color):
