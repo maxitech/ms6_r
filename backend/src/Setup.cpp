@@ -33,7 +33,7 @@ void Setup::_validateJson()
     }
 }
 
-std::array<DHparam, 6> Setup::_extractDHParams()
+std::array<DHparam, Utils::NUM_DOF> Setup::_extractDHParams()
 {
     if (!_valid)
     {
@@ -41,10 +41,10 @@ std::array<DHparam, 6> Setup::_extractDHParams()
         return {};
     }
 
-    JsonObjectConst        dh_params = _jsonDoc["dh_params"];
-    std::array<DHparam, 6> result;
+    JsonObjectConst                     dh_params = _jsonDoc["dh_params"];
+    std::array<DHparam, Utils::NUM_DOF> result;
 
-    for (int i = 1; i <= 6; ++i)
+    for (int i = 1; i <= Utils::NUM_DOF; ++i)
     {
         std::string     jointName = "joint" + std::to_string(i);
         JsonObjectConst joint     = dh_params[jointName.c_str()];
@@ -75,7 +75,7 @@ std::array<DHparam, 6> Setup::_extractDHParams()
     return result;
 };
 
-std::array<int, 6> Setup::_extractHomingParams()
+std::array<int, Utils::NUM_DOF> Setup::_extractHomingParams()
 {
     if (!_valid)
     {
@@ -83,10 +83,10 @@ std::array<int, 6> Setup::_extractHomingParams()
         return {};
     }
 
-    JsonObjectConst    homing_params = _jsonDoc["homing_params"];
-    std::array<int, 6> result;
+    JsonObjectConst                 homing_params = _jsonDoc["homing_params"];
+    std::array<int, Utils::NUM_DOF> result;
 
-    for (int i = 1; i <= 6; ++i)
+    for (int i = 1; i <= Utils::NUM_DOF; ++i)
     {
         std::string     motor     = "motor" + std::to_string(i);
         JsonObjectConst motorData = homing_params[motor.c_str()];
@@ -109,7 +109,7 @@ std::array<int, 6> Setup::_extractHomingParams()
     return result;
 };
 
-std::array<MotionProfile, 6> Setup::_extractMotionProfiles()
+std::array<MotionProfile, Utils::NUM_DOF> Setup::_extractMotionProfiles()
 {
     if (!_valid)
     {
@@ -117,10 +117,10 @@ std::array<MotionProfile, 6> Setup::_extractMotionProfiles()
         return {};
     }
 
-    JsonObjectConst              speed_a_accel = _jsonDoc["speed_a_accel"];
-    std::array<MotionProfile, 6> result;
+    JsonObjectConst                           speed_a_accel = _jsonDoc["speed_a_accel"];
+    std::array<MotionProfile, Utils::NUM_DOF> result;
 
-    for (int i = 1; i <= 6; ++i)
+    for (int i = 1; i <= Utils::NUM_DOF; ++i)
     {
         std::string     motor         = "motor" + std::to_string(i);
         JsonObjectConst motionProfile = speed_a_accel[motor.c_str()];
@@ -170,9 +170,9 @@ bool Setup::_checkFields(const char* f1, const char* f2, const char* f3, const c
 
 void Setup::_updateDhParams()
 {
-    std::array<DHparam, 6> extractedParams = _extractDHParams();
+    std::array<DHparam, Utils::NUM_DOF> extractedParams = _extractDHParams();
 
-    if (extractedParams.size() == 6)
+    if (extractedParams.size() == Utils::NUM_DOF)
     {
         _dhParams = extractedParams;
     }
@@ -180,8 +180,8 @@ void Setup::_updateDhParams()
 
 void Setup::_updateHomePositions()
 {
-    std::array<int, 6> extractedHomePositions = _extractHomingParams(); // Holding all home positions -> set via frontend setup
-    if (extractedHomePositions.size() == 6)
+    std::array<int, Utils::NUM_DOF> extractedHomePositions = _extractHomingParams(); // Holding all home positions -> set via frontend setup
+    if (extractedHomePositions.size() == Utils::NUM_DOF)
     {
         _HOME_POS_J1 = extractedHomePositions[0];
         _HOME_POS_J2 = extractedHomePositions[1];
@@ -194,8 +194,8 @@ void Setup::_updateHomePositions()
 
 void Setup::_updateMotionProfiles()
 {
-    std::array<MotionProfile, 6> extractedProfiles = _extractMotionProfiles();
-    if (extractedProfiles.size() == 6)
+    std::array<MotionProfile, Utils::NUM_DOF> extractedProfiles = _extractMotionProfiles();
+    if (extractedProfiles.size() == Utils::NUM_DOF)
     {
         Stepper* motors[] = {&_motorJ1, &_motorJ2, &_motorJ3, &_motorJ4, &_motorJ5, &_motorJ6};
         for (size_t i = 0; i < extractedProfiles.size(); ++i)
@@ -212,7 +212,7 @@ void Setup::_updateMotorConfigs()
         delete cfg;
     }
     _motorConfigs.clear();
-    _motorConfigs.reserve(6);
+    _motorConfigs.reserve(Utils::NUM_DOF); // Reserve space for 6 motor configs
     _motorConfigs.push_back(new MotorConfig {&_motorJ1, _HOME_POS_J1, 200, 64, 16.0f, 100.0f, 1.0f});
     _motorConfigs.push_back(new MotorConfig {&_motorJ2, _HOME_POS_J2, 200, 64, 16.0f, 80.0f, 14.0f});
     _motorConfigs.push_back(new MotorConfig {&_motorJ3, _HOME_POS_J3, 200, 64, 16.0f, 100.0f, 1.0f});
