@@ -54,8 +54,7 @@ struct MotorConfig
 
     /**
      * @brief Home offset in steps.
-     * This is set to the defined home position and used to calculate the mathmatical 0° position after homing.
-     * Default is 0.
+     * This is set to the defined home position and used to calculate the mathematical 0° position after homing.
      */
     int homeOffsetSteps;
 
