@@ -151,48 +151,11 @@ class MainWindowController:
             # Handle data that starts with "DATA:"
             data_content = data[5:].strip()
             if "MOTOR_POS_STEPS" in data_content:
-                match = re.search(r"\*(.*?)#(.*)", data_content)
-                if match:
-                    motor = match.group(1)
-                    pos = match.group(2)
-                    label_name = f"jog_j{motor}_label"
-                    label_widget = getattr(self._ui, label_name, None)
-                    if label_widget is not None:
-                        label_widget.setText(pos)
+                self._update_jog_label(data_content)
             elif "FK_POSE" in data_content:
-                match = re.search(r"\*(.*)", data_content)
-                if match:
-                    pose_values = match.group(1).split(",")
-                    if len(pose_values) == 6:
-                        x, y, z, roll, pitch, yaw = pose_values
-                        self._ui.tool_x_label.setText(x)
-                        self._ui.tool_y_label.setText(y)
-                        self._ui.tool_z_label.setText(z)
-                        self._ui.tool_rx_label.setText(roll)
-                        self._ui.tool_ry_label.setText(pitch)
-                        self._ui.tool_rz_label.setText(yaw)
-                    else:
-                        print(
-                            "[ERROR]: FK_POSE received but did not contain 6 values:",
-                            pose_values,
-                        )
+                self._update_fk_pose_labels(data_content)
             elif "JOINT_ANGLES" in data_content:
-                match = re.search(r"\*(.*)", data_content)
-                if match:
-                    angles_values = match.group(1).split(",")
-                    if len(angles_values) == 6:
-                        j1, j2, j3, j4, j5, j6 = angles_values
-                        self._ui.joint_pos_j1_label.setText(j1)
-                        self._ui.joint_pos_j2_label.setText(j2)
-                        self._ui.joint_pos_j3_label.setText(j3)
-                        self._ui.joint_pos_j4_label.setText(j4)
-                        self._ui.joint_pos_j5_label.setText(j5)
-                        self._ui.joint_pos_j6_label.setText(j6)
-                    else:
-                        print(
-                            "[ERROR]: JOINT_ANGLES received but did not contain 6 values:",
-                            angles_values,
-                        )
+                self._update_joint_angle_labels(data_content)
 
     # ***************Handlers*******************
     def _handle_con_btn_click(self):
@@ -361,6 +324,54 @@ class MainWindowController:
         cursor.insertText(data + ("\n" if "\n" not in data else ""))
 
         self._ui.log_textEdit.setTextCursor(cursor)
+
+    # *Jog Labels
+    def _update_jog_label(self, data_content):
+        match = re.search(r"\*(.*)", data_content)
+        if match:
+            motor, pos = match.group(1).split(",")
+            label_name = f"jog_j{motor}_label"
+            label_widget = getattr(self._ui, label_name, None)
+            if label_widget is not None:
+                label_widget.setText(pos)
+
+    # *FK Pose Labels
+    def _update_fk_pose_labels(self, data_content):
+        match = re.search(r"\*(.*)", data_content)
+        if match:
+            pose_values = match.group(1).split(",")
+            if len(pose_values) == 6:
+                x, y, z, roll, pitch, yaw = pose_values
+                self._ui.tool_x_label.setText(x)
+                self._ui.tool_y_label.setText(y)
+                self._ui.tool_z_label.setText(z)
+                self._ui.tool_rx_label.setText(roll)
+                self._ui.tool_ry_label.setText(pitch)
+                self._ui.tool_rz_label.setText(yaw)
+            else:
+                print(
+                    "[ERROR]: FK_POSE received but did not contain 6 values:",
+                    pose_values,
+                )
+
+    # *Joint Angle Labels
+    def _update_joint_angle_labels(self, data_content):
+        match = re.search(r"\*(.*)", data_content)
+        if match:
+            angles_values = match.group(1).split(",")
+            if len(angles_values) == 6:
+                j1, j2, j3, j4, j5, j6 = angles_values
+                self._ui.joint_pos_j1_label.setText(j1)
+                self._ui.joint_pos_j2_label.setText(j2)
+                self._ui.joint_pos_j3_label.setText(j3)
+                self._ui.joint_pos_j4_label.setText(j4)
+                self._ui.joint_pos_j5_label.setText(j5)
+                self._ui.joint_pos_j6_label.setText(j6)
+            else:
+                print(
+                    "[ERROR]: JOINT_ANGLES received but did not contain 6 values:",
+                    angles_values,
+                )
 
     # ***********Helper Functions****************
     def _check_for_program(self):
