@@ -43,6 +43,7 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
         {
             return;
         }
+        digitalWrite(_limitSwitches.getLedPin(), LOW); // Turn off the LED
         _stop();
     }
     else if (command == "IDLE")
@@ -53,7 +54,8 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
         }
         else
         {
-            _stop(); // Stop any running program and set to IDLE state
+            _stop();                                       // Stop any running program and set to IDLE state
+            digitalWrite(_limitSwitches.getLedPin(), LOW); // Turn off the LED
             _setState(IDLE);
             _executionState = EXEC_IDLE;
         }
