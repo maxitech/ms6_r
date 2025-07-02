@@ -121,6 +121,41 @@ private:
      */
     bool _checkFields(const char* f1, const char* f2, const char* f3, const char* f4, const char* context);
 
+    /**
+     * @brief Updates the DH parameters based on the JSON document.
+     */
+    void _updateDhParams();
+
+    /**
+     * @brief Updates the home positions based on the JSON document.
+     */
+    void _updateHomePositions();
+
+    /**
+     * @brief Updates the motion profiles based on the JSON document.
+     */
+    void _updateMotionProfiles();
+
+    /**
+     * @brief Updates the motor configurations based on the JSON document.
+     */
+    void _updateMotorConfigs();
+
+    /**
+     * @brief Updates the kinematics instance with the current motor configurations and DH parameters.
+     */
+    void _updateKinematics();
+
+    /**
+     * @brief Updates the axis data for each axis.
+     */
+    void _updateAxisData();
+
+    /**
+     * @brief Updates the homing groups with the current axis data.
+     */
+    void _updateHomingGroups();
+
     JsonDocument _jsonDoc;       ///< JSON document for storing configuration data
     bool         _valid = false; ///< Flag to indicate if the JSON document is valid
     String       _jsonStr;       ///< String representation of the JSON document received from the frontend
