@@ -360,13 +360,11 @@ class MainWindowController:
         if match:
             angles_values = match.group(1).split(",")
             if len(angles_values) == 6:
-                j1, j2, j3, j4, j5, j6 = angles_values
-                self._ui.joint_pos_j1_label.setText(j1)
-                self._ui.joint_pos_j2_label.setText(j2)
-                self._ui.joint_pos_j3_label.setText(j3)
-                self._ui.joint_pos_j4_label.setText(j4)
-                self._ui.joint_pos_j5_label.setText(j5)
-                self._ui.joint_pos_j6_label.setText(j6)
+                for i, angle in enumerate(angles_values, start=1):
+                    label_name = f"joint_pos_j{i}_label"
+                    label_widget = getattr(self._ui, label_name, None)
+                    if label_widget is not None:
+                        label_widget.setText(angle)
             else:
                 print(
                     "[ERROR]: JOINT_ANGLES received but did not contain 6 values:",
