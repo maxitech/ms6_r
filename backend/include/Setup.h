@@ -22,6 +22,7 @@
 #include <Arduino.h>
 
 #include "Kinematics.h"
+#include "Utils.h"
 #include <ArduinoJson.h>
 
 /**
@@ -88,19 +89,19 @@ private:
      * @brief Extracts the dh parameters from the JSON document.
      * @return An array of DHparam structs.
      */
-    std::array<DHparam, 6> _extractDHParams();
+    std::array<DHparam, Utils::NUM_DOF> _extractDHParams();
 
     /**
      * @brief Extracts the homing parameters(for now only home pos) from the JSON document.
      * @return An array of home positions.
      */
-    std::array<int, 6> _extractHomingParams();
+    std::array<int, Utils::NUM_DOF> _extractHomingParams();
 
     /**
      * @brief Extracts the motion profiles from the JSON document.
      * @return An array of MotionProfile structs.
      */
-    std::array<MotionProfile, 6> _extractMotionProfiles();
+    std::array<MotionProfile, Utils::NUM_DOF> _extractMotionProfiles();
 
     /**
      * @brief Checks if a given part exists in the JSON object.
@@ -156,6 +157,7 @@ private:
      */
     void _updateHomingGroups();
 
+    // ************Variables*************
     JsonDocument _jsonDoc;       ///< JSON document for storing configuration data
     bool         _valid = false; ///< Flag to indicate if the JSON document is valid
     String       _jsonStr;       ///< String representation of the JSON document received from the frontend
@@ -247,7 +249,7 @@ private:
     std::vector<MotorConfig*> _motorConfigs; ///< Vector of MotorConfig pointers @internal
 
     // Initialize Kinematics with DH parameters
-    std::array<DHparam, 6> _dhParams; ///< Array of DH parameters for the robot arm
+    std::array<DHparam, Utils::NUM_DOF> _dhParams; ///< Array of DH parameters for the robot arm
     // *Default values for L position of MS6R below as reference
     // std::vector<DHparam> dhParams = {
     //     {37.5f, -1.571f, 135.300f},
