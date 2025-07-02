@@ -372,6 +372,6 @@ void ProgramLoader::_sendMotorPosInSteps(const int motorIdx)
     const int motorPos = _motorConfigs[motorIdx]->motor->getPosition();
     Serial.print("DATA:MOTOR_POS_STEPS*");
     Serial.print(motorIdx + 1);
-    Serial.print("#");
+    Serial.print(",");
     Serial.println(motorPos);
 }
