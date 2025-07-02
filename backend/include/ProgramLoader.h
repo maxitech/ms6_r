@@ -22,7 +22,7 @@ enum ProgramState
     PONG,          ///< Sends "PING" every second.
     TEST_SWITCHES, ///< Runs limit switch diagnostic.
     HOME,          ///< Executes homing routine for all axes.
-    MAIN
+    MAIN           ///< Main program for executing commands like JOG or MOVE.
 };
 
 enum ExecutionState
