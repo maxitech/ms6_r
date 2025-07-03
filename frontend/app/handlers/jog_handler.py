@@ -1,3 +1,6 @@
+from app.constants.jog_config import JOG_CONFIG
+
+
 class JogHandler:
     def __init__(self, ui, serial, helper, ui_manager):
         self._ui = ui
@@ -59,11 +62,11 @@ class JogHandler:
 
     def _calculate_jog_speed(self, joint):
         """Calculate jog speed based on joint and slider value"""
-        gear_factors = [1, 14, 1, 1, 1, 1]
+        gear_factors = JOG_CONFIG["gear_factors"]
         joint_speeds = self._helper.get_joint_speeds(
             slider_value=self._slider_value,
-            v_min=500,
-            v_max=4000,
+            v_min=JOG_CONFIG["speed_range"]["min"],
+            v_max=JOG_CONFIG["speed_range"]["max"],
             gear_factors=gear_factors,
         )
         index = int(joint.split("J")[1]) - 1
