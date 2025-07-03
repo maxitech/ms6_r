@@ -175,7 +175,10 @@ cython_debug/
 
 # -----Custom rules-----
 # Ignore all .py files in the ui/ folder
-app/ui/*.py
+# app/ui/*.py
+
+# Ignore this file
+app/ui/main_window_ui.py
 
 # But do NOT ignore .ui files
 app/!ui/*.ui
