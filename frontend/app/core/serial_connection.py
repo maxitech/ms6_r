@@ -4,15 +4,19 @@ from app.core.serial_worker import SerialWorker
 
 
 class SerialConnection:
-    def __init__(self, controller, baudrate=115200):
+    def __init__(self, helper, ui_manager, baudrate=115200):
+        self._helper = helper
+        self._ui_manager = ui_manager
+        self._connection_handler = None
         self._serial_worker = None
         self._baudrate = baudrate
         self._serial = None
         self._ports = []
         self._port = None
-        self._main_win_controller = controller
 
-    # public methods
+    def set_connection_handler(self, handler):
+        self._connection_handler = handler
+
     def getPorts(self):
         self._load_ports()
         devices = [port.device for port in self._ports]
@@ -51,12 +55,13 @@ class SerialConnection:
                 print(
                     f"Warning: {self._port} no longer available, device may be disconnected."
                 )
-                self._main_win_controller.handle_unexpected_disconnect()
+                self._connection_handler.handle_unexpected_disconnect()
                 self.disconnect()
                 return False
         return False
 
-    def send_data(self, data):
+    def _send_data(self, data):
+        """Internal send function"""
         if not self.is_connected():
             print(f"Cannot send data, no active connection to {self._port}")
             return
@@ -70,6 +75,29 @@ class SerialConnection:
                 print("Write timeout error!")
             except Exception as e:
                 print(f"[MainWindow] Write error: {e}")
+
+    def send_data(self, data):
+        """Public Send data function."""
+        if isinstance(data, str) and len(data) > 0:
+            checksum = self._helper.calc_checksum(data)
+            data_str = f"${data}*{checksum}#"
+
+            if self.is_connected():
+                if self._is_valid_format(data_str):
+                    self._send_data(data_str)
+                    print(f"Sent: {data_str}")
+                else:
+                    self._ui_manager.log_message("ERROR", "Invalid data format!", "red")
+            else:
+                self._ui_manager.log_message("ERROR", "Not connected!", "red")
+
+    def _is_valid_format(self, data_str):
+        """Check if data format is valid"""
+        return (
+            data_str.startswith("$")
+            and data_str.find("*") != -1
+            and data_str.endswith("#")
+        )
 
     # private methods
     def _load_ports(self):
