@@ -59,17 +59,29 @@ struct MotorConfig
     int homeOffsetSteps;
 
     /**
+     * @brief Minimum angle of the motor.
+     */
+    double minAngleDeg;
+
+    /**
+     * @brief Maximum angle of the motor.
+     */
+    double maxAngleDeg;
+
+    /**
      * @brief Constructs a new MotorConfig object.
      *
      * @param motor Pointer to the Stepper motor instance.
      * @param homeOffset Offset in steps from limit switch(=== HOME_POS).
+     * @param minAngleDeg Minimum angle limit of the motor/joint
+     * @param maxAngleDeg Maximum angle limit of the motor/joint
      * @param spr Steps per revolution of the motor.
      * @param ms Microsteps per full step.
      * @param drt Number of teeth on the driving pulley (default 1.0).
      * @param dnt Number of teeth on the driven pulley (default 1.0).
      * @param gr Gearbox ratio applied to the motor (default 1.0).
      */
-    MotorConfig(Stepper* motor, int homeOffset, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
+    MotorConfig(Stepper* motor, int homeOffset, float minAngleDeg, float maxAngleDeg, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
         : motor(motor)
         , stepsPerRev(spr)
         , microsteps(ms)
@@ -77,6 +89,8 @@ struct MotorConfig
         , drivenTeeth(dnt)
         , gearboxRatio(gr)
         , homeOffsetSteps(homeOffset)
+        , minAngleDeg(minAngleDeg)
+        , maxAngleDeg(maxAngleDeg)
     {
     }
 };
