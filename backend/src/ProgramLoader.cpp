@@ -256,18 +256,6 @@ void ProgramLoader::_main()
             warningShown = true;
         }
     }
-
-    if (currJogState == JOGGING && _isHomingDone)
-    {
-        static unsigned long lastSendTime = 0;
-        if (Utils::nonBlockingDelay(100, lastSendTime))
-        {
-            // Send motor position in steps
-            _sendMotorPosInSteps(motorIdx);
-            // Send forward kinematics pose and joint angles
-            _sendFkPoseAndJointAngles();
-        }
-    }
 }
 
 //  ******************************HELPER FUNCTIONS********************************
