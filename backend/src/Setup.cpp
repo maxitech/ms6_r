@@ -285,11 +285,11 @@ void Setup::_updateHomingGroups()
     group2->addAxis(_axis3);
 
     auto group3 = std::make_unique<AxisGroup>();
-    // group3->addAxis(_axis5);
+    group3->addAxis(_axis5);
     group3->addAxis(_axis6);
 
-    // _homingManager.addGroup(std::move(group1));
-    // _homingManager.addGroup(std::move(group2));
+    _homingManager.addGroup(std::move(group1));
+    _homingManager.addGroup(std::move(group2));
     _homingManager.addGroup(std::move(group3));
 }
 
