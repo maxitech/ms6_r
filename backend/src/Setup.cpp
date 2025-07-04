@@ -213,12 +213,12 @@ void Setup::_updateMotorConfigs()
     }
     _motorConfigs.clear();
     _motorConfigs.reserve(Utils::NUM_DOF); // Reserve space for 6 motor configs
-    _motorConfigs.push_back(new MotorConfig {&_motorJ1, _HOME_POS_J1, 200, 64, 16.0f, 100.0f, 1.0f});
-    _motorConfigs.push_back(new MotorConfig {&_motorJ2, _HOME_POS_J2, 200, 64, 16.0f, 80.0f, 14.0f});
-    _motorConfigs.push_back(new MotorConfig {&_motorJ3, _HOME_POS_J3, 200, 64, 16.0f, 100.0f, 1.0f});
-    _motorConfigs.push_back(new MotorConfig {&_motorJ4, _HOME_POS_J4, 200, 64, 16.0f, 60.0f, 1.0f});
-    _motorConfigs.push_back(new MotorConfig {&_motorJ5, _HOME_POS_J5, 400, 64, 16.0f, 32.0f, 1.0f});
-    _motorConfigs.push_back(new MotorConfig {&_motorJ6, _HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
+    _motorConfigs.push_back(new MotorConfig {&_motorJ1, _HOME_POS_J1, _minAngleDegJ1, _maxAngleDegJ1, 200, 64, 16.0f, 100.0f, 1.0f});
+    _motorConfigs.push_back(new MotorConfig {&_motorJ2, _HOME_POS_J2, _minAngleDegJ2, _maxAngleDegJ2, 200, 64, 16.0f, 80.0f, 14.0f});
+    _motorConfigs.push_back(new MotorConfig {&_motorJ3, _HOME_POS_J3, _minAngleDegJ3, _maxAngleDegJ3, 200, 64, 16.0f, 100.0f, 1.0f});
+    _motorConfigs.push_back(new MotorConfig {&_motorJ4, _HOME_POS_J4, _minAngleDegJ4, _maxAngleDegJ4, 200, 64, 16.0f, 60.0f, 1.0f});
+    _motorConfigs.push_back(new MotorConfig {&_motorJ5, _HOME_POS_J5, _minAngleDegJ5, _maxAngleDegJ5, 400, 64, 16.0f, 32.0f, 1.0f});
+    _motorConfigs.push_back(new MotorConfig {&_motorJ6, _HOME_POS_J6, _minAngleDegJ6, _maxAngleDegJ6, 200, 64, 1.0f, 1.0f, 1.0f});
 }
 
 void Setup::_updateKinematics()
@@ -285,11 +285,11 @@ void Setup::_updateHomingGroups()
     group2->addAxis(_axis3);
 
     auto group3 = std::make_unique<AxisGroup>();
-    group3->addAxis(_axis5);
+    // group3->addAxis(_axis5);
     group3->addAxis(_axis6);
 
-    _homingManager.addGroup(std::move(group1));
-    _homingManager.addGroup(std::move(group2));
+    // _homingManager.addGroup(std::move(group1));
+    // _homingManager.addGroup(std::move(group2));
     _homingManager.addGroup(std::move(group3));
 }
 
