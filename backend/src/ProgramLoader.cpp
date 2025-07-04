@@ -286,6 +286,7 @@ void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
     String&       direction = _arguments[1];
     const int     velocity  = _arguments[2].toInt();
     const String& jogState  = _arguments.back();
+    JogFlags&     jogFlags  = _jogFlags[motorIdx];
 
     JogCommand jogCmd = _getJogCommand(jogState);
 

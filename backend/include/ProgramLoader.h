@@ -9,6 +9,7 @@
 #include "Homing.h"
 #include "LimitSwitches.h"
 #include "MotorConfig.h"
+#include "Utils.h"
 #include "teensystep4.h"
 #include <Arduino.h>
 
@@ -37,6 +38,13 @@ enum JogState
 {
     IDLE_JOG, ///< No jog command is active.
     JOGGING,  ///< Currently executing a jog command.
+};
+
+struct JogFlags
+{
+    bool   limitReached = false;
+    String blockedDir   = "";
+    bool   runOnce      = false;
 };
 
 enum JogCommand
@@ -174,14 +182,15 @@ private:
     void _sendMotorPosInSteps(const int motorIdx);
 
     // ******************************MEMBER VARIABLES********************************
-    Homing*                    _homingManager;                   ///< Pointer to the Homing manager for homing routines.
-    std::vector<MotorConfig*>& _motorConfigs;                    ///< Vector of motor configurations for the robot. Note: Setup class has full ownership of this vector.
-    ProgramState               _currentProgramState = IDLE;      ///< Current active program state. @internal
-    ExecutionState             _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
-    LimitSwitches&             _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
-    std::vector<String>        _arguments;                       ///< Arguments passed with the command. @internal
-    String                     _cmd;                             ///< Current command @internal
-    bool                       _isHomingDone = false;            ///< Flag to check if homing is done. @internal
+    Homing*                              _homingManager;                   ///< Pointer to the Homing manager for homing routines.
+    std::vector<MotorConfig*>&           _motorConfigs;                    ///< Vector of motor configurations for the robot. Note: Setup class has full ownership of this vector.
+    ProgramState                         _currentProgramState = IDLE;      ///< Current active program state. @internal
+    ExecutionState                       _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
+    LimitSwitches&                       _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
+    std::vector<String>                  _arguments;                       ///< Arguments passed with the command. @internal
+    String                               _cmd;                             ///< Current command @internal
+    bool                                 _isHomingDone = false;            ///< Flag to check if homing is done. @internal
+    std::array<JogFlags, Utils::NUM_DOF> _jogFlags;
 };
 
 #endif // PROGRAMLOADER_H
