@@ -240,13 +240,24 @@ void ProgramLoader::_main()
     const String&   joint        = _arguments[0];                  // e.g. "J1"
     const int       motorIdx     = joint.substring(1).toInt() - 1; // Convert "J1" extract 1 -> to index 0
     static JogState currJogState = IDLE_JOG;
+    static bool     warningShown = false;
 
-    if (_cmd == "JOG")
+    if (_cmd == "JOG" && _isHomingDone)
     {
         _jogJoint(currJogState, motorIdx);
+        warningShown = false;
+    }
+    else
+    {
+        currJogState = IDLE_JOG;
+        if (!warningShown)
+        {
+            Serial.println("Arm not homed - home first");
+            warningShown = true;
+        }
     }
 
-    if (currJogState == JOGGING && _homingManager->isHomingDone())
+    if (currJogState == JOGGING && _isHomingDone)
     {
         static unsigned long lastSendTime = 0;
         if (Utils::nonBlockingDelay(100, lastSendTime))
@@ -256,10 +267,6 @@ void ProgramLoader::_main()
             // Send forward kinematics pose and joint angles
             _sendFkPoseAndJointAngles();
         }
-    }
-    else if (currJogState == IDLE_JOG)
-    {
-        delay(20);
     }
 }
 
@@ -282,13 +289,32 @@ void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
 
     JogCommand jogCmd = _getJogCommand(jogState);
 
+    static bool   limitReached = false;
+    static String blockedDir   = "";
+    static bool   runOnce      = false;
+
     switch (jogCmd)
     {
     case JOG_START:
-        if (currJogState != JOGGING)
+        if (limitReached && direction == blockedDir && !runOnce)
+        {
+            Serial.println("Cannot jog in " + direction + " direction - limit reached");
+            runOnce = true;
+            return;
+        }
+
+        if (limitReached && direction != blockedDir)
+        {
+            limitReached = false;
+            runOnce      = false;
+            blockedDir   = "";
+        }
+
+        if (currJogState != JOGGING && !limitReached)
         {
             // start
             currJogState = JOGGING;
+
             if (direction != "POS" && direction != "NEG")
             {
                 Serial.println("Invalid direction string: " + direction);
@@ -300,10 +326,21 @@ void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
 
             _motorConfigs[motorIdx]->motor->rotateAsync(dirVel);
         }
+        else if (currJogState == JOGGING && !limitReached)
+        {
+            long currentPos = _motorConfigs[motorIdx]->motor->getPosition();
+            if (currentPos >= -4000)
+            {
+                _motorConfigs[motorIdx]->motor->emergencyStop();
+                currJogState = IDLE_JOG;
+                limitReached = true;
+                blockedDir   = direction;
+            }
+        }
         break;
 
     case JOG_STOP:
-        if (currJogState != IDLE_JOG)
+        if (currJogState == JOGGING && !limitReached)
         {
             // stop
             _motorConfigs[motorIdx]->motor->emergencyStop();
