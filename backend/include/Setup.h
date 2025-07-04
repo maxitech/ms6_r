@@ -238,19 +238,21 @@ private:
     int       _HOME_POS_J6;
     // const int HOME_POS_J6           = -6400;
 
-    const float _minAngleDegJ1 = 180;
-    const float _minAngleDegJ2 = 180;
-    const float _minAngleDegJ3 = 180;
+    // Note: min values have to be positive
+    const float _minAngleDegJ1 = 152;
+    const float _minAngleDegJ2 = 88;
+    const float _minAngleDegJ3 = 50;
     const float _minAngleDegJ4 = 180;
-    const float _minAngleDegJ5 = 180;
+    const float _minAngleDegJ5 = 110;
     const float _minAngleDegJ6 = 180;
 
+    // Note: max values have to be negative
     const float _maxAngleDegJ1 = -180;
-    const float _maxAngleDegJ2 = -180;
-    const float _maxAngleDegJ3 = -180;
-    const float _maxAngleDegJ4 = -180;
-    const float _maxAngleDegJ5 = -180;
-    const float _maxAngleDegJ6 = -180;
+    const float _maxAngleDegJ2 = -14;
+    const float _maxAngleDegJ3 = -57;
+    const float _maxAngleDegJ4 = -166;
+    const float _maxAngleDegJ5 = -120;
+    const float _maxAngleDegJ6 = -174;
 
     // //*********** Initialize Classes *********//
 
