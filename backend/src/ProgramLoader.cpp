@@ -290,9 +290,17 @@ void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
 
     JogCommand jogCmd = _getJogCommand(jogState);
 
-    static bool   limitReached = false;
-    static String blockedDir   = "";
-    static bool   runOnce      = false;
+    if (currJogState == JOGGING)
+    {
+        static unsigned long lastSendTime = 0;
+        if (Utils::nonBlockingDelay(100, lastSendTime))
+        {
+            // Send motor position in steps
+            _sendMotorPosInSteps(motorIdx);
+            // Send forward kinematics pose and joint angles
+            _sendFkPoseAndJointAngles();
+        }
+    }
 
     switch (jogCmd)
     {
@@ -336,6 +344,9 @@ void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
                 currJogState = IDLE_JOG;
                 limitReached = true;
                 blockedDir   = direction;
+
+                _sendMotorPosInSteps(motorIdx);
+                _sendFkPoseAndJointAngles();
             }
         }
         break;
@@ -346,6 +357,9 @@ void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
             // stop
             _motorConfigs[motorIdx]->motor->emergencyStop();
             currJogState = IDLE_JOG;
+
+            _sendMotorPosInSteps(motorIdx);
+            _sendFkPoseAndJointAngles();
         }
         break;
 
