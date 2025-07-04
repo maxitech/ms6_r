@@ -293,21 +293,21 @@ void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
     switch (jogCmd)
     {
     case JOG_START:
-        if (limitReached && direction == blockedDir && !runOnce)
+        if (jogFlags.limitReached && direction == jogFlags.blockedDir && !jogFlags.runOnce)
         {
             Serial.println("Cannot jog in " + direction + " direction - limit reached");
-            runOnce = true;
+            jogFlags.runOnce = true;
             return;
         }
 
-        if (limitReached && direction != blockedDir)
+        if (jogFlags.limitReached && direction != jogFlags.blockedDir)
         {
-            limitReached = false;
-            runOnce      = false;
-            blockedDir   = "";
+            jogFlags.limitReached = false;
+            jogFlags.runOnce      = false;
+            jogFlags.blockedDir   = "";
         }
 
-        if (currJogState != JOGGING && !limitReached)
+        if (currJogState != JOGGING && !jogFlags.limitReached)
         {
             // start
             currJogState = JOGGING;
@@ -323,15 +323,17 @@ void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
 
             _motorConfigs[motorIdx]->motor->rotateAsync(dirVel);
         }
-        else if (currJogState == JOGGING && !limitReached)
+        else if (currJogState == JOGGING && !jogFlags.limitReached)
         {
-            long currentPos = _motorConfigs[motorIdx]->motor->getPosition();
-            if (currentPos >= -4000)
+            std::vector<double> jointAngles = Setup::getInstance().getKinematics()->getJointAnglesInRadOrDeg(0);
+            float               currPosDeg  = jointAngles[motorIdx];
+            if (currPosDeg == _motorConfigs[motorIdx]->minAngleDeg ||
+                currPosDeg == _motorConfigs[motorIdx]->maxAngleDeg)
             {
                 _motorConfigs[motorIdx]->motor->emergencyStop();
-                currJogState = IDLE_JOG;
-                limitReached = true;
-                blockedDir   = direction;
+                currJogState          = IDLE_JOG;
+                jogFlags.limitReached = true;
+                jogFlags.blockedDir   = direction;
 
                 _sendMotorPosInSteps(motorIdx);
                 _sendFkPoseAndJointAngles();
@@ -340,7 +342,7 @@ void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
         break;
 
     case JOG_STOP:
-        if (currJogState == JOGGING && !limitReached)
+        if (currJogState == JOGGING && !jogFlags.limitReached)
         {
             // stop
             _motorConfigs[motorIdx]->motor->emergencyStop();
