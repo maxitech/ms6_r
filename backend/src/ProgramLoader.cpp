@@ -327,8 +327,8 @@ void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
         {
             std::vector<double> jointAngles = Setup::getInstance().getKinematics()->getJointAnglesInRadOrDeg(0);
             float               currPosDeg  = jointAngles[motorIdx];
-            if (currPosDeg == _motorConfigs[motorIdx]->minAngleDeg ||
-                currPosDeg == _motorConfigs[motorIdx]->maxAngleDeg)
+            if (currPosDeg >= _motorConfigs[motorIdx]->minAngleDeg ||
+                currPosDeg <= _motorConfigs[motorIdx]->maxAngleDeg)
             {
                 _motorConfigs[motorIdx]->motor->emergencyStop();
                 currJogState          = IDLE_JOG;
