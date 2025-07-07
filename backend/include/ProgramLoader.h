@@ -7,8 +7,12 @@
 #define PROGRAMLOADER_H
 
 #include "Homing.h"
+#include "JogCommand.h"
+#include "JogController.h"
+#include "JogState.h"
 #include "LimitSwitches.h"
 #include "MotorConfig.h"
+#include "RobotDataSender.h"
 #include "Utils.h"
 #include "teensystep4.h"
 #include <Arduino.h>
@@ -34,26 +38,6 @@ enum ExecutionState
 
 };
 
-enum JogState
-{
-    IDLE_JOG, ///< No jog command is active.
-    JOGGING,  ///< Currently executing a jog command.
-};
-
-struct JogFlags
-{
-    bool   limitReached = false;
-    String blockedDir   = "";
-    bool   runOnce      = false;
-};
-
-enum JogCommand
-{
-    JOG_START,  ///< Start jogging in the specified direction.
-    JOG_STOP,   ///< Stop the current jog operation.
-    JOG_UNKNOWN ///< Unknown jog command state.
-};
-
 /**
  * @brief Handles logic for loading and executing robot programs based on input commands.
  */
@@ -67,6 +51,8 @@ public:
      * @param limitSwitches Reference to a LimitSwitches instance for diagnostic testing.
      */
     ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& motorConfigs, LimitSwitches& limitSwitches);
+
+    ~ProgramLoader();
 
     /**
      * @brief Handles incoming command parts and loads a matching program.
@@ -146,21 +132,6 @@ private:
     void _main();
 
     //  ******************************HELPER FUNCTIONS********************************
-    /**
-     * @brief Parses the jog command from the input string.
-     * @param str The jog command string.
-     * @return The JogCommand enum value representing the jog command.
-     * @internal
-     */
-    JogCommand _getJogCommand(const String& str);
-
-    /**
-     * @brief Executes the jog command for a specific joint.
-     * @param currJogState Reference to the current JogState.
-     * @param motorIdx The index of the motor to jog.
-     * @internal
-     */
-    void _jogJoint(JogState& currJogState, const int motorIdx);
 
     /**
      * @brief Stops all motors if they are currently moving.
@@ -168,29 +139,17 @@ private:
      */
     void _stopMotors();
 
-    /**
-     * @brief Sends the forward kinematics pose and joint angles to the serial output.
-     * @internal
-     */
-    void _sendFkPoseAndJointAngles();
-
-    /**
-     * @brief Sends the current motor position in steps to the serial output.
-     * @param motorIdx The index of the motor to send the position for.
-     * @internal
-     */
-    void _sendMotorPosInSteps(const int motorIdx);
-
     // ******************************MEMBER VARIABLES********************************
-    Homing*                              _homingManager;                   ///< Pointer to the Homing manager for homing routines.
-    std::vector<MotorConfig*>&           _motorConfigs;                    ///< Vector of motor configurations for the robot. Note: Setup class has full ownership of this vector.
-    ProgramState                         _currentProgramState = IDLE;      ///< Current active program state. @internal
-    ExecutionState                       _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
-    LimitSwitches&                       _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
-    std::vector<String>                  _arguments;                       ///< Arguments passed with the command. @internal
-    String                               _cmd;                             ///< Current command @internal
-    bool                                 _isHomingDone = false;            ///< Flag to check if homing is done. @internal
-    std::array<JogFlags, Utils::NUM_DOF> _jogFlags;
+    Homing*                    _homingManager;                   ///< Pointer to the Homing manager for homing routines.
+    std::vector<MotorConfig*>& _motorConfigs;                    ///< Vector of motor configurations for the robot. Note: Setup class has full ownership of this vector.
+    ProgramState               _currentProgramState = IDLE;      ///< Current active program state. @internal
+    ExecutionState             _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
+    LimitSwitches&             _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
+    std::vector<String>        _arguments;                       ///< Arguments passed with the command. @internal
+    String                     _cmd;                             ///< Current command @internal
+    bool                       _isHomingDone = false;            ///< Flag to check if homing is done. @internal
+    RobotDataSender            _rbtDtaSender;
+    JogController*             _jogCtrl;
 };
 
 #endif // PROGRAMLOADER_H

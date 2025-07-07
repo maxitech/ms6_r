@@ -6,7 +6,14 @@
 ProgramLoader::ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& configs, LimitSwitches& limitSwitches)
     : _homingManager(homingManager)
     , _motorConfigs(configs)
-    , _limitSwitches(limitSwitches) {};
+    , _limitSwitches(limitSwitches)
+    , _rbtDtaSender()
+    , _jogCtrl(new JogController(_motorConfigs, _rbtDtaSender)) {};
+
+ProgramLoader::~ProgramLoader()
+{
+    delete _jogCtrl;
+}
 
 void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& args)
 {
@@ -209,13 +216,13 @@ void ProgramLoader::_home()
         _homingManager->executeHoming();
         if (_homingManager->isHomingDone())
         {
-            _isHomingDone = true;        // Set homing done flag
-            _sendFkPoseAndJointAngles(); // Send FK pose and joint angles after homing is done
+            _isHomingDone = true;                     // Set homing done flag
+            _rbtDtaSender.sendFkPoseAndJointAngles(); // Send FK pose and joint angles after homing is done
 
             // Maybe reset homing state later
             for (size_t i = 0; i < _motorConfigs.size(); ++i)
             {
-                _sendMotorPosInSteps(i); // Send motor position in steps
+                _rbtDtaSender.sendMotorPosInSteps(_motorConfigs[i], i); // Send motor position in steps
             }
             _executionState = EXEC_IDLE;
             _setState(IDLE);
@@ -244,7 +251,7 @@ void ProgramLoader::_main()
 
     if (_cmd == "JOG" && _isHomingDone)
     {
-        _jogJoint(currJogState, motorIdx);
+        _jogCtrl->jogJoint(_arguments, currJogState, motorIdx);
         warningShown = false;
     }
     else
@@ -259,106 +266,6 @@ void ProgramLoader::_main()
 }
 
 //  ******************************HELPER FUNCTIONS********************************
-JogCommand ProgramLoader::_getJogCommand(const String& str)
-{
-    if (str == "START")
-        return JOG_START;
-    else if (str == "STOP")
-        return JOG_STOP;
-    else
-        return JOG_UNKNOWN;
-}
-
-void ProgramLoader::_jogJoint(JogState& currJogState, const int motorIdx)
-{
-    String&       direction = _arguments[1];
-    const int     velocity  = _arguments[2].toInt();
-    const String& jogState  = _arguments.back();
-    JogFlags&     jogFlags  = _jogFlags[motorIdx];
-
-    JogCommand jogCmd = _getJogCommand(jogState);
-
-    if (currJogState == JOGGING)
-    {
-        static unsigned long lastSendTime = 0;
-        if (Utils::nonBlockingDelay(100, lastSendTime))
-        {
-            // Send motor position in steps
-            _sendMotorPosInSteps(motorIdx);
-            // Send forward kinematics pose and joint angles
-            _sendFkPoseAndJointAngles();
-        }
-    }
-
-    switch (jogCmd)
-    {
-    case JOG_START:
-        if (jogFlags.limitReached && direction == jogFlags.blockedDir && !jogFlags.runOnce)
-        {
-            Serial.println("Cannot jog in " + direction + " direction - limit reached");
-            jogFlags.runOnce = true;
-            return;
-        }
-
-        if (jogFlags.limitReached && direction != jogFlags.blockedDir)
-        {
-            jogFlags.limitReached = false;
-            jogFlags.runOnce      = false;
-            jogFlags.blockedDir   = "";
-        }
-
-        if (currJogState != JOGGING && !jogFlags.limitReached)
-        {
-            // start
-            currJogState = JOGGING;
-
-            if (direction != "POS" && direction != "NEG")
-            {
-                Serial.println("Invalid direction string: " + direction);
-                return;
-            }
-
-            int dir    = (direction == "POS") ? 1 : -1;
-            int dirVel = velocity * dir;
-
-            _motorConfigs[motorIdx]->motor->rotateAsync(dirVel);
-        }
-        else if (currJogState == JOGGING && !jogFlags.limitReached)
-        {
-            std::vector<double> jointAngles = Setup::getInstance().getKinematics()->getJointAnglesInRadOrDeg(0);
-            float               currPosDeg  = jointAngles[motorIdx];
-            if (currPosDeg >= _motorConfigs[motorIdx]->minAngleDeg ||
-                currPosDeg <= _motorConfigs[motorIdx]->maxAngleDeg)
-            {
-                _motorConfigs[motorIdx]->motor->emergencyStop();
-                currJogState          = IDLE_JOG;
-                jogFlags.limitReached = true;
-                jogFlags.blockedDir   = direction;
-
-                _sendMotorPosInSteps(motorIdx);
-                _sendFkPoseAndJointAngles();
-            }
-        }
-        break;
-
-    case JOG_STOP:
-        if (currJogState == JOGGING && !jogFlags.limitReached)
-        {
-            // stop
-            _motorConfigs[motorIdx]->motor->emergencyStop();
-            currJogState = IDLE_JOG;
-
-            _sendMotorPosInSteps(motorIdx);
-            _sendFkPoseAndJointAngles();
-        }
-        break;
-
-    case JOG_UNKNOWN:
-    default:
-        Serial.println("Unknown JOG state: " + jogState);
-        break;
-    }
-}
 
 void ProgramLoader::_stopMotors()
 {
@@ -369,53 +276,4 @@ void ProgramLoader::_stopMotors()
             cfg->motor->emergencyStop(); // Stop all motors if they are moving
         }
     }
-}
-
-void ProgramLoader::_sendFkPoseAndJointAngles()
-{
-    Pose                pose        = Setup::getInstance().getKinematics()->forwardKinematics();
-    std::vector<double> jointAngles = Setup::getInstance().getKinematics()->getJointAnglesInRadOrDeg(0);
-
-    // Send forward kinematics pose
-    // Format: DATA:FK_POSE*x,y,z,roll,pitch,yaw
-    Serial.print("DATA:FK_POSE*");
-    Serial.print(pose.x);
-    Serial.print(",");
-    Serial.print(pose.y);
-    Serial.print(",");
-    Serial.print(pose.z);
-    Serial.print(",");
-    Serial.print(pose.roll);
-    Serial.print(",");
-    Serial.print(pose.pitch);
-    Serial.print(",");
-    Serial.println(pose.yaw);
-
-    if (jointAngles.empty())
-    {
-        Serial.println("Error: jointAngles vector is empty!");
-        return;
-    }
-    // Send joint angles
-    // Format: DATA:JOINT_ANGLES*angle1,angle2,angle3
-    Serial.print("DATA:JOINT_ANGLES*");
-    for (size_t i = 0; i < jointAngles.size(); ++i)
-    {
-        Serial.print(jointAngles[i]);
-        if (i < jointAngles.size() - 1)
-        {
-            Serial.print(",");
-        }
-    }
-    Serial.println();
-}
-
-void ProgramLoader::_sendMotorPosInSteps(const int motorIdx)
-{
-    // Format: DATA:MOTOR_POS_STEPS*<motor_index>#<position>
-    const int motorPos = _motorConfigs[motorIdx]->motor->getPosition();
-    Serial.print("DATA:MOTOR_POS_STEPS*");
-    Serial.print(motorIdx + 1);
-    Serial.print(",");
-    Serial.println(motorPos);
 }
