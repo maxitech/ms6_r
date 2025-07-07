@@ -52,7 +52,7 @@ public:
      */
     ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& motorConfigs, LimitSwitches& limitSwitches);
 
-    ~ProgramLoader();
+    ~ProgramLoader(); ///< Declaration of deconstructor.
 
     /**
      * @brief Handles incoming command parts and loads a matching program.
@@ -140,16 +140,16 @@ private:
     void _stopMotors();
 
     // ******************************MEMBER VARIABLES********************************
-    Homing*                    _homingManager;                   ///< Pointer to the Homing manager for homing routines.
-    std::vector<MotorConfig*>& _motorConfigs;                    ///< Vector of motor configurations for the robot. Note: Setup class has full ownership of this vector.
+    Homing*                    _homingManager;                   ///< Pointer to the Homing manager for homing routines. @internal
+    std::vector<MotorConfig*>& _motorConfigs;                    ///< Vector of motor configurations for the robot. Note: Setup class has full ownership of this vector. @internal
     ProgramState               _currentProgramState = IDLE;      ///< Current active program state. @internal
     ExecutionState             _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
     LimitSwitches&             _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
     std::vector<String>        _arguments;                       ///< Arguments passed with the command. @internal
     String                     _cmd;                             ///< Current command @internal
     bool                       _isHomingDone = false;            ///< Flag to check if homing is done. @internal
-    RobotDataSender            _rbtDtaSender;
-    JogController*             _jogCtrl;
+    RobotDataSender            _rbtDtaSender;                    ///< Instance of data sender class for the robot. @internal
+    JogController*             _jogCtrl;                         ///< Pointer of the jog controller class which handles jog of the robot. @internal
 };
 
 #endif // PROGRAMLOADER_H
