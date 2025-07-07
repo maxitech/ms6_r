@@ -1,3 +1,8 @@
+/**
+ * @file JogController.h
+ * @brief This controller class is used to handle jog related functionality.
+ */
+
 #ifndef JOGCONTROLLER_H
 #define JOGCONTROLLER_H
 
@@ -10,9 +15,9 @@
 
 struct JogFlags
 {
-    bool   limitReached = false;
-    String blockedDir   = "";
-    bool   runOnce      = false;
+    bool   limitReached = false; ///< Flag to check if limit is reached.
+    String blockedDir   = "";    ///< Sting of which direction is blocked -> "POS" || "NEG"
+    bool   runOnce      = false; ///< Flag to execute a function once.
 };
 
 class JogController
@@ -22,7 +27,8 @@ public:
 
     /**
      * @brief Executes the jog command for a specific joint.
-     * @param currJogState Reference to the current JogState.
+     * @param arguments Reference to the passed arguments vector.
+     * @param currJogState Reference to the passed `JogState`.
      * @param motorIdx The index of the motor to jog.
      */
     void jogJoint(std::vector<String>& arguments, JogState& currJogState, const int motorIdx);
@@ -36,9 +42,9 @@ private:
      */
     JogCommand _getJogCommand(const String& str);
 
-    std::array<JogFlags, Utils::NUM_DOF> _jogFlags;
-    std::vector<MotorConfig*>&           _motorConfigs;
-    RobotDataSender&                     _rbtDtaSender;
+    std::array<JogFlags, Utils::NUM_DOF> _jogFlags;     /// < Array holding `JogFlags` for each motor. @internal
+    std::vector<MotorConfig*>&           _motorConfigs; ///< Reference to a Vector of motor config pointers for the robot. Note: Setup class has full ownership of this vector. @internal
+    RobotDataSender&                     _rbtDtaSender; ///< Reference to the data sender class for the robot. @internal
 };
 
 #endif // JOGCONTROLLER_h
