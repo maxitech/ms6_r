@@ -1,3 +1,8 @@
+/**
+ * @file JogState.h
+ * @brief This file contains a enum which holds `JogStates`.
+ */
+
 #ifndef JOGSTATE_H
 #define JOGSTATE_H
 
