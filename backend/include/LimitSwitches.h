@@ -9,6 +9,7 @@
 #ifndef LIMITSWITCHES_H
 #define LIMITSWITCHES_H
 
+#include "Utils.h"
 #include <Arduino.h>
 
 /**
@@ -45,6 +46,19 @@ private:
      * @internal
      */
     bool _isPressed(const byte limitSwitch);
+
+    /**
+     * @brief Creates the Data string out of the given switches array.
+     * @param switches
+     * @return String data.
+     */
+    String _createDtaStr(std::array<byte, Utils::NUM_DOF> switches);
+
+    /**
+     * @brief Sends the created data string to serial.
+     * @param dta
+     */
+    void _sendDtaStr(String& dta);
 
     const byte                _ledPin;        ///< The pin number of the LED. @internal
     const std::array<byte, 6> _limitSwitches; ///< Array holding pin numbers for the limit switches. @internal
