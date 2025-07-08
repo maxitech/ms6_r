@@ -18,6 +18,6 @@ class CommandHandler:
         btn_name = clicked_button.objectName()
         if btn_name in self._command_map:
             name, command = self._command_map[btn_name]
-            self._ui_manager.update_program_monitor(name, "lightblue", "white")
+            self._ui_manager.update_program_monitor(name)
             self._ui_manager.set_current_program(command)
             self._ui.btn_load_prog_btn.setEnabled(True)
