@@ -24,7 +24,15 @@ class UIManager:
         """Update connection status label"""
         self._ui.con_status_label2.setText(status_text)
 
-    def update_program_monitor(self, cmd, txt_color, bracket_color):
+    def update_program_monitor(
+        self,
+        cmd,
+        font_size=11,
+        font_weight=600,
+        txt_color="lightblue",
+        bracket_color="white",
+        with_brackets=True,
+    ):
         """Update program monitor display"""
         self._ui.prog_textEdit.clear()
         cursor = self._ui.prog_textEdit.textCursor()
@@ -33,17 +41,18 @@ class UIManager:
         # Format command
         fmt_cmd = QTextCharFormat()
         fmt_cmd.setForeground(QColor(txt_color))
-        fmt_cmd.setFontWeight(600)
-        fmt_cmd.setFontPointSize(11)
+        fmt_cmd.setFontWeight(font_weight)
+        fmt_cmd.setFontPointSize(font_size)
 
         # Format brackets
         fmt_brackets = QTextCharFormat()
         fmt_brackets.setForeground(QColor(bracket_color))
-        fmt_brackets.setFontWeight(600)
-        fmt_brackets.setFontPointSize(11)
+        fmt_brackets.setFontWeight(font_weight)
+        fmt_brackets.setFontPointSize(font_size)
 
         cursor.insertText(cmd, fmt_cmd)
-        cursor.insertText("()", fmt_brackets)
+        if with_brackets:
+            cursor.insertText("()", fmt_brackets)
         cursor.insertText("\n")
 
         self._ui.prog_textEdit.setTextCursor(cursor)
@@ -87,6 +96,8 @@ class UIManager:
             self._update_fk_pose_labels(data_content)
         elif "JOINT_ANGLES" in data_content:
             self._update_joint_angle_labels(data_content)
+        elif "L_SWITCH" in data_content:
+            self._update_limit_switch_display(data_content)
 
     def _update_jog_label(self, data_content):
         """Update jog position labels"""
@@ -123,6 +134,24 @@ class UIManager:
                     label_widget = getattr(self._ui, label_name, None)
                     if label_widget is not None:
                         label_widget.setText(angle)
+
+    def _update_limit_switch_display(self, data_content):
+        """ "Update limit switch display"""
+        match = re.search(r"\*(.*)", data_content)
+        if match:
+            switch = match.group(1).split(",")
+            str = "\n".join(
+                [
+                    f"Switch {i+1}: {'HIGH' if int(val) else 'LOW'}"
+                    for i, val in enumerate(switch[:6])
+                ]
+            )
+            self.update_program_monitor(
+                str,
+                font_weight=600,
+                txt_color="lightgrey",
+                with_brackets=False,
+            )
 
     def set_current_program(self, program):
         """Set current program"""
