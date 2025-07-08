@@ -1766,6 +1766,10 @@ class Ui_MainWindow(object):
         self.cmd_condi_menu_pushButton.toggled.connect(self.cmd_condi_frame.setVisible)
         self.prog_clear_btn.clicked.connect(self.prog_textEdit.clear)
         self.pushButton.clicked.connect(self.log_textEdit.clear)
+        self.cmd_ping_btn.clicked.connect(self.btn_stop.click)
+        self.cmd_pong_btn.clicked.connect(self.btn_stop.click)
+        self.cmd_switches_btn.clicked.connect(self.btn_stop.click)
+        self.cmd_home_axis_btn.clicked.connect(self.btn_stop.click)
 
         self.tabWidget.setCurrentIndex(0)
 

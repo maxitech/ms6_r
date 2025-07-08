@@ -3878,8 +3878,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1251</x>
-     <y>72</y>
+     <x>1267</x>
+     <y>57</y>
     </hint>
     <hint type="destinationlabel">
      <x>1199</x>
@@ -3894,8 +3894,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1251</x>
-     <y>204</y>
+     <x>1267</x>
+     <y>188</y>
     </hint>
     <hint type="destinationlabel">
      <x>1199</x>
@@ -3910,8 +3910,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
    <slot>clear()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1053</x>
-     <y>72</y>
+     <x>1064</x>
+     <y>57</y>
     </hint>
     <hint type="destinationlabel">
      <x>768</x>
@@ -3932,6 +3932,70 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <hint type="destinationlabel">
      <x>812</x>
      <y>577</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cmd_ping_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>btn_stop</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1154</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>678</x>
+     <y>490</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cmd_pong_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>btn_stop</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1149</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>696</x>
+     <y>489</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cmd_switches_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>btn_stop</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1169</x>
+     <y>124</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>710</x>
+     <y>488</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cmd_home_axis_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>btn_stop</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1151</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>726</x>
+     <y>484</y>
     </hint>
    </hints>
   </connection>
