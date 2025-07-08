@@ -17,13 +17,38 @@ void LimitSwitches::init()
 
 void LimitSwitches::check()
 {
-    bool anyPressed = false;
+    bool                             anyPressed = false;
+    byte                             pressedSwitch;
+    std::array<byte, Utils::NUM_DOF> switches {0, 0, 0, 0, 0, 0};
+
+    // Determine if switch is pressed -> if so turn on led
     for (byte i = 0; i < _limitSwitches.size(); i++)
     {
         if (_isPressed(_limitSwitches[i]))
-            anyPressed = true;
-        digitalWrite(_ledPin, anyPressed ? HIGH : LOW);
+        {
+            anyPressed    = true;
+            pressedSwitch = _limitSwitches[i];
+            break;
+        }
     }
+    digitalWrite(_ledPin, anyPressed ? HIGH : LOW);
+
+    // Determine which switch is pressed and set pressed switch in array to one
+    if (anyPressed)
+    {
+        switches[pressedSwitch] = 1;
+    }
+    else
+    {
+        for (byte& s : switches)
+        {
+            s = 0;
+        }
+    }
+
+    // Create and send data string
+    String data = _createDtaStr(switches);
+    _sendDtaStr(data);
 }
 
 bool LimitSwitches::_isPressed(const byte limitSwitch)
