@@ -1,3 +1,6 @@
+from PySide6.QtWidgets import QButtonGroup, QPushButton
+
+
 from app.constants.jog_config import JOG_CONFIG
 
 
@@ -10,10 +13,14 @@ class JogHandler:
         self._jog_joint = ""
         self._jog_direction = ""
         self._slider_value = ui.jog_slider.value()
+        self._transl_btn_group = None
+        self._rotation_btn_group = None
 
     def setup_connections(self):
         """Setup jog-related connections"""
         self._setup_jog_buttons()
+        self._setup_cart_step_btns(0)
+        self._setup_cart_step_btns(1)
         self._ui.jog_slider.valueChanged.connect(self._handle_jog_slider_change)
 
     def _setup_jog_buttons(self):
