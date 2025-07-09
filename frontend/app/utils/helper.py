@@ -20,6 +20,5 @@ class Helper:
 
     # *************************Private Methods****************************
     def _map_slider_to_speed(self, slider_value, v_min, v_max):
-        # t = (slider_value - 10) / (100 - 10)  # Normalize slider value from 10 to 100
         percent = slider_value / 100
         return v_min + percent * (v_max - v_min)
