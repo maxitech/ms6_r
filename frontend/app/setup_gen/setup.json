@@ -1,0 +1,86 @@
+{
+    "dh_params": {
+        "joint1": {
+            "theta_offset": "0",
+            "alpha": "-1.571",
+            "d": "135.30",
+            "a": "37.50"
+        },
+        "joint2": {
+            "theta_offset": "-90",
+            "alpha": "0",
+            "d": "0",
+            "a": "160.00"
+        },
+        "joint3": {
+            "theta_offset": "180",
+            "alpha": "1.571",
+            "d": "0",
+            "a": "-15.00"
+        },
+        "joint4": {
+            "theta_offset": "0",
+            "alpha": "-1.571",
+            "d": "138.40",
+            "a": "0"
+        },
+        "joint5": {
+            "theta_offset": "0",
+            "alpha": "1.571",
+            "d": "0",
+            "a": "0"
+        },
+        "joint6": {
+            "theta_offset": "0",
+            "alpha": "0",
+            "d": "29.270",
+            "a": "0"
+        }
+    },
+    "homing_params": {
+        "motor1": {
+            "home_pos": "40250"
+        },
+        "motor2": {
+            "home_pos": "42760"
+        },
+        "motor3": {
+            "home_pos": "-11820"
+        },
+        "motor4": {
+            "home_pos": "-23760"
+        },
+        "motor5": {
+            "home_pos": "-16438"
+        },
+        "motor6": {
+            "home_pos": "-6400"
+        }
+    },
+    "speed_a_accel": {
+        "motor1": {
+            "max_speed": "50000",
+            "acc": "26000"
+        },
+        "motor2": {
+            "max_speed": "160000",
+            "acc": "50000"
+        },
+        "motor3": {
+            "max_speed": "60000",
+            "acc": "30000"
+        },
+        "motor4": {
+            "max_speed": "40000",
+            "acc": "30000"
+        },
+        "motor5": {
+            "max_speed": "40000",
+            "acc": "20000"
+        },
+        "motor6": {
+            "max_speed": "15000",
+            "acc": "8000"
+        }
+    }
+}
