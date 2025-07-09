@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1278, 800)
+        MainWindow.resize(1395, 938)
         MainWindow.setMinimumSize(QSize(1268, 800))
         font = QFont()
         font.setBold(False)
@@ -453,22 +453,50 @@ class Ui_MainWindow(object):
         self.jog_frame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout = QVBoxLayout(self.jog_frame)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.jog_j1_frame = QFrame(self.jog_frame)
+        self.jog_tabs = QTabWidget(self.jog_frame)
+        self.jog_tabs.setObjectName(u"jog_tabs")
+        font2 = QFont()
+        font2.setPointSize(9)
+        font2.setBold(True)
+        font2.setItalic(False)
+        font2.setUnderline(False)
+        font2.setStrikeOut(False)
+        font2.setKerning(True)
+        font2.setStyleStrategy(QFont.PreferDefault)
+        self.jog_tabs.setFont(font2)
+        self.jog_tabs.setAutoFillBackground(False)
+        self.jog_tabs.setTabPosition(QTabWidget.TabPosition.North)
+        self.jog_tabs.setTabShape(QTabWidget.TabShape.Rounded)
+        self.jog_tabs.setTabBarAutoHide(False)
+        self.joint_mode = QWidget()
+        self.joint_mode.setObjectName(u"joint_mode")
+        self.verticalLayout_16 = QVBoxLayout(self.joint_mode)
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.joint_mode_frame = QFrame(self.joint_mode)
+        self.joint_mode_frame.setObjectName(u"joint_mode_frame")
+        self.joint_mode_frame.setEnabled(True)
+        self.joint_mode_frame.setStyleSheet(u"")
+        self.joint_mode_frame.setFrameShape(QFrame.Shape.NoFrame)
+        self.joint_mode_frame.setFrameShadow(QFrame.Shadow.Plain)
+        self.verticalLayout_15 = QVBoxLayout(self.joint_mode_frame)
+        self.verticalLayout_15.setSpacing(0)
+        self.verticalLayout_15.setObjectName(u"verticalLayout_15")
+        self.verticalLayout_15.setContentsMargins(0, 0, 0, 0)
+        self.jog_j1_frame = QFrame(self.joint_mode_frame)
         self.jog_j1_frame.setObjectName(u"jog_j1_frame")
+        self.jog_j1_frame.setEnabled(True)
+        self.jog_j1_frame.setAutoFillBackground(False)
+        self.jog_j1_frame.setStyleSheet(u"")
         self.jog_j1_frame.setFrameShape(QFrame.Shape.NoFrame)
         self.jog_j1_frame.setFrameShadow(QFrame.Shadow.Plain)
         self.horizontalLayout_2 = QHBoxLayout(self.jog_j1_frame)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalSpacer_28 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_28)
-
         self.label_1 = QLabel(self.jog_j1_frame)
         self.label_1.setObjectName(u"label_1")
-        font2 = QFont()
-        font2.setPointSize(20)
-        font2.setBold(True)
-        self.label_1.setFont(font2)
+        font3 = QFont()
+        font3.setPointSize(20)
+        font3.setBold(True)
+        self.label_1.setFont(font3)
 
         self.horizontalLayout_2.addWidget(self.label_1)
 
@@ -479,10 +507,10 @@ class Ui_MainWindow(object):
         self.jog_j1_neg_btn = QPushButton(self.jog_j1_frame)
         self.jog_j1_neg_btn.setObjectName(u"jog_j1_neg_btn")
         self.jog_j1_neg_btn.setMaximumSize(QSize(50, 40))
-        font3 = QFont()
-        font3.setPointSize(12)
-        font3.setBold(True)
-        self.jog_j1_neg_btn.setFont(font3)
+        font4 = QFont()
+        font4.setPointSize(12)
+        font4.setBold(True)
+        self.jog_j1_neg_btn.setFont(font4)
 
         self.horizontalLayout_2.addWidget(self.jog_j1_neg_btn)
 
@@ -494,10 +522,10 @@ class Ui_MainWindow(object):
         self.jog_j1_label.setObjectName(u"jog_j1_label")
         self.jog_j1_label.setMinimumSize(QSize(100, 0))
         self.jog_j1_label.setMaximumSize(QSize(16777215, 30))
-        font4 = QFont()
-        font4.setPointSize(10)
-        font4.setBold(False)
-        self.jog_j1_label.setFont(font4)
+        font5 = QFont()
+        font5.setPointSize(10)
+        font5.setBold(False)
+        self.jog_j1_label.setFont(font5)
         self.jog_j1_label.setFrameShape(QFrame.Shape.WinPanel)
         self.jog_j1_label.setFrameShadow(QFrame.Shadow.Sunken)
 
@@ -510,7 +538,7 @@ class Ui_MainWindow(object):
         self.jog_j1_pos_btn = QPushButton(self.jog_j1_frame)
         self.jog_j1_pos_btn.setObjectName(u"jog_j1_pos_btn")
         self.jog_j1_pos_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j1_pos_btn.setFont(font3)
+        self.jog_j1_pos_btn.setFont(font4)
 
         self.horizontalLayout_2.addWidget(self.jog_j1_pos_btn)
 
@@ -519,21 +547,17 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addItem(self.horizontalSpacer_5)
 
 
-        self.verticalLayout.addWidget(self.jog_j1_frame)
+        self.verticalLayout_15.addWidget(self.jog_j1_frame)
 
-        self.jog_j2_frame = QFrame(self.jog_frame)
+        self.jog_j2_frame = QFrame(self.joint_mode_frame)
         self.jog_j2_frame.setObjectName(u"jog_j2_frame")
         self.jog_j2_frame.setFrameShape(QFrame.Shape.NoFrame)
         self.jog_j2_frame.setFrameShadow(QFrame.Shadow.Plain)
         self.horizontalLayout_6 = QHBoxLayout(self.jog_j2_frame)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-        self.horizontalSpacer_29 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_6.addItem(self.horizontalSpacer_29)
-
         self.label_4 = QLabel(self.jog_j2_frame)
         self.label_4.setObjectName(u"label_4")
-        self.label_4.setFont(font2)
+        self.label_4.setFont(font3)
 
         self.horizontalLayout_6.addWidget(self.label_4)
 
@@ -544,7 +568,7 @@ class Ui_MainWindow(object):
         self.jog_j2_neg_btn = QPushButton(self.jog_j2_frame)
         self.jog_j2_neg_btn.setObjectName(u"jog_j2_neg_btn")
         self.jog_j2_neg_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j2_neg_btn.setFont(font3)
+        self.jog_j2_neg_btn.setFont(font4)
 
         self.horizontalLayout_6.addWidget(self.jog_j2_neg_btn)
 
@@ -556,7 +580,7 @@ class Ui_MainWindow(object):
         self.jog_j2_label.setObjectName(u"jog_j2_label")
         self.jog_j2_label.setMinimumSize(QSize(100, 0))
         self.jog_j2_label.setMaximumSize(QSize(16777215, 30))
-        self.jog_j2_label.setFont(font4)
+        self.jog_j2_label.setFont(font5)
         self.jog_j2_label.setFrameShape(QFrame.Shape.WinPanel)
         self.jog_j2_label.setFrameShadow(QFrame.Shadow.Sunken)
 
@@ -569,7 +593,7 @@ class Ui_MainWindow(object):
         self.jog_j2_pos_btn = QPushButton(self.jog_j2_frame)
         self.jog_j2_pos_btn.setObjectName(u"jog_j2_pos_btn")
         self.jog_j2_pos_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j2_pos_btn.setFont(font3)
+        self.jog_j2_pos_btn.setFont(font4)
 
         self.horizontalLayout_6.addWidget(self.jog_j2_pos_btn)
 
@@ -578,21 +602,17 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6.addItem(self.horizontalSpacer_11)
 
 
-        self.verticalLayout.addWidget(self.jog_j2_frame)
+        self.verticalLayout_15.addWidget(self.jog_j2_frame)
 
-        self.jog_j3_frame = QFrame(self.jog_frame)
+        self.jog_j3_frame = QFrame(self.joint_mode_frame)
         self.jog_j3_frame.setObjectName(u"jog_j3_frame")
         self.jog_j3_frame.setFrameShape(QFrame.Shape.NoFrame)
         self.jog_j3_frame.setFrameShadow(QFrame.Shadow.Plain)
         self.horizontalLayout_7 = QHBoxLayout(self.jog_j3_frame)
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-        self.horizontalSpacer_30 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_7.addItem(self.horizontalSpacer_30)
-
         self.label_6 = QLabel(self.jog_j3_frame)
         self.label_6.setObjectName(u"label_6")
-        self.label_6.setFont(font2)
+        self.label_6.setFont(font3)
 
         self.horizontalLayout_7.addWidget(self.label_6)
 
@@ -603,7 +623,7 @@ class Ui_MainWindow(object):
         self.jog_j3_neg_btn = QPushButton(self.jog_j3_frame)
         self.jog_j3_neg_btn.setObjectName(u"jog_j3_neg_btn")
         self.jog_j3_neg_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j3_neg_btn.setFont(font3)
+        self.jog_j3_neg_btn.setFont(font4)
 
         self.horizontalLayout_7.addWidget(self.jog_j3_neg_btn)
 
@@ -615,7 +635,7 @@ class Ui_MainWindow(object):
         self.jog_j3_label.setObjectName(u"jog_j3_label")
         self.jog_j3_label.setMinimumSize(QSize(100, 0))
         self.jog_j3_label.setMaximumSize(QSize(16777215, 30))
-        self.jog_j3_label.setFont(font4)
+        self.jog_j3_label.setFont(font5)
         self.jog_j3_label.setFrameShape(QFrame.Shape.WinPanel)
         self.jog_j3_label.setFrameShadow(QFrame.Shadow.Sunken)
 
@@ -628,7 +648,7 @@ class Ui_MainWindow(object):
         self.jog_j3_pos_btn = QPushButton(self.jog_j3_frame)
         self.jog_j3_pos_btn.setObjectName(u"jog_j3_pos_btn")
         self.jog_j3_pos_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j3_pos_btn.setFont(font3)
+        self.jog_j3_pos_btn.setFont(font4)
 
         self.horizontalLayout_7.addWidget(self.jog_j3_pos_btn)
 
@@ -637,21 +657,17 @@ class Ui_MainWindow(object):
         self.horizontalLayout_7.addItem(self.horizontalSpacer_15)
 
 
-        self.verticalLayout.addWidget(self.jog_j3_frame)
+        self.verticalLayout_15.addWidget(self.jog_j3_frame)
 
-        self.jog_j4_frame = QFrame(self.jog_frame)
+        self.jog_j4_frame = QFrame(self.joint_mode_frame)
         self.jog_j4_frame.setObjectName(u"jog_j4_frame")
         self.jog_j4_frame.setFrameShape(QFrame.Shape.NoFrame)
         self.jog_j4_frame.setFrameShadow(QFrame.Shadow.Plain)
         self.horizontalLayout_8 = QHBoxLayout(self.jog_j4_frame)
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
-        self.horizontalSpacer_31 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_8.addItem(self.horizontalSpacer_31)
-
         self.label_8 = QLabel(self.jog_j4_frame)
         self.label_8.setObjectName(u"label_8")
-        self.label_8.setFont(font2)
+        self.label_8.setFont(font3)
 
         self.horizontalLayout_8.addWidget(self.label_8)
 
@@ -662,7 +678,7 @@ class Ui_MainWindow(object):
         self.jog_j4_neg_btn = QPushButton(self.jog_j4_frame)
         self.jog_j4_neg_btn.setObjectName(u"jog_j4_neg_btn")
         self.jog_j4_neg_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j4_neg_btn.setFont(font3)
+        self.jog_j4_neg_btn.setFont(font4)
 
         self.horizontalLayout_8.addWidget(self.jog_j4_neg_btn)
 
@@ -674,7 +690,7 @@ class Ui_MainWindow(object):
         self.jog_j4_label.setObjectName(u"jog_j4_label")
         self.jog_j4_label.setMinimumSize(QSize(100, 0))
         self.jog_j4_label.setMaximumSize(QSize(16777215, 30))
-        self.jog_j4_label.setFont(font4)
+        self.jog_j4_label.setFont(font5)
         self.jog_j4_label.setFrameShape(QFrame.Shape.WinPanel)
         self.jog_j4_label.setFrameShadow(QFrame.Shadow.Sunken)
 
@@ -687,7 +703,7 @@ class Ui_MainWindow(object):
         self.jog_j4_pos_btn = QPushButton(self.jog_j4_frame)
         self.jog_j4_pos_btn.setObjectName(u"jog_j4_pos_btn")
         self.jog_j4_pos_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j4_pos_btn.setFont(font3)
+        self.jog_j4_pos_btn.setFont(font4)
 
         self.horizontalLayout_8.addWidget(self.jog_j4_pos_btn)
 
@@ -696,21 +712,17 @@ class Ui_MainWindow(object):
         self.horizontalLayout_8.addItem(self.horizontalSpacer_19)
 
 
-        self.verticalLayout.addWidget(self.jog_j4_frame)
+        self.verticalLayout_15.addWidget(self.jog_j4_frame)
 
-        self.jog_j5_frame = QFrame(self.jog_frame)
+        self.jog_j5_frame = QFrame(self.joint_mode_frame)
         self.jog_j5_frame.setObjectName(u"jog_j5_frame")
         self.jog_j5_frame.setFrameShape(QFrame.Shape.NoFrame)
         self.jog_j5_frame.setFrameShadow(QFrame.Shadow.Plain)
         self.horizontalLayout_9 = QHBoxLayout(self.jog_j5_frame)
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
-        self.horizontalSpacer_32 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_9.addItem(self.horizontalSpacer_32)
-
         self.label_10 = QLabel(self.jog_j5_frame)
         self.label_10.setObjectName(u"label_10")
-        self.label_10.setFont(font2)
+        self.label_10.setFont(font3)
 
         self.horizontalLayout_9.addWidget(self.label_10)
 
@@ -721,7 +733,7 @@ class Ui_MainWindow(object):
         self.jog_j5_neg_btn = QPushButton(self.jog_j5_frame)
         self.jog_j5_neg_btn.setObjectName(u"jog_j5_neg_btn")
         self.jog_j5_neg_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j5_neg_btn.setFont(font3)
+        self.jog_j5_neg_btn.setFont(font4)
 
         self.horizontalLayout_9.addWidget(self.jog_j5_neg_btn)
 
@@ -733,7 +745,7 @@ class Ui_MainWindow(object):
         self.jog_j5_label.setObjectName(u"jog_j5_label")
         self.jog_j5_label.setMinimumSize(QSize(100, 0))
         self.jog_j5_label.setMaximumSize(QSize(16777215, 30))
-        self.jog_j5_label.setFont(font4)
+        self.jog_j5_label.setFont(font5)
         self.jog_j5_label.setFrameShape(QFrame.Shape.WinPanel)
         self.jog_j5_label.setFrameShadow(QFrame.Shadow.Sunken)
 
@@ -746,7 +758,7 @@ class Ui_MainWindow(object):
         self.jog_j5_pos_btn = QPushButton(self.jog_j5_frame)
         self.jog_j5_pos_btn.setObjectName(u"jog_j5_pos_btn")
         self.jog_j5_pos_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j5_pos_btn.setFont(font3)
+        self.jog_j5_pos_btn.setFont(font4)
 
         self.horizontalLayout_9.addWidget(self.jog_j5_pos_btn)
 
@@ -755,21 +767,17 @@ class Ui_MainWindow(object):
         self.horizontalLayout_9.addItem(self.horizontalSpacer_23)
 
 
-        self.verticalLayout.addWidget(self.jog_j5_frame)
+        self.verticalLayout_15.addWidget(self.jog_j5_frame)
 
-        self.jog_j6_frame = QFrame(self.jog_frame)
+        self.jog_j6_frame = QFrame(self.joint_mode_frame)
         self.jog_j6_frame.setObjectName(u"jog_j6_frame")
         self.jog_j6_frame.setFrameShape(QFrame.Shape.NoFrame)
         self.jog_j6_frame.setFrameShadow(QFrame.Shadow.Plain)
         self.horizontalLayout_10 = QHBoxLayout(self.jog_j6_frame)
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
-        self.horizontalSpacer_33 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_10.addItem(self.horizontalSpacer_33)
-
         self.label_12 = QLabel(self.jog_j6_frame)
         self.label_12.setObjectName(u"label_12")
-        self.label_12.setFont(font2)
+        self.label_12.setFont(font3)
 
         self.horizontalLayout_10.addWidget(self.label_12)
 
@@ -780,7 +788,7 @@ class Ui_MainWindow(object):
         self.jog_j6_neg_btn = QPushButton(self.jog_j6_frame)
         self.jog_j6_neg_btn.setObjectName(u"jog_j6_neg_btn")
         self.jog_j6_neg_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j6_neg_btn.setFont(font3)
+        self.jog_j6_neg_btn.setFont(font4)
 
         self.horizontalLayout_10.addWidget(self.jog_j6_neg_btn)
 
@@ -792,7 +800,7 @@ class Ui_MainWindow(object):
         self.jog_j6_label.setObjectName(u"jog_j6_label")
         self.jog_j6_label.setMinimumSize(QSize(100, 0))
         self.jog_j6_label.setMaximumSize(QSize(16777215, 30))
-        self.jog_j6_label.setFont(font4)
+        self.jog_j6_label.setFont(font5)
         self.jog_j6_label.setFrameShape(QFrame.Shape.WinPanel)
         self.jog_j6_label.setFrameShadow(QFrame.Shadow.Sunken)
 
@@ -805,7 +813,7 @@ class Ui_MainWindow(object):
         self.jog_j6_pos_btn = QPushButton(self.jog_j6_frame)
         self.jog_j6_pos_btn.setObjectName(u"jog_j6_pos_btn")
         self.jog_j6_pos_btn.setMaximumSize(QSize(50, 40))
-        self.jog_j6_pos_btn.setFont(font3)
+        self.jog_j6_pos_btn.setFont(font4)
 
         self.horizontalLayout_10.addWidget(self.jog_j6_pos_btn)
 
@@ -814,7 +822,315 @@ class Ui_MainWindow(object):
         self.horizontalLayout_10.addItem(self.horizontalSpacer_27)
 
 
-        self.verticalLayout.addWidget(self.jog_j6_frame)
+        self.verticalLayout_15.addWidget(self.jog_j6_frame)
+
+        self.jog_j3_frame.raise_()
+        self.jog_j1_frame.raise_()
+        self.jog_j2_frame.raise_()
+        self.jog_j4_frame.raise_()
+        self.jog_j5_frame.raise_()
+        self.jog_j6_frame.raise_()
+
+        self.verticalLayout_16.addWidget(self.joint_mode_frame)
+
+        self.jog_tabs.addTab(self.joint_mode, "")
+        self.cartesian_mode = QWidget()
+        self.cartesian_mode.setObjectName(u"cartesian_mode")
+        self.verticalLayout_17 = QVBoxLayout(self.cartesian_mode)
+        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
+        self.cartesian_frame = QFrame(self.cartesian_mode)
+        self.cartesian_frame.setObjectName(u"cartesian_frame")
+        self.cartesian_frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.cartesian_frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.frame_7 = QFrame(self.cartesian_frame)
+        self.frame_7.setObjectName(u"frame_7")
+        self.frame_7.setGeometry(QRect(260, 50, 271, 221))
+        self.frame_7.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_7.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_4 = QGridLayout(self.frame_7)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.cart_ry_neg_btn = QPushButton(self.frame_7)
+        self.cart_ry_neg_btn.setObjectName(u"cart_ry_neg_btn")
+        self.cart_ry_neg_btn.setMinimumSize(QSize(70, 70))
+        self.cart_ry_neg_btn.setMaximumSize(QSize(70, 70))
+        font6 = QFont()
+        font6.setPointSize(14)
+        font6.setBold(True)
+        font6.setItalic(False)
+        self.cart_ry_neg_btn.setFont(font6)
+
+        self.gridLayout_4.addWidget(self.cart_ry_neg_btn, 1, 1, 1, 1)
+
+        self.cart_rx_neg_btn = QPushButton(self.frame_7)
+        self.cart_rx_neg_btn.setObjectName(u"cart_rx_neg_btn")
+        self.cart_rx_neg_btn.setMinimumSize(QSize(70, 70))
+        self.cart_rx_neg_btn.setMaximumSize(QSize(70, 70))
+        self.cart_rx_neg_btn.setFont(font6)
+
+        self.gridLayout_4.addWidget(self.cart_rx_neg_btn, 1, 0, 1, 1)
+
+        self.cart_rz_neg_btn = QPushButton(self.frame_7)
+        self.cart_rz_neg_btn.setObjectName(u"cart_rz_neg_btn")
+        self.cart_rz_neg_btn.setMinimumSize(QSize(70, 70))
+        self.cart_rz_neg_btn.setMaximumSize(QSize(70, 70))
+        self.cart_rz_neg_btn.setFont(font6)
+
+        self.gridLayout_4.addWidget(self.cart_rz_neg_btn, 1, 2, 1, 1)
+
+        self.cart_rx_pos_btn = QPushButton(self.frame_7)
+        self.cart_rx_pos_btn.setObjectName(u"cart_rx_pos_btn")
+        self.cart_rx_pos_btn.setMinimumSize(QSize(70, 70))
+        self.cart_rx_pos_btn.setMaximumSize(QSize(70, 70))
+        self.cart_rx_pos_btn.setFont(font6)
+
+        self.gridLayout_4.addWidget(self.cart_rx_pos_btn, 0, 0, 1, 1)
+
+        self.cart_rz_pos_btn = QPushButton(self.frame_7)
+        self.cart_rz_pos_btn.setObjectName(u"cart_rz_pos_btn")
+        self.cart_rz_pos_btn.setMinimumSize(QSize(70, 70))
+        self.cart_rz_pos_btn.setMaximumSize(QSize(70, 70))
+        self.cart_rz_pos_btn.setFont(font6)
+
+        self.gridLayout_4.addWidget(self.cart_rz_pos_btn, 0, 2, 1, 1)
+
+        self.cart_ry_pos_btn = QPushButton(self.frame_7)
+        self.cart_ry_pos_btn.setObjectName(u"cart_ry_pos_btn")
+        self.cart_ry_pos_btn.setMinimumSize(QSize(70, 70))
+        self.cart_ry_pos_btn.setMaximumSize(QSize(70, 70))
+        self.cart_ry_pos_btn.setFont(font6)
+
+        self.gridLayout_4.addWidget(self.cart_ry_pos_btn, 0, 1, 1, 1)
+
+        self.frame_3 = QFrame(self.cartesian_frame)
+        self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setGeometry(QRect(20, 310, 451, 91))
+        self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_3.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_18 = QVBoxLayout(self.frame_3)
+        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
+        self.label_5 = QLabel(self.frame_3)
+        self.label_5.setObjectName(u"label_5")
+        font7 = QFont()
+        font7.setPointSize(9)
+        font7.setWeight(QFont.DemiBold)
+        self.label_5.setFont(font7)
+
+        self.verticalLayout_18.addWidget(self.label_5)
+
+        self.translation_btn_group = QFrame(self.frame_3)
+        self.translation_btn_group.setObjectName(u"translation_btn_group")
+        self.translation_btn_group.setFrameShape(QFrame.Shape.StyledPanel)
+        self.translation_btn_group.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_13 = QHBoxLayout(self.translation_btn_group)
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.stp_trans_01mm = QPushButton(self.translation_btn_group)
+        self.stp_trans_01mm.setObjectName(u"stp_trans_01mm")
+        self.stp_trans_01mm.setMinimumSize(QSize(20, 30))
+        self.stp_trans_01mm.setMaximumSize(QSize(65, 16777215))
+        font8 = QFont()
+        font8.setPointSize(9)
+        font8.setBold(True)
+        self.stp_trans_01mm.setFont(font8)
+        self.stp_trans_01mm.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.stp_trans_01mm.setCheckable(True)
+
+        self.horizontalLayout_13.addWidget(self.stp_trans_01mm)
+
+        self.stp_trans_1mm = QPushButton(self.translation_btn_group)
+        self.stp_trans_1mm.setObjectName(u"stp_trans_1mm")
+        self.stp_trans_1mm.setMinimumSize(QSize(20, 30))
+        self.stp_trans_1mm.setMaximumSize(QSize(65, 16777215))
+        self.stp_trans_1mm.setFont(font8)
+        self.stp_trans_1mm.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.stp_trans_1mm.setCheckable(True)
+
+        self.horizontalLayout_13.addWidget(self.stp_trans_1mm)
+
+        self.stp_trans_5mm = QPushButton(self.translation_btn_group)
+        self.stp_trans_5mm.setObjectName(u"stp_trans_5mm")
+        self.stp_trans_5mm.setMinimumSize(QSize(20, 30))
+        self.stp_trans_5mm.setMaximumSize(QSize(65, 16777215))
+        self.stp_trans_5mm.setFont(font8)
+        self.stp_trans_5mm.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.stp_trans_5mm.setCheckable(True)
+        self.stp_trans_5mm.setChecked(True)
+
+        self.horizontalLayout_13.addWidget(self.stp_trans_5mm)
+
+        self.stp_trans_10mm = QPushButton(self.translation_btn_group)
+        self.stp_trans_10mm.setObjectName(u"stp_trans_10mm")
+        self.stp_trans_10mm.setMinimumSize(QSize(20, 30))
+        self.stp_trans_10mm.setMaximumSize(QSize(65, 16777215))
+        self.stp_trans_10mm.setFont(font8)
+        self.stp_trans_10mm.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.stp_trans_10mm.setCheckable(True)
+
+        self.horizontalLayout_13.addWidget(self.stp_trans_10mm)
+
+        self.stp_trans_50mm = QPushButton(self.translation_btn_group)
+        self.stp_trans_50mm.setObjectName(u"stp_trans_50mm")
+        self.stp_trans_50mm.setMinimumSize(QSize(20, 30))
+        self.stp_trans_50mm.setMaximumSize(QSize(65, 16777215))
+        self.stp_trans_50mm.setFont(font8)
+        self.stp_trans_50mm.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.stp_trans_50mm.setCheckable(True)
+
+        self.horizontalLayout_13.addWidget(self.stp_trans_50mm)
+
+        self.horizontalSpacer_29 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_13.addItem(self.horizontalSpacer_29)
+
+
+        self.verticalLayout_18.addWidget(self.translation_btn_group)
+
+        self.frame_8 = QFrame(self.cartesian_frame)
+        self.frame_8.setObjectName(u"frame_8")
+        self.frame_8.setGeometry(QRect(10, 50, 251, 221))
+        self.frame_8.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_8.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_7 = QGridLayout(self.frame_8)
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.cart_y_neg_btn = QPushButton(self.frame_8)
+        self.cart_y_neg_btn.setObjectName(u"cart_y_neg_btn")
+        self.cart_y_neg_btn.setMinimumSize(QSize(70, 70))
+        self.cart_y_neg_btn.setMaximumSize(QSize(70, 70))
+        self.cart_y_neg_btn.setFont(font6)
+
+        self.gridLayout_7.addWidget(self.cart_y_neg_btn, 1, 1, 1, 1)
+
+        self.cart_x_neg_btn = QPushButton(self.frame_8)
+        self.cart_x_neg_btn.setObjectName(u"cart_x_neg_btn")
+        self.cart_x_neg_btn.setMinimumSize(QSize(70, 70))
+        self.cart_x_neg_btn.setMaximumSize(QSize(70, 70))
+        self.cart_x_neg_btn.setFont(font6)
+
+        self.gridLayout_7.addWidget(self.cart_x_neg_btn, 1, 0, 1, 1)
+
+        self.cart_z_neg_btn = QPushButton(self.frame_8)
+        self.cart_z_neg_btn.setObjectName(u"cart_z_neg_btn")
+        self.cart_z_neg_btn.setMinimumSize(QSize(70, 70))
+        self.cart_z_neg_btn.setMaximumSize(QSize(70, 70))
+        self.cart_z_neg_btn.setFont(font6)
+
+        self.gridLayout_7.addWidget(self.cart_z_neg_btn, 1, 2, 1, 1)
+
+        self.cart_x_pos_btn = QPushButton(self.frame_8)
+        self.cart_x_pos_btn.setObjectName(u"cart_x_pos_btn")
+        self.cart_x_pos_btn.setMinimumSize(QSize(70, 70))
+        self.cart_x_pos_btn.setMaximumSize(QSize(70, 70))
+        self.cart_x_pos_btn.setFont(font6)
+
+        self.gridLayout_7.addWidget(self.cart_x_pos_btn, 0, 0, 1, 1)
+
+        self.cart_z_pos_btn = QPushButton(self.frame_8)
+        self.cart_z_pos_btn.setObjectName(u"cart_z_pos_btn")
+        self.cart_z_pos_btn.setMinimumSize(QSize(70, 70))
+        self.cart_z_pos_btn.setMaximumSize(QSize(70, 70))
+        self.cart_z_pos_btn.setFont(font6)
+
+        self.gridLayout_7.addWidget(self.cart_z_pos_btn, 0, 2, 1, 1)
+
+        self.cart_y_pos_btn = QPushButton(self.frame_8)
+        self.cart_y_pos_btn.setObjectName(u"cart_y_pos_btn")
+        self.cart_y_pos_btn.setMinimumSize(QSize(70, 70))
+        self.cart_y_pos_btn.setMaximumSize(QSize(70, 70))
+        self.cart_y_pos_btn.setFont(font6)
+
+        self.gridLayout_7.addWidget(self.cart_y_pos_btn, 0, 1, 1, 1)
+
+        self.comboBox = QComboBox(self.cartesian_frame)
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.setObjectName(u"comboBox")
+        self.comboBox.setGeometry(QRect(20, 10, 211, 31))
+        font9 = QFont()
+        font9.setPointSize(12)
+        font9.setWeight(QFont.DemiBold)
+        self.comboBox.setFont(font9)
+        self.frame_10 = QFrame(self.cartesian_frame)
+        self.frame_10.setObjectName(u"frame_10")
+        self.frame_10.setGeometry(QRect(20, 400, 451, 101))
+        self.frame_10.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_10.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_20 = QVBoxLayout(self.frame_10)
+        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
+        self.label_20 = QLabel(self.frame_10)
+        self.label_20.setObjectName(u"label_20")
+        self.label_20.setFont(font7)
+
+        self.verticalLayout_20.addWidget(self.label_20)
+
+        self.rotation_btn_group = QFrame(self.frame_10)
+        self.rotation_btn_group.setObjectName(u"rotation_btn_group")
+        self.rotation_btn_group.setFrameShape(QFrame.Shape.StyledPanel)
+        self.rotation_btn_group.setFrameShadow(QFrame.Shadow.Raised)
+        self.horizontalLayout_15 = QHBoxLayout(self.rotation_btn_group)
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.stp_rot_1deg = QPushButton(self.rotation_btn_group)
+        self.stp_rot_1deg.setObjectName(u"stp_rot_1deg")
+        self.stp_rot_1deg.setMinimumSize(QSize(20, 30))
+        self.stp_rot_1deg.setMaximumSize(QSize(45, 16777215))
+        self.stp_rot_1deg.setFont(font8)
+        self.stp_rot_1deg.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.stp_rot_1deg.setCheckable(True)
+
+        self.horizontalLayout_15.addWidget(self.stp_rot_1deg)
+
+        self.stp_rot_5deg = QPushButton(self.rotation_btn_group)
+        self.stp_rot_5deg.setObjectName(u"stp_rot_5deg")
+        self.stp_rot_5deg.setMinimumSize(QSize(20, 30))
+        self.stp_rot_5deg.setMaximumSize(QSize(45, 16777215))
+        self.stp_rot_5deg.setFont(font8)
+        self.stp_rot_5deg.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.stp_rot_5deg.setCheckable(True)
+
+        self.horizontalLayout_15.addWidget(self.stp_rot_5deg)
+
+        self.stp_rot_10deg = QPushButton(self.rotation_btn_group)
+        self.stp_rot_10deg.setObjectName(u"stp_rot_10deg")
+        self.stp_rot_10deg.setMinimumSize(QSize(20, 30))
+        self.stp_rot_10deg.setMaximumSize(QSize(45, 16777215))
+        self.stp_rot_10deg.setFont(font8)
+        self.stp_rot_10deg.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.stp_rot_10deg.setCheckable(True)
+        self.stp_rot_10deg.setChecked(True)
+
+        self.horizontalLayout_15.addWidget(self.stp_rot_10deg)
+
+        self.stp_rot_15deg = QPushButton(self.rotation_btn_group)
+        self.stp_rot_15deg.setObjectName(u"stp_rot_15deg")
+        self.stp_rot_15deg.setMinimumSize(QSize(20, 30))
+        self.stp_rot_15deg.setMaximumSize(QSize(45, 16777215))
+        self.stp_rot_15deg.setFont(font8)
+        self.stp_rot_15deg.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.stp_rot_15deg.setCheckable(True)
+
+        self.horizontalLayout_15.addWidget(self.stp_rot_15deg)
+
+        self.stp_rot_30deg = QPushButton(self.rotation_btn_group)
+        self.stp_rot_30deg.setObjectName(u"stp_rot_30deg")
+        self.stp_rot_30deg.setMinimumSize(QSize(20, 30))
+        self.stp_rot_30deg.setMaximumSize(QSize(45, 16777215))
+        self.stp_rot_30deg.setFont(font8)
+        self.stp_rot_30deg.setCursor(QCursor(Qt.CursorShape.ArrowCursor))
+        self.stp_rot_30deg.setCheckable(True)
+
+        self.horizontalLayout_15.addWidget(self.stp_rot_30deg)
+
+        self.horizontalSpacer_28 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_15.addItem(self.horizontalSpacer_28)
+
+
+        self.verticalLayout_20.addWidget(self.rotation_btn_group)
+
+
+        self.verticalLayout_17.addWidget(self.cartesian_frame)
+
+        self.jog_tabs.addTab(self.cartesian_mode, "")
+
+        self.verticalLayout.addWidget(self.jog_tabs)
 
 
         self.gridLayout.addWidget(self.jog_frame, 1, 0, 10, 4)
@@ -848,26 +1164,26 @@ class Ui_MainWindow(object):
 
         self.cmd_pong_btn = QPushButton(self.cmd_prog_frame)
         self.cmd_pong_btn.setObjectName(u"cmd_pong_btn")
-        font5 = QFont()
-        font5.setPointSize(9)
-        font5.setBold(False)
-        font5.setStrikeOut(False)
-        font5.setKerning(True)
-        font5.setStyleStrategy(QFont.PreferDefault)
-        self.cmd_pong_btn.setFont(font5)
+        font10 = QFont()
+        font10.setPointSize(9)
+        font10.setBold(False)
+        font10.setStrikeOut(False)
+        font10.setKerning(True)
+        font10.setStyleStrategy(QFont.PreferDefault)
+        self.cmd_pong_btn.setFont(font10)
         self.cmd_pong_btn.setAutoFillBackground(False)
 
         self.verticalLayout_6.addWidget(self.cmd_pong_btn)
 
         self.cmd_switches_btn = QPushButton(self.cmd_prog_frame)
         self.cmd_switches_btn.setObjectName(u"cmd_switches_btn")
-        font6 = QFont()
-        font6.setPointSize(8)
-        font6.setBold(False)
-        font6.setStrikeOut(False)
-        font6.setKerning(True)
-        font6.setStyleStrategy(QFont.PreferDefault)
-        self.cmd_switches_btn.setFont(font6)
+        font11 = QFont()
+        font11.setPointSize(8)
+        font11.setBold(False)
+        font11.setStrikeOut(False)
+        font11.setKerning(True)
+        font11.setStyleStrategy(QFont.PreferDefault)
+        self.cmd_switches_btn.setFont(font11)
         self.cmd_switches_btn.setAutoFillBackground(False)
 
         self.verticalLayout_6.addWidget(self.cmd_switches_btn)
@@ -934,12 +1250,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
         self.prog_label = QLabel(self.prog_header_frame)
         self.prog_label.setObjectName(u"prog_label")
-        font7 = QFont()
-        font7.setPointSize(10)
-        font7.setBold(True)
-        font7.setItalic(False)
-        font7.setUnderline(False)
-        self.prog_label.setFont(font7)
+        font12 = QFont()
+        font12.setPointSize(10)
+        font12.setBold(True)
+        font12.setItalic(False)
+        font12.setUnderline(False)
+        self.prog_label.setFont(font12)
 
         self.horizontalLayout_4.addWidget(self.prog_label)
 
@@ -950,9 +1266,6 @@ class Ui_MainWindow(object):
         self.prog_clear_btn = QPushButton(self.prog_header_frame)
         self.prog_clear_btn.setObjectName(u"prog_clear_btn")
         self.prog_clear_btn.setMaximumSize(QSize(16777211, 16777215))
-        font8 = QFont()
-        font8.setPointSize(9)
-        font8.setBold(True)
         self.prog_clear_btn.setFont(font8)
 
         self.horizontalLayout_4.addWidget(self.prog_clear_btn)
@@ -962,12 +1275,12 @@ class Ui_MainWindow(object):
 
         self.prog_textEdit = QTextEdit(self.prog_frame)
         self.prog_textEdit.setObjectName(u"prog_textEdit")
-        font9 = QFont()
-        font9.setFamilies([u"Arial"])
-        font9.setPointSize(10)
-        font9.setBold(False)
-        font9.setKerning(False)
-        self.prog_textEdit.setFont(font9)
+        font13 = QFont()
+        font13.setFamilies([u"Arial"])
+        font13.setPointSize(10)
+        font13.setBold(False)
+        font13.setKerning(False)
+        self.prog_textEdit.setFont(font13)
         self.prog_textEdit.setStyleSheet(u"background-color: rgb(21, 21, 21);\n"
 "color: #fff;\n"
 "font-size: 10pt;\n"
@@ -1001,10 +1314,10 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.log_label = QLabel(self.frame)
         self.log_label.setObjectName(u"log_label")
-        font10 = QFont()
-        font10.setPointSize(10)
-        font10.setBold(True)
-        self.log_label.setFont(font10)
+        font14 = QFont()
+        font14.setPointSize(10)
+        font14.setBold(True)
+        self.log_label.setFont(font14)
 
         self.horizontalLayout_5.addWidget(self.log_label)
 
@@ -1024,7 +1337,7 @@ class Ui_MainWindow(object):
         self.log_textEdit = QTextEdit(self.log_frame)
         self.log_textEdit.setObjectName(u"log_textEdit")
         self.log_textEdit.setMinimumSize(QSize(0, 0))
-        self.log_textEdit.setFont(font4)
+        self.log_textEdit.setFont(font5)
         self.log_textEdit.setStyleSheet(u"background-color: rgb(21, 21, 21);\n"
 "color: #fff;\n"
 "font-size: 10pt;\n"
@@ -1085,7 +1398,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setContentsMargins(9, -1, 50, -1)
         self.select_device_label = QLabel(self.con_frame)
         self.select_device_label.setObjectName(u"select_device_label")
-        self.select_device_label.setFont(font10)
+        self.select_device_label.setFont(font14)
         self.select_device_label.setFrameShape(QFrame.Shape.NoFrame)
         self.select_device_label.setFrameShadow(QFrame.Shadow.Plain)
 
@@ -1108,14 +1421,14 @@ class Ui_MainWindow(object):
 
         self.con_status_label1 = QLabel(self.con_frame)
         self.con_status_label1.setObjectName(u"con_status_label1")
-        self.con_status_label1.setFont(font10)
+        self.con_status_label1.setFont(font14)
 
         self.horizontalLayout.addWidget(self.con_status_label1)
 
         self.con_status_label2 = QLabel(self.con_frame)
         self.con_status_label2.setObjectName(u"con_status_label2")
         self.con_status_label2.setMinimumSize(QSize(140, 0))
-        self.con_status_label2.setFont(font10)
+        self.con_status_label2.setFont(font14)
 
         self.horizontalLayout.addWidget(self.con_status_label2)
 
@@ -1169,13 +1482,13 @@ class Ui_MainWindow(object):
 
         self.label_15 = QLabel(self.frame_2)
         self.label_15.setObjectName(u"label_15")
-        self.label_15.setFont(font10)
+        self.label_15.setFont(font14)
 
         self.gridLayout_2.addWidget(self.label_15, 3, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_18 = QLabel(self.frame_2)
         self.label_18.setObjectName(u"label_18")
-        self.label_18.setFont(font10)
+        self.label_18.setFont(font14)
 
         self.gridLayout_2.addWidget(self.label_18, 5, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1190,14 +1503,14 @@ class Ui_MainWindow(object):
 
         self.label_11 = QLabel(self.frame_2)
         self.label_11.setObjectName(u"label_11")
-        self.label_11.setFont(font10)
+        self.label_11.setFont(font14)
 
         self.gridLayout_2.addWidget(self.label_11, 0, 4, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_17 = QLabel(self.frame_2)
         self.label_17.setObjectName(u"label_17")
         self.label_17.setMaximumSize(QSize(16777215, 20))
-        self.label_17.setFont(font10)
+        self.label_17.setFont(font14)
 
         self.gridLayout_2.addWidget(self.label_17, 1, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1212,13 +1525,13 @@ class Ui_MainWindow(object):
 
         self.label_9 = QLabel(self.frame_2)
         self.label_9.setObjectName(u"label_9")
-        self.label_9.setFont(font10)
+        self.label_9.setFont(font14)
 
         self.gridLayout_2.addWidget(self.label_9, 0, 3, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_14 = QLabel(self.frame_2)
         self.label_14.setObjectName(u"label_14")
-        self.label_14.setFont(font10)
+        self.label_14.setFont(font14)
 
         self.gridLayout_2.addWidget(self.label_14, 2, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1233,7 +1546,7 @@ class Ui_MainWindow(object):
 
         self.label_7 = QLabel(self.frame_2)
         self.label_7.setObjectName(u"label_7")
-        self.label_7.setFont(font10)
+        self.label_7.setFont(font14)
 
         self.gridLayout_2.addWidget(self.label_7, 0, 2, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1275,7 +1588,7 @@ class Ui_MainWindow(object):
 
         self.label_16 = QLabel(self.frame_2)
         self.label_16.setObjectName(u"label_16")
-        self.label_16.setFont(font10)
+        self.label_16.setFont(font14)
 
         self.gridLayout_2.addWidget(self.label_16, 4, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1290,7 +1603,7 @@ class Ui_MainWindow(object):
 
         self.label_19 = QLabel(self.frame_2)
         self.label_19.setObjectName(u"label_19")
-        self.label_19.setFont(font10)
+        self.label_19.setFont(font14)
 
         self.gridLayout_2.addWidget(self.label_19, 6, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1342,7 +1655,7 @@ class Ui_MainWindow(object):
         self.joint_label = QLabel(self.frame_2)
         self.joint_label.setObjectName(u"joint_label")
         self.joint_label.setMaximumSize(QSize(100, 20))
-        self.joint_label.setFont(font10)
+        self.joint_label.setFont(font14)
 
         self.gridLayout_2.addWidget(self.joint_label, 0, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1384,7 +1697,7 @@ class Ui_MainWindow(object):
 
         self.label_53 = QLabel(self.frame_2)
         self.label_53.setObjectName(u"label_53")
-        self.label_53.setFont(font10)
+        self.label_53.setFont(font14)
 
         self.gridLayout_2.addWidget(self.label_53, 0, 1, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1462,7 +1775,7 @@ class Ui_MainWindow(object):
         self.gridLayout_5.setContentsMargins(0, -1, -1, -1)
         self.label_47 = QLabel(self.frame_4)
         self.label_47.setObjectName(u"label_47")
-        self.label_47.setFont(font10)
+        self.label_47.setFont(font14)
 
         self.gridLayout_5.addWidget(self.label_47, 4, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1486,7 +1799,7 @@ class Ui_MainWindow(object):
 
         self.label_41 = QLabel(self.frame_4)
         self.label_41.setObjectName(u"label_41")
-        self.label_41.setFont(font10)
+        self.label_41.setFont(font14)
 
         self.gridLayout_5.addWidget(self.label_41, 5, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1501,13 +1814,13 @@ class Ui_MainWindow(object):
 
         self.label_40 = QLabel(self.frame_4)
         self.label_40.setObjectName(u"label_40")
-        self.label_40.setFont(font10)
+        self.label_40.setFont(font14)
 
         self.gridLayout_5.addWidget(self.label_40, 3, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_49 = QLabel(self.frame_4)
         self.label_49.setObjectName(u"label_49")
-        self.label_49.setFont(font10)
+        self.label_49.setFont(font14)
 
         self.gridLayout_5.addWidget(self.label_49, 0, 1, 1, 1)
 
@@ -1522,7 +1835,7 @@ class Ui_MainWindow(object):
 
         self.label_48 = QLabel(self.frame_4)
         self.label_48.setObjectName(u"label_48")
-        self.label_48.setFont(font10)
+        self.label_48.setFont(font14)
 
         self.gridLayout_5.addWidget(self.label_48, 6, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1537,21 +1850,21 @@ class Ui_MainWindow(object):
 
         self.label_45 = QLabel(self.frame_4)
         self.label_45.setObjectName(u"label_45")
-        self.label_45.setFont(font10)
+        self.label_45.setFont(font14)
 
         self.gridLayout_5.addWidget(self.label_45, 2, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_43 = QLabel(self.frame_4)
         self.label_43.setObjectName(u"label_43")
         self.label_43.setMaximumSize(QSize(16777215, 20))
-        self.label_43.setFont(font10)
+        self.label_43.setFont(font14)
 
         self.gridLayout_5.addWidget(self.label_43, 1, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.motor_label = QLabel(self.frame_4)
         self.motor_label.setObjectName(u"motor_label")
         self.motor_label.setMaximumSize(QSize(100, 20))
-        self.motor_label.setFont(font10)
+        self.motor_label.setFont(font14)
 
         self.gridLayout_5.addWidget(self.motor_label, 0, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1584,7 +1897,7 @@ class Ui_MainWindow(object):
         self.gridLayout_6.setContentsMargins(0, -1, -1, -1)
         self.label_52 = QLabel(self.frame_5)
         self.label_52.setObjectName(u"label_52")
-        self.label_52.setFont(font10)
+        self.label_52.setFont(font14)
 
         self.gridLayout_6.addWidget(self.label_52, 5, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1617,19 +1930,19 @@ class Ui_MainWindow(object):
 
         self.label_57 = QLabel(self.frame_5)
         self.label_57.setObjectName(u"label_57")
-        self.label_57.setFont(font10)
+        self.label_57.setFont(font14)
 
         self.gridLayout_6.addWidget(self.label_57, 0, 1, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_55 = QLabel(self.frame_5)
         self.label_55.setObjectName(u"label_55")
-        self.label_55.setFont(font10)
+        self.label_55.setFont(font14)
 
         self.gridLayout_6.addWidget(self.label_55, 0, 2, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_59 = QLabel(self.frame_5)
         self.label_59.setObjectName(u"label_59")
-        self.label_59.setFont(font10)
+        self.label_59.setFont(font14)
 
         self.gridLayout_6.addWidget(self.label_59, 6, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1662,14 +1975,14 @@ class Ui_MainWindow(object):
 
         self.label_56 = QLabel(self.frame_5)
         self.label_56.setObjectName(u"label_56")
-        self.label_56.setFont(font10)
+        self.label_56.setFont(font14)
 
         self.gridLayout_6.addWidget(self.label_56, 2, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.motor_label_2 = QLabel(self.frame_5)
         self.motor_label_2.setObjectName(u"motor_label_2")
         self.motor_label_2.setMaximumSize(QSize(100, 20))
-        self.motor_label_2.setFont(font10)
+        self.motor_label_2.setFont(font14)
 
         self.gridLayout_6.addWidget(self.motor_label_2, 0, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1702,20 +2015,20 @@ class Ui_MainWindow(object):
 
         self.label_51 = QLabel(self.frame_5)
         self.label_51.setObjectName(u"label_51")
-        self.label_51.setFont(font10)
+        self.label_51.setFont(font14)
 
         self.gridLayout_6.addWidget(self.label_51, 3, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_54 = QLabel(self.frame_5)
         self.label_54.setObjectName(u"label_54")
         self.label_54.setMaximumSize(QSize(16777215, 20))
-        self.label_54.setFont(font10)
+        self.label_54.setFont(font14)
 
         self.gridLayout_6.addWidget(self.label_54, 1, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
         self.label_58 = QLabel(self.frame_5)
         self.label_58.setObjectName(u"label_58")
-        self.label_58.setFont(font10)
+        self.label_58.setFont(font14)
 
         self.gridLayout_6.addWidget(self.label_58, 4, 0, 1, 1, Qt.AlignmentFlag.AlignHCenter)
 
@@ -1772,6 +2085,9 @@ class Ui_MainWindow(object):
         self.cmd_home_axis_btn.clicked.connect(self.btn_stop.click)
 
         self.tabWidget.setCurrentIndex(0)
+        self.jog_tabs.setCurrentIndex(1)
+        self.stp_trans_5mm.setDefault(False)
+        self.stp_rot_10deg.setDefault(False)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1829,6 +2145,36 @@ class Ui_MainWindow(object):
         self.jog_j6_neg_btn.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.jog_j6_label.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.jog_j6_pos_btn.setText(QCoreApplication.translate("MainWindow", u"+", None))
+        self.jog_tabs.setTabText(self.jog_tabs.indexOf(self.joint_mode), QCoreApplication.translate("MainWindow", u"Joint Mode", None))
+        self.cart_ry_neg_btn.setText(QCoreApplication.translate("MainWindow", u"Ry-", None))
+        self.cart_rx_neg_btn.setText(QCoreApplication.translate("MainWindow", u"Rx-", None))
+        self.cart_rz_neg_btn.setText(QCoreApplication.translate("MainWindow", u"Rz-", None))
+        self.cart_rx_pos_btn.setText(QCoreApplication.translate("MainWindow", u"Rx+", None))
+        self.cart_rz_pos_btn.setText(QCoreApplication.translate("MainWindow", u"Rz+", None))
+        self.cart_ry_pos_btn.setText(QCoreApplication.translate("MainWindow", u"Ry+", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Step Translation:", None))
+        self.stp_trans_01mm.setText(QCoreApplication.translate("MainWindow", u"0.1mm", None))
+        self.stp_trans_1mm.setText(QCoreApplication.translate("MainWindow", u"1mm", None))
+        self.stp_trans_5mm.setText(QCoreApplication.translate("MainWindow", u"5mm", None))
+        self.stp_trans_10mm.setText(QCoreApplication.translate("MainWindow", u"10mm", None))
+        self.stp_trans_50mm.setText(QCoreApplication.translate("MainWindow", u"50mm", None))
+        self.cart_y_neg_btn.setText(QCoreApplication.translate("MainWindow", u"Y-", None))
+        self.cart_x_neg_btn.setText(QCoreApplication.translate("MainWindow", u"X-", None))
+        self.cart_z_neg_btn.setText(QCoreApplication.translate("MainWindow", u"Z-", None))
+        self.cart_x_pos_btn.setText(QCoreApplication.translate("MainWindow", u"X+", None))
+        self.cart_z_pos_btn.setText(QCoreApplication.translate("MainWindow", u"Z+", None))
+        self.cart_y_pos_btn.setText(QCoreApplication.translate("MainWindow", u"Y+", None))
+        self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"WORLD", None))
+        self.comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"TOOLFRAME", None))
+
+        self.comboBox.setCurrentText(QCoreApplication.translate("MainWindow", u"WORLD", None))
+        self.label_20.setText(QCoreApplication.translate("MainWindow", u"Step Rotation:", None))
+        self.stp_rot_1deg.setText(QCoreApplication.translate("MainWindow", u"1\u00b0", None))
+        self.stp_rot_5deg.setText(QCoreApplication.translate("MainWindow", u"5\u00b0", None))
+        self.stp_rot_10deg.setText(QCoreApplication.translate("MainWindow", u"10\u00b0", None))
+        self.stp_rot_15deg.setText(QCoreApplication.translate("MainWindow", u"15\u00b0", None))
+        self.stp_rot_30deg.setText(QCoreApplication.translate("MainWindow", u"30\u00b0", None))
+        self.jog_tabs.setTabText(self.jog_tabs.indexOf(self.cartesian_mode), QCoreApplication.translate("MainWindow", u"Cartesian Mode", None))
         self.cmd_prog_menu_pushButton.setText(QCoreApplication.translate("MainWindow", u"Programs", None))
         self.cmd_ping_btn.setText(QCoreApplication.translate("MainWindow", u"Ping", None))
         self.cmd_pong_btn.setText(QCoreApplication.translate("MainWindow", u"Pong", None))
@@ -1851,27 +2197,171 @@ class Ui_MainWindow(object):
         self.con_status_label2.setText(QCoreApplication.translate("MainWindow", u"Disconnected", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_control), QCoreApplication.translate("MainWindow", u"Control", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"DH Params:", None))
+        self.dh_j2_a_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">160.00</p></body></html>", None))
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"3", None))
         self.label_18.setText(QCoreApplication.translate("MainWindow", u"5", None))
+        self.dh_j2_d_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p></body></html>", None))
 #if QT_CONFIG(tooltip)
         self.label_11.setToolTip(QCoreApplication.translate("MainWindow", u"Link length", None))
 #endif // QT_CONFIG(tooltip)
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"a", None))
         self.label_17.setText(QCoreApplication.translate("MainWindow", u"1", None))
+        self.dh_j1_aph_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">-1.571</p></body></html>", None))
 #if QT_CONFIG(tooltip)
         self.label_9.setToolTip(QCoreApplication.translate("MainWindow", u"Link offset", None))
 #endif // QT_CONFIG(tooltip)
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"d", None))
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"2", None))
+        self.dh_j5_aph_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">1.571</p></body></html>", None))
 #if QT_CONFIG(tooltip)
         self.label_7.setToolTip(QCoreApplication.translate("MainWindow", u"Link twist (in radians)", None))
 #endif // QT_CONFIG(tooltip)
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"alpha", None))
+        self.dh_j3_a_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">-15.00</p></body></html>", None))
+        self.dh_j5_a_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p></body></html>", None))
+        self.dh_j5_d_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p></body></html>", None))
+        self.dh_j3_aph_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">1.571</p></body></html>", None))
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"4", None))
+        self.dh_j6_aph_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p></body></html>", None))
         self.label_19.setText(QCoreApplication.translate("MainWindow", u"6", None))
+        self.dh_j6_a_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p></body></html>", None))
+        self.dh_j2_aph_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p></body></html>", None))
+        self.dh_j1_a_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">37.50</p></body></html>", None))
+        self.dh_j1_d_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">135.30</p></body></html>", None))
+        self.dh_j3_d_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p></body></html>", None))
         self.joint_label.setText(QCoreApplication.translate("MainWindow", u"Joint", None))
+        self.dh_j6_d_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">29.270</p></body></html>", None))
+        self.dh_j4_a_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p></body></html>", None))
+        self.dh_j4_d_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">138.40</p></body></html>", None))
+        self.dh_j4_aph_v.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">-1.571</p></body></html>", None))
 #if QT_CONFIG(tooltip)
-        self.label_53.setToolTip(QCoreApplication.translate("MainWindow", u"Theta offset (in degrees) default 0", None))
+        self.label_53.setToolTip(QCoreApplication.translate("MainWindow", u"Theta offset (in degrees)", None))
 #endif // QT_CONFIG(tooltip)
         self.label_53.setText(QCoreApplication.translate("MainWindow", u"theta offset", None))
         self.dh_j1_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -1881,7 +2371,7 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.dh_j2_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
@@ -1890,7 +2380,7 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">-90</p></body></html>", None))
         self.dh_j3_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -1898,7 +2388,7 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">180</p></body></html>", None))
         self.dh_j4_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -1906,7 +2396,7 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p></body></html>", None))
         self.dh_j5_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -1914,7 +2404,7 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p></body></html>", None))
         self.dh_j6_theta_off.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -1922,26 +2412,170 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">0.0</p></body></html>", None))
         self.label_39.setText(QCoreApplication.translate("MainWindow", u"Homing Params:", None))
         self.label_47.setText(QCoreApplication.translate("MainWindow", u"4", None))
+        self.home_mtr_1_h_pos.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">40250</p></body></html>", None))
+        self.home_mtr_2_h_pos.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">42760</p></body></html>", None))
         self.label_41.setText(QCoreApplication.translate("MainWindow", u"5", None))
+        self.home_mtr_6_h_pos.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">-6400</p></body></html>", None))
         self.label_40.setText(QCoreApplication.translate("MainWindow", u"3", None))
         self.label_49.setText(QCoreApplication.translate("MainWindow", u"home position", None))
+        self.home_mtr_4_h_pos.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">-23760</p></body></html>", None))
         self.label_48.setText(QCoreApplication.translate("MainWindow", u"6", None))
+        self.home_mtr_3_h_pos.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">-11820</p></body></html>", None))
         self.label_45.setText(QCoreApplication.translate("MainWindow", u"2", None))
         self.label_43.setText(QCoreApplication.translate("MainWindow", u"1", None))
         self.motor_label.setText(QCoreApplication.translate("MainWindow", u"Motor", None))
+        self.home_mtr_5_h_pos.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">-16438</p></body></html>", None))
         self.label_50.setText(QCoreApplication.translate("MainWindow", u"Speed and Acceleration:", None))
         self.label_52.setText(QCoreApplication.translate("MainWindow", u"5", None))
+        self.motor_4_acc.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">30000</p></body></html>", None))
+        self.motor_4_max_speed.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">40000</p></body></html>", None))
+        self.motor_1_max_speed.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">50000</p></body></html>", None))
         self.label_57.setText(QCoreApplication.translate("MainWindow", u"max speed", None))
         self.label_55.setText(QCoreApplication.translate("MainWindow", u"acceleration", None))
         self.label_59.setText(QCoreApplication.translate("MainWindow", u"6", None))
+        self.motor_5_max_speed.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">40000</p></body></html>", None))
+        self.motor_5_acc.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">20000</p></body></html>", None))
+        self.motor_2_max_speed.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">160000</p></body></html>", None))
         self.label_56.setText(QCoreApplication.translate("MainWindow", u"2", None))
         self.motor_label_2.setText(QCoreApplication.translate("MainWindow", u"Motor", None))
+        self.motor_6_max_speed.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">15000</p></body></html>", None))
+        self.motor_2_acc.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">50000</p></body></html>", None))
+        self.motor_3_acc.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">30000</p></body></html>", None))
         self.label_51.setText(QCoreApplication.translate("MainWindow", u"3", None))
         self.label_54.setText(QCoreApplication.translate("MainWindow", u"1", None))
         self.label_58.setText(QCoreApplication.translate("MainWindow", u"4", None))
+        self.motor_3_max_speed.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">60000</p></body></html>", None))
+        self.motor_1_acc.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">26000</p></body></html>", None))
+        self.motor_6_acc.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">8000</p></body></html>", None))
         self.setup_save_btn.setText(QCoreApplication.translate("MainWindow", u"Save ", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_setup), QCoreApplication.translate("MainWindow", u"Setup", None))
         pass
