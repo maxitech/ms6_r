@@ -39,10 +39,46 @@ class JogHandler:
             self._ui.jog_j6_pos_btn,
             self._ui.jog_j6_neg_btn,
         ]
-
         for button in jog_buttons:
             button.pressed.connect(lambda btn=button: self._handle_jog_btn_press(btn))
             button.released.connect(self._handle_jog_btn_release)
+
+        cart_jog_buttons = [
+            self._ui.cart_x_pos_btn,
+            self._ui.cart_x_neg_btn,
+            self._ui.cart_y_pos_btn,
+            self._ui.cart_y_neg_btn,
+            self._ui.cart_z_pos_btn,
+            self._ui.cart_z_neg_btn,
+            self._ui.cart_rx_pos_btn,
+            self._ui.cart_rx_neg_btn,
+            self._ui.cart_ry_pos_btn,
+            self._ui.cart_ry_neg_btn,
+            self._ui.cart_rz_pos_btn,
+            self._ui.cart_rz_neg_btn,
+        ]
+        for btn in cart_jog_buttons:
+            btn.pressed.connect(lambda btn=btn: self._handle_cart_jog_btn_press(btn))
+            btn.released.connect(self._handle_cart_jog_btn_release)
+
+    def _setup_cart_step_btns(self, stp_mode):
+        """0 for translation group
+        1 for rotation group
+        """
+        if stp_mode == 0:
+            container = self._ui.translation_btn_group
+        elif stp_mode == 1:
+            container = self._ui.rotation_btn_group
+        btn_group = QButtonGroup()
+        btn_group.setExclusive(True)
+
+        for child in container.findChildren(QPushButton):
+            if child.isCheckable():
+                btn_group.addButton(child)
+                if stp_mode == 0:
+                    self._transl_btn_group = btn_group
+                elif stp_mode == 1:
+                    self._rotation_btn_group = btn_group
 
     def _handle_jog_btn_press(self, btn):
         """Handle jog button press"""
