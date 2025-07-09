@@ -115,6 +115,65 @@ class JogHandler:
         index = int(joint.split("J")[1]) - 1
         return joint_speeds[index]
 
+    def _handle_cart_jog_btn_press(self, btn):
+        """Handles press on caresian jog btn.
+        Collects data sring and forwards it to send_data function"""
+        axis, direction = self._parse_jog_button(btn)
+        direction = self._map_cart_direction(direction)
+        mode = self._map_axis_to_mode(axis)
+        transl_delta = self._get_transl_delta()
+        rot_delta = self._get_rot_delta()
+        start_cart_dta_str = self._create_cart_jog_data_str(
+            axis, direction, mode, transl_delta, rot_delta
+        )
+        self._serial.send_data(start_cart_dta_str)
+
+    def _create_cart_jog_data_str(self, axis, dir, mode, t_delta, r_delta):
+        """Create data string for cartesian jog"""
+        start_cart_data = f"JOG_CART,[{axis},"
+        if mode == -1:
+            print("ERROR: Failed in '_handle_cart_jog_btn_press'.")
+        elif mode == "linear":
+            speed_mm_s = self._helper.map_slider_to_linear_speed(
+                self._slider_value, max_mm_s=30.0
+            )
+            # axis
+            start_cart_data += f"LIN,{dir},{speed_mm_s},{t_delta}"
+        else:
+            speed_deg_s = self._helper.map_slider_to_rot_speed(
+                self._slider_value, max_deg_s=30.0
+            )
+            start_cart_data += f"ROT,{dir},{speed_deg_s},{r_delta}"
+        start_cart_data += ",START]"
+        return start_cart_data
+
+    def _map_cart_direction(self, dir):
+        if dir == "POS":
+            return 1
+        return -1
+
+    def _map_axis_to_mode(self, axis):
+        linear_mode_axes = ["X", "Y", "Z"]
+        rot_mode_axes = ["RX", "RY", "RZ"]
+        if axis in linear_mode_axes:
+            return "linear"
+        elif axis in rot_mode_axes:
+            return "rotation"
+        return -1
+
+    def _get_transl_delta(self):
+        active_btn = self._transl_btn_group.checkedButton()
+        if active_btn:
+            return active_btn.text()[:-2]  # btnTxt = 0.1mm, 50mm
+
+    def _get_rot_delta(self):
+        active_btn = self._rotation_btn_group.checkedButton()
+        if active_btn:
+            return active_btn.text()[:-1]  # btnTxt = 1°, 30°
+
+    def _handle_cart_jog_btn_release(self):
+        pass
+
     def _handle_jog_slider_change(self):
         """Handle jog slider value change"""
         self._ui.jog_slider.setValue(round(self._ui.jog_slider.value() / 10) * 10)
