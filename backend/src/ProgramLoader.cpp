@@ -68,7 +68,7 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
             _executionState = EXEC_IDLE;
         }
     }
-    else if (command == "JOG" || command == "MOVE")
+    else if (command == "JOG" || command == "JOG_CART" || command == "MOVE")
     {
 
         if (_currentProgramState != MAIN)
