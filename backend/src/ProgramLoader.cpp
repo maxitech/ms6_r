@@ -251,6 +251,8 @@ void ProgramLoader::_main()
 
     if (_cmd == "JOG" && _isHomingDone)
     {
+        const String& joint    = _arguments[0];                  // e.g. "J1"
+        const int     motorIdx = joint.substring(1).toInt() - 1; // Convert "J1" extract 1 -> to index 0
         _jogCtrl->jogJoint(_arguments, currJogState, motorIdx);
         warningShown = false;
     }
