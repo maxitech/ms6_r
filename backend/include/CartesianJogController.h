@@ -1,0 +1,27 @@
+#ifndef CARTESIANJOGCONTROLLER_H
+#define CARTESIANJOGCONTROLLER_H
+
+#include "JogState.h"
+#include "MotorConfig.h"
+#include "RobotDataSender.h"
+
+class CartesianJogController
+{
+public:
+    CartesianJogController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender);
+    // need motorConfigs, arguments, motorIdx & rbtDataSender(sendPosData) from program loader maybe getJogCmd from JogController
+    void jog_cartesian(const std::vector<String>& arguments, JogState& currJogState);
+
+    // currPos -> FK()
+    // take in dir -> input from frontend dir==pressedBtn
+    // new_pos = delta => delta + curr pos val -> which axis -> pressed btn
+    // put new_pos in IK() -> get next joint angles
+    // move all joints simultaniously to next pos
+    // pay attention to joint limits and futre workspace limits
+
+private:
+    std::vector<MotorConfig*>& _motorConfigs; ///< Reference to a Vector of motor config pointers for the robot. Note: Setup class has full ownership of this vector. @internal
+    RobotDataSender&           _rbtDtaSender; ///< Reference to the data sender class for the robot. @internal
+};
+
+#endif // CARTESIANJOGCONTROLLER_H
