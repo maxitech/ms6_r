@@ -8,7 +8,8 @@ ProgramLoader::ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& c
     , _motorConfigs(configs)
     , _limitSwitches(limitSwitches)
     , _rbtDtaSender()
-    , _jogCtrl(new JogController(_motorConfigs, _rbtDtaSender)) {};
+    , _jogCtrl(new JogController(_motorConfigs, _rbtDtaSender))
+    , _jogCartCtrl(new CartesianJogController(_motorConfigs, _rbtDtaSender)) {};
 
 ProgramLoader::~ProgramLoader()
 {

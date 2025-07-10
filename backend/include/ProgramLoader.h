@@ -6,6 +6,7 @@
 #ifndef PROGRAMLOADER_H
 #define PROGRAMLOADER_H
 
+#include "CartesianJogController.h"
 #include "Homing.h"
 #include "JogCommand.h"
 #include "JogController.h"
@@ -150,6 +151,7 @@ private:
     bool                       _isHomingDone = false;            ///< Flag to check if homing is done. @internal
     RobotDataSender            _rbtDtaSender;                    ///< Instance of data sender class for the robot. @internal
     JogController*             _jogCtrl;                         ///< Pointer of the jog controller class which handles jog of the robot. @internal
+    CartesianJogController*    _jogCartCtrl;                     ///< Pointer of the cartesian jog controller class which handles cartesian jog of the robot.@internal
 };
 
 #endif // PROGRAMLOADER_H
