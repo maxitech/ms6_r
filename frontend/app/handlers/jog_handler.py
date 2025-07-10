@@ -10,9 +10,14 @@ class JogHandler:
         self._serial = serial
         self._helper = helper
         self._ui_manager = ui_manager
+
+        # ******joint mode****
         self._jog_joint = ""
         self._jog_direction = ""
         self._slider_value = ui.jog_slider.value()
+
+        # *****cartesian mode*****
+        self._jog_cart_axis = None
         self._transl_btn_group = None
         self._rotation_btn_group = None
 
@@ -120,6 +125,7 @@ class JogHandler:
         Collects data sring and forwards it to send_data function"""
         axis, direction = self._parse_jog_button(btn)
         direction = self._map_cart_direction(direction)
+        self._jog_cart_axis = axis
         mode = self._map_axis_to_mode(axis)
         transl_delta = self._get_transl_delta()
         rot_delta = self._get_rot_delta()
@@ -172,7 +178,9 @@ class JogHandler:
             return active_btn.text()[:-1]  # btnTxt = 1°, 30°
 
     def _handle_cart_jog_btn_release(self):
-        pass
+        """Handle cartesian jog btn release"""
+        stop_jog_cart_dta = f"JOG_CART,[{self._jog_cart_axis},0,0,0,0,STOP]"  # 0 represents no data -> solution to prevent backend form accessing invalid indexes
+        self._serial.send_data(stop_jog_cart_dta)
 
     def _handle_jog_slider_change(self):
         """Handle jog slider value change"""
