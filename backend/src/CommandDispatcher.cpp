@@ -15,7 +15,7 @@ void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& a
     const String& command = cmd;
 
     // --------------------This block is use if backend runs main func automatically if JOG of MOVE are the cmd's-------------
-    std::vector<String> cmds       = {"LOAD", "START", "STOP", "IDLE", "HOME", "JOG", "MOVE", "SETUP"};
+    std::vector<String> cmds       = {"LOAD", "START", "STOP", "IDLE", "HOME", "JOG", "JOG_CART", "MOVE", "SETUP"};
     bool                isValidCmd = std::find(cmds.begin(), cmds.end(), command) != cmds.end();
     if (isValidCmd)
     {
