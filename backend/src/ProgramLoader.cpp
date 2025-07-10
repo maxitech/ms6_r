@@ -255,6 +255,11 @@ void ProgramLoader::_main()
         _jogCtrl->jogJoint(_arguments, currJogState, motorIdx);
         warningShown = false;
     }
+    else if (_cmd == "JOG_CART") // ! _isHomingDone <---
+    {
+        _jogCartCtrl->jog_cartesian(_arguments, currJogState);
+        warningShown = false;
+    }
     else
     {
         currJogState = IDLE_JOG;
