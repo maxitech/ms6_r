@@ -20,6 +20,7 @@ public:
     // pay attention to joint limits and futre workspace limits
 
 private:
+    void                       _handle_jog_cartesian(const std::vector<String>& arguments, JogState& currJogState);
     std::vector<MotorConfig*>& _motorConfigs; ///< Reference to a Vector of motor config pointers for the robot. Note: Setup class has full ownership of this vector. @internal
     RobotDataSender&           _rbtDtaSender; ///< Reference to the data sender class for the robot. @internal
 };

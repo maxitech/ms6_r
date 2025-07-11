@@ -6,6 +6,11 @@ CartesianJogController::CartesianJogController(std::vector<MotorConfig*>& motorC
 
 void CartesianJogController::jog_cartesian(const std::vector<String>& arguments, JogState& currJogState)
 {
+    _handle_jog_cartesian(arguments, currJogState);
+}
+
+void CartesianJogController::_handle_jog_cartesian(const std::vector<String>& arguments, JogState& currJogState)
+{
     // _arguments -> AXIS,MODE,DIR(-1/1),SPEED,DELTA,EVENT -> {X,LIN,1,15.5,5,START}
     const String& axis  = arguments[0];
     const String& mode  = arguments[1];
