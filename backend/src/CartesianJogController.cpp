@@ -1,4 +1,6 @@
 #include "CartesianJogController.h"
+#include "teensystep4.h"
+using namespace TS4;
 
 CartesianJogController::CartesianJogController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender, Kinematics* kin)
     : _motorConfigs(motorConfigs)
@@ -100,4 +102,43 @@ Pose CartesianJogController::_calcNextPos(const String& mode, const String& axis
 Angles CartesianJogController::_calcNextPosAngles(const Pose& nextPos)
 {
     return _kin->inverseKinematics(nextPos.x, nextPos.y, nextPos.z, nextPos.roll, nextPos.pitch, nextPos.yaw);
+}
+
+void CartesianJogController::_moveToPos(const Angles& angles)
+{
+
+    StepperGroup group;
+    for (MotorConfig* cfg : _motorConfigs)
+    {
+        group.add(cfg->motor);
+    }
+
+    // get steps for each stepper
+    std::vector<int> steps = _convertAngToDeg(angles);
+
+    for (Stepper* s : group)
+    {
+        //
+    }
+
+    // give every stepper in the group its steps to move
+    // set rel pos (delta) for each stepper
+
+    // use moveAsync for group sync move
+    // for stopping mybe use emergency stop
+}
+
+std::vector<int> CartesianJogController::_convertAngToDeg(const Angles& angles)
+{
+    std::array<double, 6> allAngles = {
+        angles.theta1, angles.theta2, angles.theta3,
+        angles.theta4, angles.theta5, angles.theta6};
+
+    std::vector<int> steps;
+    for (size_t i = 0; i < allAngles.size(); ++i)
+    {
+        int stepCount = _kin->degToSteps(_motorConfigs[i], allAngles[i]);
+        steps.push_back(stepCount);
+    }
+    return steps;
 }

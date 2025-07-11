@@ -14,11 +14,13 @@ public:
     void jog_cartesian(const std::vector<String>& arguments, JogState& currJogState);
 
 private:
-    void   _handle_jog_cartesian(const std::vector<String>& arguments, JogState& currJogState);
-    Pose   _getCurrPose();
-    float  _calcIntervall(const float delta, const float speed);
-    Pose   _calcNextPos(const String& mode, const String& axis, const float delta, const Pose& currPos);
-    Angles _calcNextPosAngles(const Pose& nextPose);
+    void             _handle_jog_cartesian(const std::vector<String>& arguments, JogState& currJogState);
+    Pose             _getCurrPose();
+    float            _calcIntervall(const float delta, const float speed);
+    Pose             _calcNextPos(const String& mode, const String& axis, const float delta, const Pose& currPos);
+    Angles           _calcNextPosAngles(const Pose& nextPose);
+    void             _moveToPos(const Angles& angles);
+    std::vector<int> _convertAngToDeg(const Angles& angles);
 
     std::vector<MotorConfig*>& _motorConfigs; ///< Reference to a Vector of motor config pointers for the robot. Note: Setup class has full ownership of this vector. @internal
     RobotDataSender&           _rbtDtaSender; ///< Reference to the data sender class for the robot. @internal
