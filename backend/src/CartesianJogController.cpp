@@ -22,9 +22,10 @@ void CartesianJogController::_handle_jog_cartesian(const std::vector<String>& ar
 
     Pose  currPos      = _getCurrPose();
     float intervall_ms = _calcIntervall(delta, speed);
-    Pose  newPos       = _calcNextPos(mode, axis, delta, currPos);
+    Pose  nextPos      = _calcNextPos(mode, axis, delta, currPos);
 
-    // put new_pos in IK() -> get next joint angles
+    Angles nextPosAngles = _calcNextPosAngles(nextPos);
+
     // move all joints simultaniously to next pos
     // pay attention to joint limits and futre workspace limits
 }
@@ -93,4 +94,9 @@ Pose CartesianJogController::_calcNextPos(const String& mode, const String& axis
         Serial.println(".");
     }
     return newPos;
+}
+
+Angles CartesianJogController::_calcNextPosAngles(const Pose& nextPos)
+{
+    return _kin->inverseKinematics(nextPos.x, nextPos.y, nextPos.z, nextPos.roll, nextPos.pitch, nextPos.yaw);
 }
