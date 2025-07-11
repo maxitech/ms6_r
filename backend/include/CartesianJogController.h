@@ -2,13 +2,14 @@
 #define CARTESIANJOGCONTROLLER_H
 
 #include "JogState.h"
+#include "Kinematics.h"
 #include "MotorConfig.h"
 #include "RobotDataSender.h"
 
 class CartesianJogController
 {
 public:
-    CartesianJogController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender);
+    CartesianJogController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender, Kinematics* kin);
     // need motorConfigs, arguments, motorIdx & rbtDataSender(sendPosData) from program loader maybe getJogCmd from JogController
     void jog_cartesian(const std::vector<String>& arguments, JogState& currJogState);
 
