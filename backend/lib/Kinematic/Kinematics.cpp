@@ -39,7 +39,7 @@ double Kinematics::_stepsToDeg(const MotorConfig* motorConfig, const int currPos
     return (static_cast<double>(relativeSteps) / _stepsPerRev(motorConfig)) * 360.0;
 }
 
-int Kinematics::_degToSteps(const MotorConfig* motorConfig, const double deg) const
+int Kinematics::degToSteps(const MotorConfig* motorConfig, const double deg) const
 {
     if (!_isValidConfig(motorConfig))
     {

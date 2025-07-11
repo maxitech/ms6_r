@@ -97,6 +97,14 @@ public:
      */
     Angles inverseKinematics(double x, double y, double z, double yaw, double pitch, double roll);
 
+    /**
+     * @brief Converts degrees to steps for the given motor configuration.
+     * @param motorConfig Pointer to the MotorConfig object.
+     * @param deg Angle in degrees.
+     * @return Position in steps.
+     */
+    int degToSteps(const MotorConfig* motorConfig, const double deg) const;
+
 private:
     /**
      * @brief Computes the total ratio of the motor configuration.
