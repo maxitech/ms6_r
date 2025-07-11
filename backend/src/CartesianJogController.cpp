@@ -1,8 +1,9 @@
 #include "CartesianJogController.h"
 
-CartesianJogController::CartesianJogController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender)
+CartesianJogController::CartesianJogController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender, Kinematics* kin)
     : _motorConfigs(motorConfigs)
-    , _rbtDtaSender(rbtDtaSender) {};
+    , _rbtDtaSender(rbtDtaSender)
+    , _kin(kin) {};
 
 void CartesianJogController::jog_cartesian(const std::vector<String>& arguments, JogState& currJogState)
 {
@@ -30,7 +31,7 @@ void CartesianJogController::_handle_jog_cartesian(const std::vector<String>& ar
 
 Pose CartesianJogController::_getCurrPose()
 {
-    return _kin.forwardKinematics();
+    return _kin->forwardKinematics();
 }
 
 float CartesianJogController::_calcIntervall(const float delta, const float speed)

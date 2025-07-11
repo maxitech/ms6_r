@@ -27,6 +27,7 @@ private:
 
     std::vector<MotorConfig*>& _motorConfigs; ///< Reference to a Vector of motor config pointers for the robot. Note: Setup class has full ownership of this vector. @internal
     RobotDataSender&           _rbtDtaSender; ///< Reference to the data sender class for the robot. @internal
+    Kinematics*                _kin;          ///< Pointer to kinematics class instance. Note: Setup class has ownership.
 };
 
 #endif // CARTESIANJOGCONTROLLER_H

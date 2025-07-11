@@ -11,6 +11,7 @@
 #include "JogCommand.h"
 #include "JogController.h"
 #include "JogState.h"
+#include "Kinematics.h"
 #include "LimitSwitches.h"
 #include "MotorConfig.h"
 #include "RobotDataSender.h"
@@ -51,7 +52,7 @@ public:
      * @param motorConfigs Reference to a vector of MotorConfig's for the robot's motors.
      * @param limitSwitches Reference to a LimitSwitches instance for diagnostic testing.
      */
-    ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& motorConfigs, LimitSwitches& limitSwitches);
+    ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& motorConfigs, LimitSwitches& limitSwitches, Kinematics* kin);
 
     ~ProgramLoader(); ///< Declaration of deconstructor.
 
@@ -146,6 +147,7 @@ private:
     ProgramState               _currentProgramState = IDLE;      ///< Current active program state. @internal
     ExecutionState             _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
     LimitSwitches&             _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
+    Kinematics*                _kin;                             ///< Pointer to kinematics class instance. Note: Setup class has ownership.
     std::vector<String>        _arguments;                       ///< Arguments passed with the command. @internal
     String                     _cmd;                             ///< Current command @internal
     bool                       _isHomingDone = false;            ///< Flag to check if homing is done. @internal

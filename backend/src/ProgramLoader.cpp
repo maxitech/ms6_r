@@ -3,13 +3,14 @@
 #include "Utils.h"
 #include <map>
 
-ProgramLoader::ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& configs, LimitSwitches& limitSwitches)
+ProgramLoader::ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& configs, LimitSwitches& limitSwitches, Kinematics* kin)
     : _homingManager(homingManager)
     , _motorConfigs(configs)
     , _limitSwitches(limitSwitches)
+    , _kin(kin)
     , _rbtDtaSender()
     , _jogCtrl(new JogController(_motorConfigs, _rbtDtaSender))
-    , _jogCartCtrl(new CartesianJogController(_motorConfigs, _rbtDtaSender)) {};
+    , _jogCartCtrl(new CartesianJogController(_motorConfigs, _rbtDtaSender, _kin)) {};
 
 ProgramLoader::~ProgramLoader()
 {
