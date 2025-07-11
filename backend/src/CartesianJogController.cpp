@@ -16,6 +16,6 @@ void CartesianJogController::_handle_jog_cartesian(const std::vector<String>& ar
     const String& mode  = arguments[1];
     const int     dir   = arguments[2].toInt();
     const float   speed = arguments[3].toFloat();
-    const int     delta = arguments[4].toInt();
+    const float   delta = arguments[4].toFloat();
     const String& event = arguments.back();
 }
