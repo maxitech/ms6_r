@@ -132,15 +132,6 @@ private:
     double _stepsToDeg(const MotorConfig* motorConfig, const int currPosInSteps) const;
 
     /**
-     * @brief Converts degrees to steps for the given motor configuration.
-     * @param motorConfig Pointer to the MotorConfig object.
-     * @param deg Angle in degrees.
-     * @return Position in steps.
-     * @internal
-     */
-    int _degToSteps(const MotorConfig* motorConfig, const double deg) const;
-
-    /**
      * @brief Converts degrees to radians.
      * @param deg Angle in degrees.
      * @return Angle in radians.
