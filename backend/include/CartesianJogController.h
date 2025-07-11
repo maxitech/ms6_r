@@ -13,13 +13,6 @@ public:
     // need motorConfigs, arguments, motorIdx & rbtDataSender(sendPosData) from program loader maybe getJogCmd from JogController
     void jog_cartesian(const std::vector<String>& arguments, JogState& currJogState);
 
-    // currPos -> FK()
-    // take in dir -> input from frontend dir==pressedBtn
-    // new_pos = delta => delta + curr pos val -> which axis -> pressed btn
-    // put new_pos in IK() -> get next joint angles
-    // move all joints simultaniously to next pos
-    // pay attention to joint limits and futre workspace limits
-
 private:
     void  _handle_jog_cartesian(const std::vector<String>& arguments, JogState& currJogState);
     Pose  _getCurrPose();
