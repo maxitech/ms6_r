@@ -12,6 +12,7 @@ void CartesianJogController::jog_cartesian(const std::vector<String>& arguments,
 
 void CartesianJogController::_handle_jog_cartesian(const std::vector<String>& arguments, JogState& currJogState)
 {
+    // ***Extracting***
     // _arguments -> AXIS,MODE,DIR(-1/1),SPEED,DELTA,EVENT -> {X,LIN,1,15.5,5,START}
     const String& axis  = arguments[0];
     const String& mode  = arguments[1];
@@ -20,10 +21,10 @@ void CartesianJogController::_handle_jog_cartesian(const std::vector<String>& ar
     const float   delta = arguments[4].toFloat();
     const String& event = arguments.back();
 
-    Pose  currPos      = _getCurrPose();
-    float intervall_ms = _calcIntervall(delta, speed);
-    Pose  nextPos      = _calcNextPos(mode, axis, delta, currPos);
-
+    // ***Calculations***
+    Pose   currPos       = _getCurrPose();
+    float  intervall_ms  = _calcIntervall(delta, speed);
+    Pose   nextPos       = _calcNextPos(mode, axis, delta, currPos);
     Angles nextPosAngles = _calcNextPosAngles(nextPos);
 
     // move all joints simultaniously to next pos
