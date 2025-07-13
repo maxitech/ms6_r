@@ -25,6 +25,22 @@ struct MotorConfig
     Stepper* motor;
 
     /**
+     * @brief Home offset in steps.
+     * This is set to the defined home position and used to calculate the mathematical 0° position after homing.
+     */
+    int homeOffsetSteps;
+
+    /**
+     * @brief Minimum angle of the motor.
+     */
+    double minAngleDeg;
+
+    /**
+     * @brief Maximum angle of the motor.
+     */
+    double maxAngleDeg;
+
+    /**
      * @brief Number of full steps the motor takes per revolution.
      */
     int stepsPerRev;
@@ -53,22 +69,6 @@ struct MotorConfig
     float gearboxRatio;
 
     /**
-     * @brief Home offset in steps.
-     * This is set to the defined home position and used to calculate the mathematical 0° position after homing.
-     */
-    int homeOffsetSteps;
-
-    /**
-     * @brief Minimum angle of the motor.
-     */
-    double minAngleDeg;
-
-    /**
-     * @brief Maximum angle of the motor.
-     */
-    double maxAngleDeg;
-
-    /**
      * @brief Constructs a new MotorConfig object.
      *
      * @param motor Pointer to the Stepper motor instance.
@@ -83,14 +83,14 @@ struct MotorConfig
      */
     MotorConfig(Stepper* motor, int homeOffset, float minAngleDeg, float maxAngleDeg, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
         : motor(motor)
+        , homeOffsetSteps(homeOffset)
+        , minAngleDeg(minAngleDeg)
+        , maxAngleDeg(maxAngleDeg)
         , stepsPerRev(spr)
         , microsteps(ms)
         , driverTeeth(drt)
         , drivenTeeth(dnt)
         , gearboxRatio(gr)
-        , homeOffsetSteps(homeOffset)
-        , minAngleDeg(minAngleDeg)
-        , maxAngleDeg(maxAngleDeg)
     {
     }
 };
