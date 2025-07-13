@@ -54,12 +54,12 @@ void setUp(void)
     motor6->setPosition(TEST_HOME_POS_J6);
 
     motorConfigs.clear();
-    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
-    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor4, TEST_HOME_POS_J4, 400, 64, 16.0f, 60.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor5, TEST_HOME_POS_J5, 200, 64, 16.0f, 32.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor6, TEST_HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig(motor1, 10000, 200, 180, 180, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor2, 10000, 200, 180, 180, 64, 16.0f, 80.0f, 14.0f));
+    motorConfigs.push_back(new MotorConfig(motor3, 10000, 200, 180, 180, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor4, TEST_HOME_POS_J4, 400, 180, 180, 64, 16.0f, 60.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor5, TEST_HOME_POS_J5, 200, 180, 180, 64, 16.0f, 32.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor6, TEST_HOME_POS_J6, 200, 180, 180, 64, 1.0f, 1.0f, 1.0f));
 
     // kin = new Kinematics(motorConfigs, std::vector<DHparam> {});
     kin = new Kinematics(motorConfigs, dhParams);
@@ -130,12 +130,12 @@ void test_getJointAnglesInRadOrDeg_should_return_correct_angle_in_radian(void)
     motor2->setPosition(234000); // 1.57 rad (90°) in steps
     motor3->setPosition(30000);  // 1.57 rad (90°) in steps
     motorConfigs.clear();
-    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
-    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor4, TEST_HOME_POS_J4, 400, 4, 16.0f, 60.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor5, TEST_HOME_POS_J5, 200, 4, 16.0f, 32.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor6, TEST_HOME_POS_J6, 200, 4, 1.0f, 1.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig(motor1, 10000, 200, 180, 180, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor2, 10000, 200, 180, 180, 64, 16.0f, 80.0f, 14.0f));
+    motorConfigs.push_back(new MotorConfig(motor3, 10000, 200, 180, 180, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor4, TEST_HOME_POS_J4, 400, 180, 180, 4, 16.0f, 60.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor5, TEST_HOME_POS_J5, 200, 180, 180, 4, 16.0f, 32.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor6, TEST_HOME_POS_J6, 200, 180, 180, 4, 1.0f, 1.0f, 1.0f));
 
     delete kin;
     kin = new Kinematics(motorConfigs, dhParams);
@@ -219,12 +219,12 @@ void test_fk_to_ik_angle_reconstruction()
     motor5->setPosition(16400); // 90° in steps
 
     motorConfigs.clear();
-    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
-    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor4, TEST_HOME_POS_J4, 400, 64, 16.0f, 60.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor5, 10000, 200, 64, 16.0f, 32.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor6, TEST_HOME_POS_J6, 200, 64, 1.0f, 1.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig(motor1, 10000, 180, 180, 200, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor2, 10000, 200, 180, 180, 64, 16.0f, 80.0f, 14.0f));
+    motorConfigs.push_back(new MotorConfig(motor3, 10000, 200, 180, 180, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor4, TEST_HOME_POS_J4, 400, 180, 180, 64, 16.0f, 60.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor5, 10000, 200, 180, 180, 64, 16.0f, 32.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor6, TEST_HOME_POS_J6, 200, 180, 180, 64, 1.0f, 1.0f, 1.0f));
 
     delete kin;
     kin = new Kinematics(motorConfigs, dhParams);
@@ -265,12 +265,12 @@ void test_inverseKinematics_static_j5_positive(void)
     motor6->setPosition(13.947); // 111° in steps
 
     motorConfigs.clear();
-    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
-    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor4, 10000, 400, 64, 16.0f, 60.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor5, 10000, 200, 64, 16.0f, 32.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor6, 10000, 200, 64, 1.0f, 1.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig(motor1, 10000, 180, 180, 200, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor2, 10000, 180, 180, 200, 64, 16.0f, 80.0f, 14.0f));
+    motorConfigs.push_back(new MotorConfig(motor3, 10000, 180, 180, 200, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor4, 10000, 180, 180, 400, 64, 16.0f, 60.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor5, 10000, 180, 180, 200, 64, 16.0f, 32.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor6, 10000, 180, 180, 200, 64, 1.0f, 1.0f, 1.0f));
 
     delete kin;
     kin = new Kinematics(motorConfigs, dhParams);
@@ -306,12 +306,12 @@ void test_inverseKinematics_static_j5_negative(void)
     motor6->setPosition(13.947); // 111° in steps
 
     motorConfigs.clear();
-    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
-    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor4, 10000, 400, 64, 16.0f, 60.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor5, 10000, 200, 64, 16.0f, 32.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor6, 10000, 200, 64, 1.0f, 1.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig(motor1, 10000, 180, 180, 200, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor2, 10000, 180, 180, 200, 64, 16.0f, 80.0f, 14.0f));
+    motorConfigs.push_back(new MotorConfig(motor3, 10000, 180, 180, 200, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor4, 10000, 180, 180, 400, 64, 16.0f, 60.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor5, 10000, 180, 180, 200, 64, 16.0f, 32.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor6, 10000, 180, 180, 200, 64, 1.0f, 1.0f, 1.0f));
 
     delete kin;
     kin = new Kinematics(motorConfigs, dhParams);
@@ -348,12 +348,12 @@ void test_inverseKinematics_static_j5_positive_w_toolFrame(void)
     motor6->setPosition(13.947); // 111° in steps
 
     motorConfigs.clear();
-    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
-    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor4, 10000, 400, 64, 16.0f, 60.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor5, 10000, 200, 64, 16.0f, 32.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor6, 10000, 200, 64, 1.0f, 1.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig(motor1, 10000, 180, 180, 200, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor2, 10000, 180, 180, 200, 64, 16.0f, 80.0f, 14.0f));
+    motorConfigs.push_back(new MotorConfig(motor3, 10000, 180, 180, 200, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor4, 10000, 180, 180, 400, 64, 16.0f, 60.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor5, 10000, 180, 180, 200, 64, 16.0f, 32.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor6, 10000, 180, 180, 200, 64, 1.0f, 1.0f, 1.0f));
     delete kin;
     kin = new Kinematics(motorConfigs, dhParams);
 
@@ -389,12 +389,12 @@ void test_inverseKinematics_static_j5_negative_w_toolFrame(void)
     motor6->setPosition(13.947); // 111° in steps
 
     motorConfigs.clear();
-    motorConfigs.push_back(new MotorConfig {motor1, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor2, 10000, 200, 64, 16.0f, 80.0f, 14.0f});
-    motorConfigs.push_back(new MotorConfig {motor3, 10000, 200, 64, 16.0f, 100.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor4, 10000, 400, 64, 16.0f, 60.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor5, 10000, 200, 64, 16.0f, 32.0f, 1.0f});
-    motorConfigs.push_back(new MotorConfig {motor6, 10000, 200, 64, 1.0f, 1.0f, 1.0f});
+    motorConfigs.push_back(new MotorConfig(motor1, 10000, 180, 180, 200, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor2, 10000, 180, 180, 200, 64, 16.0f, 80.0f, 14.0f));
+    motorConfigs.push_back(new MotorConfig(motor3, 10000, 180, 180, 200, 64, 16.0f, 100.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor4, 10000, 180, 180, 400, 64, 16.0f, 60.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor5, 10000, 180, 180, 200, 64, 16.0f, 32.0f, 1.0f));
+    motorConfigs.push_back(new MotorConfig(motor6, 10000, 180, 180, 200, 64, 1.0f, 1.0f, 1.0f));
     delete kin;
     kin = new Kinematics(motorConfigs, dhParams);
 
