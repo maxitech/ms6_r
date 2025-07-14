@@ -46,7 +46,7 @@ float CartesianJogController::_calcIntervall(const float delta, const float spee
 
 Pose CartesianJogController::_calcNextPos(const String& mode, const String& axis, const float delta, const Pose& currPos)
 {
-    Pose newPos;
+    Pose newPos = currPos;
     if (mode == "LIN")
     {
         if (axis == "X")
@@ -115,10 +115,10 @@ void CartesianJogController::_moveToPos(const Angles& angles)
     // get steps for each stepper
     std::vector<int> steps = _convertAngToDeg(angles);
 
-    for (Stepper* s : group)
-    {
-        //
-    }
+    // for (Stepper* s : group)
+    // {
+    //     //
+    // }
 
     // give every stepper in the group its steps to move
     // set rel pos (delta) for each stepper
