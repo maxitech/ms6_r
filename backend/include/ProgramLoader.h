@@ -52,7 +52,7 @@ public:
      * @param motorConfigs Reference to a vector of MotorConfig's for the robot's motors.
      * @param limitSwitches Reference to a LimitSwitches instance for diagnostic testing.
      */
-    ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& motorConfigs, LimitSwitches& limitSwitches, Kinematics* kin);
+    ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& motorConfigs, LimitSwitches& limitSwitches);
 
     ~ProgramLoader(); ///< Declaration of deconstructor.
 
@@ -73,6 +73,11 @@ public:
      * @return The current ProgramState.
      */
     ProgramState getState() const;
+
+    void forwardKin(Kinematics* kin)
+    {
+        _jogCartCtrl->setKin(kin);
+    }
 
 private:
     //  ******************************PRIVATE FUNCTIONS********************************

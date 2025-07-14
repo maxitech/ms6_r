@@ -9,9 +9,14 @@
 class CartesianJogController
 {
 public:
-    CartesianJogController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender, Kinematics* kin);
+    CartesianJogController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender);
     // need motorConfigs, arguments, motorIdx & rbtDataSender(sendPosData) from program loader maybe getJogCmd from JogController
     void jog_cartesian(const std::vector<String>& arguments, JogState& currJogState);
+
+    void setKin(Kinematics* kin)
+    {
+        _kin = kin;
+    }
 
 private:
     void             _handle_jog_cartesian(const std::vector<String>& arguments, JogState& currJogState);

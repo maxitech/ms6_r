@@ -2,10 +2,9 @@
 #include "teensystep4.h"
 using namespace TS4;
 
-CartesianJogController::CartesianJogController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender, Kinematics* kin)
+CartesianJogController::CartesianJogController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender)
     : _motorConfigs(motorConfigs)
-    , _rbtDtaSender(rbtDtaSender)
-    , _kin(kin) {};
+    , _rbtDtaSender(rbtDtaSender) {};
 
 void CartesianJogController::jog_cartesian(const std::vector<String>& arguments, JogState& currJogState)
 {

@@ -16,7 +16,7 @@ Setup::Setup()
     , _motorJ6(_motorJ6Step, _motorJ6Dir)
     , _limitSwitches(_ledPin, _limitSwitchPins)
     , _homingManager(_limitSwitchPins)
-    , _programLoader(&_homingManager, _motorConfigs, _limitSwitches, _kin)
+    , _programLoader(&_homingManager, _motorConfigs, _limitSwitches)
     , _cmdProcessor(_programLoader) {};
 
 void Setup::_validateJson()
@@ -306,6 +306,7 @@ void Setup::update(const String& jsonString)
         _updateKinematics();
         _updateAxisData();
         _updateHomingGroups();
+        _programLoader.forwardKin(_kin);
     }
 }
 
