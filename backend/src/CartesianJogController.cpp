@@ -113,7 +113,7 @@ void CartesianJogController::_moveToPos(const Angles& angles)
     }
 
     // get steps for each stepper
-    std::vector<int> steps = _convertAngToDeg(angles);
+    std::vector<int> steps = _convertAngToSteps(angles);
 
     // for (Stepper* s : group)
     // {
@@ -127,7 +127,7 @@ void CartesianJogController::_moveToPos(const Angles& angles)
     // for stopping mybe use emergency stop
 }
 
-std::vector<int> CartesianJogController::_convertAngToDeg(const Angles& angles)
+std::vector<int> CartesianJogController::_convertAngToSteps(const Angles& angles)
 {
     std::array<double, 6> allAngles = {
         angles.theta1, angles.theta2, angles.theta3,
