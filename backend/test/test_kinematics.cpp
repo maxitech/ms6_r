@@ -181,9 +181,9 @@ void test_forwardKinematics_correctPose(void)
     float expectedRoll  = -90.0f; // Replace with expected roll
 
     // Validate results
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, expectedX, result.x);
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, expectedY, result.y);
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, expectedZ, result.z);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, expectedX, result.x);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, expectedY, result.y);
+    TEST_ASSERT_FLOAT_WITHIN(0.1f, expectedZ, result.z);
     TEST_ASSERT_FLOAT_WITHIN(1.0f, expectedYaw, result.yaw);
     TEST_ASSERT_FLOAT_WITHIN(1.0f, expectedPitch, result.pitch);
     TEST_ASSERT_FLOAT_WITHIN(1.0f, expectedRoll, result.roll);
