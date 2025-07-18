@@ -27,6 +27,15 @@ int TEST_HOME_POS_J4 = -24'000;
 int TEST_HOME_POS_J5 = -22'000;
 int TEST_HOME_POS_J6 = -6'400;
 
+// correct in theory => problems with kinemaic => atm no idea why => keep "old" functional dh params
+// std::array<DHparam, 6> dhParams = {
+//     DHparam {37.5, -1.571, 135.300, 0.0},
+//     DHparam {160.0, 3.142, 0.0, -90.0},
+//     DHparam {-15.0, 1.571, 0.0, 180.0},
+//     DHparam {0.0, -1.571, -138.400, 0.0},
+//     DHparam {0.0, 1.571, 0.0, 0.0},
+//     DHparam {0.0, 3.142, -29.270, 0.0}};
+
 std::array<DHparam, 6> dhParams = {
     DHparam {37.5, -1.571, 135.300, 0.0},
     DHparam {160.0, 0.0, 0.0, -90.0},
