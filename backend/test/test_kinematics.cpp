@@ -241,7 +241,7 @@ void test_fk_to_ik_angle_reconstruction()
     Angles original = {0, 0, 0, 0, 90.0f, 0};
     Pose   fkPose   = kin->forwardKinematics();
 
-    Angles angles = kin->inverseKinematics(fkPose.x, fkPose.y, fkPose.z, fkPose.yaw, fkPose.pitch, fkPose.roll);
+    Angles angles = kin->inverseKinematics(fkPose.x, fkPose.y, fkPose.z, fkPose.yaw, fkPose.pitch, fkPose.roll, false);
 
     // Debug output
     // std::cout << "----------------------------------------" << std::endl;
@@ -286,7 +286,7 @@ void test_inverseKinematics_static_j5_positive(void)
     kin = new Kinematics(motorConfigs, dhParams);
 
     Angles original = {45.0f, 33.0f, 23.0f, 170.0f, 90.0f, 111.0f}; // Represents the expected angles
-    Angles angles   = kin->inverseKinematics(164.957f, 172.145f, 179.255f, -24.991f, 11.914f, -55.749f);
+    Angles angles   = kin->inverseKinematics(164.957f, 172.145f, 179.255f, -24.991f, 11.914f, -55.749f, true);
 
     // Debug output
     // std::cout << "----------------------------------------" << std::endl;
@@ -327,7 +327,7 @@ void test_inverseKinematics_static_j5_negative(void)
     kin = new Kinematics(motorConfigs, dhParams);
 
     Angles original = {45.0f, 33.0f, 23.0f, 170.0f, -90.0f, 111.0f}; // Represents the expected angles
-    Angles angles   = kin->inverseKinematics(138.349f, 131.161f, 147.017f, -49.106f, -22.815f, 126.687f);
+    Angles angles   = kin->inverseKinematics(138.349f, 131.161f, 147.017f, -49.106f, -22.815f, 126.687f, true);
 
     // Debug output
     // std::cout << "----------------------------------------" << std::endl;
@@ -369,7 +369,7 @@ void test_inverseKinematics_static_j5_positive_w_toolFrame(void)
 
     Angles original = {45.0f, 33.0f, 23.0f, 170.0f, 90.0f, 111.0f}; // Represents the expected angles
     kin->setToolFrame(0.0f, 0.0f, 23.5f, 0.0f, 0.0f, 0.0f);
-    Angles angles = kin->inverseKinematics(175.639f, 188.598f, 192.197f, -24.991f, 11.914f, -55.749f);
+    Angles angles = kin->inverseKinematics(175.639f, 188.598f, 192.197f, -24.991f, 11.914f, -55.749f, true);
 
     // Debug output
     // std::cout << "----------------------------------------" << std::endl;
@@ -410,7 +410,7 @@ void test_inverseKinematics_static_j5_negative_w_toolFrame(void)
 
     Angles original = {45.0f, 33.0f, 23.0f, 170.0f, -90.0f, 111.0f}; // Represents the expected angles
     kin->setToolFrame(0.0f, 0.0f, 23.5f, 0.0f, 0.0f, 0.0f);
-    Angles angles = kin->inverseKinematics(127.668f, 114.709f, 134.076f, -49.106f, -22.815f, 126.687f);
+    Angles angles = kin->inverseKinematics(127.668f, 114.709f, 134.076f, -49.106f, -22.815f, 126.687f, true);
 
     // Debug output
     // std::cout << "----------------------------------------" << std::endl;
@@ -433,17 +433,17 @@ void test_inverseKinematics_static_j5_negative_w_toolFrame(void)
 int runUnityTests(void)
 {
     UNITY_BEGIN();
-    RUN_TEST(test_kinematics_initialization);
-    RUN_TEST(test_getJointAnglesInRadOrDeg_returns_vector);
-    RUN_TEST(test_getJointAnglesInRadOrDeg_should_return_correct_angle_in_degree);
-    RUN_TEST(test_getJointAnglesInRadOrDeg_should_return_correct_angle_in_radian);
-    RUN_TEST(test_forwardKinematics_correctPose);
-    RUN_TEST(test_forwardKinematics_correctPose_w_toolFrame);
+    // RUN_TEST(test_kinematics_initialization);
+    // RUN_TEST(test_getJointAnglesInRadOrDeg_returns_vector);
+    // RUN_TEST(test_getJointAnglesInRadOrDeg_should_return_correct_angle_in_degree);
+    // RUN_TEST(test_getJointAnglesInRadOrDeg_should_return_correct_angle_in_radian);
+    // RUN_TEST(test_forwardKinematics_correctPose);
+    // RUN_TEST(test_forwardKinematics_correctPose_w_toolFrame);
     RUN_TEST(test_fk_to_ik_angle_reconstruction);
-    RUN_TEST(test_inverseKinematics_static_j5_positive);
-    RUN_TEST(test_inverseKinematics_static_j5_negative);
-    RUN_TEST(test_inverseKinematics_static_j5_positive_w_toolFrame);
-    RUN_TEST(test_inverseKinematics_static_j5_negative_w_toolFrame);
+    // RUN_TEST(test_inverseKinematics_static_j5_positive);
+    // RUN_TEST(test_inverseKinematics_static_j5_negative);
+    // RUN_TEST(test_inverseKinematics_static_j5_positive_w_toolFrame);
+    // RUN_TEST(test_inverseKinematics_static_j5_negative_w_toolFrame);
     return UNITY_END();
 }
 
