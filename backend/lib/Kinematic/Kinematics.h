@@ -28,7 +28,7 @@ struct DHparam
 struct Pose
 {
     double x, y, z;          ///< Position (mm)
-    double roll, pitch, yaw; ///< Orientation (Euler angles) in degrees
+    double yaw, pitch, roll; ///< Orientation (Euler angles) in degrees
     bool   inSingularity;    ///< Indicates if the pose is in a singularity
 };
 
