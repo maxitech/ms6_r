@@ -37,13 +37,21 @@ struct Pose
  */
 struct Angles
 {
-    double theta1;
-    double theta2;
-    double theta3;
-    double theta4;
-    double theta5;
-    double theta6;
+    double theta1, theta2, theta3, theta4, theta5, theta6;
+    int    shoulderVariant; // 1 / -1
+    int    elbowVariant;    // 1 / -1
+    bool   wristFlipped;    // true / false
 };
+
+//!!!!!!!!!!!!!!!!!!!!
+struct IKVariant
+{
+    int  shoulder;  // 1 oder -1
+    int  elbow;     // 1 oder -1
+    bool wristFlip; // false = normal, true = flipped
+};
+
+//!!!!
 
 /**
  * @class Kinematics
@@ -93,9 +101,10 @@ public:
      * @param yaw Yaw angle (deg)
      * @param pitch Pitch angle (deg)
      * @param roll Roll angle (deg)
+     * @param forceCurrVariant Bool indicating if variant of shoulder, elbow, wrist should be forced
      * @return Joint angles to achieve the pose.
      */
-    Angles inverseKinematics(double x, double y, double z, double yaw, double pitch, double roll);
+    Angles inverseKinematics(double x, double y, double z, double yaw, double pitch, double roll, bool forceCurrVariant);
 
     /**
      * @brief Converts degrees to steps for the given motor configuration.
@@ -104,6 +113,10 @@ public:
      * @return Position in steps.
      */
     int degToSteps(const MotorConfig* motorConfig, const double deg) const;
+
+    //!!!!!
+    void setCurrentVariant(int s, int e, bool w);
+    //!!!
 
 private:
     /**
@@ -169,6 +182,32 @@ private:
      * @internal
      */
     Eigen::Matrix4d _createTransformationMatrix(double x, double y, double z, double yaw, double pitch, double roll) const;
+
+    //!!!!!!!!!!!prototype 1 fk
+    Eigen::Matrix4d computeForwardKinematicsMatrix(const std::vector<double>& anglesRad);
+    Eigen::MatrixXd computeNumericalJacobian(const std::vector<double>& anglesRad);
+    //!!!
+
+    // //!!!!!!! prototype 1 ik
+    // std::vector<Angles> _generateAllIKSolutions(double x, double y, double z, double yaw, double pitch, double roll);
+    // Angles              _computeIKSolution(double x, double y, double z, double yaw, double pitch, double roll,
+    //                                        int shoulderVariant, int elbowVariant, bool flipWrist);
+    // bool                _isSolutionValid(const Angles& angles) const;
+    // Angles              _selectBestSolution(const std::vector<Angles>& solutions) const;
+
+    // //!!!!!!
+
+    //!!!!!!! prototype 2 ik
+    std::vector<Angles> _generateAllIKSolutions(double x, double y, double z, double yaw, double pitch, double roll);
+    Angles              _computeIKSolution(double x, double y, double z, double yaw, double pitch, double roll,
+                                           int shoulderVariant, int elbowVariant, bool flipWrist);
+    bool                _isSolutionValid(const Angles& angles) const;
+    Angles              _selectBestSolution(const std::vector<Angles>& solutions) const;
+    bool                _matchesCurrentVariant(const Angles& sol) const;
+    void                _updateCurrentVariant(const Angles& best);
+
+    IKVariant _currentVariant = {1, 1, false}; // Default
+    //!!!!!!
 
     // Helper function
     bool _isValidConfig(const MotorConfig* cfg) const;

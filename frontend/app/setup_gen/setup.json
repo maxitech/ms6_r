@@ -13,7 +13,7 @@
             "a": "160.00"
         },
         "joint3": {
-            "theta_offset": "180",
+            "theta_offset": "225",
             "alpha": "1.571",
             "d": "0",
             "a": "-15.00"
@@ -25,7 +25,7 @@
             "a": "0"
         },
         "joint5": {
-            "theta_offset": "0",
+            "theta_offset": "-45",
             "alpha": "1.571",
             "d": "0",
             "a": "0"
@@ -45,13 +45,13 @@
             "home_pos": "42760"
         },
         "motor3": {
-            "home_pos": "-11820"
+            "home_pos": "-22176"
         },
         "motor4": {
             "home_pos": "-24080"
         },
         "motor5": {
-            "home_pos": "-16438"
+            "home_pos": "-22953"
         },
         "motor6": {
             "home_pos": "-6400"
