@@ -4,45 +4,63 @@ from math import pi
 import numpy as np
 import matplotlib.pyplot as plt
 
-STEPS_PER_REV = [200, 200, 200, 200, 400, 200]
-MICRO_STEPS = 64
-DRIVING_PULLEY_TEETH = [16, 16, 16, 16, 16, 1]
-DRIVEN_PULLEY_TEETH = [100, 80, 100, 60, 32, 1]
-HOME_POSITIONS = [0, 0, 0, 0, 0, 0]
+
+class RobotConstants:
+    STEPS_PER_REV = [200, 200, 200, 200, 400, 200]
+    MICRO_STEPS = 64
+    MOTOR_SPEED_A_ACCEL = [
+        [50000, 26000],
+        [160000, 50000],
+        [60000, 30000],
+        [40000, 30000],
+        [40000, 20000],
+        [15000, 8000],
+    ]  # max speed, accel
+    DRIVING_PULLEY_TEETH = [16, 16, 16, 16, 16, 1]
+    DRIVEN_PULLEY_TEETH = [100, 80, 100, 60, 32, 1]
+    HOME_POSITIONS = [40250, 42760, -11820, -24080, -16438, -6400]  # steps
+
+    # Min and max positions the joint can reach in degrees after homing
+    JOINT_LIMTS = [
+        [-180, 152],
+        [-14, 88],
+        [-57, 50],
+        [-166, 180],
+        [-120, 110],
+        [-174, 180],
+    ]  # min,max
+
+    DH_PARAMS = {
+        "d": [135.30, 0, 0, 138.40, 0, 29.27],
+        "a": [37.50, 160.00, -15.00, 0, 0, 0],
+        "alpha": [-pi / 2, 0, pi / 2, -pi / 2, pi / 2, 0],
+        "offset": [0, -pi / 2, pi, 0, 0, 0],
+    }
+    NAME = "MS6_R"
 
 
-# Min and max positions the joint can reach in degrees after homing
-JOINT_LIMTS = [
-    [-180, 152],
-    [-14, 88],
-    [-57, 50],
-    [-166, 180],
-    [-120, 110],
-    [-174, 180],
-]  # min,max
+class Robot:
+    def __init__(self):
+        dh = RobotConstants.DH_PARAMS
+        self.robot = DHRobot(
+            [
+                RevoluteDH(
+                    d=dh["d"][i],
+                    a=dh["a"][i],
+                    alpha=dh["alpha"][i],
+                    offset=dh["offset"][i],
+                )
+                for i in range(6)
+            ],
+            name=RobotConstants.NAME,
+        )
 
 
-d = [135.30, 0, 0, 138.40, 0, 29.27]
-a = [37.50, 160.00, -15.00, 0, 0, 0]
-alpha = [-pi / 2, 0, pi / 2, -pi / 2, pi / 2, 0]
-t_offset = [0, -pi / 2, pi, 0, 0, 0]
-
-
-robot = DHRobot(
-    [
-        RevoluteDH(d=d[0], a=a[0], alpha=alpha[0], offset=t_offset[0]),
-        RevoluteDH(d=d[1], a=a[1], alpha=alpha[1], offset=t_offset[1]),
-        RevoluteDH(d=d[2], a=a[2], alpha=alpha[2], offset=t_offset[2]),
-        RevoluteDH(d=d[3], a=a[3], alpha=alpha[3], offset=t_offset[3]),
-        RevoluteDH(d=d[4], a=a[4], alpha=alpha[4], offset=t_offset[4]),
-        RevoluteDH(d=d[5], a=a[5], alpha=alpha[5], offset=t_offset[5]),
-    ],
-    name="MS6_R",
-)
-
-if __name__ == "__main__":
-    # q = [0, 0, 0, 0, np.deg2rad(90), 0]
-    # T = robot.fkine(q=q)
-    # print(T)
-    # sol = robot.ikine_LM(T)
-    # robot.plot(q=q, backend="pyplot", block=True)
+# if __name__ == "__main__":
+#     rbt_instance = Robot()
+#     q = [0, 0, 0, 0, np.deg2rad(90), 0]
+#     T = rbt_instance.robot.fkine(q=q)
+#     print(T)
+#     sol = rbt_instance.robot.ikine_LM(T)
+#     rbt_instance.robot.plot(q=q, backend="pyplot", block=True)
+# pass
