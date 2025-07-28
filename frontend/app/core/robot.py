@@ -28,9 +28,8 @@ class Robot(DHRobot):
 
     # *** Public ***
     # *** Private ***
-    def _total_ratio():
-        # gearboxRatio * (drivenTeeth /driverTeeth)
-        pass
+    def _total_ratio(gearbox_ratio: int, driven_teeth: int, driver_teeth: int) -> float:
+        return gearbox_ratio * (driven_teeth / driver_teeth)
 
 
 if __name__ == "__main__":
