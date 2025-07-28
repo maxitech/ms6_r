@@ -5,7 +5,7 @@ from typing import List
 @dataclass(frozen=True)
 class RobotConstants:
     STEPS_PER_REV: List[int]
-    MICRO_STEPS: int
+    MICROSTEPS: int
     MOTOR_SPEED_A_ACCEL: List[List[int]]
     DRIVING_PULLEY_TEETH: List[int]
     DRIVEN_PULLEY_TEETH: List[int]
