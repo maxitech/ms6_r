@@ -2,7 +2,7 @@ from math import pi
 from .robot_constants import RobotConstants
 
 
-ms6_r_constants = RobotConstants(
+MS6_R_CONSTANTS = RobotConstants(
     STEPS_PER_REV=[200, 200, 200, 200, 400, 200],
     MICRO_STEPS=64,
     MOTOR_SPEED_A_ACCEL=[
