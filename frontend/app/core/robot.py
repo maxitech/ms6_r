@@ -61,6 +61,14 @@ class Robot(DHRobot):
     def _deg_2_steps(self, joint_index: int, deg: float) -> int:
         return int((deg / 360) * self._steps_per_rev(joint_index=joint_index))
 
+    def _get_joint_limits_in_steps(self) -> List[List[int]]:
+        step_limits = []
+        for i, (min_deg, max_deg) in enumerate(self.constants.JOINT_LIMITS):
+            min_steps = self._deg_2_steps(i, min_deg)
+            max_steps = self._deg_2_steps(i, max_deg)
+            step_limits.append([int(min_steps), int(max_steps)])
+        return step_limits
+
 
 if __name__ == "__main__":
     # Debug
