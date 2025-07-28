@@ -4,7 +4,7 @@ from .robot_constants import RobotConstants
 
 MS6_R_CONSTANTS = RobotConstants(
     STEPS_PER_REV=[200, 200, 200, 200, 400, 200],
-    MICRO_STEPS=64,
+    MICROSTEPS=64,
     MOTOR_SPEED_A_ACCEL=[
         [50000, 26000],
         [160000, 50000],
