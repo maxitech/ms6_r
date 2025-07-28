@@ -27,6 +27,13 @@ class Robot(DHRobot):
         self.constants = constants
 
     # *** Public ***
+    def get_joint_angles_deg(self, curr_steps: List[int]) -> List[float]:
+        angles_deg: List[float] = []
+        for i in range(len(curr_steps)):
+            deg = self._steps_2_deg(i, curr_steps=curr_steps[i])
+            angles_deg.append(deg)
+        return angles_deg
+
     # *** Private ***
     def _total_ratio(self, joint_index: int) -> float:
         c = self.constants
