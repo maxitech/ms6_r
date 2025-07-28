@@ -184,3 +184,4 @@ app/ui/main_window_ui.py
 app/!ui/*.ui
 
 setup_gen
+.vscode/settings.json
