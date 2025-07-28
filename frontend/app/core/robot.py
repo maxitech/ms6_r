@@ -70,3 +70,7 @@ if __name__ == "__main__":
     print(T)
     sol = ms6_r.ikine_LM(T)
     ms6_r.plot(q=q, backend="pyplot", block=True)
+    print("Steps for j1: ", ms6_r._deg_2_steps(0, 180))
+    TEST_POSITIONS = [40250 + 40000, 42760, -11820, -24080, -16438, -6400 * 2]  # steps
+    for angle in ms6_r.get_joint_angles_deg(TEST_POSITIONS):
+        print(angle)
