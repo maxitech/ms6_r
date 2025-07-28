@@ -33,6 +33,18 @@ class Robot(DHRobot):
     ) -> float:
         return gearbox_ratio * (driven_teeth / driver_teeth)
 
+    def _steps_per_rev(self, steps_per_rev: int, microsteps: int) -> float:
+        const = self.constants
+        return (
+            steps_per_rev
+            * microsteps
+            * self._total_ratio(
+                gearbox_ratio=const.GEARBOX_RATIO,
+                driven_teeth=const.DRIVEN_PULLEY_TEETH,
+                driver_teeth=const.DRIVER_PULLEY_TEETH,
+            )
+        )
+
 
 if __name__ == "__main__":
     # Debug
