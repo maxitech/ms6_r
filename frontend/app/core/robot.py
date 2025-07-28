@@ -3,6 +3,7 @@ from roboticstoolbox import *
 from math import pi
 import numpy as np
 import matplotlib.pyplot as plt
+from typing import List
 
 from app.constants.ms6_r_constants import RobotConstants
 from app.constants.ms6_r_constants import MS6_R_CONSTANTS
