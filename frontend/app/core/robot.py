@@ -28,13 +28,30 @@ class Robot(DHRobot):
 
     # *** Public ***
     # *** Private ***
-    def _total_ratio(self) -> float:
+    def _total_ratio(self, joint_index: int) -> float:
         c = self.constants
-        return c.GEARBOX_RATIO * (c.DRIVEN_PULLEY_TEETH / c.DRIVER_PULLEY_TEETH)
+        return c.GEARBOX_RATIO[joint_index] * (
+            c.DRIVEN_PULLEY_TEETH[joint_index] / c.DRIVER_PULLEY_TEETH[joint_index]
+        )
 
-    def _steps_per_rev(self) -> float:
+    def _steps_per_rev(self, joint_index: int) -> float:
         c = self.constants
-        return c.STEPS_PER_REV * c.MICROSTEPS * self._total_ratio()
+        return (
+            c.STEPS_PER_REV[joint_index]
+            * c.MICROSTEPS
+            * self._total_ratio(joint_index=joint_index)
+        )
+
+    def _steps_2_deg(self, joint_index: int, curr_steps: int) -> float:
+        c = self.constants
+        home_offset: int = c.HOME_POSITIONS[joint_index]
+        relative_steps: int = curr_steps - home_offset
+        return (
+            float(relative_steps) / self._steps_per_rev(joint_index=joint_index) * 360
+        )
+
+    def _deg_2_steps(self, joint_index: int, deg: float) -> int:
+        return int((deg / 360) * self._steps_per_rev(joint_index=joint_index))
 
 
 if __name__ == "__main__":
