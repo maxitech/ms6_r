@@ -13,7 +13,7 @@ MS6_R_CONSTANTS = RobotConstants(
         [40000, 20000],
         [15000, 8000],
     ],  # max speed, accel
-    DRIVING_PULLEY_TEETH=[16, 16, 16, 16, 16, 1],
+    DRIVER_PULLEY_TEETH=[16, 16, 16, 16, 16, 1],
     DRIVEN_PULLEY_TEETH=[100, 80, 100, 60, 32, 1],
     HOME_POSITIONS=[40250, 42760, -11820, -24080, -16438, -6400],  # steps
     # Min and max positions the joint can reach in degrees after homing
