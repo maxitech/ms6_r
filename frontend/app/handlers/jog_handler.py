@@ -45,12 +45,12 @@ class JogHandler:
             self._jog_direction = direction
             speed = self._calculate_jog_speed(joint)
             start_data = f"JOG,[{joint}, {direction}, {speed}, START]"
-            self._serial.send_data(start_data)
+            self._serial.set_data_out(start_data)
 
     def _handle_jog_btn_release(self):
         """Handle jog button release"""
         stop_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, 0, STOP]"
-        self._serial.send_data(stop_data)
+        self._serial.set_data_out(stop_data)
 
     def _parse_jog_button(self, btn):
         """Parse jog button name to get joint and direction"""
