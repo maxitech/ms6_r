@@ -60,23 +60,12 @@ class SerialConnection:
                 return False
         return False
 
-    def _send_data(self, data):
-        """Internal send function"""
-        if not self.is_connected():
-            print(f"Cannot send data, no active connection to {self._port}")
-            return
+    def _set_data_out(self, data):
+        if isinstance(data, str):
+            data = bytes(data, "utf-8")
+            shared_data.set_data_out(data)
 
-        if self.is_connected():
-            if isinstance(data, str):
-                data = bytes(data, "utf-8")
-            try:
-                self._serial.write(data)
-            except serial.SerialTimeoutException:
-                print("Write timeout error!")
-            except Exception as e:
-                print(f"[MainWindow] Write error: {e}")
-
-    def send_data(self, data):
+    def set_data_out(self, data):
         """Public Send data function."""
         if isinstance(data, str) and len(data) > 0:
             checksum = self._helper.calc_checksum(data)
@@ -84,8 +73,7 @@ class SerialConnection:
 
             if self.is_connected():
                 if self._is_valid_format(data_str):
-                    self._send_data(data_str)
-                    print(f"Sent: {data_str}")
+                    self._set_data_out(data_str)
                 else:
                     self._ui_manager.log_message("ERROR", "Invalid data format!", "red")
             else:
