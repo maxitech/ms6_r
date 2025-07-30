@@ -12,8 +12,8 @@ class MainWindow(QMainWindow):
         self.controller = MainWindowController(self.ui)
 
     def closeEvent(self, event):
-        print("Closing application... Stopping SerialWorker")
-        self.controller.send_data("IDLE,[EXEC]")
+        print("Closing application...")
+        self.controller.set_data_out("IDLE,[EXEC]")
         self.controller.serial.disconnect()
         event.accept()
 
