@@ -45,9 +45,9 @@ class MainWindowController:
         self._port_timer.timeout.connect(self._connection_handler.check_status)
         self._port_timer.start(1000)
 
-    def send_data(self, data):
+    def set_data_out(self, data):
         """Send data through serial connection"""
-        self.serial.send_data(data)
+        self.serial.set_data_out(data)
 
     def _handle_setup_save(self):
         """Handle setup save"""

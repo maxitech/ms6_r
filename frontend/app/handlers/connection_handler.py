@@ -56,7 +56,7 @@ class ConnectionHandler:
 
     def _disconnect(self):
         """Disconnect from current port"""
-        self._serial.send_data("IDLE,[EXEC]")
+        self._serial.set_data_out("IDLE,[EXEC]")
         self._serial.disconnect()
         if not self._serial.is_connected():
             self._ui_manager.update_ui_based_on_connection_status(
