@@ -87,6 +87,5 @@ class SerialConnection:
             and data_str.endswith("#")
         )
 
-    # private methods
     def _load_ports(self):
         self._ports = serial.tools.list_ports.comports()
