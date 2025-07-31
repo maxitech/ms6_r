@@ -21,10 +21,10 @@ class SerialReaderThread(QThread):
                     self.data_received.emit(data)  # send data to ui
             except serial.SerialException as e:
                 print(f"Serial error: {e}")
-                self._is_running = False
+                self.stop()
             except Exception as e:
                 print(f"Unhandled error: {e}")
-                self._is_running = False
+                self.stop()
 
             time.sleep(0.001)  # reduce cpu power
 
