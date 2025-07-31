@@ -15,17 +15,18 @@ class SharedData:
             "new_steps": [],
         }
 
-    def emit_signal(self, signal_name, data):
-        for callback in self._signals[signal_name]:
-            callback(data)
-
-    def subscribe(self, signal_name, callback):
-        if signal_name in self._signals:
+    # *** Public ***
+    def subscribe(self, signal_name, callback) -> None:
+        if signal_name in self._signals and callback not in self._signals[signal_name]:
             self._signals[signal_name].append(callback)
         else:
             print(f"No Signal: '{signal_name}' found.")
 
-    def set_data_out(self, data: bytearray):
+    def unsubscribe(self) -> None:
+        for key in self._signals:
+            self._signals[key].clear()
+
+    def set_data_out(self, data: bytearray) -> None:
         with self._lock:
             self._data_out = data
             self._data_queue_out.put(data)
