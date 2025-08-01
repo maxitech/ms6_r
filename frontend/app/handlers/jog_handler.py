@@ -57,7 +57,15 @@ class JogHandler:
         btn_name = btn.objectName()
         parts = btn_name.split("_")
         if len(parts) == 4:
-            return parts[1].upper(), parts[2].upper()
+            joint: str = parts[1].upper()  # J1-J6
+            dir: str = parts[2].upper()  # POS || NEG
+            joint_i = int(joint[-1]) - 1
+            if dir == "POS":
+                dir: int = 1
+            else:
+                dir: int = -1
+            return joint_i, dir
+
         return None, None
 
     def _calculate_jog_speed(self, joint):
