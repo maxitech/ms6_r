@@ -52,7 +52,7 @@ class JogHandler:
         stop_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, 0, STOP]"
         self._serial.set_data_out(stop_data)
 
-    def _parse_jog_button(self, btn):
+    def _parse_jog_button(self, btn) -> Tuple[int | None, int | None]:
         """Parse jog button name to get joint and direction"""
         btn_name = btn.objectName()
         parts = btn_name.split("_")
