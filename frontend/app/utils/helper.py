@@ -14,8 +14,8 @@ class Helper:
         hex_checksum = format(checksumVal, "X").zfill(2)
         return hex_checksum
 
-    def get_joint_speeds(self, slider_value, v_min, v_max, gear_factors):
-        base_speed = self._map_slider_to_speed(slider_value, v_min, v_max)
+    def get_joint_speeds(self, slider_value, s_min, s_max, gear_factors):
+        base_speed = self._map_slider_to_speed(slider_value, s_min, s_max)
         return [round(base_speed * math.sqrt(f)) for f in gear_factors]
 
     # *************************Private Methods****************************
