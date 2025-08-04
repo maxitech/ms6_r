@@ -26,7 +26,7 @@ class SerialConnection:
     def setPort(self, port):
         self._port = port
 
-    def connect(self, update_ui_callback):
+    def connect(self, on_serial_data_received):
         try:
             self._serial = serial.Serial(
                 self._port, self._baudrate, timeout=1, write_timeout=1
