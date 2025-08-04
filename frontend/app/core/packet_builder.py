@@ -3,6 +3,9 @@ from typing import List, Callable, Any
 
 
 class PacketBuilder:
+    SIGNED_24BIT_MIN = -(1 << 23)  # -8388608
+    SIGNED_24BIT_MAX = (1 << 23) - 1  # 8388607
+
     def __init__(self):
         self.payload_map = {
             CMD_JOG: self._pack_jog_speeds,
@@ -25,11 +28,13 @@ class PacketBuilder:
             + bytes([crc])
             + bytes(END_BYTES)
         )
-        print(packet)
         return packet
 
     def _int_to_3_bytes(self, val: int) -> bytes:
-        val = val & 0xFFFFFF  # keep only lower 24 bits for 3-byte representation
+        if not self.SIGNED_24BIT_MIN <= val <= self.SIGNED_24BIT_MAX:
+            raise OverflowError(
+                f"Value {val} out of range for signed 24-bit representation"
+            )
         return val.to_bytes(length=3, byteorder="big", signed=True)
 
     def _pack_jog_speeds(self, speeds: List[int]) -> bytes:
