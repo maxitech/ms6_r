@@ -39,7 +39,7 @@ class ConnectionHandler:
         """Connect to selected port"""
         selected_port = self._ui.con_device_comboBox.currentText()
         self._serial.setPort(selected_port)
-        self._serial.connect(self._process_received_data)
+        self._serial.connect(self._on_serial_data_received)  # provide callback
 
         if self._serial.is_connected():
             setup_data = f"SETUP,[{json.dumps(self._setup.get_setup())}]"
@@ -73,10 +73,7 @@ class ConnectionHandler:
             "ERROR", "Connection lost! Device may be disconnected.", "red"
         )
 
-    def _process_received_data(self, data):
-        """Process received serial data"""
-        data = data.strip()
-        if not data.startswith("DATA:"):
-            self._ui_manager.update_log_monitor_with_serial(data)
-        else:
-            self._ui_manager.process_data_update(data)
+    def _on_serial_data_received(self, raw_data: str):
+        # process data
+        if raw_data != shared_data.get_data_in():
+            shared_data.set_data_in(raw_data)
