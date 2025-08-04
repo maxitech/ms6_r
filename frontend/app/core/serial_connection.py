@@ -99,11 +99,7 @@ class SerialConnection:
 
     def _is_valid_packet(self, packet: bytes):
         """Check if data format is valid"""
-        return (
-            data_str.startswith("$")
-            and data_str.find("*") != -1
-            and data_str.endswith("#")
-        )
+        return packet[0:3] == bytes(START_BYTES) and packet[-2:] == bytes(END_BYTES)
 
     def _load_ports(self):
         self._ports = serial.tools.list_ports.comports()
