@@ -11,10 +11,11 @@ from app.constants.com_protocoll import START_BYTES, END_BYTES
 from app.core.shared.shared_data import shared_data
 
 
-class SerialConnection:
+class SerialConnection(Serial):
     def __init__(self, helper, ui_manager, baudrate=115200):
         self._helper = helper
         self._ui_manager = ui_manager
+        self._connection_handler: ConnectionHandler | None = None
         self._serial_reader_t = None
         self._serial_writer_t = None
         self._motion_planner_t = None
@@ -73,22 +74,19 @@ class SerialConnection:
                 print(
                     f"Warning: {self._port} no longer available, device may be disconnected."
                 )
-                self._connection_handler.handle_unexpected_disconnect()
+                if self._connection_handler:
+                    self._connection_handler.handle_unexpected_disconnect()
                 self.disconnect()
                 return False
         return False
 
     def _set_data_out(self, data):
-        if isinstance(data, str):
-            data = bytes(data, "utf-8")
+        if isinstance(data, bytes):
             shared_data.set_data_out(data)
 
     def set_data_out(self, data):
         """Public Send data function."""
-        if isinstance(data, str) and len(data) > 0:
-            checksum = self._helper.calc_checksum(data)
-            data_str = f"${data}*{checksum}#"
-
+        if isinstance(data, bytes) and len(data) > 0:
             if self.is_connected():
                 if self._is_valid_packet(data):
                     self._set_data_out(data)
