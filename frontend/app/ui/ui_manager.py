@@ -36,7 +36,7 @@ class UIManager:
         """Update program monitor display"""
         self._ui.prog_textEdit.clear()
         cursor = self._ui.prog_textEdit.textCursor()
-        cursor.movePosition(QTextCursor.End)
+        cursor.movePosition(QTextCursor.MoveOperation.End)
 
         # Format command
         fmt_cmd = QTextCharFormat()
@@ -64,7 +64,7 @@ class UIManager:
         dt_time_str = f"{date} {time} - "
 
         cursor = self._ui.log_textEdit.textCursor()
-        cursor.movePosition(QTextCursor.End)
+        cursor.movePosition(QTextCursor.MoveOperation.End)
 
         fmt_prefix = QTextCharFormat()
         fmt_prefix.setForeground(QColor(prefix_color))
