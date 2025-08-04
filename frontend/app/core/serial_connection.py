@@ -1,6 +1,14 @@
 import serial.tools.list_ports
-import serial
-from app.core.serial_worker import SerialWorker
+from serial import Serial
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.handlers.connection_handler import ConnectionHandler
+from app.core.threads.serial_reader_thread import SerialReaderThread
+from app.core.threads.serial_writer_thread import SerialWriterThread
+from app.core.threads.motion_planner_thread import MotionPlannerThread
+from app.constants.com_protocoll import START_BYTES, END_BYTES
+from app.core.shared.shared_data import shared_data
 
 
 class SerialConnection:
