@@ -7,8 +7,9 @@ class SerialConnection:
     def __init__(self, helper, ui_manager, baudrate=115200):
         self._helper = helper
         self._ui_manager = ui_manager
-        self._connection_handler = None
-        self._serial_worker = None
+        self._serial_reader_t = None
+        self._serial_writer_t = None
+        self._motion_planner_t = None
         self._baudrate = baudrate
         self._serial = None
         self._ports = []
@@ -30,16 +31,24 @@ class SerialConnection:
             self._serial = serial.Serial(
                 self._port, self._baudrate, timeout=1, write_timeout=1
             )
-            self._serial_worker = SerialWorker(self._serial)
-            self._serial_worker.data_received.connect(update_ui_callback)
-            self._serial_worker.start()
+            self._serial_reader_t = SerialReaderThread(self._serial)
+            self._serial_reader_t.data_received.connect(on_serial_data_received)
+            self._serial_reader_t.start()
+
+            self._serial_writer_t = SerialWriterThread(self._serial)
+            self._serial_writer_t.start()
+
+            self._motion_planner_t = MotionPlannerThread(self._serial)
+            self._motion_planner_t.start()
             print(f"Connected to {self._port} at {self._baudrate} baud.")
         except serial.SerialException as e:
             print(f"Error connecting to {self._port}: {e}")
 
     def disconnect(self):
-        if self._serial_worker:
-            self._serial_worker.stop()
+        if self._serial_reader_t and self._serial_writer_t and self._motion_planner_t:
+            self._serial_reader_t.stop()
+            self._serial_writer_t.stop()
+            self._motion_planner_t.stop()
         if self._serial and self._serial.is_open:
             self._serial.close()
             print(f"Disconnected from {self._port}.")
