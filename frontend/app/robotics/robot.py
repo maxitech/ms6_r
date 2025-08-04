@@ -1,4 +1,5 @@
 import roboticstoolbox as rtb
+from roboticstoolbox import DHRobot, RevoluteDH
 from roboticstoolbox import *
 from math import pi
 import numpy as np
