@@ -77,17 +77,16 @@ class JogHandler:
 
         return None, None
 
-    def _calculate_jog_speed(self, joint):
+    def _calculate_jog_speed(self, i: int):
         """Calculate jog speed based on joint and slider value"""
-        gear_factors = JOG_CONFIG["gear_factors"]
+        gear_factors = RC.GEARBOX_RATIO
         joint_speeds = self._helper.get_joint_speeds(
             slider_value=self._slider_value,
-            v_min=JOG_CONFIG["speed_range"]["min"],
-            v_max=JOG_CONFIG["speed_range"]["max"],
+            s_min=RC.JOINT_JOG_SPEED_RANGE[0],
+            s_max=RC.JOINT_JOG_SPEED_RANGE[1],
             gear_factors=gear_factors,
         )
-        index = int(joint.split("J")[1]) - 1
-        return joint_speeds[index]
+        return joint_speeds[i]
 
     def _handle_jog_slider_change(self):
         """Handle jog slider value change"""
