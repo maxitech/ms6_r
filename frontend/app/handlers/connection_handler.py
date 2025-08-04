@@ -1,13 +1,17 @@
 import json
+from app.core.serial_connection import SerialConnection
+from typing import List
+from app.core.shared.shared_data import shared_data
+from serial.tools.list_ports_common import ListPortInfo
 
 
 class ConnectionHandler:
-    def __init__(self, ui, setup, serial, ui_manager):
+    def __init__(self, ui, setup, serial: SerialConnection, ui_manager):
         self._ui = ui
         self._setup = setup
         self._serial = serial
         self._ui_manager = ui_manager
-        self._current_ports = []
+        self._current_ports: List[ListPortInfo] = []
 
     def setup_connections(self):
         """Setup connection-related UI connections"""
