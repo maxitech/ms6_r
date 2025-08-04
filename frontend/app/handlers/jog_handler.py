@@ -67,10 +67,11 @@ class JogHandler:
         parts = btn_name.split("_")
         if len(parts) == 4:
             joint: str = parts[1].upper()  # J1-J6
-            dir: str = parts[2].upper()  # POS || NEG
+            dir_str: str = parts[2].upper()  # POS || NEG
             joint_i = int(joint[-1]) - 1
-            if dir == "POS":
-                dir: int = 1
+            dir: int
+            if dir_str == "POS":
+                dir = 1
             else:
                 dir: int = -1
             return joint_i, dir
