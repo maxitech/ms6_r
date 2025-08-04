@@ -73,7 +73,7 @@ class JogHandler:
             if dir_str == "POS":
                 dir = 1
             else:
-                dir: int = -1
+                dir = -1
             return joint_i, dir
 
         return None, None
