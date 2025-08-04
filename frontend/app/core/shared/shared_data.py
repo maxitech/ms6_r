@@ -1,17 +1,19 @@
 import queue
 import threading
+from queue import Queue, Empty
+from typing import Dict
 
 
 class SharedData:
     def __init__(self):
-        self._data_queue_out = queue.Queue()
+        self._data_queue_out: Queue = Queue()
         self._lock = threading.RLock()
 
-        self._data_out: bytearray = None
-        self._data_in: str = None
-        self._curr_steps: int = None
+        self._data_out: bytes | None = None
+        self._data_in: str | None = None
+        self._curr_steps: int | None = None
 
-        self._signals = {
+        self._signals: Dict[str, list] = {
             "new_steps": [],
         }
 
@@ -26,16 +28,16 @@ class SharedData:
         for key in self._signals:
             self._signals[key].clear()
 
-    def set_data_out(self, data: bytearray) -> None:
+    def set_data_out(self, data: bytes) -> None:
         with self._lock:
             self._data_out = data
             self._data_queue_out.put(data)
 
-    def get_data_out(self) -> str:
+    def get_data_out(self) -> bytes | None:
         with self._lock:
-            return str(self._data_out, "utf-8")
+            return self._data_out
 
-    def get_next_data(self) -> bytearray:
+    def get_next_data(self) -> bytes | None:
         with self._lock:
             return self._data_queue_out.get_nowait()
 
@@ -43,7 +45,7 @@ class SharedData:
         with self._lock:
             self._data_in = data
 
-    def get_data_in(self) -> str:
+    def get_data_in(self) -> str | None:
         with self._lock:
             return self._data_in
 
