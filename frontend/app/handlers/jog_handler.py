@@ -1,8 +1,14 @@
-from app.constants.jog_config import JOG_CONFIG
+from PySide6.QtCore import QTimer
+from typing import Tuple
+from app.core.serial_connection import SerialConnection
+from app.core.packet_builder import PacketBuilder
+from app.core.shared.shared_data import shared_data
+from app.constants.ms6_r_constants import MS6_R_CONSTANTS as RC
+from app.constants.com_protocoll import CMD_JOG
 
 
 class JogHandler:
-    def __init__(self, ui, serial, helper, ui_manager):
+    def __init__(self, ui, serial: SerialConnection, helper, ui_manager):
         self._ui = ui
         self._serial = serial
         self._helper = helper
