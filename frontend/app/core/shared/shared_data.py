@@ -33,6 +33,14 @@ class SharedData:
             self._data_out = data
             self._data_queue_out.put(data)
 
+    def clear_data_queue_out(self) -> None:
+        with self._lock:
+            while True:
+                try:
+                    self._data_queue_out.get_nowait()
+                except Empty:
+                    break
+
     def get_data_out(self) -> bytes | None:
         with self._lock:
             return self._data_out
