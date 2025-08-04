@@ -57,6 +57,7 @@ class SerialConnection:
             self._serial_reader_t.stop()
             self._serial_writer_t.stop()
             self._motion_planner_t.stop()
+            shared_data.unsubscribe()
         if self._serial and self._serial.is_open:
             self._serial.close()
             print(f"Disconnected from {self._port}.")
