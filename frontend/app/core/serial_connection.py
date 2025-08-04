@@ -90,14 +90,14 @@ class SerialConnection:
             data_str = f"${data}*{checksum}#"
 
             if self.is_connected():
-                if self._is_valid_format(data_str):
-                    self._set_data_out(data_str)
+                if self._is_valid_packet(data):
+                    self._set_data_out(data)
                 else:
                     self._ui_manager.log_message("ERROR", "Invalid data format!", "red")
             else:
                 self._ui_manager.log_message("ERROR", "Not connected!", "red")
 
-    def _is_valid_format(self, data_str):
+    def _is_valid_packet(self, packet: bytes):
         """Check if data format is valid"""
         return (
             data_str.startswith("$")
