@@ -26,6 +26,7 @@ MS6_R_CONSTANTS = RobotConstants(
         [-120, 110],
         [-174, 180],
     ],  # min,max
+    JOINT_JOG_SPEED_RANGE=[500, 4000],  # min,max
     DH_PARAMS={
         "d": [135.30, 0, 0, 138.40, 0, 29.27],
         "a": [37.50, 160.00, -15.00, 0, 0, 0],

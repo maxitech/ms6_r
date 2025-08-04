@@ -12,5 +12,6 @@ class RobotConstants:
     GEARBOX_RATIO: List[int]
     HOME_POSITIONS: List[int]
     JOINT_LIMITS: List[List[float]]
+    JOINT_JOG_SPEED_RANGE: List[int]
     DH_PARAMS: dict
     NAME: str
