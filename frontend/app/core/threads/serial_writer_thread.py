@@ -37,4 +37,5 @@ class SerialWriterThread(QThread):
 
     def stop(self):
         self._is_running = False
-        self.wait()
+        if QThread.currentThread() != self and self.isRunning():
+            self.wait()
