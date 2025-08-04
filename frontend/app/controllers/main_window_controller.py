@@ -16,7 +16,7 @@ class MainWindowController:
         self._setup = Setup(ui=self._ui)
         self._helper = Helper()
         self._ui_manager = UIManager(ui)
-        self.serial = SerialConnection(self._helper, self._ui_manager)
+        self.serial: SerialConnection = SerialConnection(self._helper, self._ui_manager)
         self._connection_handler = ConnectionHandler(
             ui, self._setup, self.serial, self._ui_manager
         )
