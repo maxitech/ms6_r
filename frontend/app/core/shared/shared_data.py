@@ -62,7 +62,7 @@ class SharedData:
             self._curr_steps = steps
         self._emit_signal("new_steps", steps)
 
-    def get_steps(self) -> int:
+    def get_steps(self) -> int | None:
         with self._lock:
             return self._curr_steps
 
