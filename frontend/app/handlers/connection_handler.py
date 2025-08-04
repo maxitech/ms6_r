@@ -43,7 +43,7 @@ class ConnectionHandler:
 
         if self._serial.is_connected():
             setup_data = f"SETUP,[{json.dumps(self._setup.get_setup())}]"
-            self._serial.send_data(setup_data)
+            self._serial.set_data_out(setup_data)
             self._ui_manager.update_ui_based_on_connection_status(
                 "Disconnect", f"Connected to {selected_port}", False
             )
