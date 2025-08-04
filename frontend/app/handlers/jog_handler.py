@@ -7,9 +7,12 @@ class JogHandler:
         self._serial = serial
         self._helper = helper
         self._ui_manager = ui_manager
-        self._jog_joint = ""
-        self._jog_direction = ""
+        self._pb = PacketBuilder()
         self._slider_value = ui.jog_slider.value()
+        self._jog_timer = QTimer()
+        self._jog_timer.setInterval(10)
+        self._jog_timer.timeout.connect(self._queue_jog_cmd)
+        self._serial_packet: bytes | None = None
 
     def setup_connections(self):
         """Setup jog-related connections"""
@@ -39,18 +42,24 @@ class JogHandler:
 
     def _handle_jog_btn_press(self, btn):
         """Handle jog button press"""
-        joint, direction = self._parse_jog_button(btn)
-        if joint and direction:
-            self._jog_joint = joint
-            self._jog_direction = direction
-            speed = self._calculate_jog_speed(joint)
-            start_data = f"JOG,[{joint}, {direction}, {speed}, START]"
-            self._serial.set_data_out(start_data)
+        joint_i, direction = self._parse_jog_button(btn)
+        if joint_i is not None and direction:
+            self._create_jog_cmd(i=joint_i, dir=direction)
+            self._jog_timer.start()
+
+    def _create_jog_cmd(self, i: int, dir: int):
+        jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
+        speed = self._calculate_jog_speed(i)
+        jog_speeds[i] = speed * dir
+        self._serial_packet = self._pb.build_packet(cmd_id=CMD_JOG, data=jog_speeds)
+
+    def _queue_jog_cmd(self):
+        self._serial.set_data_out(self._serial_packet)
 
     def _handle_jog_btn_release(self):
         """Handle jog button release"""
-        stop_data = f"JOG,[{self._jog_joint}, {self._jog_direction}, 0, STOP]"
-        self._serial.set_data_out(stop_data)
+        self._jog_timer.stop()
+        shared_data.clear_data_queue_out()
 
     def _parse_jog_button(self, btn) -> Tuple[int | None, int | None]:
         """Parse jog button name to get joint and direction"""
