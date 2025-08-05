@@ -169,14 +169,14 @@ void SerialHandler::_readSerialInput()
             break;
         case READ_PAYLOAD:
             buffer[index++] = byte;
-            if (index >= 4 + payloadLength)
+            if (index >= 4 + static_cast<size_t>(payloadLength))
             {
                 state = READ_CRC;
             }
             break;
         case READ_CRC:
             buffer[index++] = byte;
-            if (index >= 4 + payloadLength + 2)
+            if (index >= 4 + static_cast<size_t>(payloadLength) + 2) // 2 bytes crc
             {
                 state = READ_END;
             }
@@ -184,7 +184,7 @@ void SerialHandler::_readSerialInput()
 
         case READ_END:
             buffer[index++] = byte;
-            if (index >= 4 + payloadLength + 4)
+            if (index >= 4 + static_cast<size_t>(payloadLength) + 4) // last 2 end bytes
             {
                 // validate crc and end bytes
                 // process payload
