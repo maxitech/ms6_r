@@ -77,6 +77,51 @@ void SerialHandler::listenForSerial()
 //     }
 // }
 
+// void SerialHandler::_readSerialInput()
+// {
+//     static char   message[MAX_MESSAGE_SIZE];
+//     static size_t index     = 0;
+//     static bool   receiving = false;
+
+//     while (Serial.available() > 0)
+//     {
+//         char c = Serial.read();
+
+//         if (c == '$') // Start of message
+//         {
+//             receiving = true;
+//             index     = 0; // Reset buffer
+//         }
+
+//         if (receiving)
+//         {
+//             if (index < MAX_MESSAGE_SIZE - 1)
+//             {
+//                 message[index++] = c;
+//                 if (c == '#') // End of message
+//                 {
+//                     message[index] = '\0';
+//                     receiving      = false;
+
+//                     String input = String(message);
+//                     input.trim();
+
+//                     // _forwardInput(input); // Process input
+//                     Serial.println(input);
+//                     index = 0;
+//                 }
+//             }
+//             else
+//             {
+//                 // Buffer overflow
+//                 receiving = false;
+//                 index     = 0;
+//                 Serial.println("Error: Serial message too long");
+//             }
+//         }
+//     }
+// }
+
 void SerialHandler::_readSerialInput()
 {
     static char   message[MAX_MESSAGE_SIZE];
