@@ -28,8 +28,9 @@ public:
     explicit CommandProcessor(ProgramLoader& programLoader);
 
     /**
-     * @brief Processes an input string, validates it, and if all valid, it forwards the data.
-     * @param input The input string in the format $<cmd>*<checksum>#.
+     * @brief Processes an input buffer and forwards the data.
+     * @param buffer Vector which holds one valid packet at the time.
+     * @param payloadLen The exact length of the whole  payload.
      */
     void processInput(const std::vector<uint8_t>& buffer, const uint8_t payloadLen);
 
