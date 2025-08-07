@@ -52,16 +52,7 @@ private:
      * @param cmd The data string (after validation).
      * @internal
      */
-    void _processCommand(const String& cmd);
-
-    /**
-     * @brief Splits a string into parts based on a delimiter.
-     * @param str The string to split.
-     * @return A pair of String & vector of substrings.
-     * @internal
-     */
-    // std::vector<String> _splitString(const String& str, const char delimiter);
-    std::pair<String, std::vector<String>> _splitString(const String& str);
+    // void _processCommand(const String& cmd);
 
     /**
      * @brief Dispatcher used to handle commands internally.
