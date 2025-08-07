@@ -15,7 +15,8 @@
 ## Always included in payload. No movement execution.
 
 
-# Message Structure:
+# Package Structure:
+# MAX_PACKAGE_SIZE = 256 bytes
 
 # Field: uint24 Start         → 3 bytes         // Message start identifier
 # Field: uint8 Payload Length → 1 byte          // Length of payload in bytes
@@ -24,8 +25,11 @@
 #### Payload Details based on CMD_ID:
 ##### Field: Joint Position    → 18 bytes        // 6 joints × 3 bytes each, MSB first
 ##### [Extend with additional payload types as needed]
+##### Field Fixed Payload -> n bytes
+#### Field: Fixed Payload Length -> 1byte // must be last byte in payload
 
-# Field: uint16 CRC16         → 2 bytes         // Data integrity check
+
+# Field: uint16 CRC16         → 2 bytes         // Data integrity check LSB first
 # Field: uint16 End           → 2 bytes         // Message end identifier
 
 
