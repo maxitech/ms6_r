@@ -33,7 +33,7 @@ void CommandProcessor::processInput(const std::vector<uint8_t>& packet, uint8_t 
     case CMD_JOG:
         // decode jog speeds
         jogSpeedBytes = std::vector<uint8_t>(payload.begin() + 1, payload.begin() + 1 + 18);
-        jogSpeeds     = _decodeValues(jogSpeedBytes);
+        jogSpeeds     = _decodeSigned24BitValues(jogSpeedBytes);
         break;
     default:
         break;
@@ -42,7 +42,7 @@ void CommandProcessor::processInput(const std::vector<uint8_t>& packet, uint8_t 
     // _processCommand(data);
 }
 
-std::vector<int32_t> CommandProcessor::_decodeValues(const std::vector<uint8_t>& data)
+std::vector<int32_t> CommandProcessor::_decodeSigned24BitValues(const std::vector<uint8_t>& data)
 {
     std::vector<int32_t> result;
     for (size_t i = 0; i + 2 < data.size(); i += 3)
