@@ -8,6 +8,7 @@
 #ifndef COMMANDPROCESSOR_H
 #define COMMANDPROCESSOR_H
 
+#include "ComProtocoll.h"
 #include "CommandDispatcher.h"
 #include "SerialHandler.h"
 #include <Arduino.h>
@@ -30,9 +31,11 @@ public:
      * @brief Processes an input string, validates it, and if all valid, it forwards the data.
      * @param input The input string in the format $<cmd>*<checksum>#.
      */
-    void processInput(const String& input);
+    void processInput(const std::vector<uint8_t>& buffer, const uint8_t payloadLen);
 
 private:
+    std::vector<int32_t> _decodeValues(const std::vector<uint8_t>& data);
+
     /**
      * @brief Validates the input format.
      * @param input The input string to validate.
