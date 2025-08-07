@@ -1,123 +1,62 @@
 #include "CommandProcessor.h"
+#include "ComProtocoll.h"
+#include "Utils.h"
+
+using namespace CommunicationProtocoll;
 
 CommandProcessor::CommandProcessor(ProgramLoader& programLoader)
     : _dispatcher(programLoader)
 {
 }
 
-void CommandProcessor::processInput(const String& input)
+void CommandProcessor::processInput(const std::vector<uint8_t>& packet, uint8_t payloadLen)
 {
-    if (!_isInputValid(input))
+    int                  payloadBegin = 4;
+    std::vector<uint8_t> payload(packet.begin() + payloadBegin, packet.begin() + (payloadBegin + payloadLen));
+
+    uint8_t fixedPayloadLen;
+    if (!payload.empty())
     {
-        Serial.println("Input is invalid. Expected input: $<cmd_pt1, cmd_pt2, etc.>*<checksum>#");
-        return;
+        fixedPayloadLen = payload.back();
     }
 
-    int    delimiterIndex = input.indexOf("*");
-    String data           = input.substring(1, delimiterIndex);
-    String checksum       = input.substring(delimiterIndex + 1, input.length() - 1);
+    const uint8_t cmdId = payload[0];
 
-    if (!_validateChecksum(data, checksum))
+    std::vector<uint8_t> jogSpeedBytes;
+    std::vector<int32_t> jogSpeeds;
+
+    size_t               fixPlLenByte = 1;
+    std::vector<uint8_t> fixedPayload(payload.begin() + (payloadLen - fixPlLenByte) - fixedPayloadLen, payload.end() - 1);
+
+    switch (cmdId)
     {
-        Serial.println("Input processing failed: Checksum validation error.");
-        return;
+    case CMD_JOG:
+        // decode jog speeds
+        jogSpeedBytes = std::vector<uint8_t>(payload.begin() + 1, payload.begin() + 1 + 18);
+        jogSpeeds     = _decodeValues(jogSpeedBytes);
+        break;
+    default:
+        break;
     }
 
-    _processCommand(data);
+    // _processCommand(data);
 }
 
-bool CommandProcessor::_isInputValid(const String& input)
+std::vector<int32_t> CommandProcessor::_decodeValues(const std::vector<uint8_t>& data)
 {
-    if (!input.startsWith("$") || !input.endsWith("#") || input.indexOf("*") == -1)
-        return false;
-
-    return true;
-}
-
-bool CommandProcessor::_validateChecksum(const String& data, const String& checksum)
-{
-    uint8_t checksumValue = 0;
-
-    // Calculate checksum by XORing all characters in data -> (8-bit checksum)
-    for (size_t i = 0; i < data.length(); i++)
+    std::vector<int32_t> result;
+    for (size_t i = 0; i + 2 < data.size(); i += 3)
     {
-        checksumValue ^= static_cast<uint8_t>(data[i]);
-    }
+        int32_t value = (static_cast<int32_t>(data[i + 0]) << 16) |
+                        (static_cast<int32_t>(data[i + 1]) << 8) |
+                        (static_cast<int32_t>(data[i + 2]) << 0);
 
-    String calculatedChecksum = String(checksumValue, HEX).toUpperCase();
-    if (calculatedChecksum.length() == 1)
-    {
-        calculatedChecksum = "0" + calculatedChecksum;
-    }
-
-    if (calculatedChecksum != checksum)
-    {
-        Serial.println("Checksum Error. Expected: " + checksum + ", Calculated: " + calculatedChecksum);
-        return false;
-    }
-
-    return true;
-}
-
-void CommandProcessor::_processCommand(const String& cmd)
-{
-    std::pair<String, std::vector<String>> parts = _splitString(cmd);
-
-    _dispatcher.dispatch(parts.first, parts.second);
-}
-
-std::pair<String, std::vector<String>> CommandProcessor::_splitString(const String& str)
-{
-    std::vector<String> tokens;
-    int                 firstComma = str.indexOf(',');
-    if (firstComma == -1)
-    {
-        return {str, tokens};
-    }
-
-    String command  = str.substring(0, firstComma);
-    String paramStr = str.substring(firstComma + 1);
-
-    if (!paramStr.startsWith("[") || !paramStr.endsWith("]"))
-    {
-        Serial.println("Error: Command invalid! Correct format <cmd,[arg, arg, ...]>");
-        return {str, tokens};
-    }
-
-    paramStr = paramStr.substring(1, paramStr.length() - 1); // Remove outer brackets
-
-    // JSON-aware splitting:
-    String current;
-    int    braceDepth   = 0; // {}
-    int    bracketDepth = 0; // []
-
-    for (unsigned int i = 0; i < paramStr.length(); ++i)
-    {
-        char c = paramStr[i];
-        if (c == '{')
-            braceDepth++;
-        else if (c == '}')
-            braceDepth--;
-        else if (c == '[')
-            bracketDepth++;
-        else if (c == ']')
-            bracketDepth--;
-
-        if (c == ',' && braceDepth == 0 && bracketDepth == 0)
+        if (value & 0x800000)
         {
-            tokens.push_back(current);
-            current = "";
+            value |= 0xFF000000;
         }
-        else
-        {
-            current += c;
-        }
-    }
 
-    if (current.length() > 0)
-    {
-        tokens.push_back(current);
+        result.push_back(value);
     }
-
-    return {command, tokens};
+    return result;
 }
