@@ -1,8 +1,7 @@
 /**
  * @file CommandProcessor.h
- * @brief Declares the CommandProcessor class responsible for validating and dispatching incoming serial commands.
- * @details This class is a core component of the robot control system, responsible for parsing serial input,
- *          verifying message integrity through checksums, and delegating commands for execution.
+ * @brief Declares the CommandProcessor class responsible for processing and dispatching incoming serial commands.
+ * @details This class is a core component of the robot control system, responsible for parsing serial input and delegating commands for execution.
  */
 
 #ifndef COMMANDPROCESSOR_H
@@ -15,7 +14,7 @@
 
 /**
  * @class CommandProcessor
- * @brief Handles input commands and processes them, including validation and checksum verification.
+ * @brief Handles input commands and processes them.
  */
 class CommandProcessor
 {
