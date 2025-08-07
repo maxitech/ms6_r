@@ -62,10 +62,8 @@ private:
      */
     CommandProcessor* _commandProcessor = nullptr;
 
-    /**
-     * @brief Maximum size of the serial message buffer.
-     */
-    static constexpr size_t MAX_MESSAGE_SIZE = 2048;
+    bool  _validateCRCAndEnd(std::array<uint8_t, MAX_PACKAGE_SIZE>& buffer, size_t index, uint8_t payloadLength);
+    CRC16 _crc;
 };
 
 #endif // SERIAL_HANDLER_H

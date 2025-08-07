@@ -144,13 +144,54 @@ void SerialHandler::_readSerialInput()
     }
 }
 
+bool SerialHandler::_validateCRCAndEnd(std::array<uint8_t, MAX_PACKAGE_SIZE>& buffer, size_t totalLength, uint8_t payloadLength)
 {
+    // Calc correct position based on packet structure
+    // START(3) + LEN(1) + PAYLOAD(payloadLength) + CRC(2) + END(2)
+    size_t crcPos = 4 + payloadLength;
+    size_t endPos = crcPos + 2;
+
+    // Check if enough bytes
+    if (totalLength < endPos + 2)
+    {
+        Serial.println("Not enough bytes received");
+        return false;
+    }
+
+    // Check end bytes
+    uint8_t endByte1      = buffer[endPos];
+    uint8_t endByte2      = buffer[endPos + 1];
+    bool    endBytesValid = (endByte1 == END_BYTES[0] && endByte2 == END_BYTES[1]);
+
+    // Check crc
+    uint8_t  crcLow      = buffer[crcPos];
+    uint8_t  crcHigh     = buffer[crcPos + 1];
+    uint16_t receivedCrc = (crcHigh << 8) | crcLow;
+
+    // Calc crc over payload
+    _crc.restart();
+    for (size_t i = 4; i < 4 + static_cast<size_t>(payloadLength); i++)
+    {
+        _crc.add(buffer[i]);
+    }
+    uint16_t calculatedCrc = _crc.calc();
+
+    bool crcValid = (receivedCrc == calculatedCrc);
+
+    return endBytesValid && crcValid;
+}
+
+void SerialHandler::_forwardInput(const std::array<uint8_t, SerialHandler::MAX_PACKAGE_SIZE>& buffer, const uint8_t payloadLen, const size_t totalLength)
+{
+    std::vector<uint8_t> validPacket(buffer.begin(), buffer.begin() + totalLength);
+
     if (_commandProcessor)
     {
-        _commandProcessor->processInput(input);
+
+        _commandProcessor->processInput(validPacket, payloadLen);
     }
     else
     {
-        Serial.println("Error: No CommandProcesor set. Please set one using setCommandProcessor() in Setup.cpp");
+        Serial.println("Error: No CommandProcessor set. Please set one using setCommandProcessor() in Setup.cpp");
     }
 }
