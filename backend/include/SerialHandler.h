@@ -8,6 +8,8 @@
 #ifndef SERIAL_HANDLER_H
 #define SERIAL_HANDLER_H
 
+#include "CRC16.h"
+#include "ComProtocoll.h"
 #include <Arduino.h>
 
 class CommandProcessor;
@@ -36,6 +38,11 @@ public:
      */
     void setCommandProcessor(CommandProcessor* processor);
 
+    /**
+     * @brief Maximum size of the serial data buffer.
+     */
+    static constexpr size_t MAX_PACKAGE_SIZE = 256;
+
 private:
     /**
      * @brief Reads data from the serial buffer and trims whitespace.
@@ -48,7 +55,7 @@ private:
      * @param input The trimmed input string from the serial port.
      * @internal
      */
-    void _forwardInput(const String& input);
+    void _forwardInput(const std::array<uint8_t, SerialHandler::MAX_PACKAGE_SIZE>& buffer, const uint8_t payloadLen, const size_t totalLength);
 
     /**
      * @brief Pointer to the CommandProcessor used for input handling.
