@@ -1,4 +1,3 @@
-import queue
 import threading
 from queue import Queue, Empty
 from typing import Dict
