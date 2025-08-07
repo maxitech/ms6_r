@@ -1,7 +1,17 @@
 #include "SerialHandler.h"
 #include "CommandProcessor.h"
+#include "Utils.h"
 
-SerialHandler::SerialHandler() {}
+using namespace CommunicationProtocoll;
+
+SerialHandler::SerialHandler()
+    : _crc(CRC16_MODBUS_POLYNOME,
+           CRC16_MODBUS_INITIAL,
+           CRC16_MODBUS_XOR_OUT,
+           CRC16_MODBUS_REV_IN,
+           CRC16_MODBUS_REV_OUT)
+{
+}
 
 void SerialHandler::setCommandProcessor(CommandProcessor* processor)
 {
@@ -23,13 +33,20 @@ void SerialHandler::_readSerialInput()
         READ_END
     } state = WAIT_FOR_START;
 
-    static uint8_t buffer[MAX_PACKAGE_SIZE];
-    static size_t  index         = 0;
-    static uint8_t payloadLength = 0;
+    static std::array<uint8_t, MAX_PACKAGE_SIZE> buffer {};
+    static size_t                                index          = 0;
+    static uint8_t                               payloadLength  = 0;
+    static unsigned long                         lastByteTime   = 0;
+    static unsigned long                         lastPacketTime = 0;
+    static uint32_t                              packetCount    = 0;
+
+    const unsigned long BYTE_TIMEOUT_MS        = 50;
+    const unsigned long PACKET_LOG_INTERVAL_MS = 1000;
 
     while (Serial.available() > 0)
     {
         uint8_t byte = Serial.read();
+        lastByteTime = millis();
 
         switch (state)
         {
@@ -44,20 +61,21 @@ void SerialHandler::_readSerialInput()
                 state = READ_LENGTH;
             }
             else if (index > 3)
-            // Sliding window: keep last 2 bytes, write new byte at buffer[2]
             {
+                // Sliding window: keep last 2 bytes, write new byte at buffer[2]
                 buffer[0] = buffer[index - 2];
                 buffer[1] = buffer[index - 1];
                 buffer[2] = byte;
                 index     = 3;
             }
             break;
+
         case READ_LENGTH:
             payloadLength   = byte;
             buffer[index++] = byte;
-            // if buffer size not packet len -> timeout
-            state = READ_PAYLOAD;
+            state           = READ_PAYLOAD;
             break;
+
         case READ_PAYLOAD:
             buffer[index++] = byte;
             if (index >= 4 + static_cast<size_t>(payloadLength))
@@ -65,6 +83,7 @@ void SerialHandler::_readSerialInput()
                 state = READ_CRC;
             }
             break;
+
         case READ_CRC:
             buffer[index++] = byte;
             if (index >= 4 + static_cast<size_t>(payloadLength) + 2) // 2 bytes crc
@@ -77,20 +96,54 @@ void SerialHandler::_readSerialInput()
             buffer[index++] = byte;
             if (index >= 4 + static_cast<size_t>(payloadLength) + 4) // last 2 end bytes
             {
-                // validate crc and end bytes
-                // process payload
+                bool is_valid = _validateCRCAndEnd(buffer, index, payloadLength);
+
+                if (is_valid)
+                {
+                    packetCount++;
+
+                    // Debug log only after intervall -> better performance
+                    if (Utils::nonBlockingDelay(PACKET_LOG_INTERVAL_MS, lastPacketTime))
+                    {
+                        Serial.print("Valid packets: ");
+                        Serial.print(packetCount);
+                        Serial.print("/sec | Total bytes: ");
+                        Serial.println(packetCount * (4 + payloadLength + 4));
+                        packetCount = 0;
+                    }
+
+                    _forwardInput(buffer, payloadLength, index);
+                }
+                else
+                {
+                    Serial.println("Invalid packet - discarding");
+                }
+
+                // reset for next packet
                 state = WAIT_FOR_START;
                 index = 0;
+                return;
             }
             break;
+
         default:
             Serial.println("Unexpected error in 'SerialHandler.cpp'");
+            state = WAIT_FOR_START;
+            index = 0;
             break;
         }
     }
+
+    // Timeout check: If no bytes are received for a while during packet reception,
+    // reset the parser state to avoid getting stuck due to an incomplete packet.
+    if (state != WAIT_FOR_START && (millis() - lastByteTime) > BYTE_TIMEOUT_MS)
+    {
+        Serial.println("Packet timeout - resetting parser");
+        state = WAIT_FOR_START;
+        index = 0;
+    }
 }
 
-void SerialHandler::_forwardInput(const String& input)
 {
     if (_commandProcessor)
     {
