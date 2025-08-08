@@ -9,10 +9,9 @@
 
 #include "ComProtocoll.h"
 #include "CommandDispatcher.h"
+#include "ProcessedData.h"
 #include "SerialHandler.h"
 #include <Arduino.h>
-#include <cstdint>
-#include <optional>
 #include <vector>
 
 /**
@@ -35,13 +34,6 @@ public:
      * @param payloadLen The exact length of the whole  payload.
      */
     void processInput(const std::vector<uint8_t>& buffer, const uint8_t payloadLen);
-
-    struct ProcessedData
-    {
-        uint8_t                             cmdId;
-        std::optional<std::vector<int32_t>> jogSpeeds;
-        std::optional<bool>                 is_requestTelemetry;
-    } processedData;
 
 private:
     /**
@@ -69,6 +61,8 @@ private:
      * @internal
      */
     CommandDispatcher _dispatcher;
+
+    ProcessedData _processedData;
 };
 
 #endif // COMMANDPROCESSOR_H
