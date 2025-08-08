@@ -15,8 +15,8 @@ void CommandProcessor::processInput(const std::vector<uint8_t>& packet, uint8_t 
     int                  payloadBegin = 4;
     std::vector<uint8_t> payload(packet.begin() + payloadBegin, packet.begin() + (payloadBegin + payloadLen));
 
-    const uint8_t cmdId = payload[0];
-    processedData.cmdId = cmdId; //! add validation later to early return if something is wrong with cmdId
+    const uint8_t cmdId  = payload[0];
+    _processedData.cmdId = cmdId; //! add validation later to early return if something is wrong with cmdId
 
     // Decode data out of payload based on cmdId
     switch (cmdId)
@@ -27,7 +27,7 @@ void CommandProcessor::processInput(const std::vector<uint8_t>& packet, uint8_t 
         // decode jog speeds
         std::vector<uint8_t> jogSpeedBytes(payload.begin() + 1, payload.begin() + 1 + 18);
         std::vector<int32_t> jogSpeeds = _decodeSigned24BitValues(jogSpeedBytes);
-        processedData.jogSpeeds        = jogSpeeds;
+        _processedData.jogSpeeds       = jogSpeeds;
         break;
     }
     default:
@@ -45,22 +45,24 @@ void CommandProcessor::processInput(const std::vector<uint8_t>& packet, uint8_t 
     uint8_t              telemetryByte = fixedPayload[0];
     if (telemetryByte == 0x01)
     {
-        processedData.is_requestTelemetry = true;
+        _processedData.is_requestTelemetry = true;
     }
     else if (telemetryByte == 0x00)
     {
-        processedData.is_requestTelemetry = false;
+        _processedData.is_requestTelemetry = false;
     }
     else
     {
-        processedData.is_requestTelemetry = std::nullopt;
+        _processedData.is_requestTelemetry = std::nullopt;
     }
 
-    if (!processedData.is_requestTelemetry.has_value())
+    if (!_processedData.is_requestTelemetry.has_value())
     {
         Serial.println("Warning: Invalid telemetry flag received");
         return;
     }
+
+    // forward processed data struct to
 }
 
 std::vector<int32_t> CommandProcessor::_decodeSigned24BitValues(const std::vector<uint8_t>& data)
