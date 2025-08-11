@@ -8,6 +8,7 @@
 struct ProcessedData
 {
     uint8_t                             cmdId;
+    std::optional<uint8_t>              program;
     std::optional<std::vector<int32_t>> jogSpeeds;
     std::optional<bool>                 is_requestTelemetry;
 };
