@@ -3,6 +3,8 @@
 #include "Utils.h"
 #include <map>
 
+using namespace CommunicationProtocoll;
+
 ProgramLoader::ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& configs, LimitSwitches& limitSwitches)
     : _homingManager(homingManager)
     , _motorConfigs(configs)
@@ -15,28 +17,35 @@ ProgramLoader::~ProgramLoader()
     delete _jogCtrl;
 }
 
-void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& args)
+void ProgramLoader::handleCommand(const ProcessedData& processedDta)
 {
-    if (cmd == "" || args.empty())
+    if (processedDta.cmdId == NOP)
     {
-        Serial.println("Error: False command or not enough arguments.");
+        Serial.println("Warning: No operation command! No execution.");
         return;
     }
 
-    const String& command = cmd;
-    const String& program = args[0];
-    _arguments            = args;
-    _cmd                  = command;
-
-    for (String& arg : _arguments)
-        arg.trim();
-
-    // Note: Because of command being a String I cannot use switch-case here. -> could use mapping but not needed atm.
-    if (command == "LOAD")
+    _processedDta       = processedDta;
+    const uint8_t cmdId = processedDta.cmdId;
+    Serial.println(cmdId);
+    const bool             isReqTelemety = processedDta.is_requestTelemetry.value();
+    std::optional<uint8_t> program;
+    if (processedDta.program.has_value())
     {
-        _loadProgram(program);
+        program = processedDta.program.value();
     }
-    else if (command == "START")
+
+    std::optional<std::vector<int32_t>> jogSpeeds;
+    if (processedDta.jogSpeeds.has_value())
+    {
+        jogSpeeds = processedDta.jogSpeeds.value();
+    }
+
+    if (cmdId == CMD_LOAD && program)
+    {
+        _loadProgram(program.value());
+    }
+    else if (cmdId == CMD_START)
     {
         if (_currentProgramState == MAIN)
         {
@@ -44,7 +53,7 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
         }
         _start();
     }
-    else if (command == "STOP")
+    else if (cmdId == CMD_STOP)
     {
         if (_currentProgramState == MAIN)
         {
@@ -53,7 +62,7 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
         digitalWrite(_limitSwitches.getLedPin(), LOW); // Turn off the LED
         _stop();
     }
-    else if (command == "IDLE")
+    else if (cmdId == NOP)
     {
         if (_currentProgramState == IDLE)
         {
@@ -67,21 +76,20 @@ void ProgramLoader::handleCommand(const String& cmd, const std::vector<String>& 
             _executionState = EXEC_IDLE;
         }
     }
-    else if (command == "JOG" || command == "MOVE")
+    else if (cmdId == CMD_JOG || cmdId == CMD_MOVE_TO_POS)
     {
-
         if (_currentProgramState != MAIN)
         {
-            _loadProgram("MAIN");
+            // _loadProgram("MAIN");
         }
     }
 }
 
-void ProgramLoader::_loadProgram(const String& program)
+void ProgramLoader::_loadProgram(const uint8_t program)
 {
     _stop(); // Stop any running program before loading a new one
     static const std::map<String, ProgramState> programMap = {
-        {"PING", PING},
+        {PRG_PING, PING},
         {"PONG", PONG},
         {"TEST_SWITCHES", TEST_SWITCHES},
         {"HOME", HOME},
@@ -108,7 +116,8 @@ void ProgramLoader::_loadProgram(const String& program)
         }
         else
         {
-            _executionState = EXEC_IDLE; // Set to idle for other programs
+            _executionState = EXEC_RUNNING; // Automatically start MAIN program
+            // _executionState = EXEC_IDLE; // Set to idle for other programs
         }
 
         Serial.println("Loaded program: " + program);
@@ -239,30 +248,30 @@ void ProgramLoader::_home()
 
 void ProgramLoader::_main()
 {
-    if (_arguments.empty())
-    {
-        Serial.println("Warning: _arguments vector is empty!");
-        return;
-    }
-    const String&   joint        = _arguments[0];                  // e.g. "J1"
-    const int       motorIdx     = joint.substring(1).toInt() - 1; // Convert "J1" extract 1 -> to index 0
-    static JogState currJogState = IDLE_JOG;
-    static bool     warningShown = false;
+    // if (_arguments.empty())
+    // {
+    //     Serial.println("Warning: _arguments vector is empty!");
+    //     return;
+    // }
+    // const String&   joint        = _arguments[0];                  // e.g. "J1"
+    // const int       motorIdx     = joint.substring(1).toInt() - 1; // Convert "J1" extract 1 -> to index 0
+    // static JogState currJogState = IDLE_JOG;
+    // static bool     warningShown = false;
 
-    if (_cmd == "JOG" && _isHomingDone)
-    {
-        _jogCtrl->jogJoint(_arguments, currJogState, motorIdx);
-        warningShown = false;
-    }
-    else
-    {
-        currJogState = IDLE_JOG;
-        if (!warningShown)
-        {
-            Serial.println("Arm not homed - home first");
-            warningShown = true;
-        }
-    }
+    // if (_cmd == CMD_JOG && _isHomingDone)
+    // {
+    //     _jogCtrl->jogJoint(_arguments, currJogState, motorIdx);
+    //     warningShown = false;
+    // }
+    // else
+    // {
+    //     currJogState = IDLE_JOG;
+    //     if (!warningShown)
+    //     {
+    //         Serial.println("Arm not homed - home first");
+    //         warningShown = true;
+    //     }
+    // }
 }
 
 //  ******************************HELPER FUNCTIONS********************************

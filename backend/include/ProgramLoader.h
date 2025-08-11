@@ -6,16 +6,19 @@
 #ifndef PROGRAMLOADER_H
 #define PROGRAMLOADER_H
 
+#include "ComProtocoll.h"
 #include "Homing.h"
 #include "JogCommand.h"
 #include "JogController.h"
 #include "JogState.h"
 #include "LimitSwitches.h"
 #include "MotorConfig.h"
+#include "ProcessedData.h"
 #include "RobotDataSender.h"
 #include "Utils.h"
 #include "teensystep4.h"
 #include <Arduino.h>
+#include <optional>
 
 /**
  * @brief Enum representing the different states/programs that can be run.
@@ -56,10 +59,9 @@ public:
 
     /**
      * @brief Handles incoming command parts and loads a matching program.
-     * @param cmd A string which is the command.
-     * @param args A vector of strings arguments related to the command.
+     * @param processedDta Struct which contains cmdId and its needed data.
      */
-    void handleCommand(const String& cmd, const std::vector<String>& args);
+    void handleCommand(const ProcessedData& processedDta);
 
     /**
      * @brief Executes the current program logic. Should be called repeatedly inside the main loop.
@@ -76,10 +78,10 @@ private:
     //  ******************************PRIVATE FUNCTIONS********************************
     /**
      * @brief Loads and activates a program by name.
-     * @param program The name of the program to load (e.g., "PING", "PONG").
+     * @param program The name of the program to load (e.
      * @internal
      */
-    void _loadProgram(const String& program);
+    void _loadProgram(const uint8_t program);
 
     /**
      * @brief Executes the current loaded program.
@@ -145,8 +147,8 @@ private:
     ProgramState               _currentProgramState = IDLE;      ///< Current active program state. @internal
     ExecutionState             _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
     LimitSwitches&             _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
-    std::vector<String>        _arguments;                       ///< Arguments passed with the command. @internal
-    String                     _cmd;                             ///< Current command @internal
+    ProcessedData              _processedDta;                    ///< Struct which contains processed data @internal
+    uint8_t                    _cmd;                             ///< Current command @internal
     bool                       _isHomingDone = false;            ///< Flag to check if homing is done. @internal
     RobotDataSender            _rbtDtaSender;                    ///< Instance of data sender class for the robot. @internal
     JogController*             _jogCtrl;                         ///< Pointer of the jog controller class which handles jog of the robot. @internal
