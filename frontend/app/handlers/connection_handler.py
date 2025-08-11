@@ -12,6 +12,10 @@ class ConnectionHandler:
         self._serial = serial
         self._ui_manager = ui_manager
         self._current_ports: List[ListPortInfo] = []
+        shared_data.subscribe("new_steps", self._update_ui)
+
+    def _update_ui(self, data):
+        print("Updated UI", data)
 
     def setup_connections(self):
         """Setup connection-related UI connections"""
@@ -81,3 +85,15 @@ class ConnectionHandler:
         # process data
         if raw_data != shared_data.get_data_in():
             shared_data.set_data_in(raw_data)
+
+            # Trigger UI update
+            # shared_data
+
+            # Trigger new calculations
+
+        # print("dta: ", raw_data)
+
+        # only updates if prev != new dta
+        # pass to shared data or call shared dta fn's
+        # steps = extract_steps_from_data(raw_data)
+        # shared_data.update_steps(steps)
