@@ -21,6 +21,12 @@ void CommandProcessor::processInput(const std::vector<uint8_t>& packet, uint8_t 
     // Decode data out of payload based on cmdId
     switch (cmdId)
     {
+    case CMD_LOAD:
+    {
+        uint8_t program        = payload[1];
+        _processedData.program = program;
+        break;
+    }
     case CMD_JOG:
     {
 
@@ -63,6 +69,7 @@ void CommandProcessor::processInput(const std::vector<uint8_t>& packet, uint8_t 
     }
 
     // forward processed data struct to
+    _dispatcher.dispatch(_processedData);
 }
 
 std::vector<int32_t> CommandProcessor::_decodeSigned24BitValues(const std::vector<uint8_t>& data)
