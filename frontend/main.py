@@ -24,6 +24,15 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+
+    dark_stylesheet = """
+    QWidget {
+        background-color: #2b2b2b;
+        color: #ffffff;
+    }
+    """
+
+    app.setStyleSheet(dark_stylesheet)
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
