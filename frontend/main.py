@@ -1,7 +1,11 @@
+import os
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
 from app.ui_gen.main_window_ui import Ui_MainWindow
 from app.controllers.main_window_controller import MainWindowController
+
+
+os.environ["QT_STYLE_OVERRIDE"] = "Fusion"
 
 
 class MainWindow(QMainWindow):
