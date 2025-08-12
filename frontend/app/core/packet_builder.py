@@ -12,30 +12,28 @@ class PacketBuilder:
             CMD_JOG: self._pack_jog_speeds,
         }
 
-        def build_packet(self, cmd_id: int, data) -> bytes:
-            if not 0 <= cmd_id <= 255:
-                raise ValueError("cmd_id must be 0-255")
-            pack_fn: Callable[[Any], bytes] | None = self.payload_map.get(cmd_id)
-            if not pack_fn:
-                raise ValueError(f"Unknown command ID: '{cmd_id}'")
-            dynamic_payload: bytes = pack_fn(data)
-            fix_payload: bytes = NOP.to_bytes(1, "big", signed=False)
-            fpl_len = len(fix_payload).to_bytes(1, "big", signed=False)
-            payload: bytes = (
-                cmd_id.to_bytes(1, "big", signed=False)
-                + dynamic_payload
-                + fix_payload
-                + fpl_len
-            )
-            pl_len: bytes = len(payload).to_bytes(1, "big", signed=False)
-            crc16_fn = crcmod.predefined.mkCrcFun("modbus")
-            crc_value: int = crc16_fn(payload)
-            crc_bytes: bytes = crc_value.to_bytes(2, byteorder="little")
+    def build_packet(self, cmd_id: int, data) -> bytes:
+        if not 0 <= cmd_id <= 255:
+            raise ValueError("cmd_id must be 0-255")
+        pack_fn: Callable[[Any], bytes] | None = self.payload_map.get(cmd_id)
+        if not pack_fn:
+            raise ValueError(f"Unknown command ID: '{cmd_id}'")
+        dynamic_payload: bytes = pack_fn(data)
+        fix_payload: bytes = NOP.to_bytes(1, "big", signed=False)
+        fpl_len = len(fix_payload).to_bytes(1, "big", signed=False)
+        payload: bytes = (
+            cmd_id.to_bytes(1, "big", signed=False)
+            + dynamic_payload
+            + fix_payload
+            + fpl_len
+        )
+        pl_len: bytes = len(payload).to_bytes(1, "big", signed=False)
+        crc16_fn = crcmod.predefined.mkCrcFun("modbus")
+        crc_value: int = crc16_fn(payload)
+        crc_bytes: bytes = crc_value.to_bytes(2, byteorder="little")
 
-            packet = (
-                bytes(START_BYTES) + pl_len + payload + crc_bytes + bytes(END_BYTES)
-            )
-            return packet
+        packet = bytes(START_BYTES) + pl_len + payload + crc_bytes + bytes(END_BYTES)
+        return packet
 
     def _int_to_3_bytes(self, val: int) -> bytes:
         if not self.SIGNED_24BIT_MIN <= val <= self.SIGNED_24BIT_MAX:
