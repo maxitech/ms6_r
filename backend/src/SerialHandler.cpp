@@ -51,6 +51,16 @@ void SerialHandler::_readSerialInput()
         switch (state)
         {
         case WAIT_FOR_START:
+            if (byte == '$')
+            {
+                index = 0;
+                if (_readStringInput(byte))
+                {
+                    state = WAIT_FOR_START;
+                }
+                continue;
+            }
+
             buffer[index++] = byte;
             if (index >= 3 &&
                 buffer[index - 3] == START_BYTES[0] &&
@@ -188,10 +198,64 @@ void SerialHandler::_forwardInput(const std::array<uint8_t, SerialHandler::MAX_P
     if (_commandProcessor)
     {
 
-        _commandProcessor->processInput(validPacket, payloadLen);
+        _commandProcessor->processBinaryInput(validPacket, payloadLen);
     }
     else
     {
         Serial.println("Error: No CommandProcessor set. Please set one using setCommandProcessor() in Setup.cpp");
     }
+}
+
+// For Setup string input
+bool SerialHandler::_readStringInput(const char startByte)
+{
+    static char   message[MAX_MESSAGE_SIZE];
+    static size_t strIndex  = 0;
+    static bool   receiving = false;
+
+    while (Serial.available() > 0)
+    {
+        char c = Serial.read();
+
+        if (!receiving)
+        {
+            receiving           = true;
+            strIndex            = 0;         // Reset buffer
+            message[strIndex++] = startByte; // set first byte
+        }
+
+        if (strIndex < MAX_MESSAGE_SIZE - 1)
+        {
+            message[strIndex++] = c;
+            if (c == '#') // End of message
+            {
+                message[strIndex] = '\0';
+                receiving         = false;
+
+                String input = String(message);
+                input.trim();
+
+                if (_commandProcessor)
+                {
+
+                    _commandProcessor->processStringInput(input);
+                }
+                else
+                {
+                    Serial.println("Error: No CommandProcessor set. Please set one using setCommandProcessor() in Setup.cpp");
+                }
+                strIndex = 0;
+                return true;
+            }
+        }
+        else
+        {
+            // Buffer overflow
+            receiving = false;
+            strIndex  = 0;
+            Serial.println("Error: Serial message too long");
+            return true;
+        }
+    }
+    return false;
 }

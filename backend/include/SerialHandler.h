@@ -45,10 +45,16 @@ public:
 
 private:
     /**
-     * @brief Reads data from the serial buffer and trims whitespace.
+     * @brief Reads bytes from serial and handles validation.
      * @internal
      */
     void _readSerialInput();
+
+    /**
+     * @brief Reads data from the serial buffer and trims whitespace.
+     * @internal
+     */
+    bool _readStringInput(const char startByte);
 
     /**
      * @brief Forwards the input string to the CommandProcessor, if available.
@@ -62,8 +68,9 @@ private:
      */
     CommandProcessor* _commandProcessor = nullptr;
 
-    bool  _validateCRCAndEnd(std::array<uint8_t, MAX_PACKAGE_SIZE>& buffer, size_t index, uint8_t payloadLength);
-    CRC16 _crc;
+    bool                    _validateCRCAndEnd(std::array<uint8_t, MAX_PACKAGE_SIZE>& buffer, size_t index, uint8_t payloadLength);
+    CRC16                   _crc;
+    static constexpr size_t MAX_MESSAGE_SIZE = 2048;
 };
 
 #endif // SERIAL_HANDLER_H
