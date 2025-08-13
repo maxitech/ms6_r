@@ -9,7 +9,8 @@ CommandProcessor::CommandProcessor(ProgramLoader& programLoader)
 {
 }
 
-void CommandProcessor::processInput(const std::vector<uint8_t>& packet, uint8_t payloadLen)
+// ************** Binary ***************
+void CommandProcessor::processBinaryInput(const std::vector<uint8_t>& packet, uint8_t payloadLen)
 {
     // Payload
     int                  payloadBegin = 4;
@@ -89,4 +90,123 @@ std::vector<int32_t> CommandProcessor::_decodeSigned24BitValues(const std::vecto
         result.push_back(value);
     }
     return result;
+}
+
+// ************** String ***************
+void CommandProcessor::processStringInput(const String& input)
+{
+    if (!_isInputValid(input))
+    {
+        Serial.println("Input is invalid. Expected input: $<cmd_pt1, cmd_pt2, etc.>*<checksum>#");
+        return;
+    }
+
+    int    delimiterIndex = input.indexOf("*");
+    String data           = input.substring(1, delimiterIndex);
+    String checksum       = input.substring(delimiterIndex + 1, input.length() - 1);
+
+    if (!_validateChecksum(data, checksum))
+    {
+        Serial.println("Input processing failed: Checksum validation error.");
+        return;
+    }
+
+    _processCommand(data);
+}
+
+bool CommandProcessor::_isInputValid(const String& input)
+{
+    if (!input.startsWith("$") || !input.endsWith("#") || input.indexOf("*") == -1)
+        return false;
+    return true;
+}
+
+bool CommandProcessor::_validateChecksum(const String& data, const String& checksum)
+{
+    uint8_t checksumValue = 0;
+
+    // Calculate checksum by XORing all characters in data -> (8-bit checksum)
+    for (size_t i = 0; i < data.length(); i++)
+    {
+        checksumValue ^= static_cast<uint8_t>(data[i]);
+    }
+
+    String calculatedChecksum = String(checksumValue, HEX).toUpperCase();
+    if (calculatedChecksum.length() == 1)
+    {
+        calculatedChecksum = "0" + calculatedChecksum;
+    }
+
+    if (calculatedChecksum != checksum)
+    {
+        Serial.println("Checksum Error. Expected: " + checksum + ", Calculated: " + calculatedChecksum);
+        return false;
+    }
+
+    return true;
+}
+
+void CommandProcessor::_processCommand(const String& cmd)
+{
+    std::pair<String, std::vector<String>> parts = _splitString(cmd);
+
+    // _dispatcher.dispatch(parts.first, parts.second);
+    Serial.print("Processed string: ");
+    Serial.println(cmd);
+}
+
+std::pair<String, std::vector<String>> CommandProcessor::_splitString(const String& str)
+{
+    std::vector<String> tokens;
+    int                 firstComma = str.indexOf(',');
+    if (firstComma == -1)
+    {
+        return {str, tokens};
+    }
+
+    String command  = str.substring(0, firstComma);
+    String paramStr = str.substring(firstComma + 1);
+
+    if (!paramStr.startsWith("[") || !paramStr.endsWith("]"))
+    {
+        Serial.println("Error: Command invalid! Correct format <cmd,[arg, arg, ...]>");
+        return {str, tokens};
+    }
+
+    paramStr = paramStr.substring(1, paramStr.length() - 1); // Remove outer brackets
+
+    // JSON-aware splitting:
+    String current;
+    int    braceDepth   = 0; // {}
+    int    bracketDepth = 0; // []
+
+    for (unsigned int i = 0; i < paramStr.length(); ++i)
+    {
+        char c = paramStr[i];
+        if (c == '{')
+            braceDepth++;
+        else if (c == '}')
+            braceDepth--;
+        else if (c == '[')
+            bracketDepth++;
+        else if (c == ']')
+            bracketDepth--;
+
+        if (c == ',' && braceDepth == 0 && bracketDepth == 0)
+        {
+            tokens.push_back(current);
+            current = "";
+        }
+        else
+        {
+            current += c;
+        }
+    }
+
+    if (current.length() > 0)
+    {
+        tokens.push_back(current);
+    }
+
+    return {command, tokens};
 }

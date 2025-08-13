@@ -3,6 +3,7 @@ from app.core.serial_connection import SerialConnection
 from typing import List
 from app.core.shared.shared_data import shared_data
 from serial.tools.list_ports_common import ListPortInfo
+from app.utils.helper import Helper
 
 
 class ConnectionHandler:
@@ -11,6 +12,7 @@ class ConnectionHandler:
         self._setup = setup
         self._serial = serial
         self._ui_manager = ui_manager
+        self._helper = Helper()
         self._current_ports: List[ListPortInfo] = []
         shared_data.subscribe("new_steps", self._update_ui)
 
@@ -50,8 +52,14 @@ class ConnectionHandler:
         self._serial.connect(self._on_serial_data_received)  # provide callback
 
         if self._serial.is_connected():
-            setup_data = f"SETUP,[{json.dumps(self._setup.get_setup())}]"
-            self._serial.set_data_out(setup_data)
+            data = f"SETUP,[{json.dumps(self._setup.get_setup())}]"  # create packet
+            checksum = self._helper.calc_checksum(data)
+            setup_data_str = f"${data}*{checksum}#"
+
+            if self._is_valid_format(setup_data_str):
+                setup_bytes = setup_data_str.encode("utf-8")
+                self._serial.set_data_out(setup_bytes)
+
             self._ui_manager.update_ui_based_on_connection_status(
                 "Disconnect", f"Connected to {selected_port}", False
             )
@@ -61,6 +69,14 @@ class ConnectionHandler:
                 f"Failed to connect to {selected_port}"
             )
             self._ui_manager.log_message("ERROR", "Failed to connect", "red")
+
+    def _is_valid_format(self, data_str):
+        """Check if data format is valid"""
+        return (
+            data_str.startswith("$")
+            and data_str.find("*") != -1
+            and data_str.endswith("#")
+        )
 
     def _disconnect(self):
         """Disconnect from current port"""

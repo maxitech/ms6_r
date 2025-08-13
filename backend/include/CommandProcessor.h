@@ -33,9 +33,16 @@ public:
      * @param buffer Vector which holds one valid packet at the time.
      * @param payloadLen The exact length of the whole  payload.
      */
-    void processInput(const std::vector<uint8_t>& buffer, const uint8_t payloadLen);
+    void processBinaryInput(const std::vector<uint8_t>& buffer, const uint8_t payloadLen);
+
+    /**
+     * @brief Processes an input string, validates it, and if all valid, it forwards the data.
+     * @param input The input string in the format $<cmd>*<checksum>#.
+     */
+    void processStringInput(const String& input);
 
 private:
+    // ************* Binary **************
     /**
      * @brief Decodes a byte stream into signed 24-bit integers.
      *
@@ -54,6 +61,41 @@ private:
      * @internal
      */
     // void _processCommand(const String& cmd);
+
+    // ************* Sring **************
+    /**
+     * @brief Validates the input format.
+     * @param input The input string to validate.
+     * @return True if the input is valid, false otherwise.
+     * @internal
+     */
+    bool _isInputValid(const String& input);
+
+    /**
+     * @brief Verifies the checksum of the command string.
+     * @param data The portion of the string between `$` and `*`.
+     * @param checksum The checksum value to validate against.
+     * @return True if the checksum is correct, false otherwise.
+     * @note The checksum is calculated using an XOR operation over all characters in `data`.
+     * @internal
+     */
+    bool _validateChecksum(const String& data, const String& checksum);
+
+    /**
+     * @brief Processes a valid command.
+     * @param cmd The data string (after validation).
+     * @internal
+     */
+    void _processCommand(const String& cmd);
+
+    /**
+     * @brief Splits a string into parts based on a delimiter.
+     * @param str The string to split.
+     * @return A pair of String & vector of substrings.
+     * @internal
+     */
+    // std::vector<String> _splitString(const String& str, const char delimiter);
+    std::pair<String, std::vector<String>> _splitString(const String& str);
 
     /**
      * @brief Dispatcher used to handle commands internally.
