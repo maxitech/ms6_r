@@ -1,8 +1,6 @@
-from PySide6.QtCore import QTimer
 from typing import Tuple
 from app.core.serial_connection import SerialConnection
 from app.core.packet_builder import PacketBuilder
-from app.core.shared.shared_data import shared_data
 from app.constants.ms6_r_constants import MS6_R_CONSTANTS as RC
 from app.constants.com_protocoll import CMD_JOG
 
@@ -15,9 +13,6 @@ class JogHandler:
         self._ui_manager = ui_manager
         self._pb = PacketBuilder()
         self._slider_value = ui.jog_slider.value()
-        self._jog_timer = QTimer()
-        self._jog_timer.setInterval(10)
-        self._jog_timer.timeout.connect(self._queue_jog_cmd)
         self._serial_packet: bytes | None = None
 
     def setup_connections(self):
@@ -51,7 +46,7 @@ class JogHandler:
         joint_i, direction = self._parse_jog_button(btn)
         if joint_i is not None and direction:
             self._create_jog_cmd(i=joint_i, dir=direction)
-            self._jog_timer.start()
+            self._queue_jog_cmd()
 
     def _create_jog_cmd(self, i: int, dir: int):
         jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
@@ -64,8 +59,10 @@ class JogHandler:
 
     def _handle_jog_btn_release(self):
         """Handle jog button release"""
-        self._jog_timer.stop()
-        shared_data.clear_data_queue_out()
+        jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
+        self._serial_packet = self._pb.build_packet(cmd_id=CMD_JOG, data=jog_speeds)
+        self._queue_jog_cmd()
+        # shared_data.clear_data_queue_out()
 
     def _parse_jog_button(self, btn) -> Tuple[int | None, int | None]:
         """Parse jog button name to get joint and direction"""
