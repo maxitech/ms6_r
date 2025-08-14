@@ -113,14 +113,14 @@ void SerialHandler::_readSerialInput()
                     packetCount++;
 
                     // Debug log only after intervall -> better performance
-                    if (Utils::nonBlockingDelay(PACKET_LOG_INTERVAL_MS, lastPacketTime))
-                    {
-                        Serial.print("Valid packets: ");
-                        Serial.print(packetCount);
-                        Serial.print("/sec | Total bytes: ");
-                        Serial.println(packetCount * (4 + payloadLength + 4));
-                        packetCount = 0;
-                    }
+                    // if (Utils::nonBlockingDelay(PACKET_LOG_INTERVAL_MS, lastPacketTime))
+                    // {
+                    //     Serial.print("Valid packets: ");
+                    //     Serial.print(packetCount);
+                    //     Serial.print("/sec | Total bytes: ");
+                    //     Serial.println(packetCount * (4 + payloadLength + 4));
+                    //     packetCount = 0;
+                    // }
 
                     _forwardInput(buffer, payloadLength, index);
                 }
