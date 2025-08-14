@@ -19,15 +19,28 @@ void CommandDispatcher::dispatch(const ProcessedData& processedData)
     if (isValidCmd)
     {
         _programLoader.handleCommand(processedData);
+    }
+}
 
-        // * Take as reference if setup is needed.
-        // if (processedData.cmdId == <setup>)
-        // {
-        //     Setup::getInstance().update();
-        // }
-        // else
-        // {
-        //     _programLoader.handleCommand(processedData);
-        // }
+void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& args)
+{
+    if (cmd == "" || args.empty())
+    {
+        Serial.println("Error: no command or no arguments");
+        return;
+    }
+
+    std::vector<String> cmds       = {"SETUP"};
+    bool                isValidCmd = std::find(cmds.begin(), cmds.end(), cmd) != cmds.end();
+    if (isValidCmd)
+    {
+        if (cmd == "SETUP")
+        {
+            Setup::getInstance().update(args[0]);
+        }
+    }
+    else
+    {
+        Serial.println("Error: Unknown command or command invalide! Correct format <$cmd,[arg, arg, ...]>" + cmd);
     }
 }

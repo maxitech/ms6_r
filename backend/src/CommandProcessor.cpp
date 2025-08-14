@@ -150,9 +150,7 @@ void CommandProcessor::_processCommand(const String& cmd)
 {
     std::pair<String, std::vector<String>> parts = _splitString(cmd);
 
-    // _dispatcher.dispatch(parts.first, parts.second);
-    Serial.print("Processed string: ");
-    Serial.println(cmd);
+    _dispatcher.dispatch(parts.first, parts.second);
 }
 
 std::pair<String, std::vector<String>> CommandProcessor::_splitString(const String& str)

@@ -31,6 +31,8 @@ public:
      */
     void dispatch(const ProcessedData& processedData);
 
+    void dispatch(const String& cmd, const std::vector<String>& args);
+
 private:
     /**
      * @brief Reference to the ProgramLoader used to handle specific commands.
