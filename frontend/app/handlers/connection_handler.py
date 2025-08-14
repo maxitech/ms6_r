@@ -2,8 +2,9 @@ import json
 from app.core.serial_connection import SerialConnection
 from typing import List
 from app.core.shared.shared_data import shared_data
-from serial.tools.list_ports_common import ListPortInfo
 from app.utils.helper import Helper
+from app.constants.com_protocoll import CMD_IDLE, NOP
+from app.core.packet_builder import PacketBuilder
 
 
 class ConnectionHandler:
@@ -13,7 +14,8 @@ class ConnectionHandler:
         self._serial = serial
         self._ui_manager = ui_manager
         self._helper = Helper()
-        self._current_ports: List[ListPortInfo] = []
+        self._pb = PacketBuilder()
+        self._current_ports: List[str] = []
         shared_data.subscribe("new_steps", self._update_ui)
 
     def _update_ui(self, data):
@@ -80,7 +82,8 @@ class ConnectionHandler:
 
     def _disconnect(self):
         """Disconnect from current port"""
-        self._serial.set_data_out("IDLE,[EXEC]")
+        packet: bytes = self._pb.build_packet(cmd_id=CMD_IDLE, data=NOP)
+        self._serial.set_data_out(packet)
         self._serial.disconnect()
         if not self._serial.is_connected():
             self._ui_manager.update_ui_based_on_connection_status(

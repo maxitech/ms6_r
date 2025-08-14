@@ -3,6 +3,8 @@ import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
 from app.ui_gen.main_window_ui import Ui_MainWindow
 from app.controllers.main_window_controller import MainWindowController
+from app.constants.com_protocoll import CMD_IDLE, NOP
+from app.core.packet_builder import PacketBuilder
 
 
 os.environ["QT_STYLE_OVERRIDE"] = "Fusion"
@@ -14,10 +16,12 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.controller = MainWindowController(self.ui)
+        self._pb = PacketBuilder()
 
     def closeEvent(self, event):
         print("Closing application...")
-        self.controller.set_data_out("IDLE,[EXEC]")
+        packet: bytes = self._pb.build_packet(cmd_id=CMD_IDLE, data=NOP)
+        self.controller.set_data_out(packet)
         self.controller.serial.disconnect()
         event.accept()
 

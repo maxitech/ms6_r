@@ -1,6 +1,8 @@
+from app.constants.com_protocoll import PRG_PING, PRG_TEST_SWITCHES, PRG_HOME, PRG_PONG
+
 COMMAND_MAP = {
-    "cmd_ping_btn": ("Ping", "LOAD,[PING]"),
-    "cmd_pong_btn": ("Pong", "LOAD,[PONG]"),
-    "cmd_switches_btn": ("TestSwitches", "LOAD,[TEST_SWITCHES]"),
-    "cmd_home_axis_btn": ("Home", "LOAD,[HOME]"),
+    "cmd_ping_btn": ("Ping", PRG_PING),
+    "cmd_pong_btn": ("Pong", PRG_PONG),
+    "cmd_switches_btn": ("TestSwitches", PRG_TEST_SWITCHES),
+    "cmd_home_axis_btn": ("Home", PRG_HOME),
 }

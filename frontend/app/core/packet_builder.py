@@ -10,6 +10,10 @@ class PacketBuilder:
     def __init__(self):
         self.payload_map = {
             CMD_JOG: self._pack_jog_speeds,
+            CMD_LOAD: self._pack_load_program,
+            CMD_START: self._pack_start_exe,
+            CMD_STOP: self._pack_stop_exe,
+            CMD_IDLE: self._pack_idle_exe,
         }
 
     def build_packet(self, cmd_id: int, data) -> bytes:
@@ -19,6 +23,8 @@ class PacketBuilder:
         if not pack_fn:
             raise ValueError(f"Unknown command ID: '{cmd_id}'")
         dynamic_payload: bytes = pack_fn(data)
+        print("cmdid: ", cmd_id)
+        print("dynamic pl: ", data)
         fix_payload: bytes = NOP.to_bytes(1, "big", signed=False)
         fpl_len = len(fix_payload).to_bytes(1, "big", signed=False)
         payload: bytes = (
@@ -35,6 +41,18 @@ class PacketBuilder:
         packet = bytes(START_BYTES) + pl_len + payload + crc_bytes + bytes(END_BYTES)
         return packet
 
+    def _pack_load_program(self, prog: int) -> bytes:
+        return bytes([prog])
+
+    def _pack_start_exe(self, data: int) -> bytes:
+        return bytes([data])
+
+    def _pack_stop_exe(self, data: int) -> bytes:
+        return bytes([data])
+
+    def _pack_idle_exe(self, data: int) -> bytes:
+        return bytes([data])
+
     def _int_to_3_bytes(self, val: int) -> bytes:
         if not self.SIGNED_24BIT_MIN <= val <= self.SIGNED_24BIT_MAX:
             raise OverflowError(
@@ -43,7 +61,6 @@ class PacketBuilder:
         return val.to_bytes(length=3, byteorder="big", signed=True)
 
     def _pack_jog_speeds(self, speeds: List[int]) -> bytes:
-        print(speeds)
         payload = bytearray()
         for val in speeds:
             payload.extend(self._int_to_3_bytes(val))
