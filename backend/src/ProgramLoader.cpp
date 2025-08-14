@@ -19,33 +19,33 @@ ProgramLoader::~ProgramLoader()
 
 void ProgramLoader::handleCommand(const ProcessedData& processedDta)
 {
-    if (processedDta.cmdId == NOP)
+    if (processedDta.cmdId == NOP) // replace with other cmd
     {
         Serial.println("Warning: No operation command! No execution.");
         return;
     }
 
-    _processedDta       = processedDta;
-    const uint8_t cmdId = processedDta.cmdId;
-    Serial.println(cmdId);
-    const bool             isReqTelemety = processedDta.is_requestTelemetry.value();
+    _processedDta            = processedDta;
+    _cmdId                   = processedDta.cmdId;
+    const bool isReqTelemety = processedDta.is_requestTelemetry.value();
+
+    // Optional payload data
     std::optional<uint8_t> program;
     if (processedDta.program.has_value())
     {
         program = processedDta.program.value();
     }
 
-    std::optional<std::vector<int32_t>> jogSpeeds;
     if (processedDta.jogSpeeds.has_value())
     {
-        jogSpeeds = processedDta.jogSpeeds.value();
+        _jogSpeeds = processedDta.jogSpeeds.value();
     }
 
-    if (cmdId == CMD_LOAD && program)
+    if (_cmdId == CMD_LOAD && program)
     {
         _loadProgram(program.value());
     }
-    else if (cmdId == CMD_START)
+    else if (_cmdId == CMD_START)
     {
         if (_currentProgramState == MAIN)
         {
@@ -53,7 +53,7 @@ void ProgramLoader::handleCommand(const ProcessedData& processedDta)
         }
         _start();
     }
-    else if (cmdId == CMD_STOP)
+    else if (_cmdId == CMD_STOP)
     {
         if (_currentProgramState == MAIN)
         {
@@ -62,7 +62,7 @@ void ProgramLoader::handleCommand(const ProcessedData& processedDta)
         digitalWrite(_limitSwitches.getLedPin(), LOW); // Turn off the LED
         _stop();
     }
-    else if (cmdId == NOP)
+    else if (_cmdId == NOP)
     {
         if (_currentProgramState == IDLE)
         {
@@ -76,11 +76,11 @@ void ProgramLoader::handleCommand(const ProcessedData& processedDta)
             _executionState = EXEC_IDLE;
         }
     }
-    else if (cmdId == CMD_JOG || cmdId == CMD_MOVE_TO_POS)
+    else if (_cmdId == CMD_JOG || _cmdId == CMD_MOVE_TO_POS)
     {
         if (_currentProgramState != MAIN)
         {
-            // _loadProgram("MAIN");
+            _loadProgram(PRG_MAIN);
         }
     }
 }
@@ -93,7 +93,7 @@ void ProgramLoader::_loadProgram(const uint8_t program)
         {"PONG", PONG},
         {"TEST_SWITCHES", TEST_SWITCHES},
         {"HOME", HOME},
-        {"MAIN", MAIN},
+        {PRG_MAIN, MAIN},
     };
 
     auto it = programMap.find(program);
@@ -248,30 +248,65 @@ void ProgramLoader::_home()
 
 void ProgramLoader::_main()
 {
-    // if (_arguments.empty())
-    // {
-    //     Serial.println("Warning: _arguments vector is empty!");
-    //     return;
-    // }
-    // const String&   joint        = _arguments[0];                  // e.g. "J1"
-    // const int       motorIdx     = joint.substring(1).toInt() - 1; // Convert "J1" extract 1 -> to index 0
-    // static JogState currJogState = IDLE_JOG;
-    // static bool     warningShown = false;
+    static bool warningShown = false;
+    static bool is_jog       = false;
 
-    // if (_cmd == CMD_JOG && _isHomingDone)
-    // {
-    //     _jogCtrl->jogJoint(_arguments, currJogState, motorIdx);
-    //     warningShown = false;
-    // }
-    // else
-    // {
-    //     currJogState = IDLE_JOG;
-    //     if (!warningShown)
-    //     {
-    //         Serial.println("Arm not homed - home first");
-    //         warningShown = true;
-    //     }
-    // }
+    if (_cmdId == CMD_JOG)
+    {
+        if (!_isHomingDone)
+        {
+            if (!warningShown)
+            {
+                Serial.println("Arm not homed - home first");
+                warningShown = true;
+            }
+            return;
+        }
+
+        warningShown = false;
+
+        if (!_jogSpeeds.has_value())
+        {
+            is_jog = false;
+            _stop();
+            _setState(IDLE);
+            return;
+        }
+
+        int index = -1;
+        for (size_t i = 0; i < _jogSpeeds.value().size(); ++i)
+        {
+            if (_jogSpeeds.value()[i] != 0)
+            {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1)
+        {
+            is_jog = false;
+            _stop();
+            _setState(IDLE);
+            return;
+        }
+
+        if (!is_jog)
+        {
+            _motorConfigs[index]->motor->rotateAsync(_jogSpeeds.value()[index]);
+            is_jog = true;
+            Serial.println("Jog started");
+        }
+    }
+    else
+    {
+        if (is_jog)
+        {
+            is_jog = false;
+            _stop();
+            _setState(IDLE);
+        }
+    }
 }
 
 //  ******************************HELPER FUNCTIONS********************************

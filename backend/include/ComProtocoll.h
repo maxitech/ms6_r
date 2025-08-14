@@ -22,6 +22,7 @@ namespace CommunicationProtocoll
     static constexpr uint8_t CMD_STOP        = 0x05;
 
     static constexpr uint8_t PRG_PING = 0x06;
+    static constexpr uint8_t PRG_MAIN = 0x07;
 
     static constexpr std::array<uint8_t, NUM_CMDS> CMD_IDS {CMD_JOG, CMD_MOVE_TO_POS, CMD_LOAD, CMD_START, CMD_STOP};
 }
