@@ -282,7 +282,18 @@ void ProgramLoader::_stopMotors()
     {
         if (cfg->motor != nullptr && cfg->motor->isMoving)
         {
-            cfg->motor->emergencyStop(); // Stop all motors if they are moving
+            cfg->motor->stopAsync(); // Stop all motors if they are moving(smooth)
+        }
+    }
+}
+
+void ProgramLoader::_eStopMotors()
+{
+    for (MotorConfig* cfg : _motorConfigs)
+    {
+        if (cfg->motor != nullptr && cfg->motor->isMoving)
+        {
+            cfg->motor->emergencyStop(); // Stop all motors if they are moving(hard)
         }
     }
 }
