@@ -31,7 +31,6 @@ class ProgramHandler:
 
     def _handle_start_btn_click(self):
         """Handle start button click"""
-        print("curr prog", self._current_program)
         if self._check_for_program():
             packet: bytes = self._pb.build_packet(cmd_id=CMD_START, data=NOP)
             self._serial.set_data_out(packet)

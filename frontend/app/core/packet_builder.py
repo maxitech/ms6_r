@@ -23,8 +23,6 @@ class PacketBuilder:
         if not pack_fn:
             raise ValueError(f"Unknown command ID: '{cmd_id}'")
         dynamic_payload: bytes = pack_fn(data)
-        print("cmdid: ", cmd_id)
-        print("dynamic pl: ", data)
         fix_payload: bytes = NOP.to_bytes(1, "big", signed=False)
         fpl_len = len(fix_payload).to_bytes(1, "big", signed=False)
         payload: bytes = (
