@@ -4,7 +4,7 @@ import time
 
 
 class SerialReaderThread(QThread):
-    data_received = Signal(str)  # signal for sending data to ui
+    data_received = Signal(bytes)  # signal for sending data to ui
 
     def __init__(self, serial: serial.Serial):
         super().__init__()
@@ -15,18 +15,18 @@ class SerialReaderThread(QThread):
         print("SerialWorker started!")
         while self._is_running:
             try:
-                if self._serial_port and self._serial_port.in_waiting:
-                    data = self._serial_port.readline().decode("utf-8").strip()
-                    print(f"Received Data: {data}")
-                    self.data_received.emit(data)  # send data to ui
+                if self._serial_port:
+                    n = self._serial_port.in_waiting
+                    if n > 0:
+                        data = self._serial_port.read(n)
+                        self.data_received.emit(data)  # send data to ui
             except serial.SerialException as e:
                 print(f"Serial error: {e}")
                 self.stop()
             except Exception as e:
                 print(f"Unhandled error: {e}")
                 self.stop()
-
-            time.sleep(0.001)  # reduce cpu power
+            QThread.msleep(1)  # reduce cpu power
 
     def stop(self):
         self._is_running = False

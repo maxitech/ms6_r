@@ -1,7 +1,7 @@
 from PySide6.QtCore import QThread
 from queue import Queue, Empty
 import serial
-from oclock import Timer
+
 
 from app.core.shared.shared_data import shared_data
 
@@ -16,7 +16,6 @@ class SerialWriterThread(QThread):
 
     def run(self):
         print("SerialWriter started!")
-        tmr = Timer(interval=self.INTERVAL_S, precise=True)
         while self._is_running:
             try:
                 data = shared_data.get_next_data()
@@ -32,8 +31,7 @@ class SerialWriterThread(QThread):
                 except Exception as e:
                     print(f"Unhandled error: {e}")
                     self.stop()
-
-            tmr.checkpt()
+            QThread.msleep(1)
 
     def stop(self):
         self._is_running = False
