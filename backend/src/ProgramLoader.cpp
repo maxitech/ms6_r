@@ -62,7 +62,7 @@ void ProgramLoader::handleCommand(const ProcessedData& processedDta)
         digitalWrite(_limitSwitches.getLedPin(), LOW); // Turn off the LED
         _stop();
     }
-    else if (_cmdId == NOP)
+    else if (_cmdId == CMD_IDLE)
     {
         if (_currentProgramState == IDLE)
         {
@@ -90,22 +90,23 @@ void ProgramLoader::_loadProgram(const uint8_t program)
     _stop(); // Stop any running program before loading a new one
     static const std::map<String, ProgramState> programMap = {
         {PRG_PING, PING},
-        {"PONG", PONG},
-        {"TEST_SWITCHES", TEST_SWITCHES},
-        {"HOME", HOME},
+        {PRG_PONG, PONG},
+        {PRG_TEST_SWITCHES, TEST_SWITCHES},
+        {PRG_HOME, HOME},
         {PRG_MAIN, MAIN},
     };
 
     auto it = programMap.find(program);
     if (it == programMap.end())
     {
-        Serial.println("Unknown program: " + program);
+        Serial.println("Unknown program!");
+
         return;
     }
 
     if (_currentProgramState == it->second)
     {
-        Serial.println("Reloaded program: " + program);
+        Serial.println("Reloaded program!");
     }
     else
     {
@@ -116,11 +117,10 @@ void ProgramLoader::_loadProgram(const uint8_t program)
         }
         else
         {
-            _executionState = EXEC_RUNNING; // Automatically start MAIN program
-            // _executionState = EXEC_IDLE; // Set to idle for other programs
+            _executionState = EXEC_IDLE; // Set to idle for other programs
         }
 
-        Serial.println("Loaded program: " + program);
+        Serial.println("Loaded program!");
     }
 }
 
@@ -295,7 +295,6 @@ void ProgramLoader::_main()
         {
             _motorConfigs[index]->motor->rotateAsync(_jogSpeeds.value()[index]);
             is_jog = true;
-            Serial.println("Jog started");
         }
     }
     else
