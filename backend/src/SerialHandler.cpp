@@ -34,14 +34,16 @@ void SerialHandler::_readSerialInput()
     } state = WAIT_FOR_START;
 
     static std::array<uint8_t, MAX_PACKAGE_SIZE> buffer {};
-    static size_t                                index          = 0;
-    static uint8_t                               payloadLength  = 0;
-    static unsigned long                         lastByteTime   = 0;
-    static unsigned long                         lastPacketTime = 0;
-    static uint32_t                              packetCount    = 0;
+    static size_t                                index         = 0;
+    static uint8_t                               payloadLength = 0;
+    static unsigned long                         lastByteTime  = 0;
+    // Debug
+    //  static unsigned long                         lastPacketTime = 0;
+    static uint32_t packetCount = 0;
 
-    const unsigned long BYTE_TIMEOUT_MS        = 50;
-    const unsigned long PACKET_LOG_INTERVAL_MS = 1000;
+    const unsigned long BYTE_TIMEOUT_MS = 50;
+    // Debug
+    // const unsigned long PACKET_LOG_INTERVAL_MS = 1000;
 
     while (Serial.available() > 0)
     {
