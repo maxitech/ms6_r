@@ -3,7 +3,7 @@ from app.core.serial_connection import SerialConnection
 from typing import List
 from app.core.shared.shared_data import shared_data
 from app.utils.helper import Helper
-from app.constants.com_protocoll import CMD_IDLE, NOP
+from app.constants.com_protocol import CMD_IDLE, NOP
 from app.core.packet_builder import PacketBuilder
 
 
@@ -100,15 +100,17 @@ class ConnectionHandler:
             "ERROR", "Connection lost! Device may be disconnected.", "red"
         )
 
-    def _on_serial_data_received(self, raw_data: str):
+    def _on_serial_data_received(self, raw_data: bytes):
         # process data
-        if raw_data != shared_data.get_data_in():
-            shared_data.set_data_in(raw_data)
+        # pass
+        print(raw_data.decode("utf-8").strip())
+        # if raw_data != shared_data.get_data_in():
+        # shared_data.set_data_in(raw_data)
 
-            # Trigger UI update
-            # shared_data
+        # Trigger UI update
+        # shared_data
 
-            # Trigger new calculations
+        # Trigger new calculations
 
         # print("dta: ", raw_data)
 

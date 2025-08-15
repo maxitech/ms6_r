@@ -3,7 +3,7 @@ import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
 from app.ui_gen.main_window_ui import Ui_MainWindow
 from app.controllers.main_window_controller import MainWindowController
-from app.constants.com_protocoll import CMD_IDLE, NOP
+from app.constants.com_protocol import CMD_IDLE, NOP
 from app.core.packet_builder import PacketBuilder
 
 

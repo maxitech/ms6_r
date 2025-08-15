@@ -1,5 +1,5 @@
 import crcmod
-from app.constants.com_protocoll import *
+from app.constants.com_protocol import *
 from typing import List, Callable, Any
 
 

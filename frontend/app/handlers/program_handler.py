@@ -1,5 +1,5 @@
 from app.core.packet_builder import PacketBuilder
-from app.constants.com_protocoll import CMD_LOAD, NOP, CMD_START, CMD_STOP, CMD_IDLE
+from app.constants.com_protocol import CMD_LOAD, NOP, CMD_START, CMD_STOP, CMD_IDLE
 
 
 class ProgramHandler:

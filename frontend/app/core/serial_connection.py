@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 from app.core.threads.serial_reader_thread import SerialReaderThread
 from app.core.threads.serial_writer_thread import SerialWriterThread
 from app.core.threads.motion_planner_thread import MotionPlannerThread
-from app.constants.com_protocoll import START_BYTES, END_BYTES
+from app.constants.com_protocol import START_BYTES, END_BYTES
 from app.core.shared.shared_data import shared_data
 
 

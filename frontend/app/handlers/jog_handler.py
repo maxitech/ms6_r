@@ -2,7 +2,7 @@ from typing import Tuple
 from app.core.serial_connection import SerialConnection
 from app.core.packet_builder import PacketBuilder
 from app.constants.ms6_r_constants import MS6_R_CONSTANTS as RC
-from app.constants.com_protocoll import CMD_JOG
+from app.constants.com_protocol import CMD_JOG
 
 
 class JogHandler:
