@@ -170,7 +170,7 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
             axisData.delayStarted  = true;
         }
 
-        if (Utils::nonBlockingDelay(3000, axisData.lastDelayTime))
+        if (Utils::nonBlockingDelay(100, axisData.lastDelayTime))
         {
             // Serial.println(String(axis_x) + " set zero point");
             motorJ_x.setPosition(0); // Set the current position to zero
