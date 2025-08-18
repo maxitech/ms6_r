@@ -148,7 +148,7 @@ void ProgramLoader::_stop()
     }
 
     // Clean up
-    _stopMotors(); // Stop all motors if they are moving
+    _eStopMotors(); // Stop all motors if they are moving
     _executionState = EXEC_IDLE;
 }
 
