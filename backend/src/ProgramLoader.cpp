@@ -225,8 +225,7 @@ void ProgramLoader::_home()
         _homingManager->executeHoming();
         if (_homingManager->isHomingDone())
         {
-            _isHomingDone = true;                     // Set homing done flag
-            _rbtDtaSender.sendFkPoseAndJointAngles(); // Send FK pose and joint angles after homing is done
+            _isHomingDone = true; // Set homing done flag
 
             // Maybe reset homing state later
             for (size_t i = 0; i < _motorConfigs.size(); ++i)
@@ -248,62 +247,24 @@ void ProgramLoader::_home()
 
 void ProgramLoader::_main()
 {
-    static bool warningShown = false;
-    static bool is_jog       = false;
+    static bool     warningShown = false;
+    static JogState currJogState = IDLE_JOG;
 
-    if (_cmdId == CMD_JOG)
+    if (_cmdId == CMD_JOG && _isHomingDone)
     {
-        if (!_isHomingDone)
+        _jogCtrl->jogJoint(_jogSpeeds, currJogState);
+        if (warningShown)
         {
-            if (!warningShown)
-            {
-                Serial.println("Arm not homed - home first");
-                warningShown = true;
-            }
-            return;
-        }
-
-        warningShown = false;
-
-        if (!_jogSpeeds.has_value())
-        {
-            is_jog = false;
-            _stop();
-            _setState(IDLE);
-            return;
-        }
-
-        int index = -1;
-        for (size_t i = 0; i < _jogSpeeds.value().size(); ++i)
-        {
-            if (_jogSpeeds.value()[i] != 0)
-            {
-                index = i;
-                break;
-            }
-        }
-
-        if (index == -1)
-        {
-            is_jog = false;
-            _stop();
-            _setState(IDLE);
-            return;
-        }
-
-        if (!is_jog)
-        {
-            _motorConfigs[index]->motor->rotateAsync(_jogSpeeds.value()[index]);
-            is_jog = true;
+            warningShown = false;
         }
     }
     else
     {
-        if (is_jog)
+        currJogState = IDLE_JOG;
+        if (!warningShown)
         {
-            is_jog = false;
-            _stop();
-            _setState(IDLE);
+            Serial.println("Arm not homed - home first");
+            warningShown = true;
         }
     }
 }
