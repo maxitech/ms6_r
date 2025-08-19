@@ -37,6 +37,22 @@ bool Homing::isHomingDone() const
                        { return group->isGroupHomed; });
 }
 
+uint8_t Homing::getHomedMask() const
+{
+    uint8_t mask = 0;
+    for (const auto& group : _axisGroups)
+    {
+        for (const auto& axis : group->axes)
+        {
+            if (axis->isHomingDone)
+            {
+                mask |= (1 << static_cast<int>(axis->axisId));
+            }
+        }
+    }
+    return mask;
+}
+
 void Homing::resetGroup(AxisGroup& group)
 {
     group.isGroupHomed = false;

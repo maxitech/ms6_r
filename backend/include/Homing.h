@@ -46,6 +46,12 @@ public:
     bool isHomingDone() const;
 
     /**
+     * @brief Returns which axes are currently homed.
+     * @return Bitmask: Bit n = 1 if axis n is homed.
+     */
+    uint8_t getHomedMask() const;
+
+    /**
      * @brief Resets the homing status of a single group.
      * @param group The AxisGroup instance to reset.
      */
