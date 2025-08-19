@@ -1,53 +1,30 @@
 #include "RobotDataSender.h"
+#include "PacketBuilder.h"
 #include "Setup.h"
+
+using namespace CommunicationProtocoll;
 
 RobotDataSender::RobotDataSender() {};
 
-void RobotDataSender::sendFkPoseAndJointAngles()
+void RobotDataSender::sendMotorPosInSteps(const std::vector<MotorConfig*>& motorCoinfigs)
 {
-    Pose                pose        = Setup::getInstance().getKinematics()->forwardKinematics();
-    std::vector<double> jointAngles = Setup::getInstance().getKinematics()->getJointAnglesInRadOrDeg(0);
+    uint8_t              cmdId = SYS_DATA_REQUEST;
+    std::vector<uint8_t> payload;
 
-    // Send forward kinematics pose
-    // Format: DATA:FK_POSE*x,y,z,roll,pitch,yaw
-    Serial.print("DATA:FK_POSE*");
-    Serial.print(pose.x);
-    Serial.print(",");
-    Serial.print(pose.y);
-    Serial.print(",");
-    Serial.print(pose.z);
-    Serial.print(",");
-    Serial.print(pose.roll);
-    Serial.print(",");
-    Serial.print(pose.pitch);
-    Serial.print(",");
-    Serial.println(pose.yaw);
-
-    if (jointAngles.empty())
+    for (size_t i = 0; i < motorCoinfigs.size(); ++i)
     {
-        Serial.println("Error: jointAngles vector is empty!");
-        return;
-    }
-    // Send joint angles
-    // Format: DATA:JOINT_ANGLES*angle1,angle2,angle3
-    Serial.print("DATA:JOINT_ANGLES*");
-    for (size_t i = 0; i < jointAngles.size(); ++i)
-    {
-        Serial.print(jointAngles[i]);
-        if (i < jointAngles.size() - 1)
+        int32_t pos = 0;
+        if (_homedMask & (1 << i))
         {
-            Serial.print(",");
+            pos = motorCoinfigs[i]->motor->getPosition();
         }
+        payload.push_back((pos >> 16) & 0xFF); // MSB
+        payload.push_back((pos >> 8) & 0xFF);
+        payload.push_back(pos & 0xFF); // LSB
     }
-    Serial.println();
-}
 
-void RobotDataSender::sendMotorPosInSteps(const MotorConfig* motorCoinfig, const int motorIdx)
-{
-    // Format: DATA:MOTOR_POS_STEPS*<motor_index>#<position>
-    const int motorPos = motorCoinfig->motor->getPosition();
-    Serial.print("DATA:MOTOR_POS_STEPS*");
-    Serial.print(motorIdx + 1);
-    Serial.print(",");
-    Serial.println(motorPos);
+    std::vector<uint8_t> packet = PacketBuilder::buildPacket(cmdId, payload);
+
+    Serial.write(packet.data(), packet.size());
+    Serial.flush();
 }
