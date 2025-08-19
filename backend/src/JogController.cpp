@@ -71,7 +71,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
             static unsigned long lastSendTime = 0;
             if (Utils::nonBlockingDelay(100, lastSendTime))
             {
-                _rbtDtaSender.sendMotorPosInSteps(_motorConfigs[_activeIndex], _activeIndex);
+                _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
             }
         }
     }
@@ -140,7 +140,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
                 jogFlags->limitReached = true;
                 jogFlags->blockedDir   = direction;
 
-                _rbtDtaSender.sendMotorPosInSteps(_motorConfigs[index], index);
+                _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
             }
         }
         break;
@@ -159,7 +159,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
                 _motorConfigs[_activeIndex]->motor->emergencyStop();
                 currJogState = IDLE_JOG;
 
-                _rbtDtaSender.sendMotorPosInSteps(_motorConfigs[_activeIndex], _activeIndex);
+                _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
             }
             _activeIndex = -1;
         }

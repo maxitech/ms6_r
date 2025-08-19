@@ -227,11 +227,11 @@ void ProgramLoader::_home()
         {
             _isHomingDone = true; // Set homing done flag
 
-            // Maybe reset homing state later
-            for (size_t i = 0; i < _motorConfigs.size(); ++i)
-            {
-                _rbtDtaSender.sendMotorPosInSteps(_motorConfigs[i], i); // Send motor position in steps
-            }
+            // !!! Maybe reset homing state later
+            uint8_t homedMask = _homingManager->getHomedMask();
+            _rbtDtaSender.setHomedMask(homedMask);
+            _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
+
             _executionState = EXEC_IDLE;
             _setState(IDLE);
             return;
