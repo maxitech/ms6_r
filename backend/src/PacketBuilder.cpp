@@ -2,6 +2,8 @@
 
 using namespace CommunicationProtocoll;
 
+CRC16 PacketBuilder::_crc;
+
 PacketBuilder::PacketBuilder()
 {
 }

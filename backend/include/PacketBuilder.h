@@ -7,6 +7,7 @@
 class PacketBuilder
 {
 public:
+    PacketBuilder();
     static std::vector<uint8_t> buildPacket(uint8_t cmdId, const std::vector<uint8_t>& payload);
 
 private:
