@@ -110,7 +110,7 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
     // Extracting data from the AxisData struct
     HomingState& homingStateJ_x     = axisData.homingState;
     Stepper&     motorJ_x           = *(axisData.motor);
-    Axes         axis_x             = axisData.axis;
+    Axes         axis_x             = axisData.axisId;
     int          HOMING_VELOCITY    = axisData.HOMING_VELOCITY;
     int          MOVE_AWAY_VELOCITY = axisData.MOVE_AWAY_VELOCITY;
     int          MOVE_BACK_VELOCITY = axisData.MOVE_BACK_VELOCITY;

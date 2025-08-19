@@ -48,7 +48,7 @@ struct AxisData
      * @brief The identifier for the axis.
      * @details Uses the Axes enumeration for easy identification.
      */
-    Axes axis;
+    Axes axisId;
 
     /**
      * @brief Velocity used during the homing process.

@@ -62,8 +62,8 @@ struct AxisGroup
 
         for (const auto& axis : axes)
         {
-            bool isCurrentlyActive   = activeSwitches & (1 << axis->axis);            // Current state (use axis enum val to check bit position)
-            bool wasPreviouslyActive = groupPreviousSwitchStatus & (1 << axis->axis); // Previous state
+            bool isCurrentlyActive   = activeSwitches & (1 << axis->axisId);            // Current state (use axis enum val to check bit position)
+            bool wasPreviouslyActive = groupPreviousSwitchStatus & (1 << axis->axisId); // Previous state
             if (!axis->isHomingDone)
             {
                 homeAxisCallback(isCurrentlyActive, wasPreviouslyActive, *axis);
