@@ -1,7 +1,10 @@
 #include "ProgramLoader.h"
+#include "DebugLog.h"
 #include "Setup.h"
 #include "Utils.h"
 #include <map>
+
+#define LOG(level, msg) DebugLog::log(level, msg)
 
 using namespace CommunicationProtocoll;
 
@@ -21,7 +24,7 @@ void ProgramLoader::handleCommand(const ProcessedData& processedDta)
 {
     if (processedDta.cmdId == NOP) // replace with other cmd
     {
-        Serial.println("Warning: No operation command! No execution.");
+        LOG(LOG_WARN, "No operation command! No execution.");
         return;
     }
 
@@ -99,14 +102,14 @@ void ProgramLoader::_loadProgram(const uint8_t program)
     auto it = programMap.find(program);
     if (it == programMap.end())
     {
-        Serial.println("Unknown program!");
+        LOG(LOG_ERROR, "Unknown program.");
 
         return;
     }
 
     if (_currentProgramState == it->second)
     {
-        Serial.println("Reloaded program!");
+        LOG(LOG_INFO, "Reloaded program.");
     }
     else
     {
@@ -120,7 +123,7 @@ void ProgramLoader::_loadProgram(const uint8_t program)
             _executionState = EXEC_IDLE; // Set to idle for other programs
         }
 
-        Serial.println("Loaded program!");
+        LOG(LOG_INFO, "Loaded program.");
     }
 }
 
@@ -128,13 +131,13 @@ void ProgramLoader::_start()
 {
     if (_currentProgramState == IDLE)
     {
-        Serial.println("No program loaded.");
+        LOG(LOG_WARN, "No program loaded.");
         return;
     }
 
     if (_executionState == EXEC_RUNNING)
     {
-        Serial.println("Program already running.");
+        LOG(LOG_INFO, "Program already running.");
         return;
     }
     _executionState = EXEC_RUNNING;
@@ -241,7 +244,7 @@ void ProgramLoader::_home()
     {
         _executionState = EXEC_IDLE;
         _setState(IDLE);
-        Serial.println("Homing already done, skipping.");
+        LOG(LOG_INFO, "Homing already done, skipping.");
     }
 }
 
@@ -263,7 +266,7 @@ void ProgramLoader::_main()
         currJogState = IDLE_JOG;
         if (!warningShown)
         {
-            Serial.println("Arm not homed - home first");
+            LOG(LOG_WARN, "Arm not homed - home first");
             warningShown = true;
         }
     }

@@ -1,6 +1,9 @@
 #include "CommandDispatcher.h"
 #include "ComProtocoll.h"
+#include "DebugLog.h"
 #include "Setup.h"
+
+#define LOG(level, msg) DebugLog::log(level, msg)
 
 using namespace CommunicationProtocoll;
 
@@ -26,7 +29,7 @@ void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& a
 {
     if (cmd == "" || args.empty())
     {
-        Serial.println("Error: no command or no arguments");
+        LOG(LOG_ERROR, "No command or no arguments");
         return;
     }
 
@@ -41,6 +44,7 @@ void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& a
     }
     else
     {
-        Serial.println("Error: Unknown command or command invalide! Correct format <$cmd,[arg, arg, ...]>" + cmd);
+        String debugMsg = "Unknown command or command invalide! Correct format <$cmd,[arg, arg, ...]>" + cmd;
+        LOG(LOG_ERROR, debugMsg);
     }
 }

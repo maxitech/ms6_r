@@ -1,5 +1,8 @@
 #include "JogController.h"
+#include "DebugLog.h"
 #include "Setup.h"
+
+#define LOG(level, msg) DebugLog::log(level, msg)
 
 JogController::JogController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender)
     : _motorConfigs(motorConfigs)
@@ -21,7 +24,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
     if (jogSpeedsValid.size() > _motorConfigs.size())
     {
-        Serial.println("Error: jogSpeeds vector too large");
+        LOG(LOG_ERROR, "Error: jogSpeeds vector too large.");
         return;
     }
 
@@ -48,13 +51,15 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
     {
         if (index >= static_cast<int>(_motorConfigs.size()) || index < 0)
         {
-            Serial.println("Error: Invalid motor index: " + String(index));
+            String debugMsg = "Invalid motor index: " + String(index) + ".";
+            LOG(LOG_ERROR, debugMsg);
             return;
         }
 
         if (index >= static_cast<int>(_jogFlags.size()))
         {
-            Serial.println("Error: jogFlags index out of bounds: " + String(index));
+            String debugMsg = "'jogFlags' index out of bounds: " + String(index) + ".";
+            LOG(LOG_ERROR, debugMsg);
             return;
         }
 
@@ -86,13 +91,14 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
         if (index < 0 || index >= static_cast<int>(_motorConfigs.size()))
         {
-            Serial.println("Error: Invalid index for JOG_START");
+            LOG(LOG_ERROR, "Invalid index for 'JOG_START'.");
             return;
         }
 
         if (jogFlags->limitReached && direction == jogFlags->blockedDir && !jogFlags->runOnce)
         {
-            Serial.println("Cannot jog in " + direction + " direction - limit reached");
+            String debugMsg = "Cannot jog in '" + direction + "' direction - limit reached.";
+            LOG(LOG_INFO, debugMsg);
             jogFlags->runOnce = true;
             return;
         }
@@ -111,12 +117,12 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
             if (direction != "POS" && direction != "NEG")
             {
-                Serial.println("Invalid direction string: " + direction);
+                String debugMsg = "Invalid direction string: '" + direction + "'.";
+                LOG(LOG_ERROR, debugMsg);
                 return;
             }
 
             int dirVel = jogSpeedsValid[index];
-            Serial.println(dirVel);
             _motorConfigs[index]->motor->rotateAsync(dirVel);
         }
         else if (currJogState == JOGGING && !jogFlags->limitReached)
@@ -125,7 +131,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
             if (index >= static_cast<int>(jointAngles.size()))
             {
-                Serial.println("Error: Joint angles index out of bounds");
+                LOG(LOG_ERROR, "Joint angles index out of bounds.");
                 return;
             }
 
@@ -165,7 +171,8 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
         }
         else if (_activeIndex != -1)
         {
-            Serial.println("Warning: Resetting invalid _activeIndex: " + String(_activeIndex));
+            String debugMsg = "Resetting invalid _activeIndex: '" + String(_activeIndex) + "'.";
+            LOG(LOG_WARN, debugMsg);
             _activeIndex = -1;
             currJogState = IDLE_JOG;
         }
@@ -173,7 +180,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
     case JOG_UNKNOWN:
     default:
-        Serial.println("Unknown JOG state.");
+        LOG(LOG_ERROR, "Unknown JOG state.");
         break;
     }
 }
@@ -182,7 +189,9 @@ String JogController::_getDir(std::vector<int32_t>& jogSpeedsValid, int index)
 {
     if (index < 0 || index >= static_cast<int>(jogSpeedsValid.size()))
     {
-        Serial.println("Error: Invalid index in _getDir: " + String(index));
+        String debugMsg = "Invalid index in '_getDir': '" + String(index) + "'.";
+        LOG(LOG_ERROR, debugMsg);
+
         return "";
     }
 

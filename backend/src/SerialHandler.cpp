@@ -1,6 +1,9 @@
 #include "SerialHandler.h"
 #include "CommandProcessor.h"
+#include "DebugLog.h"
 #include "Utils.h"
+
+#define LOG(level, msg) DebugLog::log(level, msg)
 
 using namespace CommunicationProtocoll;
 
@@ -128,7 +131,7 @@ void SerialHandler::_readSerialInput()
                 }
                 else
                 {
-                    Serial.println("Invalid packet - discarding");
+                    LOG(LOG_ERROR, "Invalid packet - discarding");
                 }
 
                 // reset for next packet
@@ -139,7 +142,7 @@ void SerialHandler::_readSerialInput()
             break;
 
         default:
-            Serial.println("Unexpected error in 'SerialHandler.cpp'");
+            LOG(LOG_ERROR, "Unexpected error in 'SerialHandler.cpp'");
             state = WAIT_FOR_START;
             index = 0;
             break;
@@ -150,7 +153,7 @@ void SerialHandler::_readSerialInput()
     // reset the parser state to avoid getting stuck due to an incomplete packet.
     if (state != WAIT_FOR_START && (millis() - lastByteTime) > BYTE_TIMEOUT_MS)
     {
-        Serial.println("Packet timeout - resetting parser");
+        LOG(LOG_WARN, "Packet timeout - resetting parser");
         state = WAIT_FOR_START;
         index = 0;
     }
@@ -166,7 +169,7 @@ bool SerialHandler::_validateCRCAndEnd(std::array<uint8_t, MAX_PACKAGE_SIZE>& bu
     // Check if enough bytes
     if (totalLength < endPos + 2)
     {
-        Serial.println("Not enough bytes received");
+        LOG(LOG_ERROR, "Not enough bytes received");
         return false;
     }
 
@@ -204,7 +207,7 @@ void SerialHandler::_forwardInput(const std::array<uint8_t, SerialHandler::MAX_P
     }
     else
     {
-        Serial.println("Error: No CommandProcessor set. Please set one using setCommandProcessor() in Setup.cpp");
+        LOG(LOG_ERROR, "No CommandProcessor set. Please set one using setCommandProcessor() in Setup.cpp");
     }
 }
 
@@ -244,7 +247,7 @@ bool SerialHandler::_readStringInput(const char startByte)
                 }
                 else
                 {
-                    Serial.println("Error: No CommandProcessor set. Please set one using setCommandProcessor() in Setup.cpp");
+                    LOG(LOG_ERROR, "No CommandProcessor set. Please set one using setCommandProcessor() in Setup.cpp");
                 }
                 strIndex = 0;
                 return true;
@@ -255,7 +258,7 @@ bool SerialHandler::_readStringInput(const char startByte)
             // Buffer overflow
             receiving = false;
             strIndex  = 0;
-            Serial.println("Error: Serial message too long");
+            LOG(LOG_ERROR, "Error: Serial message too long");
             return true;
         }
     }

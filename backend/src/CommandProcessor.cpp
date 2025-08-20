@@ -1,6 +1,9 @@
 #include "CommandProcessor.h"
 #include "ComProtocoll.h"
+#include "DebugLog.h"
 #include "Utils.h"
+
+#define LOG(level, msg) DebugLog::log(level, msg)
 
 using namespace CommunicationProtocoll;
 
@@ -65,7 +68,7 @@ void CommandProcessor::processBinaryInput(const std::vector<uint8_t>& packet, ui
 
     if (!_processedData.is_requestTelemetry.has_value())
     {
-        Serial.println("Warning: Invalid telemetry flag received");
+        LOG(LOG_WARN, "Invalid telemetry flag received");
         return;
     }
 
@@ -97,7 +100,7 @@ void CommandProcessor::processStringInput(const String& input)
 {
     if (!_isInputValid(input))
     {
-        Serial.println("Input is invalid. Expected input: $<cmd_pt1, cmd_pt2, etc.>*<checksum>#");
+        LOG(LOG_ERROR, "Input is invalid. Expected input: $<cmd_pt1, cmd_pt2, etc.>*<checksum>#");
         return;
     }
 
@@ -107,7 +110,7 @@ void CommandProcessor::processStringInput(const String& input)
 
     if (!_validateChecksum(data, checksum))
     {
-        Serial.println("Input processing failed: Checksum validation error.");
+        LOG(LOG_ERROR, "Input processing failed: Checksum validation error.");
         return;
     }
 
@@ -139,7 +142,8 @@ bool CommandProcessor::_validateChecksum(const String& data, const String& check
 
     if (calculatedChecksum != checksum)
     {
-        Serial.println("Checksum Error. Expected: " + checksum + ", Calculated: " + calculatedChecksum);
+        String debugMsg = "Checksum Error. Expected: " + checksum + ", Calculated: " + calculatedChecksum;
+        LOG(LOG_ERROR, debugMsg);
         return false;
     }
 
@@ -167,7 +171,7 @@ std::pair<String, std::vector<String>> CommandProcessor::_splitString(const Stri
 
     if (!paramStr.startsWith("[") || !paramStr.endsWith("]"))
     {
-        Serial.println("Error: Command invalid! Correct format <cmd,[arg, arg, ...]>");
+        LOG(LOG_ERROR, "Command invalid! Correct format <cmd,[arg, arg, ...]>");
         return {str, tokens};
     }
 

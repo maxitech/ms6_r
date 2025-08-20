@@ -1,5 +1,8 @@
 #include "Homing.h"
+#include "DebugLog.h"
 #include "Utils.h"
+
+#define LOG(level, msg) DebugLog::log(level, msg)
 
 Homing::Homing(const std::array<byte, 6>& limitSwitches)
     : _limitSwitches(limitSwitches) {};
@@ -9,7 +12,7 @@ void Homing::addGroup(std::unique_ptr<AxisGroup> group)
     if (_axisGroups.size() < 6)
         _axisGroups.push_back(std::move(group));
     else
-        Serial.println("Error: Cannot add more than 6 groups!");
+        LOG(LOG_ERROR, "Cannot add more than 6 groups.");
 }
 
 void Homing::executeHoming()

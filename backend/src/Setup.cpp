@@ -1,4 +1,8 @@
 #include "Setup.h"
+#include "DebugLog.h"
+
+#define LOG(level, msg) DebugLog::log(level, msg)
+
 using namespace TS4;
 
 Setup& Setup::getInstance()
@@ -24,7 +28,7 @@ void Setup::_validateJson()
     DeserializationError error = deserializeJson(_jsonDoc, _jsonStr);
     if (error)
     {
-        Serial.println("Error: JSON Deserialization failed!");
+        LOG(LOG_ERROR, "JSON Deserialization failed.");
         _valid = false;
     }
     else
@@ -37,7 +41,7 @@ std::array<DHparam, Utils::NUM_DOF> Setup::_extractDHParams()
 {
     if (!_valid)
     {
-        Serial.println("Error: JSON invalid, cannot parse DH params.");
+        LOG(LOG_ERROR, "Error: JSON invalid, cannot parse DH params.");
         return {};
     }
 
@@ -79,7 +83,7 @@ std::array<int, Utils::NUM_DOF> Setup::_extractHomingParams()
 {
     if (!_valid)
     {
-        Serial.println("Error: JSON invalid, cannot parse homing params.");
+        LOG(LOG_ERROR, "JSON invalid, cannot parse homing params.");
         return {};
     }
 
@@ -100,7 +104,8 @@ std::array<int, Utils::NUM_DOF> Setup::_extractHomingParams()
 
         if (!home_pos)
         {
-            Serial.println(("Error: missing field in " + String(motor.c_str())));
+            String debugMsg = "Missing field in '" + String(motor.c_str()) + "'.";
+            LOG(LOG_ERROR, debugMsg);
             return {};
         }
 
@@ -113,7 +118,7 @@ std::array<MotionProfile, Utils::NUM_DOF> Setup::_extractMotionProfiles()
 {
     if (!_valid)
     {
-        Serial.println("Error: JSON invalid, cannot parse motionProfile params.");
+        LOG(LOG_ERROR, "JSON invalid, cannot parse motionProfile params.");
         return {};
     }
 
@@ -135,7 +140,8 @@ std::array<MotionProfile, Utils::NUM_DOF> Setup::_extractMotionProfiles()
 
         if (!max_speed || !acc)
         {
-            Serial.println(("Error: missing field in " + String(motor.c_str())));
+            String debugMsg = "Missing field in '" + String(motor.c_str()) + "'.";
+            LOG(LOG_ERROR, debugMsg);
             return {};
         }
 
@@ -152,7 +158,8 @@ bool Setup::_checkExists(const JsonObjectConst& obj, const char* name)
 {
     if (obj.isNull())
     {
-        Serial.println(("Error: missing object: " + String(name)));
+        String debugMsg = "Missing object: '" + String(name) + "'.";
+        LOG(LOG_ERROR, debugMsg);
         return false;
     }
     return true;
@@ -162,7 +169,8 @@ bool Setup::_checkFields(const char* f1, const char* f2, const char* f3, const c
 {
     if (!f1 || !f2 || !f3 || !f4)
     {
-        Serial.println(("Error: missing field in " + String(context)));
+        String debugMsg = "Missing field in '" + String(context) + "'.";
+        LOG(LOG_ERROR, debugMsg);
         return false;
     }
     return true;
@@ -226,7 +234,7 @@ void Setup::_updateKinematics()
     Kinematics* newKin = new Kinematics(_motorConfigs, _dhParams);
     if (!newKin)
     {
-        Serial.println("Error: Failed to allocate Kinematics");
+        LOG(LOG_ERROR, "Failed to allocate Kinematics.");
         return;
     }
     delete _kin;
@@ -244,7 +252,7 @@ void Setup::_updateAxisData()
 
     if (!newAxis1 || !newAxis2 || !newAxis3 || !newAxis4 || !newAxis5 || !newAxis6)
     {
-        Serial.println("Error: Failed to allocate AxisData");
+        LOG(LOG_ERROR, "Failed to allocate AxisData.");
         delete newAxis1;
         delete newAxis2;
         delete newAxis3;
