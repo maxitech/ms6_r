@@ -24,7 +24,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
     if (jogSpeedsValid.size() > _motorConfigs.size())
     {
-        LOG(LOG_ERROR, "Error: jogSpeeds vector too large.");
+        LOG(LOG_ERROR, "Vector 'jogSpeeds' too large.");
         return;
     }
 
@@ -171,8 +171,6 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
         }
         else if (_activeIndex != -1)
         {
-            String debugMsg = "Resetting invalid _activeIndex: '" + String(_activeIndex) + "'.";
-            LOG(LOG_WARN, debugMsg);
             _activeIndex = -1;
             currJogState = IDLE_JOG;
         }
