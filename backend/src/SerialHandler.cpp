@@ -258,7 +258,7 @@ bool SerialHandler::_readStringInput(const char startByte)
             // Buffer overflow
             receiving = false;
             strIndex  = 0;
-            LOG(LOG_ERROR, "Error: Serial message too long");
+            LOG(LOG_ERROR, "Serial message too long");
             return true;
         }
     }
