@@ -6,7 +6,7 @@
 #ifndef PROGRAMLOADER_H
 #define PROGRAMLOADER_H
 
-#include "ComProtocoll.h"
+#include "ComProtocol.h"
 #include "Homing.h"
 #include "JogCommand.h"
 #include "JogController.h"

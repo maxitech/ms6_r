@@ -7,7 +7,7 @@
 #ifndef COMMANDPROCESSOR_H
 #define COMMANDPROCESSOR_H
 
-#include "ComProtocoll.h"
+#include "ComProtocol.h"
 #include "CommandDispatcher.h"
 #include "ProcessedData.h"
 #include "SerialHandler.h"

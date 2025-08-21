@@ -9,7 +9,7 @@
 #define SERIAL_HANDLER_H
 
 #include "CRC16.h"
-#include "ComProtocoll.h"
+#include "ComProtocol.h"
 #include <Arduino.h>
 
 class CommandProcessor;

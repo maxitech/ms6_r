@@ -1,5 +1,5 @@
 #include "CommandDispatcher.h"
-#include "ComProtocoll.h"
+#include "ComProtocol.h"
 #include "DebugLog.h"
 #include "Setup.h"
 
