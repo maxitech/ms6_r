@@ -1,4 +1,5 @@
 #include "RobotDataSender.h"
+#include "ComProtocol.h"
 #include "PacketBuilder.h"
 #include "Setup.h"
 
@@ -9,8 +10,7 @@ RobotDataSender::RobotDataSender() {};
 void RobotDataSender::sendMotorPosInSteps(const std::vector<MotorConfig*>& motorCoinfigs)
 {
     uint8_t              cmdId = SYS_DATA_REQUEST;
-    std::vector<uint8_t> payload;
-    payload.insert(payload.begin(), cmdId);
+    std::vector<uint8_t> data;
 
     for (size_t i = 0; i < motorCoinfigs.size(); ++i)
     {
@@ -19,12 +19,13 @@ void RobotDataSender::sendMotorPosInSteps(const std::vector<MotorConfig*>& motor
         {
             pos = motorCoinfigs[i]->motor->getPosition();
         }
-        payload.push_back((pos >> 16) & 0xFF); // MSB
-        payload.push_back((pos >> 8) & 0xFF);
-        payload.push_back(pos & 0xFF); // LSB
+        data.push_back((pos >> 16) & 0xFF); // MSB
+        data.push_back((pos >> 8) & 0xFF);
+        data.push_back(pos & 0xFF); // LSB
     }
 
-    std::vector<uint8_t> packet = PacketBuilder::buildPacket(payload);
+    std::vector<uint8_t> payload = PacketBuilder::buildResponsePayload(cmdId, STATUS_OK, DATA_STEPS, data);
+    std::vector<uint8_t> packet  = PacketBuilder::buildPacket(payload);
 
     Serial.write(packet.data(), packet.size());
     Serial.flush();

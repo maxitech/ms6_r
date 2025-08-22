@@ -9,8 +9,8 @@ class PacketBuilder
 public:
     PacketBuilder();
     static std::vector<uint8_t> buildPacket(const std::vector<uint8_t>& payload);
-    static std::vector<uint8_t> buildResponsePayload(const uint8_t status, const uint8_t detail);
-    static std::vector<uint8_t> buildResponsePayload(const uint8_t status, const uint8_t detail, std::vector<uint8_t> data);
+    static std::vector<uint8_t> buildResponsePayload(const uint8_t cmdId, const uint8_t status, const uint8_t detail);
+    static std::vector<uint8_t> buildResponsePayload(const uint8_t cmdId, const uint8_t status, const uint8_t detail, std::vector<uint8_t> data);
 
 private:
     static std::vector<uint8_t> _uint16CrcToBytesLsb(uint16_t value);

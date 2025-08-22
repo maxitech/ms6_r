@@ -41,19 +41,21 @@ std::vector<uint8_t> PacketBuilder::buildPacket(const std::vector<uint8_t>& payl
     return packet;
 }
 
-std::vector<uint8_t> PacketBuilder::buildResponsePayload(const uint8_t status, const uint8_t detail)
+std::vector<uint8_t> PacketBuilder::buildResponsePayload(const uint8_t cmdId, const uint8_t status, const uint8_t detail)
 {
     std::vector<uint8_t> responsePayload;
-    responsePayload.insert(responsePayload.begin(), status);
+    responsePayload.insert(responsePayload.begin(), cmdId);
+    responsePayload.insert(responsePayload.end(), status);
     responsePayload.insert(responsePayload.end(), detail);
 
     return responsePayload;
 }
 
-std::vector<uint8_t> PacketBuilder::buildResponsePayload(const uint8_t status, const uint8_t detail, std::vector<uint8_t> data)
+std::vector<uint8_t> PacketBuilder::buildResponsePayload(const uint8_t cmdId, const uint8_t status, const uint8_t detail, std::vector<uint8_t> data)
 {
     std::vector<uint8_t> responsePayload;
-    responsePayload.insert(responsePayload.begin(), status);
+    responsePayload.insert(responsePayload.begin(), cmdId);
+    responsePayload.insert(responsePayload.end(), status);
     responsePayload.insert(responsePayload.end(), detail);
     responsePayload.insert(responsePayload.end(), data.begin(), data.end());
 
