@@ -2,7 +2,7 @@
 #define PACKETBUILDER_H
 
 #include "CRC16.h"
-#include "ComProtocoll.h"
+#include "ComProtocol.h"
 
 class PacketBuilder
 {
