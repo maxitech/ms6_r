@@ -1,7 +1,6 @@
 #ifndef ROBOTDATASENDER_H
 #define ROBOTDATASENDER_H
 
-#include "ComProtocol.h"
 #include "MotorConfig.h"
 #include <Arduino.h>
 
