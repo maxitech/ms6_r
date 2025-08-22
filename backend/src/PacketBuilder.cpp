@@ -8,7 +8,7 @@ PacketBuilder::PacketBuilder()
 {
 }
 
-std::vector<uint8_t> PacketBuilder::buildPacket(uint8_t cmdId, const std::vector<uint8_t>& payload)
+std::vector<uint8_t> PacketBuilder::buildPacket(const std::vector<uint8_t>& payload)
 {
     std::vector<uint8_t> packet;
 
@@ -18,10 +18,9 @@ std::vector<uint8_t> PacketBuilder::buildPacket(uint8_t cmdId, const std::vector
         packet.push_back(b);
     }
 
-    uint8_t payloadLen = static_cast<uint8_t>(1 + payload.size()); // 1 for cmdId
+    uint8_t payloadLen = static_cast<uint8_t>(payload.size());
     packet.push_back(payloadLen);
 
-    packet.push_back(cmdId);
     packet.insert(packet.end(), payload.begin(), payload.end());
 
     // Calc crc over payload incl. cmdId

@@ -8,7 +8,7 @@ class PacketBuilder
 {
 public:
     PacketBuilder();
-    static std::vector<uint8_t> buildPacket(uint8_t cmdId, const std::vector<uint8_t>& payload);
+    static std::vector<uint8_t> buildPacket(const std::vector<uint8_t>& payload);
 
 private:
     static std::vector<uint8_t> _uint16CrcToBytesLsb(uint16_t value);

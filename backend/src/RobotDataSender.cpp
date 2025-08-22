@@ -10,6 +10,7 @@ void RobotDataSender::sendMotorPosInSteps(const std::vector<MotorConfig*>& motor
 {
     uint8_t              cmdId = SYS_DATA_REQUEST;
     std::vector<uint8_t> payload;
+    payload.insert(payload.begin(), cmdId);
 
     for (size_t i = 0; i < motorCoinfigs.size(); ++i)
     {
@@ -23,7 +24,7 @@ void RobotDataSender::sendMotorPosInSteps(const std::vector<MotorConfig*>& motor
         payload.push_back(pos & 0xFF); // LSB
     }
 
-    std::vector<uint8_t> packet = PacketBuilder::buildPacket(cmdId, payload);
+    std::vector<uint8_t> packet = PacketBuilder::buildPacket(payload);
 
     Serial.write(packet.data(), packet.size());
     Serial.flush();
