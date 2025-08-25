@@ -22,16 +22,15 @@ ProgramLoader::~ProgramLoader()
 
 void ProgramLoader::handleCommand(const ProcessedData& processedDta)
 {
-    if (processedDta.cmdId == NOP) // replace with other cmd
+    if (processedDta.cmdId == NOP)
     {
         Utils::createAndSendPacket(processedDta.cmdId, STATUS_OK, WARN_NOP_IGNORED);
         LOG(LOG_WARN, "No operation command! No execution.");
         return;
     }
 
-    _processedDta            = processedDta;
-    _cmdId                   = processedDta.cmdId;
-    const bool isReqTelemety = processedDta.is_requestTelemetry.value();
+    _processedDta = processedDta;
+    _cmdId        = processedDta.cmdId;
 
     // Optional payload data
     std::optional<uint8_t> program;

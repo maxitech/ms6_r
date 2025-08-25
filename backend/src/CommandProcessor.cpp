@@ -52,27 +52,29 @@ void CommandProcessor::processBinaryInput(const std::vector<uint8_t>& packet, ui
     }
     size_t               fixPlLenByte = 1;
     std::vector<uint8_t> fixedPayload(payload.begin() + (payloadLen - fixPlLenByte) - fixedPayloadLen, payload.end() - 1);
-    uint8_t              telemetryByte = fixedPayload[0];
-    if (telemetryByte == 0x01)
-    {
-        _processedData.is_requestTelemetry = true;
-    }
-    else if (telemetryByte == 0x00)
-    {
-        _processedData.is_requestTelemetry = false;
-    }
-    else
-    {
-        _processedData.is_requestTelemetry = std::nullopt;
-    }
 
-    if (!_processedData.is_requestTelemetry.has_value())
-    {
-        Utils::createAndSendPacket(cmdId, STATUS_ERROR, ERR_INVALID_TELEMETRY_FLAG);
-        // Debug log
-        LOG(LOG_WARN, "Invalid telemetry flag received");
-        return;
-    }
+    // ? Code not used atm.
+    // uint8_t              telemetryByte = fixedPayload[0];
+    // if (telemetryByte == 0x01)
+    // {
+    //     _processedData.is_requestTelemetry = true;
+    // }
+    // else if (telemetryByte == 0x00)
+    // {
+    //     _processedData.is_requestTelemetry = false;
+    // }
+    // else
+    // {
+    //     _processedData.is_requestTelemetry = std::nullopt;
+    // }
+
+    // if (!_processedData.is_requestTelemetry.has_value())
+    // {
+    //     Utils::createAndSendPacket(cmdId, STATUS_ERROR, ERR_INVALID_TELEMETRY_FLAG);
+    //     // Debug log
+    //     LOG(LOG_WARN, "Invalid telemetry flag received");
+    //     return;
+    // }
 
     // forward processed data struct to
     _dispatcher.dispatch(_processedData);
