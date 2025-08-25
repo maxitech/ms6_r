@@ -126,7 +126,7 @@ void ProgramLoader::_loadProgram(const uint8_t program)
             _executionState = EXEC_IDLE; // Set to idle for other programs
         }
 
-        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_RELOADED_PROGRAM);
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_LOADED_PROGRAM);
         LOG(LOG_INFO, "Loaded program.");
     }
 }
