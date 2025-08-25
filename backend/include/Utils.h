@@ -37,6 +37,9 @@ public:
     static bool nonBlockingDelay(unsigned long interval, unsigned long& lastUpdateTime);
 
     constexpr static size_t NUM_DOF = 6; ///< Number of axes/joints/motors.
+
+    static void createAndSendPacket(const uint8_t cmdId, const uint8_t status, const uint8_t detail);
+    static void createAndSendPacket(const uint8_t cmdId, const uint8_t status, const uint8_t detail, std::vector<uint8_t> data);
 };
 
 #endif // UTILS_H
