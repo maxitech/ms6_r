@@ -173,9 +173,6 @@ void ProgramLoader::run()
     case PING:
         _executePing();
         break;
-    case PONG:
-        _executePong();
-        break;
     case TEST_SWITCHES:
         _testSwitches();
         break;
@@ -209,15 +206,6 @@ void ProgramLoader::_executePing()
     if (Utils::nonBlockingDelay(1000, lastPingTime))
     {
         Utils::createAndSendPacket(NOP, STATUS_OK, DATA_NONE);
-    }
-}
-
-void ProgramLoader::_executePong()
-{
-    static unsigned long lastPongTime = 0;
-    if (Utils::nonBlockingDelay(1000, lastPongTime))
-    {
-        Serial.println("PING");
     }
 }
 

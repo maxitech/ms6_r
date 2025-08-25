@@ -110,12 +110,6 @@ private:
     void _executePing();
 
     /**
-     * @brief Sends "PING" every second (part of the PONG program).
-     * @internal
-     */
-    void _executePong();
-
-    /**
      * @brief Executes the TEST_SWITCHES program, triggering limit switch checks.
      * @internal
      */
