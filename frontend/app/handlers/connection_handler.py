@@ -5,6 +5,7 @@ from app.core.shared.shared_data import shared_data
 from app.utils.helper import Helper
 from app.constants.com_protocol import CMD_IDLE, NOP
 from app.core.packet_builder import PacketBuilder
+from app.core.packet_processor import PacketProcessor
 
 
 class ConnectionHandler:
@@ -15,6 +16,7 @@ class ConnectionHandler:
         self._ui_manager = ui_manager
         self._helper = Helper()
         self._pb = PacketBuilder()
+        self._pp = PacketProcessor()
         self._current_ports: List[str] = []
         shared_data.subscribe("new_steps", self._update_ui)
 
