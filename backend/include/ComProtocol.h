@@ -76,10 +76,11 @@ namespace CommunicationProtocoll
     static constexpr uint8_t ERR_INVALID_TELEMETRY_FLAG = 0x67;
     static constexpr uint8_t ERR_UNKNOWN_PROGRAM        = 0x68;
 
-    static constexpr uint8_t ERR_INDEX_OOB   = 0x69;
-    static constexpr uint8_t ERR_INVALID_DIR = 0x6A;
-    static constexpr uint8_t ERR_JSON_PARSE  = 0x6B;
-    static constexpr uint8_t ERR_ALLOC_FAIL  = 0x6C;
+    static constexpr uint8_t ERR_INDEX_OOB     = 0x69;
+    static constexpr uint8_t ERR_INVALID_DIR   = 0x6A;
+    static constexpr uint8_t ERR_JSON_PARSE    = 0x6B;
+    static constexpr uint8_t ERR_ALLOC_FAIL    = 0x6C;
+    static constexpr uint8_t ERR_MISSING_FIELD = 0x6D;
 
     static constexpr std::array<uint8_t, NUM_CMDS>
         CMD_IDS {CMD_JOG, CMD_MOVE_TO_POS, CMD_LOAD, CMD_START, CMD_STOP, CMD_IDLE};
