@@ -2,7 +2,11 @@
 
 using namespace CommunicationProtocoll;
 
-CRC16 PacketBuilder::_crc;
+CRC16 PacketBuilder::_crc(CRC16_MODBUS_POLYNOME,
+                          CRC16_MODBUS_INITIAL,
+                          CRC16_MODBUS_XOR_OUT,
+                          CRC16_MODBUS_REV_IN,
+                          CRC16_MODBUS_REV_OUT);
 
 PacketBuilder::PacketBuilder()
 {
