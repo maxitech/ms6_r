@@ -68,6 +68,8 @@ void CommandProcessor::processBinaryInput(const std::vector<uint8_t>& packet, ui
 
     if (!_processedData.is_requestTelemetry.has_value())
     {
+        Utils::createAndSendPacket(cmdId, STATUS_ERROR, ERR_INVALID_TELEMETRY_FLAG);
+        // Debug log
         LOG(LOG_WARN, "Invalid telemetry flag received");
         return;
     }
@@ -100,6 +102,8 @@ void CommandProcessor::processStringInput(const String& input)
 {
     if (!_isInputValid(input))
     {
+        Utils::createAndSendPacket(CMD_SETUP, STATUS_ERROR, ERR_INVALID_PACKET);
+        // Debug log
         LOG(LOG_ERROR, "Input is invalid. Expected input: $<cmd_pt1, cmd_pt2, etc.>*<checksum>#");
         return;
     }
@@ -110,6 +114,8 @@ void CommandProcessor::processStringInput(const String& input)
 
     if (!_validateChecksum(data, checksum))
     {
+        Utils::createAndSendPacket(CMD_SETUP, STATUS_ERROR, ERR_CHECKSUM);
+        // Debug log
         LOG(LOG_ERROR, "Input processing failed: Checksum validation error.");
         return;
     }
@@ -142,6 +148,9 @@ bool CommandProcessor::_validateChecksum(const String& data, const String& check
 
     if (calculatedChecksum != checksum)
     {
+
+        Utils::createAndSendPacket(CMD_SETUP, STATUS_ERROR, ERR_CHECKSUM);
+        // Debug log
         String debugMsg = "Checksum Error. Expected: " + checksum + ", Calculated: " + calculatedChecksum;
         LOG(LOG_ERROR, debugMsg);
         return false;
@@ -171,6 +180,8 @@ std::pair<String, std::vector<String>> CommandProcessor::_splitString(const Stri
 
     if (!paramStr.startsWith("[") || !paramStr.endsWith("]"))
     {
+        Utils::createAndSendPacket(CMD_SETUP, STATUS_ERROR, ERR_INVALID_PACKET);
+        // Debug log
         LOG(LOG_ERROR, "Command invalid! Correct format <cmd,[arg, arg, ...]>");
         return {str, tokens};
     }

@@ -1,6 +1,10 @@
 #include "JogController.h"
+#include "ComProtocol.h"
 #include "DebugLog.h"
 #include "Setup.h"
+#include "Utils.h"
+
+using namespace CommunicationProtocoll;
 
 #define LOG(level, msg) DebugLog::log(level, msg)
 
@@ -24,6 +28,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
     if (jogSpeedsValid.size() > _motorConfigs.size())
     {
+        Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INDEX_OOB);
         LOG(LOG_ERROR, "Vector 'jogSpeeds' too large.");
         return;
     }
@@ -51,6 +56,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
     {
         if (index >= static_cast<int>(_motorConfigs.size()) || index < 0)
         {
+            Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INDEX_OOB);
             String debugMsg = "Invalid motor index: " + String(index) + ".";
             LOG(LOG_ERROR, debugMsg);
             return;
@@ -58,6 +64,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
         if (index >= static_cast<int>(_jogFlags.size()))
         {
+            Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INDEX_OOB);
             String debugMsg = "'jogFlags' index out of bounds: " + String(index) + ".";
             LOG(LOG_ERROR, debugMsg);
             return;
@@ -91,12 +98,14 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
         if (index < 0 || index >= static_cast<int>(_motorConfigs.size()))
         {
+            Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INDEX_OOB);
             LOG(LOG_ERROR, "Invalid index for 'JOG_START'.");
             return;
         }
 
         if (jogFlags->limitReached && direction == jogFlags->blockedDir && !jogFlags->runOnce)
         {
+            Utils::createAndSendPacket(CMD_JOG, STATUS_OK, WARN_LIMIT_HIT);
             String debugMsg = "Cannot jog in '" + direction + "' direction - limit reached.";
             LOG(LOG_INFO, debugMsg);
             jogFlags->runOnce = true;
@@ -117,6 +126,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
             if (direction != "POS" && direction != "NEG")
             {
+                Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INVALID_DIR);
                 String debugMsg = "Invalid direction string: '" + direction + "'.";
                 LOG(LOG_ERROR, debugMsg);
                 return;
@@ -131,6 +141,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
             if (index >= static_cast<int>(jointAngles.size()))
             {
+                Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INDEX_OOB);
                 LOG(LOG_ERROR, "Joint angles index out of bounds.");
                 return;
             }
@@ -178,6 +189,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
 
     case JOG_UNKNOWN:
     default:
+        Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_UNKNOWN);
         LOG(LOG_ERROR, "Unknown JOG state.");
         break;
     }
@@ -187,6 +199,7 @@ String JogController::_getDir(std::vector<int32_t>& jogSpeedsValid, int index)
 {
     if (index < 0 || index >= static_cast<int>(jogSpeedsValid.size()))
     {
+        Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INDEX_OOB);
         String debugMsg = "Invalid index in '_getDir': '" + String(index) + "'.";
         LOG(LOG_ERROR, debugMsg);
 

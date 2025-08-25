@@ -1,6 +1,7 @@
 #include "SerialHandler.h"
 #include "CommandProcessor.h"
 #include "DebugLog.h"
+#include "PacketBuilder.h"
 #include "Utils.h"
 
 #define LOG(level, msg) DebugLog::log(level, msg)
@@ -93,6 +94,7 @@ void SerialHandler::_readSerialInput()
 
         case READ_PAYLOAD:
             buffer[index++] = byte;
+            _cmdId          = buffer[4];
             if (index >= 4 + static_cast<size_t>(payloadLength))
             {
                 state = READ_CRC;
@@ -131,6 +133,8 @@ void SerialHandler::_readSerialInput()
                 }
                 else
                 {
+                    Utils::createAndSendPacket(_cmdId, STATUS_ERROR, ERR_INVALID_PACKET);
+                    // Debug log
                     LOG(LOG_ERROR, "Invalid packet - discarding");
                 }
 
@@ -142,6 +146,8 @@ void SerialHandler::_readSerialInput()
             break;
 
         default:
+            Utils::createAndSendPacket(_cmdId, STATUS_ERROR, ERR_UNKNOWN);
+            // Debug log
             LOG(LOG_ERROR, "Unexpected error in 'SerialHandler.cpp'");
             state = WAIT_FOR_START;
             index = 0;
@@ -153,6 +159,8 @@ void SerialHandler::_readSerialInput()
     // reset the parser state to avoid getting stuck due to an incomplete packet.
     if (state != WAIT_FOR_START && (millis() - lastByteTime) > BYTE_TIMEOUT_MS)
     {
+        Utils::createAndSendPacket(_cmdId, STATUS_ERROR, ERR_TIMEOUT);
+        // Debug log
         LOG(LOG_WARN, "Packet timeout - resetting parser");
         state = WAIT_FOR_START;
         index = 0;
@@ -169,6 +177,8 @@ bool SerialHandler::_validateCRCAndEnd(std::array<uint8_t, MAX_PACKAGE_SIZE>& bu
     // Check if enough bytes
     if (totalLength < endPos + 2)
     {
+        Utils::createAndSendPacket(_cmdId, STATUS_ERROR, ERR_CHECKSUM);
+        // Debug log
         LOG(LOG_ERROR, "Not enough bytes received");
         return false;
     }
@@ -207,6 +217,8 @@ void SerialHandler::_forwardInput(const std::array<uint8_t, SerialHandler::MAX_P
     }
     else
     {
+        Utils::createAndSendPacket(_cmdId, STATUS_ERROR, ERR_NO_PROCESSOR);
+        // Debug log
         LOG(LOG_ERROR, "No CommandProcessor set. Please set one using setCommandProcessor() in Setup.cpp");
     }
 }
@@ -247,6 +259,8 @@ bool SerialHandler::_readStringInput(const char startByte)
                 }
                 else
                 {
+                    Utils::createAndSendPacket(_cmdId, STATUS_ERROR, ERR_NO_PROCESSOR);
+                    // Debug log
                     LOG(LOG_ERROR, "No CommandProcessor set. Please set one using setCommandProcessor() in Setup.cpp");
                 }
                 strIndex = 0;
@@ -258,6 +272,9 @@ bool SerialHandler::_readStringInput(const char startByte)
             // Buffer overflow
             receiving = false;
             strIndex  = 0;
+
+            Utils::createAndSendPacket(_cmdId, STATUS_ERROR, ERR_BUFFER_OVERFLOW);
+            // Debug log
             LOG(LOG_ERROR, "Serial message too long");
             return true;
         }

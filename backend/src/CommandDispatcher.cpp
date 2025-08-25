@@ -2,6 +2,7 @@
 #include "ComProtocol.h"
 #include "DebugLog.h"
 #include "Setup.h"
+#include "Utils.h"
 
 #define LOG(level, msg) DebugLog::log(level, msg)
 
@@ -29,6 +30,7 @@ void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& a
 {
     if (cmd == "" || args.empty())
     {
+        Utils::createAndSendPacket(CMD_SETUP, STATUS_ERROR, ERR_INVALID_PACKET);
         LOG(LOG_ERROR, "No command or no arguments");
         return;
     }
@@ -44,6 +46,7 @@ void CommandDispatcher::dispatch(const String& cmd, const std::vector<String>& a
     }
     else
     {
+        Utils::createAndSendPacket(CMD_SETUP, STATUS_ERROR, ERR_INVALID_CMD);
         String debugMsg = "Unknown command or command invalide! Correct format <$cmd,[arg, arg, ...]>" + cmd;
         LOG(LOG_ERROR, debugMsg);
     }

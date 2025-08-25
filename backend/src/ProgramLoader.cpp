@@ -24,6 +24,7 @@ void ProgramLoader::handleCommand(const ProcessedData& processedDta)
 {
     if (processedDta.cmdId == NOP) // replace with other cmd
     {
+        Utils::createAndSendPacket(processedDta.cmdId, STATUS_OK, WARN_NOP_IGNORED);
         LOG(LOG_WARN, "No operation command! No execution.");
         return;
     }
@@ -102,6 +103,7 @@ void ProgramLoader::_loadProgram(const uint8_t program)
     auto it = programMap.find(program);
     if (it == programMap.end())
     {
+        Utils::createAndSendPacket(_cmdId, STATUS_ERROR, ERR_UNKNOWN_PROGRAM);
         LOG(LOG_ERROR, "Unknown program.");
 
         return;
@@ -109,6 +111,7 @@ void ProgramLoader::_loadProgram(const uint8_t program)
 
     if (_currentProgramState == it->second)
     {
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_RELOADED_PROGRAM);
         LOG(LOG_INFO, "Reloaded program.");
     }
     else
@@ -123,6 +126,7 @@ void ProgramLoader::_loadProgram(const uint8_t program)
             _executionState = EXEC_IDLE; // Set to idle for other programs
         }
 
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_RELOADED_PROGRAM);
         LOG(LOG_INFO, "Loaded program.");
     }
 }
@@ -131,12 +135,14 @@ void ProgramLoader::_start()
 {
     if (_currentProgramState == IDLE)
     {
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, WARN_NO_PROGRAM_LOADED);
         LOG(LOG_WARN, "No program loaded.");
         return;
     }
 
     if (_executionState == EXEC_RUNNING)
     {
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_ALREADY_RUNNING);
         LOG(LOG_INFO, "Program already running.");
         return;
     }
@@ -233,7 +239,7 @@ void ProgramLoader::_home()
             // !!! Maybe reset homing state later
             uint8_t homedMask = _homingManager->getHomedMask();
             _rbtDtaSender.setHomedMask(homedMask);
-            _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
+            _rbtDtaSender.sendMotorPosInSteps(_motorConfigs); // ! set cmdId
 
             _executionState = EXEC_IDLE;
             _setState(IDLE);
@@ -244,6 +250,8 @@ void ProgramLoader::_home()
     {
         _executionState = EXEC_IDLE;
         _setState(IDLE);
+
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_HOMING_ALREADY_DONE);
         LOG(LOG_INFO, "Homing already done, skipping.");
     }
 }
@@ -266,6 +274,7 @@ void ProgramLoader::_main()
         currJogState = IDLE_JOG;
         if (!warningShown)
         {
+            Utils::createAndSendPacket(_cmdId, STATUS_OK, WARN_ARM_NOT_HOMED);
             LOG(LOG_WARN, "Arm not homed - home first");
             warningShown = true;
         }
