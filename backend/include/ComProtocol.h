@@ -16,8 +16,7 @@ namespace CommunicationProtocoll
     static constexpr uint8_t CMD_START = 0x01;
     static constexpr uint8_t CMD_STOP  = 0x02;
     static constexpr uint8_t CMD_IDLE  = 0x03;
-    // static constexpr uint8_t CMD_PAUSE  = 0x04;
-    // static constexpr uint8_t CMD_RESUME = 0x05;
+    static constexpr uint8_t CMD_SETUP = 0x04; // only used for errors while processing setup data
 
     // Movement 0x10 - 0x4F(Jog, MTP, MR, etc.)
     static constexpr uint8_t CMD_JOG         = 0x10;

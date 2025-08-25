@@ -10,8 +10,7 @@ NOP = 0x00  # no operation
 CMD_START = 0x01
 CMD_STOP = 0x02
 CMD_IDLE = 0x03
-# CMD_PAUSE = 0x04
-# CMD_RESUME = 0x05
+CMD_SETUP = 0x04  # only used for errors while processing setup data
 
 
 # Movement 0x10-0x4F(Jog,MTP,MR,etc.)
