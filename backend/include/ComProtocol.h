@@ -1,5 +1,5 @@
-#ifndef COMPROTOCOLL_H
-#define COMPROTOCOLL_H
+#ifndef COMPROTOCOL_H
+#define COMPROTOCOL_H
 #include <array>
 #include <cstdint>
 
@@ -84,4 +84,4 @@ namespace CommunicationProtocoll
     static constexpr std::array<uint8_t, NUM_CMDS>
         CMD_IDS {CMD_JOG, CMD_MOVE_TO_POS, CMD_LOAD, CMD_START, CMD_STOP, CMD_IDLE};
 }
-#endif // COMPROTOCOLL_H
+#endif // COMPROTOCOL_H
