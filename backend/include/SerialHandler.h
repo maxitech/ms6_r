@@ -67,7 +67,7 @@ private:
      * @brief Pointer to the CommandProcessor used for input handling.
      */
     CommandProcessor*       _commandProcessor = nullptr;
-    uint8_t                 _cmdId            = NOP;
+    uint8_t                 _cmdId            = CommunicationProtocoll::NOP;
     bool                    _validateCRCAndEnd(std::array<uint8_t, MAX_PACKAGE_SIZE>& buffer, size_t index, uint8_t payloadLength);
     CRC16                   _crc;
     static constexpr size_t MAX_MESSAGE_SIZE = 2048;
