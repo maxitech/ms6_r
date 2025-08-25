@@ -14,7 +14,7 @@ enum LogLevel
 
 // Enable/disable debug messages globally
 #ifndef DEBUG_ENABLED
-#define DEBUG_ENABLED 1 // 0 = disable, 1 = enable
+#define DEBUG_ENABLED 0 // 0 = disable, 1 = enable
 #endif
 
 class DebugLog
