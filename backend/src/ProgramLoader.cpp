@@ -102,7 +102,7 @@ void ProgramLoader::_loadProgram(const uint8_t program)
     auto it = programMap.find(program);
     if (it == programMap.end())
     {
-        Utils::createAndSendPacket(_cmdId, STATUS_ERROR, ERR_UNKNOWN_PROGRAM);
+        Utils::createAndSendPacket(_cmdId, STATUS_ERROR, ERR_UNKNOWN_PROGRAM, {program});
         LOG(LOG_ERROR, "Unknown program.");
 
         return;
@@ -110,7 +110,7 @@ void ProgramLoader::_loadProgram(const uint8_t program)
 
     if (_currentProgramState == it->second)
     {
-        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_RELOADED_PROGRAM);
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_RELOADED_PROGRAM, {program});
         LOG(LOG_INFO, "Reloaded program.");
     }
     else
@@ -125,7 +125,7 @@ void ProgramLoader::_loadProgram(const uint8_t program)
             _executionState = EXEC_IDLE; // Set to idle for other programs
         }
 
-        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_LOADED_PROGRAM);
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_LOADED_PROGRAM, {program});
         LOG(LOG_INFO, "Loaded program.");
     }
 }
