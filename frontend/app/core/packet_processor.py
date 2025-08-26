@@ -118,6 +118,14 @@ class PacketProcessor:
 
         return True
 
+    def _extract_steps(self, data: bytes):
+        values = []
+        for i in range(0, len(data), 3):
+            chunk = data[i : i + 3]
+            value = int.from_bytes(chunk, byteorder="big", signed=True)
+            values.append(value)
+        return values
+
     def _logErrorDetail(self, cmd_id: int, status: int, detail: int):
         print(f"Command ID: 0x{cmd_id:02X}")
         print(f"Status:     0x{status:02X}")
