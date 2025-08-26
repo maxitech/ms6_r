@@ -1,5 +1,6 @@
 import crcmod
 from app.constants.com_protocol import *
+from app.core.shared.shared_data import shared_data
 
 
 class PacketProcessor:
@@ -25,7 +26,7 @@ class PacketProcessor:
             case _ if self._status == STATUS_OK:
                 match self._detail:
                     case _ if self._detail == DATA_NONE:
-                        pass  # Aktion DATA_NONE
+                        print("[INFO] No data available.")
                     case _ if self._detail == DATA_STEPS:
                         steps = self._extract_steps(payload[3:])
                         shared_data.update_steps(steps)
@@ -37,6 +38,8 @@ class PacketProcessor:
                         print(f"[INFO] Program: 0x{payload[3]:02X} already running.")
                     case _ if self._detail == INFO_HOMING_ALREADY_DONE:
                         print("[INFO] Homing already done.")
+                    case _ if self._detail == INFO_PING:
+                        print("[INFO] Ping OK.")
                     case _ if self._detail == WARN_NOP_IGNORED:
                         print("[WARN] No operation ignored.")
                     case _ if self._detail == WARN_NO_PROGRAM_LOADED:
