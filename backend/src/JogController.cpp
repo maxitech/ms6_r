@@ -81,7 +81,7 @@ void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, Jog
         if (_activeIndex >= 0 && _activeIndex < static_cast<int>(_motorConfigs.size()))
         {
             static unsigned long lastSendTime = 0;
-            if (Utils::nonBlockingDelay(100, lastSendTime))
+            if (Utils::nonBlockingDelay(5, lastSendTime))
             {
                 _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
             }
