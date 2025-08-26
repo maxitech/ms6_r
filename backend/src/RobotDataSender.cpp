@@ -2,6 +2,7 @@
 #include "ComProtocol.h"
 #include "PacketBuilder.h"
 #include "Setup.h"
+#include "Utils.h"
 
 using namespace CommunicationProtocoll;
 
@@ -23,10 +24,5 @@ void RobotDataSender::sendMotorPosInSteps(const std::vector<MotorConfig*>& motor
         data.push_back((pos >> 8) & 0xFF);
         data.push_back(pos & 0xFF); // LSB
     }
-
-    std::vector<uint8_t> payload = PacketBuilder::buildResponsePayload(cmdId, STATUS_OK, DATA_STEPS, data);
-    std::vector<uint8_t> packet  = PacketBuilder::buildPacket(payload);
-
-    Serial.write(packet.data(), packet.size());
-    Serial.flush();
+    Utils::createAndSendPacket(cmdId, STATUS_OK, DATA_STEPS, data);
 }
