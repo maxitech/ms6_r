@@ -20,9 +20,7 @@ class MotionPlannerThread(QThread):
         print("MotionPlanner started!")
 
         while self._is_running:
-            if self._serial_port:
-                time.sleep(0.001)  # reduce cpu power
-            else:
+            if not self._serial_port:
                 self.stop()
 
     def stop(self):
