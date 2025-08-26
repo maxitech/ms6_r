@@ -27,7 +27,8 @@ class PacketProcessor:
                     case _ if self._detail == DATA_NONE:
                         pass  # Aktion DATA_NONE
                     case _ if self._detail == DATA_STEPS:
-                        pass  # Aktion DATA_STEPS
+                        steps = self._extract_steps(payload[3:])
+                        shared_data.update_steps(steps)
                     case _ if self._detail == INFO_LOADED_PROGRAM:
                         print(f"[INFO] Program: 0x{payload[3]:02X} loaded.")
                     case _ if self._detail == INFO_RELOADED_PROGRAM:
