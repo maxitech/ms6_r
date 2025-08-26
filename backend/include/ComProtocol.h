@@ -55,7 +55,7 @@ namespace CommunicationProtocoll
     static constexpr uint8_t INFO_RELOADED_PROGRAM    = 0x21;
     static constexpr uint8_t INFO_ALREADY_RUNNING     = 0x22;
     static constexpr uint8_t INFO_HOMING_ALREADY_DONE = 0x23;
-    // static constexpr uint8_t INFO_FINISHED            = 0x23;
+    static constexpr uint8_t INFO_PING                = 0x24;
 
     // Warn range: 0x40–0x5F
     static constexpr uint8_t WARN_NOP_IGNORED       = 0x40;
