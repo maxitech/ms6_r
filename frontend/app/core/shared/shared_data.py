@@ -10,7 +10,7 @@ class SharedData:
 
         self._data_out: bytes | None = None
         self._data_in: str | None = None
-        self._curr_steps: int | None = None
+        self._curr_steps: list[int] | None = None
 
         self._signals: Dict[str, list] = {
             "new_steps": [],
@@ -56,12 +56,12 @@ class SharedData:
         with self._lock:
             return self._data_in
 
-    def update_steps(self, steps: int):
+    def update_steps(self, steps: list[int]):
         with self._lock:
             self._curr_steps = steps
         self._emit_signal("new_steps", steps)
 
-    def get_steps(self) -> int | None:
+    def get_steps(self) -> list[int] | None:
         with self._lock:
             return self._curr_steps
 
