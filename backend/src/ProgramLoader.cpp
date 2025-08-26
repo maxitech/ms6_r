@@ -204,7 +204,7 @@ void ProgramLoader::_executePing()
     static unsigned long lastPingTime = 0;
     if (Utils::nonBlockingDelay(1000, lastPingTime))
     {
-        Utils::createAndSendPacket(NOP, STATUS_OK, DATA_NONE);
+        Utils::createAndSendPacket(NOP, STATUS_OK, INFO_PING);
     }
 }
 
