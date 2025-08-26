@@ -1,3 +1,6 @@
+# Important: This works only on Windows. On any other OS you need to use this cmd: pyside6-uic ui/main_window.ui -o ui_gen/main_window_ui.py
+
+
 import os
 import subprocess
 from watchdog.observers import Observer
