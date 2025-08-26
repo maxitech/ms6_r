@@ -28,59 +28,65 @@ class PacketProcessor:
                     case _ if self._detail == DATA_STEPS:
                         pass  # Aktion DATA_STEPS
                     case _ if self._detail == INFO_LOADED_PROGRAM:
-                        print("INFO_LOADED_PROGRAM")
-                        pass
+                        print(
+                            f"[INFO] Program: {payload[3].to_bytes(1, "big").hex()} loaded."
+                        )
                     case _ if self._detail == INFO_RELOADED_PROGRAM:
-                        print("INFO_RELOADED_PROGRAM")
-                        pass
+                        print(
+                            f"[INFO] Program: {payload[3].to_bytes(1, "big").hex()} reloaded."
+                        )
                     case _ if self._detail == INFO_ALREADY_RUNNING:
-                        pass
+                        print(
+                            f"[INFO] Program: {payload[3].to_bytes(1, "big").hex()} already running."
+                        )
                     case _ if self._detail == INFO_HOMING_ALREADY_DONE:
-                        pass
+                        print("[INFO] Homing already done.")
                     case _ if self._detail == WARN_NOP_IGNORED:
-                        pass
+                        print("[WARN] No operation ignored.")
                     case _ if self._detail == WARN_NO_PROGRAM_LOADED:
-                        pass
+                        print("[WARN] No program loaded.")
                     case _ if self._detail == WARN_LIMIT_HIT:
-                        pass
+                        print("[WARN] Limit reached.")
                     case _ if self._detail == WARN_ARM_NOT_HOMED:
-                        pass
+                        print("[WARN] Arm not homed.")
                     case _:
-                        pass  # Unbekannter STATUS_OK-Detail
+                        print("[ERROR] Unknown STATUS_OK detail")
             case _ if self._status == STATUS_ERROR:
                 match self._detail:
                     case _ if self._detail == ERR_UNKNOWN:
-                        pass
+                        print("[ERROR] Unknown error occurred.")
                     case _ if self._detail == ERR_INVALID_PACKET:
-                        pass
+                        print("[ERROR] Invalid packet received.")
                     case _ if self._detail == ERR_TIMEOUT:
-                        pass
+                        print("[ERROR] Operation timed out.")
                     case _ if self._detail == ERR_CHECKSUM:
-                        pass
+                        print("[ERROR] Checksum error.")
                     case _ if self._detail == ERR_NO_PROCESSOR:
-                        pass
+                        print("[ERROR] No processor available.")
                     case _ if self._detail == ERR_BUFFER_OVERFLOW:
-                        pass
+                        print("[ERROR] Buffer overflow.")
                     case _ if self._detail == ERR_INVALID_CMD:
-                        pass
+                        print("[ERROR] Invalid command.")
                     case _ if self._detail == ERR_INVALID_TELEMETRY_FLAG:
-                        pass
+                        print("[ERROR] Invalid telemetry flag.")
                     case _ if self._detail == ERR_UNKNOWN_PROGRAM:
-                        pass
+                        print(
+                            f"[ERROR] Program: {payload[3].to_bytes(1, "big").hex()} unknown."
+                        )
                     case _ if self._detail == ERR_INDEX_OOB:
-                        pass
+                        print("[ERROR] Index out of bounds.")
                     case _ if self._detail == ERR_INVALID_DIR:
-                        pass
+                        print("[ERROR] Invalid direction.")
                     case _ if self._detail == ERR_JSON_PARSE:
-                        pass
+                        print("[ERROR] JSON parse error.")
                     case _ if self._detail == ERR_ALLOC_FAIL:
-                        pass
+                        print("[ERROR] Allocation failed.")
                     case _ if self._detail == ERR_MISSING_FIELD:
-                        pass
+                        print("[ERROR] Missing field.")
                     case _:
-                        pass  # Unbekannter STATUS_ERROR-Detail
+                        print("[ERROR] Unknown STATUS_ERROR detail.")
             case _:
-                pass  # Ungültiger Status
+                print("[ERROR] Invalid status.")
 
     def _validate_packet(self, raw_data: bytes) -> bool:
         if list(raw_data[:3]) != START_BYTES:
