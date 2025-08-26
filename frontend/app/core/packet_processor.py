@@ -98,10 +98,6 @@ class PacketProcessor:
                 print("[ERROR] Invalid status.")
 
     def _validate_packet(self, raw_data: bytes) -> bool:
-        if list(raw_data[:3]) != START_BYTES:
-            print("Invalid start bytes!")
-            return False
-
         # Payload length
         pl_len = raw_data[3]
 
@@ -118,12 +114,6 @@ class PacketProcessor:
         crc_bytes: bytes = crc_value.to_bytes(2, byteorder="little")
         if crc_bytes != crc_bytes_received:
             print("Invalid CRC!")
-            return False
-
-        # End bytes
-        end_bytes = raw_data[crc_index + 2 :]
-        if list(end_bytes) != END_BYTES:
-            print("Invalid end bytes!")
             return False
 
         return True

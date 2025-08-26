@@ -3,9 +3,10 @@ from app.core.serial_connection import SerialConnection
 from typing import List
 from app.core.shared.shared_data import shared_data
 from app.utils.helper import Helper
-from app.constants.com_protocol import CMD_IDLE, NOP
+from app.constants.com_protocol import *
 from app.core.packet_builder import PacketBuilder
 from app.core.packet_processor import PacketProcessor
+from app.core.packet_parser import PacketParser
 
 
 class ConnectionHandler:
@@ -17,6 +18,7 @@ class ConnectionHandler:
         self._helper = Helper()
         self._pb = PacketBuilder()
         self._pp = PacketProcessor()
+        self._parser = PacketParser()
         self._current_ports: List[str] = []
         shared_data.subscribe("new_steps", self._update_ui)
 
@@ -103,11 +105,9 @@ class ConnectionHandler:
         )
 
     def _on_serial_data_received(self, raw_data: bytes):
-        # process data
-        # pass
-        print(raw_data.decode("utf-8").strip())
-        # if raw_data != shared_data.get_data_in():
-        # shared_data.set_data_in(raw_data)
+        packets: list[bytes] = self._parser.feed(raw_data)
+        for p in packets:
+            self._pp.process_packet(p)
 
         # Trigger UI update
         # shared_data
