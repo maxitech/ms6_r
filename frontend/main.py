@@ -130,11 +130,7 @@ class MainWindow(QMainWindow):
                 border:none;
             }}
 
-            QMenuBar::item:selected {{
-                background-color: {col_light_gray};
-            }}
-            
-            QMenuBar::item:pressed {{
+            QMenuBar::item:selected, QMenuBar::item:pressed {{
                 background-color: {col_light_gray};
             }}
 
