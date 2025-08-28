@@ -37,6 +37,8 @@ class MainWindow(QMainWindow):
         self._pb = PacketBuilder()
         # ----------------------
         self.setWindowTitle("MS6_R by Maximilian Stadlmeyer")
+        self.setMinimumSize(1200, 800)
+        self.setMaximumSize(1920, 1080)
         self.setGeometry(100, 100, 1400, 900)
 
         # Init components
