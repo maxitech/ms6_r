@@ -79,75 +79,19 @@ class MainWindow(QMainWindow):
                 font-size: 11px;
                 color: {col_text};
             }}
-
-            QPushButton {{
-                background-color: {bg_color};
-                border: 2px outset #c0c0c0;
-                padding: 4px 8px;
-                min-height: 20px;
-                font-weight: normal;
-            }}
-
-            QPushButton:pressed {{
-                border: 2px inset #c0c0c0;
-            }}
-
-            QPushButton:disabled {{
-                background-color: #808080;
-                color: #606060;
-                border: 2px outset #808080;
-            }}
-
-            QPushButton.emergency {{
-                background-color: #ff4444;
-                color: white;
-                font-weight: bold;
-                border: 2px outset #ff4444;
-            }}
-
-            QPushButton.emergency:pressed {{
-                background-color: #cc0000;
-                border: 2px inset #cc0000;
-            }}
-            
-            QPushButton.emergency:checked {{
-                background-color: #cc0000;
-                border: 2px inset #cc0000;
-            }}
             
             QFrame {{
-                border: 2px inset #c0c0c0;
-                background-color: #c0c0c0;
+                border: 1px solid {col_mid_gray};
+                background-color: {bg_color};
             }}
             
-            QGroupBox {{
-                border: 2px inset #c0c0c0;
-                font-weight: bold;
-                padding-top: 10px;
-                margin-top: 6px;
+            QFrame#left-panel QFrame {{
+                border: 2px solid {col_mid_gray};
             }}
-            
-            QGroupBox::title {{
-                subcontrol-origin: margin;
-                left: 10px;
-                padding: 0 5px 0 5px;
-            }}
-
-            QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox {{
-                border: 2px inset #c0c0c0;
-                background-color: white;
-                padding: 2px;
-            }}
-
-            QTextEdit, QPlainTextEdit {{
-                border: 2px inset #c0c0c0;
-                background-color: white;
-                font-family: 'Courier New', monospace;
-            }}
-
+    
             QMenuBar {{
                 background-color: {bg_color};
-                border-bottom: 2px solid {col_mid_gray};
+                border-bottom: 1px solid {col_mid_gray};
                 min-height: 24px;
                 spacing: 0;
             }}
@@ -159,24 +103,6 @@ class MainWindow(QMainWindow):
 
             QMenuBar::item:selected, QMenuBar::item:pressed {{
                 background-color: {col_light_gray};
-            }}
-
-            QStatusBar {{
-                background-color: #c0c0c0;
-                border-top: 1px solid #808080;
-            }}
-
-            .status-indicator {{
-                border: 2px inset #c0c0c0;
-                border-radius: 8px;
-            }}
-
-            .connected {{
-                background-color: #00ff00;
-            }}
-
-            .disconnected {{
-                background-color: #ff0000;
             }}
             """
         self.setStyleSheet(style)
@@ -304,27 +230,52 @@ class MainWindow(QMainWindow):
         grid.setContentsMargins(0, 0, 0, 0)
         grid.setSpacing(0)
 
-        left_panel = make_panel("LeftPanel")
-        left_panel.setFixedWidth(375)
-
-        editor_panel = make_panel("EditorPanel")
-        editor_panel.setFixedHeight(700)
-
-        right_panel = make_panel("RightPanel")
-        right_panel.setFixedWidth(375)
+        left_panel = self._create_left_panel()
+        editor_panel = self._create_editor_panel()
+        central_bottom = self._create_central_bottom_panel()
+        right_panel = self._create_right_panel()
+        bottom_bar = self._create_bottom_bar()
 
         grid.addWidget(left_panel, 0, 0, 2, 1)
         grid.addWidget(editor_panel, 0, 1, 1, 1)
-        grid.addWidget(right_panel, 0, 2, 2, 1)
-
-        central_bottom = make_panel("CentralBottom")
         grid.addWidget(central_bottom, 1, 1, 1, 1)
-
-        bottom_bar = make_panel("BottomBar")
-        bottom_bar.setFixedHeight(40)
+        grid.addWidget(right_panel, 0, 2, 2, 1)
         grid.addWidget(bottom_bar, 2, 0, 1, 3)
 
         self.setCentralWidget(main_widget)
+
+    def _create_left_panel(self):
+        left_panel = make_panel("left-panel")
+        left_panel.setFixedWidth(375)
+        left_layout = QVBoxLayout(left_panel)
+
+        con_panel = QFrame()
+        con_panel.setFixedHeight(280)
+
+        ctrl_panel = QFrame()
+
+        left_layout.addWidget(con_panel)
+        left_layout.addWidget(ctrl_panel)
+        return left_panel
+
+    def _create_right_panel(self):
+        right_panel = make_panel("right-panel")
+        right_panel.setFixedWidth(375)
+        return right_panel
+
+    def _create_editor_panel(self):
+        editor_panel = make_panel("editor-panel")
+        editor_panel.setFixedHeight(700)
+        return editor_panel
+
+    def _create_central_bottom_panel(self):
+        central_bottom = make_panel("CentralBottom")
+        return central_bottom
+
+    def _create_bottom_bar(self):
+        bottom_bar = make_panel("BottomBar")
+        bottom_bar.setFixedHeight(40)
+        return bottom_bar
 
     def closeEvent(self, event):
         print("Closing application...")
