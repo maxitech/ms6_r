@@ -149,6 +149,7 @@ class MainWindow(QMainWindow):
     def create_menu_bar(self):
         """Create application menu bar"""
         menubar = self.menuBar()
+        menubar.setContentsMargins(0, 0, 0, 0)
 
         # File menu
         file_menu = menubar.addMenu("File")
@@ -210,7 +211,7 @@ class MainWindow(QMainWindow):
         edit_menu.addAction("Copy")
         edit_menu.addAction("Paste")
         edit_menu.addSeparator()
-        # edit_menu.addAction("Find & Replace")
+        edit_menu.addAction("Find & Replace")
 
         # Robot menu
         robot_menu = menubar.addMenu("Robot")
@@ -244,25 +245,21 @@ class MainWindow(QMainWindow):
     # Menu action implementations
     def new_program(self):
         """Create new program"""
-        pass
         # self.program_editor.new_program()
         pass
 
     def open_program(self):
         """Open existing program file"""
-        pass
         # self.program_editor.open_program()
         pass
 
     def save_program(self):
         """Save current program"""
-        pass
         # self.program_editor.save_program()
         pass
 
     def save_program_as(self):
         """Save program with new name"""
-        pass
         # self.program_editor.save_program_as()
         pass
 
