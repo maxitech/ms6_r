@@ -6,12 +6,29 @@ from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
+    QGridLayout,
+    QPushButton,
+    QLabel,
+    QLineEdit,
+    QTextEdit,
+    QComboBox,
+    QFrame,
     QSplitter,
     QMenuBar,
     QStatusBar,
-    QMessageBox,
+    QGroupBox,
+    QRadioButton,
+    QSlider,
+    QSpinBox,
+    QDoubleSpinBox,
+    QButtonGroup,
+    QTabWidget,
+    QPlainTextEdit,
+    QSizePolicy,
+    QWidgetAction,
 )
-from PySide6.QtGui import QFont, QAction
+from PySide6.QtCore import Qt, QTimer, Signal
+from PySide6.QtGui import QFont, QPalette, QColor, QAction
 from app.ui_gen.main_window_ui import Ui_MainWindow
 from app.controllers.main_window_controller import MainWindowController
 from app.constants.com_protocol import CMD_IDLE, NOP
