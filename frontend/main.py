@@ -21,6 +21,13 @@ from app.core.packet_builder import PacketBuilder
 os.environ["QT_STYLE_OVERRIDE"] = "Fusion"
 
 
+def make_panel(name):
+    panel = QFrame()
+    panel.setFrameShape(QFrame.Shape.StyledPanel)
+    panel.setObjectName(name)
+    return panel
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -34,6 +41,7 @@ class MainWindow(QMainWindow):
 
         # Init components
         self.create_menu_bar()
+        self._create_main_layout()
 
         # Setup UI
         self.setup_style()
@@ -270,6 +278,34 @@ class MainWindow(QMainWindow):
         """Save program with new name"""
         # self.program_editor.save_program_as()
         pass
+
+    def _create_main_layout(self):
+        main_widget = QWidget()
+        grid = QGridLayout(main_widget)
+        grid.setContentsMargins(0, 0, 0, 0)
+        grid.setSpacing(0)
+
+        left_panel = make_panel("LeftPanel")
+        left_panel.setFixedWidth(375)
+
+        editor_panel = make_panel("EditorPanel")
+        editor_panel.setFixedHeight(700)
+
+        right_panel = make_panel("RightPanel")
+        right_panel.setFixedWidth(375)
+
+        grid.addWidget(left_panel, 0, 0, 2, 1)
+        grid.addWidget(editor_panel, 0, 1, 1, 1)
+        grid.addWidget(right_panel, 0, 2, 2, 1)
+
+        central_bottom = make_panel("CentralBottom")
+        grid.addWidget(central_bottom, 1, 1, 1, 1)
+
+        bottom_bar = make_panel("BottomBar")
+        bottom_bar.setFixedHeight(40)
+        grid.addWidget(bottom_bar, 2, 0, 1, 3)
+
+        self.setCentralWidget(main_widget)
 
     def closeEvent(self, event):
         print("Closing application...")
