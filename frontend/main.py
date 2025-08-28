@@ -40,109 +40,121 @@ class MainWindow(QMainWindow):
 
     def setup_style(self):
         """Apply Windows 95/98 industrial style"""
-        style = """
-            QMainWindow {
-                background-color: #c0c0c0;
-                font-family: 'MS Sans Serif', 'Arial', sans-serif;
+        bg_color = "#e5e7eb"
+        col_text = "#000000"
+        col_light_gray = "#d1d5dc"
+        col_mid_gray = "#99a1af"
+
+        style = f"""
+            QMainWindow {{
+                background-color: {bg_color};
+                font-family: 'MS Sans Serif', 'Liberation Sans', 'Arial', sans-serif;
                 font-size: 11px;
-            }
-            
-            QPushButton {
-                background-color: #c0c0c0;
+                color: {col_text};
+            }}
+
+            QPushButton {{
+                background-color: {bg_color};
                 border: 2px outset #c0c0c0;
                 padding: 4px 8px;
                 min-height: 20px;
                 font-weight: normal;
-            }
-            
-            QPushButton:pressed {
+            }}
+
+            QPushButton:pressed {{
                 border: 2px inset #c0c0c0;
-            }
-            
-            QPushButton:disabled {
+            }}
+
+            QPushButton:disabled {{
                 background-color: #808080;
                 color: #606060;
                 border: 2px outset #808080;
-            }
-            
-            QPushButton.emergency {
+            }}
+
+            QPushButton.emergency {{
                 background-color: #ff4444;
                 color: white;
                 font-weight: bold;
                 border: 2px outset #ff4444;
-            }
-            
-            QPushButton.emergency:pressed {
+            }}
+
+            QPushButton.emergency:pressed {{
                 background-color: #cc0000;
                 border: 2px inset #cc0000;
-            }
+            }}
             
-            QPushButton.emergency:checked {
+            QPushButton.emergency:checked {{
                 background-color: #cc0000;
                 border: 2px inset #cc0000;
-            }
+            }}
             
-            QFrame {
+            QFrame {{
                 border: 2px inset #c0c0c0;
                 background-color: #c0c0c0;
-            }
+            }}
             
-            QGroupBox {
+            QGroupBox {{
                 border: 2px inset #c0c0c0;
                 font-weight: bold;
                 padding-top: 10px;
                 margin-top: 6px;
-            }
+            }}
             
-            QGroupBox::title {
+            QGroupBox::title {{
                 subcontrol-origin: margin;
                 left: 10px;
                 padding: 0 5px 0 5px;
-            }
-            
-            QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox {
+            }}
+
+            QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox {{
                 border: 2px inset #c0c0c0;
                 background-color: white;
                 padding: 2px;
-            }
-            
-            QTextEdit, QPlainTextEdit {
+            }}
+
+            QTextEdit, QPlainTextEdit {{
                 border: 2px inset #c0c0c0;
                 background-color: white;
                 font-family: 'Courier New', monospace;
-            }
+            }}
+
+            QMenuBar {{
+                background-color: {bg_color};
+                border-bottom: 2px solid {col_mid_gray};
+                min-height: 24px;
+                spacing: 0;
+            }}
+
+            QMenuBar::item {{
+                padding: 0px 4px;
+                border:none;
+            }}
+
+            QMenuBar::item:selected {{
+                background-color: {col_light_gray};
+            }}
             
-            QMenuBar {
-                background-color: #c0c0c0;
-                border-bottom: 1px solid #808080;
-            }
-            
-            QMenuBar::item {
-                padding: 2px 6px;
-            }
-            
-            QMenuBar::item:selected {
-                background-color: #0078d4;
-                color: white;
-            }
-            
-            QStatusBar {
+            QMenuBar::item:pressed {{
+                background-color: {col_light_gray};
+            }}
+
+            QStatusBar {{
                 background-color: #c0c0c0;
                 border-top: 1px solid #808080;
-            }
-            
-            .status-indicator {
+            }}
+
+            .status-indicator {{
                 border: 2px inset #c0c0c0;
                 border-radius: 8px;
-            }
-            
-            .connected {
+            }}
+
+            .connected {{
                 background-color: #00ff00;
-            }
-            
-            .disconnected {
+            }}
+
+            .disconnected {{
                 background-color: #ff0000;
-            }
+            }}
             """
         self.setStyleSheet(style)
 
