@@ -23,6 +23,8 @@ class MotionPlannerThread(QThread):
             if not self._serial_port:
                 self.stop()
 
+            QThread.msleep(1)
+
     def stop(self):
         self._is_running = False
         if QThread.currentThread() != self and self.isRunning():
