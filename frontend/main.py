@@ -290,16 +290,18 @@ class MainWindow(QMainWindow):
 
         program_ctrl = QFrame()
         program_ctrl.setObjectName("program-ctrl")
-        layout = QVBoxLayout(program_ctrl)
+        layout_prog_ctrl = QVBoxLayout(program_ctrl)
 
+        # Label 1
         label_prog_ctrl = QLabel("Program Control")
         label_prog_ctrl.setObjectName("label-prog-ctrl")
-        layout.addWidget(label_prog_ctrl)
+        layout_prog_ctrl.addWidget(label_prog_ctrl)
 
+        # Label 2
         label_rbt_op = QLabel("Robot Operations")
         label_rbt_op.setObjectName("label-rbt-op")
-        layout.addWidget(label_rbt_op)
-        layout.addSpacerItem(
+        layout_prog_ctrl.addWidget(label_rbt_op)
+        layout_prog_ctrl.addSpacerItem(
             QSpacerItem(0, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         )
 
