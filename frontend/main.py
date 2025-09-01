@@ -91,6 +91,7 @@ class MainWindow(QMainWindow):
     
             QMenuBar {{
                 background-color: {bg_color};
+                color: {col_text};
                 border-bottom: 1px solid {col_mid_gray};
                 min-height: 24px;
                 spacing: 0;
@@ -102,6 +103,15 @@ class MainWindow(QMainWindow):
             }}
 
             QMenuBar::item:selected, QMenuBar::item:pressed {{
+                background-color: {col_light_gray};
+            }}
+            
+            QMenu {{
+                background-color: {bg_color};
+                color: {col_text};
+            }}
+            
+            QMenu::item:selected, QMenu::item:pressed {{
                 background-color: {col_light_gray};
             }}
             """
