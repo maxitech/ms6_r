@@ -4,37 +4,20 @@ from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
     QGridLayout,
-    QPushButton,
-    QLabel,
-    QLineEdit,
-    QTextEdit,
-    QComboBox,
     QFrame,
-    QSplitter,
-    QMenuBar,
-    QStatusBar,
-    QGroupBox,
-    QRadioButton,
-    QSlider,
-    QSpinBox,
-    QDoubleSpinBox,
-    QButtonGroup,
-    QTabWidget,
-    QPlainTextEdit,
-    QSizePolicy,
-    QWidgetAction,
-    QSpacerItem,
 )
-from PySide6.QtCore import Qt, QTimer, Signal
-from PySide6.QtGui import QFont, QPalette, QColor, QAction
-from app.ui_gen.main_window_ui import Ui_MainWindow
 from app.controllers.main_window_controller import MainWindowController
 from app.constants.com_protocol import CMD_IDLE, NOP
 from app.core.packet_builder import PacketBuilder
-
+from app.ui.components import (
+    MenuBar,
+    LeftPanel,
+    RightPanel,
+    EditorPanel,
+    CentralBottomPanel,
+    BottomBar,
+)
 
 os.environ["QT_STYLE_OVERRIDE"] = "Fusion"
 
@@ -60,14 +43,13 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 1400, 900)
 
         # Init components
-        self.create_menu_bar()
+        self.setMenuBar(MenuBar(self))
         self._create_main_layout()
 
         # Setup UI
         self.setup_style()
 
     def setup_style(self):
-        """Apply Windows 95/98 industrial style"""
         bg_color = "#e5e7eb"
         col_text = "#000000"
         col_text_disabled = "#6b7280"
@@ -82,7 +64,7 @@ class MainWindow(QMainWindow):
                 font-size: 11px;
                 color: {col_text};
             }}
-            
+        
             QPushButton {{
                 background-color: {col_light_gray};
                 color: {col_text};
@@ -116,171 +98,8 @@ class MainWindow(QMainWindow):
                 background-color: {col_light_gray};
                 border: 2px solid {col_mid_gray};
             }}
-    
-            QMenuBar {{
-                background-color: {bg_color};
-                color: {col_text};
-                border-bottom: 1px solid {col_mid_gray};
-                min-height: 24px;
-                spacing: 0;
-            }}
-
-            QMenuBar::item {{
-                padding: 0px 4px;
-                border:none;
-            }}
-
-            QMenuBar::item:selected, QMenuBar::item:pressed {{
-                background-color: {col_light_gray};
-            }}
-            
-            QMenu {{
-                background-color: {bg_color};
-                color: {col_text};
-            }}
-            
-            QMenu::item:selected, QMenu::item:pressed {{
-                background-color: {col_light_gray};
-            }}
-
-            QFrame#program-ctrl QLabel {{
-                color: {col_text};
-                font-weight: 500;
-                border: none;
-            }}
-            
-            QLabel#label-prog-ctrl {{
-                font-size: 16px;
-            }}
-            
-            QLabel#label-rbt-op {{
-                font-size: 13px;
-            }}
-            
-            QFrame#program-ctrl QFrame#btn-container {{
-                padding: 0;
-                margin: 0;
-                border: none;
-            }}
             """
         self.setStyleSheet(style)
-
-    def create_menu_bar(self):
-        """Create application menu bar"""
-        menubar = self.menuBar()
-        menubar.setContentsMargins(0, 0, 0, 0)
-
-        # File menu
-        file_menu = menubar.addMenu("File")
-
-        new_action = QAction("New Program", self)
-        new_action.triggered.connect(self.new_program)
-        file_menu.addAction(new_action)
-
-        open_action = QAction("Open Program", self)
-        open_action.triggered.connect(self.open_program)
-        file_menu.addAction(open_action)
-
-        save_action = QAction("Save Program", self)
-        save_action.triggered.connect(self.save_program)
-        file_menu.addAction(save_action)
-
-        save_as_action = QAction("Save As...", self)
-        save_as_action.triggered.connect(self.save_program_as)
-        file_menu.addAction(save_as_action)
-
-        file_menu.addSeparator()
-
-        # Predefined Programs submenu
-        predefined_menu = file_menu.addMenu("Predefined Programs")
-
-        ping_action = QAction("Ping", self)
-        # ping_action.triggered.connect(lambda: self.load_predefined_program("ping"))
-        predefined_menu.addAction(ping_action)
-
-        test_switches_action = QAction("Test Switches", self)
-        # test_switches_action.triggered.connect(
-        #     lambda: self.load_predefined_program("test_switches")
-        # )
-        predefined_menu.addAction(test_switches_action)
-
-        home_action = QAction("Home Robot", self)
-        # home_action.triggered.connect(lambda: self.load_predefined_program("home"))
-        predefined_menu.addAction(home_action)
-
-        # predefined_menu.addSeparator()
-        # predefined_manager_action = QAction("Manage Predefined Programs...", self)
-        # predefined_manager_action.triggered.connect(
-        #     self.show_predefined_programs_dialog
-        # )
-        # predefined_menu.addAction(predefined_manager_action)
-
-        file_menu.addSeparator()
-
-        exit_action = QAction("Exit", self)
-        exit_action.triggered.connect(self.close)
-        file_menu.addAction(exit_action)
-
-        # Edit menu
-        edit_menu = menubar.addMenu("Edit")
-        edit_menu.addAction("Undo")
-        edit_menu.addAction("Redo")
-        edit_menu.addSeparator()
-        edit_menu.addAction("Cut")
-        edit_menu.addAction("Copy")
-        edit_menu.addAction("Paste")
-        edit_menu.addSeparator()
-        edit_menu.addAction("Find & Replace")
-
-        # Robot menu
-        robot_menu = menubar.addMenu("Robot")
-        robot_menu.addAction("Calibrate Axes")
-        robot_menu.addAction("Set Tool Frame")
-        robot_menu.addAction("Set Base Frame")
-        robot_menu.addAction("Safety Configuration")
-
-        # Settings menu
-        settings_menu = menubar.addMenu("Settings")
-        settings_menu.addAction("Communication Settings")
-        settings_menu.addAction("Motion Parameters")
-        settings_menu.addAction("User Preferences")
-        settings_menu.addAction("Language")
-        # settings_menu.addAction("Import/Export Settings")
-
-        # Tools menu
-        tools_menu = menubar.addMenu("Tools")
-        tools_menu.addAction("I/O Monitor")
-        tools_menu.addAction("Variable Monitor")
-        tools_menu.addAction("Diagnostics")
-        tools_menu.addAction("Log Viewer")
-        tools_menu.addAction("Backup/Restore")
-
-        # Help menu
-        help_menu = menubar.addMenu("Help")
-        help_menu.addAction("User Manual")
-        help_menu.addAction("Command Reference")
-        help_menu.addAction("About")
-
-    # Menu action implementations
-    def new_program(self):
-        """Create new program"""
-        # self.program_editor.new_program()
-        pass
-
-    def open_program(self):
-        """Open existing program file"""
-        # self.program_editor.open_program()
-        pass
-
-    def save_program(self):
-        """Save current program"""
-        # self.program_editor.save_program()
-        pass
-
-    def save_program_as(self):
-        """Save program with new name"""
-        # self.program_editor.save_program_as()
-        pass
 
     def _create_main_layout(self):
         main_widget = QWidget()
@@ -288,119 +107,13 @@ class MainWindow(QMainWindow):
         grid.setContentsMargins(0, 0, 0, 0)
         grid.setSpacing(0)
 
-        left_panel = self._create_left_panel()
-        editor_panel = self._create_editor_panel()
-        central_bottom = self._create_central_bottom_panel()
-        right_panel = self._create_right_panel()
-        bottom_bar = self._create_bottom_bar()
-
-        grid.addWidget(left_panel, 0, 0, 2, 1)
-        grid.addWidget(editor_panel, 0, 1, 1, 1)
-        grid.addWidget(central_bottom, 1, 1, 1, 1)
-        grid.addWidget(right_panel, 0, 2, 2, 1)
-        grid.addWidget(bottom_bar, 2, 0, 1, 3)
+        grid.addWidget(LeftPanel(), 0, 0, 2, 1)
+        grid.addWidget(EditorPanel(), 0, 1, 1, 1)
+        grid.addWidget(CentralBottomPanel(), 1, 1, 1, 1)
+        grid.addWidget(RightPanel(), 0, 2, 2, 1)
+        grid.addWidget(BottomBar(), 2, 0, 1, 3)
 
         self.setCentralWidget(main_widget)
-
-    def _create_left_panel(self):
-        left_panel = make_panel("left-panel")
-        left_panel.setFixedWidth(375)
-        left_layout = QVBoxLayout(left_panel)
-
-        con_panel = QFrame()
-        con_panel.setFixedHeight(280)
-
-        ctrl_panel = QFrame()
-
-        left_layout.addWidget(con_panel)
-        left_layout.addWidget(ctrl_panel)
-        return left_panel
-
-    def _create_right_panel(self):
-        right_panel = make_panel("right-panel")
-        right_panel.setFixedWidth(375)
-        right_layout = QVBoxLayout(right_panel)
-
-        program_ctrl = QFrame()
-        program_ctrl.setObjectName("program-ctrl")
-        layout_prog_ctrl = QVBoxLayout(program_ctrl)
-
-        # Label 1
-        label_prog_ctrl = QLabel("Program Control")
-        label_prog_ctrl.setObjectName("label-prog-ctrl")
-        layout_prog_ctrl.addWidget(label_prog_ctrl)
-
-        # Label 2
-        label_rbt_op = QLabel("Robot Operations")
-        label_rbt_op.setObjectName("label-rbt-op")
-        layout_prog_ctrl.addWidget(label_rbt_op)
-
-        # Container for btn's
-        op_btn_div = QFrame()
-        op_btn_div.setObjectName("btn-container")
-        op_btn_div.setFrameShape(QFrame.Shape.NoFrame)
-        layout_op_btn_div = QVBoxLayout(op_btn_div)
-        layout_op_btn_div.setContentsMargins(0, 0, 0, 0)
-        layout_op_btn_div.setSpacing(5)
-
-        # Row 1
-        op_btn_div_row1 = QHBoxLayout()
-        run_btn = QPushButton("Run")
-        run_btn.setObjectName("btn-run")
-        run_btn.setCheckable(True)
-        run_btn.setChecked(True)
-        run_btn.setEnabled(False)
-        op_btn_div_row1.addWidget(run_btn)
-
-        stop_btn = QPushButton("Stop")
-        stop_btn.setObjectName("btn-stop")
-        stop_btn.setCheckable(True)
-        stop_btn.setEnabled(False)
-        op_btn_div_row1.addWidget(stop_btn)
-
-        group = QButtonGroup(op_btn_div)
-        group.setExclusive(True)
-        group.addButton(run_btn)
-        group.addButton(stop_btn)
-
-        step_btn = QPushButton("Step")
-        step_btn.setObjectName("btn-step")
-        step_btn.setEnabled(False)
-        op_btn_div_row1.addWidget(step_btn)
-
-        # Row 2
-        op_btn_div_row2 = QHBoxLayout()
-        load_btn = QPushButton("Load Program to Robot")
-        load_btn.setObjectName("btn-load-to-rbt")
-        load_btn.setEnabled(False)
-        op_btn_div_row2.addWidget(load_btn)
-
-        # Add rows to frame layout
-        layout_op_btn_div.addLayout(op_btn_div_row1)
-        layout_op_btn_div.addLayout(op_btn_div_row2)
-
-        # Add frame to main layout
-        layout_prog_ctrl.addWidget(op_btn_div)
-
-        layout_prog_ctrl.addSpacerItem(
-            QSpacerItem(0, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-        )
-        right_layout.addWidget(program_ctrl)
-        return right_panel
-
-    def _create_editor_panel(self):
-        editor_panel = make_panel("editor-panel")
-        editor_panel.setFixedHeight(700)
-        return editor_panel
-
-    def _create_central_bottom_panel(self):
-        central_bottom = make_panel("CentralBottom")
-        return central_bottom
-
-    def _create_bottom_bar(self):
-        bottom_bar = make_panel("BottomBar")
-        bottom_bar.setFixedHeight(40)
-        return bottom_bar
 
     def closeEvent(self, event):
         print("Closing application...")
