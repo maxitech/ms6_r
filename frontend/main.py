@@ -26,6 +26,7 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QSizePolicy,
     QWidgetAction,
+    QSpacerItem,
 )
 from PySide6.QtCore import Qt, QTimer, Signal
 from PySide6.QtGui import QFont, QPalette, QColor, QAction
@@ -85,7 +86,7 @@ class MainWindow(QMainWindow):
                 background-color: {bg_color};
             }}
             
-            QFrame#left-panel QFrame {{
+            QFrame#left-panel QFrame, QFrame#right-panel QFrame {{
                 border: 2px solid {col_mid_gray};
             }}
     
@@ -113,6 +114,20 @@ class MainWindow(QMainWindow):
             
             QMenu::item:selected, QMenu::item:pressed {{
                 background-color: {col_light_gray};
+            }}
+
+            QFrame#program-ctrl QLabel {{
+                color: {col_text};
+                font-weight: 500;
+                border: none;
+            }}
+            
+            QLabel#label-prog-ctrl {{
+                font-size: 16px;
+            }}
+            
+            QLabel#label-rbt-op {{
+                font-size: 13px;
             }}
             """
         self.setStyleSheet(style)
@@ -271,6 +286,27 @@ class MainWindow(QMainWindow):
     def _create_right_panel(self):
         right_panel = make_panel("right-panel")
         right_panel.setFixedWidth(375)
+        right_layout = QVBoxLayout(right_panel)
+
+        program_ctrl = QFrame()
+        program_ctrl.setObjectName("program-ctrl")
+        layout = QVBoxLayout(program_ctrl)
+
+        label_prog_ctrl = QLabel("Program Control")
+        label_prog_ctrl.setObjectName("label-prog-ctrl")
+        layout.addWidget(label_prog_ctrl)
+
+        label_rbt_op = QLabel("Robot Operations")
+        label_rbt_op.setObjectName("label-rbt-op")
+        layout.addWidget(label_rbt_op)
+        layout.addSpacerItem(
+            QSpacerItem(0, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        )
+
+        # cmd_templates = QFrame()
+
+        right_layout.addWidget(program_ctrl)
+        # right_layout.addWidget(cmd_templates)
         return right_panel
 
     def _create_editor_panel(self):
