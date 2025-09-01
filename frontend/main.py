@@ -70,8 +70,10 @@ class MainWindow(QMainWindow):
         """Apply Windows 95/98 industrial style"""
         bg_color = "#e5e7eb"
         col_text = "#000000"
+        col_text_disabled = "#6b7280"
         col_light_gray = "#d1d5dc"
         col_mid_gray = "#99a1af"
+        col_hover_gray = "#bdc2cc"
 
         style = f"""
             QMainWindow {{
@@ -81,12 +83,37 @@ class MainWindow(QMainWindow):
                 color: {col_text};
             }}
             
+            QPushButton {{
+                background-color: {col_light_gray};
+                color: {col_text};
+                border: 2px outset {col_mid_gray};
+                border-radius: 0px;
+                padding: 8px 0px;
+            }}
+            
+            QPushButton:hover {{ 
+                background-color: {col_hover_gray};
+                color: {col_text};
+            }}
+            
+            QPushButton::checked {{
+                background-color: {col_mid_gray};
+                color: {col_text_disabled};
+            }}
+
+            QPushButton::disabled {{
+                background-color: {col_mid_gray};
+                color: {col_text_disabled};
+                border: 2px inset {col_mid_gray};
+            }}
+                        
             QFrame {{
                 border: 1px solid {col_mid_gray};
                 background-color: {bg_color};
             }}
             
             QFrame#left-panel QFrame, QFrame#right-panel QFrame {{
+                background-color: {col_light_gray};
                 border: 2px solid {col_mid_gray};
             }}
     
@@ -128,6 +155,12 @@ class MainWindow(QMainWindow):
             
             QLabel#label-rbt-op {{
                 font-size: 13px;
+            }}
+            
+            QFrame#program-ctrl QFrame#btn-container {{
+                padding: 0;
+                margin: 0;
+                border: none;
             }}
             """
         self.setStyleSheet(style)
@@ -301,14 +334,58 @@ class MainWindow(QMainWindow):
         label_rbt_op = QLabel("Robot Operations")
         label_rbt_op.setObjectName("label-rbt-op")
         layout_prog_ctrl.addWidget(label_rbt_op)
+
+        # Container for btn's
+        op_btn_div = QFrame()
+        op_btn_div.setObjectName("btn-container")
+        op_btn_div.setFrameShape(QFrame.Shape.NoFrame)
+        layout_op_btn_div = QVBoxLayout(op_btn_div)
+        layout_op_btn_div.setContentsMargins(0, 0, 0, 0)
+        layout_op_btn_div.setSpacing(5)
+
+        # Row 1
+        op_btn_div_row1 = QHBoxLayout()
+        run_btn = QPushButton("Run")
+        run_btn.setObjectName("btn-run")
+        run_btn.setCheckable(True)
+        run_btn.setChecked(True)
+        run_btn.setEnabled(False)
+        op_btn_div_row1.addWidget(run_btn)
+
+        stop_btn = QPushButton("Stop")
+        stop_btn.setObjectName("btn-stop")
+        stop_btn.setCheckable(True)
+        stop_btn.setEnabled(False)
+        op_btn_div_row1.addWidget(stop_btn)
+
+        group = QButtonGroup(op_btn_div)
+        group.setExclusive(True)
+        group.addButton(run_btn)
+        group.addButton(stop_btn)
+
+        step_btn = QPushButton("Step")
+        step_btn.setObjectName("btn-step")
+        step_btn.setEnabled(False)
+        op_btn_div_row1.addWidget(step_btn)
+
+        # Row 2
+        op_btn_div_row2 = QHBoxLayout()
+        load_btn = QPushButton("Load Program to Robot")
+        load_btn.setObjectName("btn-load-to-rbt")
+        load_btn.setEnabled(False)
+        op_btn_div_row2.addWidget(load_btn)
+
+        # Add rows to frame layout
+        layout_op_btn_div.addLayout(op_btn_div_row1)
+        layout_op_btn_div.addLayout(op_btn_div_row2)
+
+        # Add frame to main layout
+        layout_prog_ctrl.addWidget(op_btn_div)
+
         layout_prog_ctrl.addSpacerItem(
             QSpacerItem(0, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         )
-
-        # cmd_templates = QFrame()
-
         right_layout.addWidget(program_ctrl)
-        # right_layout.addWidget(cmd_templates)
         return right_panel
 
     def _create_editor_panel(self):
