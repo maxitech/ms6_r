@@ -98,6 +98,13 @@ class MainWindow(QMainWindow):
                 background-color: {col_light_gray};
                 border: 2px solid {col_mid_gray};
             }}
+            
+            QComboBox {{
+                background-color: {bg_color};
+                color: {col_text};
+                min-height: 30px;
+                padding-left: 8px;
+            }}
             """
         self.setStyleSheet(style)
 
