@@ -1,4 +1,11 @@
-from PySide6.QtWidgets import QFrame
+from PySide6.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QSpacerItem,
+    QSizePolicy,
+    QLabel,
+)
+from PySide6.QtCore import QTimer, QTime
 
 
 def make_panel(name):
@@ -11,5 +18,50 @@ def make_panel(name):
 class BottomBar(QFrame):
     def __init__(self):
         super().__init__()
-        self.setFixedHeight(40)
+        self._setup_style()
+        self._create_layout()
+
+    def _setup_style(self):
+        bg_color = "#e5e7eb"
+        col_text = "#000000"
+        col_text_disabled = "#6b7280"
+        col_light_gray = "#d1d5dc"
+        col_mid_gray = "#99a1af"
+        col_hover_gray = "#bdc2cc"
+
+        style = f"""
+            QFrame#btm-bar QLabel {{
+                color: {col_text};
+                font-size: 14px;
+                border: none;
+                padding: 0 12px;
+            }}
+            
+            QFrame#btm-bar QLabel#label-time {{
+                border-left: 1px solid {col_mid_gray};
+            }}
+            """
+        self.setStyleSheet(style)
+
+    def _create_layout(self):
+        self.setFixedHeight(30)
         self.setObjectName("btm-bar")
+        layout_bar = QHBoxLayout(self)
+        layout_bar.setContentsMargins(0, 5, 0, 5)
+        layout_bar.addSpacerItem(
+            QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        )
+
+        self.label_time = QLabel()
+        self.label_time.setObjectName("label-time")
+        self.label_time.setContentsMargins(0, 0, 0, 0)
+        timer = QTimer(self)
+        timer.timeout.connect(self._update_time)
+        timer.start(1000)
+        self._update_time()
+
+        layout_bar.addWidget(self.label_time)
+
+    def _update_time(self):
+        curr_t = QTime.currentTime().toString("h:mm:ss AP")
+        self.label_time.setText(curr_t)
