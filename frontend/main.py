@@ -39,8 +39,13 @@ class MainWindow(QMainWindow):
         # self.controller = MainWindowController(self.ui)
         self._pb = PacketBuilder()
         # ----------------------
-        version = QApplication.instance().applicationVersion()
-        app_name = QApplication.instance().applicationName()
+        app_instance = QApplication.instance()
+        if app_instance is not None:
+            version = app_instance.applicationVersion()
+            app_name = app_instance.applicationName()
+        else:
+            version = "unknown"
+            app_name = "MS6_R Software Suite"
         self.setWindowTitle(f"{app_name} v{version} — by Maximilian Stadlmeyer")
         self.setMinimumSize(1200, 800)
         self.setMaximumSize(1920, 1080)

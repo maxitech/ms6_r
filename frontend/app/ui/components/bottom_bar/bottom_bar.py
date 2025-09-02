@@ -58,8 +58,13 @@ class BottomBar(QFrame):
             QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         )
 
-        version = QApplication.instance().applicationVersion()
-        app_name = QApplication.instance().applicationName()
+        app_instance = QApplication.instance()
+        if app_instance is not None:
+            version = app_instance.applicationVersion()
+            app_name = app_instance.applicationName()
+        else:
+            version = "unknown"
+            app_name = "MS6_R Software Suite"
         label_app_info = QLabel(f"{app_name} v{version}")
         label_app_info.setObjectName("label-app-info")
         label_app_info.setContentsMargins(0, 0, 0, 0)
