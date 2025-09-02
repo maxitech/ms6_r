@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
 
 
 from .con_panel import ConPanel
+from .control_panel import CtrlPanel
 
 
 class LeftPanel(QFrame):
@@ -37,6 +38,6 @@ class LeftPanel(QFrame):
 
         left_layout.addWidget(ConPanel())
 
-        ctrl_panel = QFrame()
+        # ctrl_panel = QFrame()
 
-        left_layout.addWidget(ctrl_panel)
+        left_layout.addWidget(CtrlPanel())
