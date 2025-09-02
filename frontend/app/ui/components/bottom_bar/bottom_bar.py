@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
     QSpacerItem,
     QSizePolicy,
     QLabel,
+    QApplication,
 )
 from PySide6.QtCore import QTimer, QTime
 
@@ -36,7 +37,11 @@ class BottomBar(QFrame):
                 border: none;
                 padding: 0 12px;
             }}
-            
+
+            QFrame#btm-bar QLabel#label-app-info {{
+                border: none;
+            }}
+
             QFrame#btm-bar QLabel#label-time {{
                 border-left: 1px solid {col_mid_gray};
             }}
@@ -47,10 +52,18 @@ class BottomBar(QFrame):
         self.setFixedHeight(30)
         self.setObjectName("btm-bar")
         layout_bar = QHBoxLayout(self)
+        layout_bar.setSpacing(0)
         layout_bar.setContentsMargins(0, 5, 0, 5)
         layout_bar.addSpacerItem(
             QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         )
+
+        version = QApplication.instance().applicationVersion()
+        app_name = QApplication.instance().applicationName()
+        label_app_info = QLabel(f"{app_name} v{version}")
+        label_app_info.setObjectName("label-app-info")
+        label_app_info.setContentsMargins(0, 0, 0, 0)
+        layout_bar.addWidget(label_app_info)
 
         self.label_time = QLabel()
         self.label_time.setObjectName("label-time")
@@ -59,7 +72,6 @@ class BottomBar(QFrame):
         timer.timeout.connect(self._update_time)
         timer.start(1000)
         self._update_time()
-
         layout_bar.addWidget(self.label_time)
 
     def _update_time(self):
