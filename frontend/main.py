@@ -7,6 +7,8 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QFrame,
 )
+from PySide6.QtGui import QFont
+
 from app.controllers.main_window_controller import MainWindowController
 from app.constants.com_protocol import CMD_IDLE, NOP
 from app.core.packet_builder import PacketBuilder
@@ -37,7 +39,9 @@ class MainWindow(QMainWindow):
         # self.controller = MainWindowController(self.ui)
         self._pb = PacketBuilder()
         # ----------------------
-        self.setWindowTitle("MS6_R by Maximilian Stadlmeyer")
+        version = QApplication.instance().applicationVersion()
+        app_name = QApplication.instance().applicationName()
+        self.setWindowTitle(f"{app_name} v{version} — by Maximilian Stadlmeyer")
         self.setMinimumSize(1200, 800)
         self.setMaximumSize(1920, 1080)
         self.setGeometry(100, 100, 1400, 900)
@@ -134,11 +138,14 @@ class MainWindow(QMainWindow):
 def main():
     """Main entry point for the application."""
     app = QApplication(sys.argv)
+    font = QFont("Courier New", 10)
+    font.setLetterSpacing(QFont.SpacingType.PercentageSpacing, 95)
+    app.setFont(font)
 
     # Set application properties
-    app.setApplicationName("MS6_R")
+    app.setApplicationName("MS6_R Software Suite")
     app.setApplicationVersion("1.0.0")
-    app.setOrganizationName("Empty for now")
+    app.setOrganizationName("Stadlmeyer Robotics")
 
     # Create and show main window
     window = MainWindow()
