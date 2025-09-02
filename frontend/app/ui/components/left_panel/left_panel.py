@@ -46,15 +46,15 @@ class LeftPanel(QFrame):
             }}
             
             QPushButton#btn-con {{
-                margin-top: 4px;
-                margin-bottom: 4px;
+                margin-top: 6px;
+                margin-bottom: 2px;
             }}
             
             QPushButton#btn-emergency-stop {{
                 margin-bottom: 0px;
             }}
             
-            QLabel#label-select-comport {{
+            QLabel#label-com-port {{
                 font-size: 14px;
                 font-weight: 400;
                 margin-top: 4px;
@@ -86,18 +86,6 @@ class LeftPanel(QFrame):
         layout_con_div = QHBoxLayout(con_div)
         layout_con_div.setContentsMargins(0, 0, 0, 0)
 
-        com_port_label = QLabel("Select ComPort:")
-        com_port_label.setObjectName("label-select-comport")
-        com_port_label.setIndent(0)
-        layout_con_panel.addWidget(com_port_label)
-
-        combo_box = QComboBox()
-        combo_box.setObjectName("combo-box-comport")
-        combo_box.addItem("COM1")
-        combo_box.addItem("COM2")
-        combo_box.addItem("COM3")
-        layout_con_panel.addWidget(combo_box)
-
         layout_con_panel.addSpacerItem(
             QSpacerItem(0, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         )
@@ -123,6 +111,19 @@ class LeftPanel(QFrame):
         emergency_stop_btn = QPushButton("EMERGENCY STOP")
         emergency_stop_btn.setObjectName("btn-emergency-stop")
         layout_con_panel.addWidget(emergency_stop_btn)
+
+        com_port_label = QLabel("COM Port:")
+        com_port_label.setObjectName("label-com-port")
+        com_port_label.setIndent(0)
+        layout_con_panel.addWidget(com_port_label)
+
+        combo_box = QComboBox()
+        combo_box.setObjectName("combo-box-comport")
+        combo_box.addItem("COM1")
+        combo_box.addItem("COM2")
+        combo_box.addItem("COM3")
+        layout_con_panel.addWidget(combo_box)
+
         # layout_con_panel.addSpacerItem(
         #     QSpacerItem(0, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         # )
