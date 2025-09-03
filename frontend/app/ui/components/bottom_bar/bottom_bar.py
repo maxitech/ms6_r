@@ -33,9 +33,13 @@ class BottomBar(QFrame):
         style = f"""
             QFrame#btm-bar QLabel {{
                 color: {col_text};
-                font-size: 14px;
+                font-size: 12px;
                 border: none;
                 padding: 0 12px;
+            }}
+            
+            QFrame#btm-bar QLabel#label-con-status, QFrame#btm-bar QLabel#label-port, QFrame#btm-bar QLabel#label-mode {{
+                border-right: 1px solid {col_mid_gray};
             }}
 
             QFrame#btm-bar QLabel#label-app-info {{
@@ -49,11 +53,36 @@ class BottomBar(QFrame):
         self.setStyleSheet(style)
 
     def _create_layout(self):
-        self.setFixedHeight(30)
+        self.setFixedHeight(25)
         self.setObjectName("btm-bar")
         layout_bar = QHBoxLayout(self)
         layout_bar.setSpacing(0)
         layout_bar.setContentsMargins(0, 5, 0, 5)
+
+        self._label_status = QLabel()
+        self._label_status.setObjectName("label-con-status")
+        self._label_status.setText("Status: Disconnected")
+        self._label_status.setContentsMargins(0, 0, 0, 0)
+        layout_bar.addWidget(self._label_status)
+
+        self._label_port = QLabel()
+        self._label_port.setObjectName("label-port")
+        self._label_port.setText("Port: None")
+        self._label_port.setContentsMargins(0, 0, 0, 0)
+        layout_bar.addWidget(self._label_port)
+
+        self._label_mode = QLabel()
+        self._label_mode.setObjectName("label-mode")
+        self._label_mode.setText("Mode: JOINT")
+        self._label_mode.setContentsMargins(0, 0, 0, 0)
+        layout_bar.addWidget(self._label_mode)
+
+        self._label_speed = QLabel()
+        self._label_speed.setObjectName("label-speed")
+        self._label_speed.setText("Speed: 50%")
+        self._label_speed.setContentsMargins(0, 0, 0, 0)
+        layout_bar.addWidget(self._label_speed)
+
         layout_bar.addSpacerItem(
             QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         )
@@ -82,3 +111,15 @@ class BottomBar(QFrame):
     def _update_time(self):
         curr_t = QTime.currentTime().toString("hh:mm:ss AP")
         self.label_time.setText(curr_t)
+
+    def update_con_status(self, status: str):
+        self._label_status.setText(f"Status: {status}")
+
+    def update_port(self, port: str):
+        self._label_port.setText(f"Port: {port}")
+
+    def update_mode(self, mode: str):
+        self._label_mode.setText(f"Mode: {mode}")
+
+    def update_speed(self, speed: int):
+        self._label_speed.setText(f"Speed: {speed}%")
