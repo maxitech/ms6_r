@@ -15,14 +15,14 @@ from PySide6.QtGui import QFont, QAction
 from app.controllers.main_window_controller import MainWindowController
 from app.constants.com_protocol import CMD_IDLE, NOP
 from app.core.packet_builder import PacketBuilder
-from app.ui.components import (
+from app.ui import (
     MenuBar,
     LeftPanel,
     RightPanel,
     EditorPanel,
     IOMonitorPanel,
-    CentralBottomPanel,
     BottomBar,
+    CentralBottomPanel,
 )
 
 os.environ["QT_STYLE_OVERRIDE"] = "Fusion"
