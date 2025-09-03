@@ -20,6 +20,7 @@ from app.ui.components import (
     LeftPanel,
     RightPanel,
     EditorPanel,
+    IOMonitorPanel,
     CentralBottomPanel,
     BottomBar,
 )
@@ -146,10 +147,7 @@ class MainWindow(QMainWindow):
         self.center_stack = QStackedWidget()
 
         editor_page = EditorPanel()
-        # ! temp
-        io_monitor_page = QWidget()
-        io_layout = QVBoxLayout(io_monitor_page)
-        io_layout.addWidget(QLabel("I/O Monitor (placeholder)"))
+        io_monitor_page = IOMonitorPanel()
 
         # add pages to stack
         self.center_stack.addWidget(editor_page)
