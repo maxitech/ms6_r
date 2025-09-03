@@ -33,7 +33,7 @@ class LeftPanel(QFrame):
 
     def _create_layout(self):
         self.setObjectName("left-panel")
-        self.setFixedWidth(345)
+        self.setFixedWidth(280)
         left_layout = QVBoxLayout(self)
 
         left_layout.addWidget(ConPanel())

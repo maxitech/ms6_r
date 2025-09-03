@@ -49,7 +49,7 @@ class RightPanel(QFrame):
 
     def _create_panel(self):
         self.setObjectName("right-panel")
-        self.setFixedWidth(375)
+        self.setFixedWidth(280)
         right_layout = QVBoxLayout(self)
 
         program_ctrl = QFrame()

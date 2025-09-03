@@ -37,7 +37,7 @@ class CtrlPanel(QFrame):
             QLabel#h1 {{
                 font-size: 16px;
                 font-weight: 500;
-                margin-bottom: 4px;
+                margin-bottom: 8px;
             }}
         
             QGroupBox {{
@@ -89,6 +89,7 @@ class CtrlPanel(QFrame):
             QFrame#slider-div QLabel {{
                 font-size: 14px;
                 margin-bottom: 4px;
+                margin-top: 8px;
                 font-weight: 400;
             }}
 
@@ -154,7 +155,7 @@ class CtrlPanel(QFrame):
             }}
 
             QSlider#jog-speed-slider {{
-                margin-bottom: 12px;
+                margin-bottom: 18px;
             }}
 
             QStackedWidget , QStackedWidget QFrame{{
