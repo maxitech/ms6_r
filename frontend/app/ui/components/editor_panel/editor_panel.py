@@ -5,4 +5,3 @@ class EditorPanel(QFrame):
     def __init__(self):
         super().__init__()
         self.setObjectName("editor-panel")
-        self.setFixedHeight(700)
