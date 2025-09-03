@@ -108,7 +108,7 @@ class MenuBar(QMenuBar):
 
         view_menu = self.addMenu("View")
         view_main_page_act = QAction("Control Panel", self)
-        view_main_page_act.setData("main:main_page")
+        view_main_page_act.setData("main:home_page")
         self._actions.append(view_main_page_act)
         view_menu.addAction(view_main_page_act)
 

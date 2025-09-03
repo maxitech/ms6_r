@@ -131,8 +131,8 @@ class MainWindow(QMainWindow):
          - self.main_stack: holds full-window pages (main app, settings, about)
          - inside the "Main App" page we create a center_stack that swaps the central tool area
         """
-        main_app_page = QWidget()
-        app_grid = QGridLayout(main_app_page)
+        home_page = QWidget()
+        app_grid = QGridLayout(home_page)
         app_grid.setContentsMargins(0, 0, 0, 0)
         app_grid.setSpacing(0)
 
@@ -199,7 +199,7 @@ class MainWindow(QMainWindow):
             pass
 
     def _show_main_page(self, page: str):
-        mapping = {"main_page": 0, "general_settings": 1, "about_page": 2}
+        mapping = {"home_page": 0, "general_settings": 1, "about_page": 2}
         idx = mapping.get(page)
         if idx is None:
             return
