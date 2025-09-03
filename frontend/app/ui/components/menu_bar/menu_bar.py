@@ -46,50 +46,30 @@ class MenuBar(QMenuBar):
 
     def _create_bar(self):
         """Create application menu bar"""
+        self._actions: list[QAction] = []
+
         # File menu
         file_menu = self.addMenu("File")
 
-        new_action = QAction("New Program", self)
-        new_action.triggered.connect(self._new_program)
-        file_menu.addAction(new_action)
+        new_program_action = QAction("New Program", self)
+        new_program_action.setData("noop:new")
+        self._actions.append(new_program_action)
+        file_menu.addAction(new_program_action)
 
-        open_action = QAction("Open Program", self)
-        open_action.triggered.connect(self._open_program)
-        file_menu.addAction(open_action)
+        open_program_action = QAction("Open Program", self)
+        open_program_action.setData("noop:open")
+        self._actions.append(open_program_action)
+        file_menu.addAction(open_program_action)
 
-        save_action = QAction("Save Program", self)
-        save_action.triggered.connect(self._save_program)
-        file_menu.addAction(save_action)
+        save_program_action = QAction("Save Program", self)
+        save_program_action.setData("noop:save")
+        self._actions.append(save_program_action)
+        file_menu.addAction(save_program_action)
 
-        save_as_action = QAction("Save As...", self)
-        save_as_action.triggered.connect(self._save_program_as)
+        save_as_action = QAction("Save As", self)
+        save_as_action.setData("noop:save_as")
+        self._actions.append(save_as_action)
         file_menu.addAction(save_as_action)
-
-        file_menu.addSeparator()
-
-        # Predefined Programs submenu
-        predefined_menu = file_menu.addMenu("Predefined Programs")
-
-        ping_action = QAction("Ping", self)
-        # ping_action.triggered.connect(lambda: self.load_predefined_program("ping"))
-        predefined_menu.addAction(ping_action)
-
-        test_switches_action = QAction("Test Switches", self)
-        # test_switches_action.triggered.connect(
-        #     lambda: self.load_predefined_program("test_switches")
-        # )
-        predefined_menu.addAction(test_switches_action)
-
-        home_action = QAction("Home Robot", self)
-        # home_action.triggered.connect(lambda: self.load_predefined_program("home"))
-        predefined_menu.addAction(home_action)
-
-        # predefined_menu.addSeparator()
-        # predefined_manager_action = QAction("Manage Predefined Programs...", self)
-        # predefined_manager_action.triggered.connect(
-        #     self.show_predefined_programs_dialog
-        # )
-        # predefined_menu.addAction(predefined_manager_action)
 
         file_menu.addSeparator()
 
@@ -106,54 +86,62 @@ class MenuBar(QMenuBar):
         edit_menu.addAction("Copy")
         edit_menu.addAction("Paste")
         edit_menu.addSeparator()
-        edit_menu.addAction("Find & Replace")
+        edit_menu.addAction("Find && Replace")
 
         # Robot menu
         robot_menu = self.addMenu("Robot")
         robot_menu.addAction("Calibrate Axes")
         robot_menu.addAction("Set Tool Frame")
-        robot_menu.addAction("Set Base Frame")
-        robot_menu.addAction("Safety Configuration")
+        robot_menu.addAction("Set DH Parameters")
+        robot_menu.addSeparator()
+
+        # Predefined Programs submenu
+        predefined_menu = robot_menu.addMenu("Predefined Programs")
+        ping_action = QAction("Ping", self)
+        predefined_menu.addAction(ping_action)
+
+        test_switches_action = QAction("Test Switches", self)
+        predefined_menu.addAction(test_switches_action)
+
+        home_action = QAction("Home Robot", self)
+        predefined_menu.addAction(home_action)
+
+        view_menu = self.addMenu("View")
+        view_main_page_act = QAction("Control Panel", self)
+        view_main_page_act.setData("main:main_page")
+        self._actions.append(view_main_page_act)
+        view_menu.addAction(view_main_page_act)
 
         # Settings menu
         settings_menu = self.addMenu("Settings")
-        settings_menu.addAction("Communication Settings")
-        settings_menu.addAction("Motion Parameters")
-        settings_menu.addAction("User Preferences")
-        settings_menu.addAction("Language")
-        # settings_menu.addAction("Import/Export Settings")
+        com_settings_act = QAction("General", self)
+        com_settings_act.setData("main:general_settings")
+        self._actions.append(com_settings_act)
+        settings_menu.addAction(com_settings_act)
 
         # Tools menu
         tools_menu = self.addMenu("Tools")
-        tools_menu.addAction("I/O Monitor")
-        tools_menu.addAction("Variable Monitor")
-        tools_menu.addAction("Diagnostics")
-        tools_menu.addAction("Log Viewer")
-        tools_menu.addAction("Backup/Restore")
+        editor_act = QAction("Editor", self)
+        editor_act.setData("center:editor")
+        self._actions.append(editor_act)
+        tools_menu.addAction(editor_act)
+
+        io_act = QAction("I/O Monitor", self)
+        io_act.setData("center:io_monitor")
+        self._actions.append(io_act)
+        tools_menu.addAction(io_act)
+
+        # tools_menu.addAction("Variable Monitor")
+        # tools_menu.addAction("Diagnostics")
+        # tools_menu.addAction("Log Viewer")
+        # tools_menu.addAction("Backup/Restore")
 
         # Help menu
         help_menu = self.addMenu("Help")
         help_menu.addAction("User Manual")
         help_menu.addAction("Command Reference")
-        help_menu.addAction("About")
 
-    # Menu action implementations
-    def _new_program(self):
-        """Create new program"""
-        # self.program_editor.new_program()
-        pass
-
-    def _open_program(self):
-        """Open existing program file"""
-        # self.program_editor.open_program()
-        pass
-
-    def _save_program(self):
-        """Save current program"""
-        # self.program_editor.save_program()
-        pass
-
-    def _save_program_as(self):
-        """Save program with new name"""
-        # self.program_editor.save_program_as()
-        pass
+        about_act = QAction("About", self)
+        about_act.setData("main:about_page")
+        self._actions.append(about_act)
+        help_menu.addAction(about_act)
