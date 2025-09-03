@@ -23,6 +23,8 @@ from app.ui import (
     IOMonitorPanel,
     BottomBar,
     CentralBottomPanel,
+    SettingsPage,
+    AboutPage,
 )
 
 os.environ["QT_STYLE_OVERRIDE"] = "Fusion"
@@ -161,17 +163,12 @@ class MainWindow(QMainWindow):
         app_grid.addWidget(self.right_panel, 0, 2, 2, 1)
         app_grid.addWidget(BottomBar(), 2, 0, 1, 3)
 
-        # Build other full-window pages
-        general_settings_page = QWidget()
-        s_layout = QVBoxLayout(general_settings_page)
-        s_layout.addWidget(QLabel("General Settings Page (full-window)"))
+        # Other full-window pages
+        general_settings_page = SettingsPage()
+        about_page = AboutPage()
 
-        about_page = QWidget()
-        a_layout = QVBoxLayout(about_page)
-        a_layout.addWidget(QLabel("About Page (full-window)"))
-
-        # Add pages to main_stack and set initial page to the app
-        self.main_stack.addWidget(main_app_page)
+        # Add pages to main_stack and set initial page
+        self.main_stack.addWidget(home_page)
         self.main_stack.addWidget(general_settings_page)
         self.main_stack.addWidget(about_page)
         self.main_stack.setCurrentIndex(0)
