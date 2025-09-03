@@ -80,5 +80,5 @@ class BottomBar(QFrame):
         layout_bar.addWidget(self.label_time)
 
     def _update_time(self):
-        curr_t = QTime.currentTime().toString("h:mm:ss AP")
+        curr_t = QTime.currentTime().toString("hh:mm:ss AP")
         self.label_time.setText(curr_t)
