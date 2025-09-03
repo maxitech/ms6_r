@@ -34,6 +34,10 @@ class CtrlPanel(QFrame):
         col_hover_gray = "#bdc2cc"
 
         style = f"""
+            QFrame#ctrl-panel {{
+                border: 2px solid {col_mid_gray}
+            }}
+        
             QLabel#h1 {{
                 font-size: 16px;
                 font-weight: 500;
@@ -164,9 +168,13 @@ class CtrlPanel(QFrame):
             
             QStackedWidget QFrame QPushButton {{
                 min-height: 0;
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: 700;
-                letter-spacing: 0.3;
+            }}
+            
+            QStackedWidget QFrame QPushButton#btn-home-pos {{
+                font-weight: 700;
+                font-size: 14px;
             }}
             """
         self.setStyleSheet(style)

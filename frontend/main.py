@@ -62,6 +62,7 @@ class MainWindow(QMainWindow):
 
         # top-level stacks
         self.main_stack = QStackedWidget(self)  # full-window pages
+        self.main_stack.setObjectName("main-stack")
         self._create_main_layout()
 
         # Setup UI
@@ -80,8 +81,11 @@ class MainWindow(QMainWindow):
                 background-color: {bg_color};
                 color: {col_text};
             }}
-            
-        
+                   
+            QStackedWidget#main-stack {{
+                border: none;
+            }}
+             
             QPushButton {{
                 background-color: {col_light_gray};
                 color: {col_text};
@@ -111,6 +115,10 @@ class MainWindow(QMainWindow):
                 background-color: {bg_color};
             }}
             
+            QFrame#home-page {{
+                border: none;
+            }}
+            
             QFrame#left-panel QFrame, QFrame#right-panel QFrame {{
                 background-color: {col_light_gray};
                 border: 2px solid {col_mid_gray};
@@ -131,7 +139,9 @@ class MainWindow(QMainWindow):
          - self.main_stack: holds full-window pages (main app, settings, about)
          - inside the "Main App" page we create a center_stack that swaps the central tool area
         """
-        home_page = QWidget()
+
+        home_page = QFrame()
+        home_page.setObjectName("home-page")
         app_grid = QGridLayout(home_page)
         app_grid.setContentsMargins(0, 0, 0, 0)
         app_grid.setSpacing(0)
@@ -140,7 +150,7 @@ class MainWindow(QMainWindow):
         self.right_panel = RightPanel()
 
         # center container: top = center_stack(editor / io moitor / etc), bottom = CentralBottomPanel
-        center_container = QFrame()
+        center_container = QWidget()
         center_layout = QVBoxLayout(center_container)
         center_layout.setContentsMargins(0, 0, 0, 0)
         center_layout.setSpacing(0)
