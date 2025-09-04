@@ -174,7 +174,9 @@ class MainWindow(QMainWindow):
         app_grid.addWidget(self.left_panel, 0, 0, 2, 1)
         app_grid.addWidget(center_container, 0, 1, 2, 1)
         app_grid.addWidget(self.right_panel, 0, 2, 2, 1)
-        app_grid.addWidget(BottomBar(), 2, 0, 1, 3)
+
+        self.btm_bar = BottomBar()
+        app_grid.addWidget(self.btm_bar, 2, 0, 1, 3)
 
         # Other full-window pages
         general_settings_page = SettingsPage()
