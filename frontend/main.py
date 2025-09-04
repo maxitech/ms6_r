@@ -25,6 +25,7 @@ from app.ui import (
     CentralBottomPanel,
     SettingsPage,
     AboutPage,
+    ComMonitorPanel,
 )
 
 os.environ["QT_STYLE_OVERRIDE"] = "Fusion"
@@ -158,12 +159,14 @@ class MainWindow(QMainWindow):
         # inner stack for central tools
         self.center_stack = QStackedWidget()
 
-        editor_page = EditorPanel()
-        io_monitor_page = IOMonitorPanel()
+        editor_panel = EditorPanel()
+        com_monitor_panel = ComMonitorPanel()
+        io_monitor_panel = IOMonitorPanel()
 
         # add pages to stack
-        self.center_stack.addWidget(editor_page)
-        self.center_stack.addWidget(io_monitor_page)
+        self.center_stack.addWidget(editor_panel)
+        self.center_stack.addWidget(com_monitor_panel)
+        self.center_stack.addWidget(io_monitor_panel)
 
         center_layout.addWidget(self.center_stack)
         center_layout.addWidget(CentralBottomPanel())
@@ -216,7 +219,7 @@ class MainWindow(QMainWindow):
         self.main_stack.setCurrentIndex(idx)
 
     def _show_center_page(self, page: str):
-        mapping = {"editor": 0, "io_monitor": 1}
+        mapping = {"editor": 0, "com_monitor": 1, "io_monitor": 2}
         idx = mapping.get(page)
         if idx is None:
             return

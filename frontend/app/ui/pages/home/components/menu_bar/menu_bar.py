@@ -126,6 +126,11 @@ class MenuBar(QMenuBar):
         self._actions.append(editor_act)
         tools_menu.addAction(editor_act)
 
+        com_act = QAction("Communication Monitor", self)
+        com_act.setData("center:com_monitor")
+        self._actions.append(com_act)
+        tools_menu.addAction(com_act)
+
         io_act = QAction("I/O Monitor", self)
         io_act.setData("center:io_monitor")
         self._actions.append(io_act)
