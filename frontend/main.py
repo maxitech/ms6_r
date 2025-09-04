@@ -41,9 +41,6 @@ def make_panel(name):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        # self.ui = Ui_MainWindow()
-        # self.ui.setupUi(self)
-        # self.controller = MainWindowController(self.ui)
         self._pb = PacketBuilder()
         # ----------------------
         app_instance = QApplication.instance()
@@ -68,6 +65,9 @@ class MainWindow(QMainWindow):
 
         # Setup UI
         self.setup_style()
+
+        # Note: Do not move this line!
+        self.controller = MainWindowController(self)
 
     def setup_style(self):
         bg_color = "#e5e7eb"

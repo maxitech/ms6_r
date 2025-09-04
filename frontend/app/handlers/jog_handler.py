@@ -1,4 +1,7 @@
+from PySide6.QtWidgets import QMainWindow
+
 from typing import Tuple
+from main import MainWindow
 from app.core.serial_connection import SerialConnection
 from app.core.packet_builder import PacketBuilder
 from app.constants.ms6_r_constants import MS6_R_CONSTANTS as RC
@@ -6,7 +9,7 @@ from app.constants.com_protocol import CMD_JOG
 
 
 class JogHandler:
-    def __init__(self, ui, serial: SerialConnection, helper, ui_manager):
+    def __init__(self, ui: MainWindow, serial: SerialConnection, helper, ui_manager):
         self._ui = ui
         self._serial = serial
         self._helper = helper

@@ -7,10 +7,11 @@ from app.handlers.connection_handler import ConnectionHandler
 from app.handlers.command_handler import CommandHandler
 from app.handlers.jog_handler import JogHandler
 from app.handlers.program_handler import ProgramHandler
+from main import MainWindow
 
 
 class MainWindowController:
-    def __init__(self, ui):
+    def __init__(self, ui: MainWindow):
         # Note: Do not change order of init!
         self._ui = ui
         self._setup = Setup(ui=self._ui)
@@ -36,7 +37,7 @@ class MainWindowController:
         self._program_handler.setup_connections()
 
         # Setup specific connections
-        self._ui.setup_save_btn.clicked.connect(self._handle_setup_save)
+        # self._ui.setup_save_btn.clicked.connect(self._handle_setup_save)
 
     def _setup_timers(self):
         """Setup all timers"""
