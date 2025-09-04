@@ -8,9 +8,14 @@ from app.core.packet_builder import PacketBuilder
 from app.core.packet_processor import PacketProcessor
 from app.core.packet_parser import PacketParser
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from main import MainWindow
+
 
 class ConnectionHandler:
-    def __init__(self, ui, setup, serial: SerialConnection, ui_manager):
+    def __init__(self, ui: "MainWindow", setup, serial: SerialConnection, ui_manager):
         self._ui = ui
         self._setup = setup
         self._serial = serial
