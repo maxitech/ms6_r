@@ -7,11 +7,14 @@ from app.handlers.connection_handler import ConnectionHandler
 from app.handlers.command_handler import CommandHandler
 from app.handlers.jog_handler import JogHandler
 from app.handlers.program_handler import ProgramHandler
-from main import MainWindow
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from main import MainWindow
 
 
 class MainWindowController:
-    def __init__(self, ui: MainWindow):
+    def __init__(self, ui: "MainWindow"):
         # Note: Do not change order of init!
         self._ui = ui
         self._setup = Setup(ui=self._ui)

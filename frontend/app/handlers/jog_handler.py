@@ -1,15 +1,18 @@
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QPushButton
+from typing import TYPE_CHECKING
 
 from typing import Tuple
-from main import MainWindow
 from app.core.serial_connection import SerialConnection
 from app.core.packet_builder import PacketBuilder
 from app.constants.ms6_r_constants import MS6_R_CONSTANTS as RC
 from app.constants.com_protocol import CMD_JOG
 
+if TYPE_CHECKING:
+    from main import MainWindow
+
 
 class JogHandler:
-    def __init__(self, ui: MainWindow, serial: SerialConnection, helper, ui_manager):
+    def __init__(self, ui: "MainWindow", serial: SerialConnection, helper, ui_manager):
         self._ui = ui
         self._serial = serial
         self._helper = helper
