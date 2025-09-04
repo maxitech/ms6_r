@@ -13,16 +13,25 @@ class UIManager:
         self._ui.con_device_comboBox.clear()
         self._ui.con_device_comboBox.addItems(ports)
 
-    def update_ui_based_on_connection_status(self, btn_text, status_text, is_enabled):
+    def update_ui_based_on_connection_status(
+        self, btn_text, status_text, is_enabled, port
+    ):
         """Update UI based on connection status"""
-        self._ui.con_connect_btn.setText(btn_text)
-        self._ui.con_device_comboBox.setEnabled(is_enabled)
-        self._ui.con_status_label2.setText(status_text)
-        self._ui.setup_save_btn.setEnabled(is_enabled)
+        con_btn = self._ui.left_panel.con.con_btn
+        combo_box = self._ui.left_panel.con.combo_box
+        con_status_label = self._ui.left_panel.con.con_status_label
+
+        con_btn.setText(btn_text)
+        combo_box.setEnabled(is_enabled)
+        con_status_label.setText(status_text)
+        self._ui.btm_bar.con_status = status_text
+        self._ui.btm_bar.com_port = port
+        # self._ui.setup_save_btn.setEnabled(is_enabled)
 
     def update_connection_status(self, status_text):
         """Update connection status label"""
-        self._ui.con_status_label2.setText(status_text)
+        con_status_label = self._ui.left_panel.con.con_status_label
+        con_status_label.setText(status_text)
 
     def update_program_monitor(
         self,

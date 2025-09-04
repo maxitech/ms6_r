@@ -32,7 +32,8 @@ class ConnectionHandler:
 
     def setup_connections(self):
         """Setup connection-related UI connections"""
-        self._ui.con_connect_btn.clicked.connect(self._handle_con_btn_click)
+        con_btn = self._ui.left_panel.con.con_btn
+        con_btn.clicked.connect(self._handle_con_btn_click)
         self.check_ports()
 
     def check_ports(self):
@@ -46,19 +47,21 @@ class ConnectionHandler:
         """Check connection status"""
         if not self._serial.is_connected():
             self._ui_manager.update_ui_based_on_connection_status(
-                "Connect", "Disconnected", True
+                "Connect", "Disconnected", True, "None"
             )
 
     def _handle_con_btn_click(self):
         """Handle connect/disconnect button click"""
-        if self._ui.con_connect_btn.text() == "Connect":
+        con_btn = self._ui.left_panel.con.con_btn
+        if con_btn.text() == "Connect":
             self._connect()
         else:
             self._disconnect()
 
     def _connect(self):
         """Connect to selected port"""
-        selected_port = self._ui.con_device_comboBox.currentText()
+        combo_box = self._ui.left_panel.con.combo_box
+        selected_port = combo_box.currentText()
         self._serial.setPort(selected_port)
         self._serial.connect(self._on_serial_data_received)  # provide callback
 
@@ -72,7 +75,7 @@ class ConnectionHandler:
                 self._serial.set_data_out(setup_bytes)
 
             self._ui_manager.update_ui_based_on_connection_status(
-                "Disconnect", f"Connected to {selected_port}", False
+                "Disconnect", f"Connected", False, selected_port
             )
             self._ui_manager.log_message("INFO", "Connection established", "lightblue")
         else:
@@ -96,7 +99,7 @@ class ConnectionHandler:
         self._serial.disconnect()
         if not self._serial.is_connected():
             self._ui_manager.update_ui_based_on_connection_status(
-                "Connect", "Disconnected", True
+                "Connect", "Disconnected", True, "None"
             )
             self._ui_manager.log_message("INFO", "Disconnected", "lightblue")
         else:

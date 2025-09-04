@@ -99,27 +99,47 @@ class BottomBar(QFrame):
         label_app_info.setContentsMargins(0, 0, 0, 0)
         layout_bar.addWidget(label_app_info)
 
-        self.label_time = QLabel()
-        self.label_time.setObjectName("label-time")
-        self.label_time.setContentsMargins(0, 0, 0, 0)
+        self._label_time = QLabel()
+        self._label_time.setObjectName("label-time")
+        self._label_time.setContentsMargins(0, 0, 0, 0)
         timer = QTimer(self)
         timer.timeout.connect(self._update_time)
         timer.start(1000)
         self._update_time()
-        layout_bar.addWidget(self.label_time)
+        layout_bar.addWidget(self._label_time)
 
     def _update_time(self):
         curr_t = QTime.currentTime().toString("hh:mm:ss AP")
-        self.label_time.setText(curr_t)
+        self._label_time.setText(curr_t)
 
-    def update_con_status(self, status: str):
+    @property
+    def con_status(self) -> QLabel:
+        return self._label_status
+
+    @con_status.setter
+    def con_status(self, status: str):
         self._label_status.setText(f"Status: {status}")
 
-    def update_port(self, port: str):
+    @property
+    def com_port(self) -> QLabel:
+        return self._label_port
+
+    @com_port.setter
+    def com_port(self, port: str):
         self._label_port.setText(f"Port: {port}")
 
-    def update_mode(self, mode: str):
+    @property
+    def mode(self) -> QLabel:
+        return self._label_mode
+
+    @mode.setter
+    def mode(self, mode: str):
         self._label_mode.setText(f"Mode: {mode}")
 
-    def update_speed(self, speed: int):
-        self._label_speed.setText(f"Speed: {speed}%")
+    @property
+    def speed(self) -> QLabel:
+        return self._label_speed
+
+    @speed.setter
+    def speed(self, speed: int):
+        self._label_speed.setText(f"Speed: {str(int)}%")

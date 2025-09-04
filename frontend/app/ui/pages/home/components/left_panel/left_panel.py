@@ -36,10 +36,15 @@ class LeftPanel(QFrame):
         self.setFixedWidth(280)
         left_layout = QVBoxLayout(self)
 
-        left_layout.addWidget(ConPanel())
+        self._con_panel = ConPanel()
+        left_layout.addWidget(self._con_panel)
 
         self._ctrl_panel = CtrlPanel()
         left_layout.addWidget(self._ctrl_panel)
+
+    @property
+    def con(self) -> ConPanel:
+        return self._con_panel
 
     @property
     def ctrl(self) -> CtrlPanel:

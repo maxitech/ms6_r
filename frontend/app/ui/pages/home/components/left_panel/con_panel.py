@@ -74,20 +74,20 @@ class ConPanel(QFrame):
 
         # Connection Display
         label_con = QLabel("Connection:")
-        label_con_status = QLabel("Disconnected")
-        label_con_status.setObjectName("label-con-status")
+        self._label_con_status = QLabel("Disconnected")
+        self._label_con_status.setObjectName("label-con-status")
         layout_con_div.addWidget(label_con)
         layout_con_div.addSpacerItem(
             QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         )
-        layout_con_div.addWidget(label_con_status)
+        layout_con_div.addWidget(self._label_con_status)
 
         layout_con_panel.addWidget(con_div)
 
         # Connect Btn
-        con_btn = QPushButton("Connect")
-        con_btn.setObjectName("btn-con")
-        layout_con_panel.addWidget(con_btn)
+        self._con_btn = QPushButton("Connect")
+        self._con_btn.setObjectName("btn-con")
+        layout_con_panel.addWidget(self._con_btn)
 
         # Emergency Btn
         emergency_stop_btn = QPushButton("EMERGENCY STOP")
@@ -99,6 +99,18 @@ class ConPanel(QFrame):
         com_port_label.setIndent(0)
         layout_con_panel.addWidget(com_port_label)
 
-        combo_box = QComboBox()
-        combo_box.setObjectName("combo-box-comport")
-        layout_con_panel.addWidget(combo_box)
+        self._combo_box = QComboBox()
+        self._combo_box.setObjectName("combo-box-comport")
+        layout_con_panel.addWidget(self._combo_box)
+
+    @property
+    def con_status_label(self) -> QLabel:
+        return self._label_con_status
+
+    @property
+    def con_btn(self) -> QPushButton:
+        return self._con_btn
+
+    @property
+    def combo_box(self) -> QComboBox:
+        return self._combo_box
