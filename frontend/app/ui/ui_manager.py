@@ -1,10 +1,14 @@
 import datetime
 import re
 from PySide6.QtGui import QTextCharFormat, QColor, QTextCursor
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from main import MainWindow
 
 
 class UIManager:
-    def __init__(self, ui):
+    def __init__(self, ui: "MainWindow"):
         self._ui = ui
         self._current_program = None
 
