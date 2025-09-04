@@ -77,9 +77,10 @@ class CentralBottomPanel(QFrame):
             QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         )
 
-        btn_teach_pos = QPushButton("Teach Position")
-        btn_teach_pos.setObjectName("btn-teach-pos")
-        layout_top_row.addWidget(btn_teach_pos)
+        self._btn_teach_pos = QPushButton("Teach Position")
+        self._btn_teach_pos.setObjectName("btn-teach-pos")
+        self._btn_teach_pos.setEnabled(False)
+        layout_top_row.addWidget(self._btn_teach_pos)
         layout_ctl_btm.addWidget(top_row)
 
         label_joint_h2 = QLabel("JOINT POSITIONS")
@@ -135,3 +136,7 @@ class CentralBottomPanel(QFrame):
             layout_row_joint_pos.addWidget(div_joint_pos)
 
         return row_joint_pos
+
+    @property
+    def btn_teach_pos(self) -> QPushButton:
+        return self._btn_teach_pos

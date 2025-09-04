@@ -85,6 +85,32 @@ class CtrlPanel(QFrame):
                 width: 7px; 
                 height: 7px; 
             }}
+            
+            QRadioButton::indicator::disabled {{
+                width: 14px;
+                height: 14px;
+                border-radius: 7px;
+                border: 2px solid #6c757d;
+                background-color: #212529;
+            }}
+            
+            QRadioButton::indicator::unchecked::disabled{{
+                border: 1px solid; 
+                border-color: #6c757d;
+                border-radius: 5px;
+                background-color: #212529; 
+                width: 11px; 
+                height: 11px; 
+            }}
+            
+            QRadioButton::indicator::checked::disabled{{
+                border: 3px solid; 
+                border-color: #212529;
+                border-radius: 6px;
+                background-color: #6c757d; 
+                width: 7px; 
+                height: 7px; 
+            }}
         
             QFrame#slider-div {{
                 border: none;
@@ -193,7 +219,9 @@ class CtrlPanel(QFrame):
         layout_group.setContentsMargins(0, 0, 0, 0)
         self._radio1 = QRadioButton("Joint")
         self._radio1.setChecked(True)
+        self._radio1.setEnabled(False)
         self._radio2 = QRadioButton("Cartesian")
+        self._radio2.setEnabled(False)
         layout_group.addWidget(self._radio1)
         layout_group.addWidget(self._radio2)
         layout_group.addSpacerItem(
@@ -225,6 +253,7 @@ class CtrlPanel(QFrame):
         self._slider.setValue(50)
         self._slider.setSingleStep(10)
         self._slider.setTickInterval(10)
+        self._slider.setEnabled(False)
         layout_ctrl_panel.addWidget(self._slider)
 
         self._stacked = QStackedWidget()
@@ -238,6 +267,7 @@ class CtrlPanel(QFrame):
             btn.setSizePolicy(
                 QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
             )
+            btn.setEnabled(False)
             layout_set1.addWidget(btn, row, 0)
 
         for row in range(6):
@@ -246,6 +276,7 @@ class CtrlPanel(QFrame):
             btn.setSizePolicy(
                 QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
             )
+            btn.setEnabled(False)
             layout_set1.addWidget(btn, row, 1)
 
         self._stacked.addWidget(set1)
@@ -283,9 +314,10 @@ class CtrlPanel(QFrame):
         self._radio2.toggled.connect(lambda: self._stacked.setCurrentIndex(1))
         layout_ctrl_panel.addWidget(self._stacked)
 
-        btn_home_position = QPushButton("Home Position")
-        btn_home_position.setObjectName("btn-home-pos")
-        layout_ctrl_panel.addWidget(btn_home_position)
+        self._btn_home_position = QPushButton("Home Position")
+        self._btn_home_position.setObjectName("btn-home-pos")
+        self._btn_home_position.setEnabled(False)
+        layout_ctrl_panel.addWidget(self._btn_home_position)
 
         # btn_save_position = QPushButton("Save Position")
         # btn_save_position.setObjectName("btn-save-pos")
@@ -322,3 +354,7 @@ class CtrlPanel(QFrame):
     @property
     def button_stack(self) -> QStackedWidget:
         return self._stacked
+
+    @property
+    def btn_home_pos(self) -> QPushButton:
+        return self._btn_home_position

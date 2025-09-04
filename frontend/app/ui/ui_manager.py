@@ -1,5 +1,7 @@
 import datetime
 import re
+
+from PySide6.QtWidgets import QPushButton
 from PySide6.QtGui import QTextCharFormat, QColor, QTextCursor
 from typing import TYPE_CHECKING
 
@@ -44,6 +46,27 @@ class UIManager:
         con_status_label.setText(status_text)
         self._ui.btm_bar.con_status = status_text
         self._ui.btm_bar.com_port = port
+
+        # Toggle Enabled/Disabled
+        left_panel_ctrl = self._ui.left_panel.ctrl
+        left_panel_con = self._ui.left_panel.con
+        central_btm_panel = self._ui.central_btm_panel
+
+        left_panel_con.emergency_stop_btn.setEnabled(not is_enabled)
+
+        left_panel_ctrl.btn_radio1.setEnabled(not is_enabled)
+        left_panel_ctrl.btn_radio2.setEnabled(not is_enabled)
+        left_panel_ctrl.jog_speed_slider.setEnabled(not is_enabled)
+
+        for i in range(left_panel_ctrl.button_stack.count()):
+            frame = self._ui.left_panel.ctrl.button_stack.widget(i)
+            buttons = frame.findChildren(QPushButton)
+            for button in buttons:
+                button.setEnabled(not is_enabled)
+
+        left_panel_ctrl.btn_home_pos.setEnabled(not is_enabled)
+        central_btm_panel.btn_teach_pos.setEnabled(not is_enabled)
+
         # self._ui.setup_save_btn.setEnabled(is_enabled)
 
     def update_connection_status(self, status_text):

@@ -90,9 +90,10 @@ class ConPanel(QFrame):
         layout_con_panel.addWidget(self._con_btn)
 
         # Emergency Btn
-        emergency_stop_btn = QPushButton("EMERGENCY STOP")
-        emergency_stop_btn.setObjectName("btn-emergency-stop")
-        layout_con_panel.addWidget(emergency_stop_btn)
+        self._emergency_stop_btn = QPushButton("EMERGENCY STOP")
+        self._emergency_stop_btn.setObjectName("btn-emergency-stop")
+        self._emergency_stop_btn.setEnabled(False)
+        layout_con_panel.addWidget(self._emergency_stop_btn)
 
         com_port_label = QLabel("COM Port:")
         com_port_label.setObjectName("label-com-port")
@@ -102,6 +103,10 @@ class ConPanel(QFrame):
         self._combo_box = QComboBox()
         self._combo_box.setObjectName("combo-box-comport")
         layout_con_panel.addWidget(self._combo_box)
+
+    @property
+    def emergency_stop_btn(self) -> QPushButton:
+        return self._emergency_stop_btn
 
     @property
     def con_status_label(self) -> QLabel:

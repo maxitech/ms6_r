@@ -169,7 +169,8 @@ class MainWindow(QMainWindow):
         self.center_stack.addWidget(io_monitor_panel)
 
         center_layout.addWidget(self.center_stack)
-        center_layout.addWidget(CentralBottomPanel())
+        self.central_btm_panel = CentralBottomPanel()
+        center_layout.addWidget(self.central_btm_panel)
 
         app_grid.addWidget(self.left_panel, 0, 0, 2, 1)
         app_grid.addWidget(center_container, 0, 1, 2, 1)
