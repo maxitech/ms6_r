@@ -47,7 +47,7 @@ class MainWindowController:
         self._port_timer = QTimer()
         self._port_timer.timeout.connect(self._connection_handler.check_ports)
         self._port_timer.timeout.connect(self._connection_handler.check_status)
-        self._port_timer.start(1000)
+        self._port_timer.start(250)
 
     def set_data_out(self, packet):
         """Send data through serial connection"""
