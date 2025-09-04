@@ -14,8 +14,9 @@ class UIManager:
 
     def update_combo_box(self, ports):
         """Update port combo box"""
-        self._ui.con_device_comboBox.clear()
-        self._ui.con_device_comboBox.addItems(ports)
+        combo_box = self._ui.left_panel.con.combo_box
+        combo_box.clear()
+        combo_box.addItems(ports)
 
     def update_ui_based_on_connection_status(
         self, btn_text, status_text, is_enabled, port
