@@ -15,7 +15,7 @@ class JogHandler:
         self._helper = helper
         self._ui_manager = ui_manager
         self._pb = PacketBuilder()
-        self._slider_value = ui.left_panel.ctrl.jog_speed_slider
+        self._slider_value = ui.left_panel.ctrl.jog_speed_slider_val
         self._serial_packet: bytes | None = None
 
     def setup_connections(self):
@@ -27,31 +27,25 @@ class JogHandler:
 
     def _setup_jog_buttons(self):
         """Setup all jog button connections"""
-        jog_buttons = [
-            self._ui.jog_j1_pos_btn,
-            self._ui.jog_j1_neg_btn,
-            self._ui.jog_j2_pos_btn,
-            self._ui.jog_j2_neg_btn,
-            self._ui.jog_j3_pos_btn,
-            self._ui.jog_j3_neg_btn,
-            self._ui.jog_j4_pos_btn,
-            self._ui.jog_j4_neg_btn,
-            self._ui.jog_j5_pos_btn,
-            self._ui.jog_j5_neg_btn,
-            self._ui.jog_j6_pos_btn,
-            self._ui.jog_j6_neg_btn,
-        ]
+        for i in range(self._ui.left_panel.ctrl.button_stack.count()):
+            frame = self._ui.left_panel.ctrl.button_stack.widget(i)
+            buttons = frame.findChildren(QPushButton)
+            for button in buttons:
+                button.pressed.connect(
+                    lambda btn=button: self._handle_jog_btn_press(btn)
+                )
+                button.released.connect(self._handle_jog_btn_release)
 
-        for button in jog_buttons:
-            button.pressed.connect(lambda btn=button: self._handle_jog_btn_press(btn))
-            button.released.connect(self._handle_jog_btn_release)
-
-    def _handle_jog_btn_press(self, btn):
+    def _handle_jog_btn_press(self, btn: QPushButton):
         """Handle jog button press"""
-        joint_i, direction = self._parse_jog_button(btn)
-        if joint_i is not None and direction:
-            self._create_jog_cmd(i=joint_i, dir=direction)
-            self._queue_jog_cmd()
+        if "cart" in btn.objectName():
+            print("handle-jog-cart-btn-click")
+        else:
+            joint_i, direction = self._parse_jog_button(btn)
+            print(joint_i, direction)
+            if joint_i is not None and direction:
+                self._create_jog_cmd(i=joint_i, dir=direction)
+                # self._queue_jog_cmd()
 
     def _create_jog_cmd(self, i: int, dir: int):
         jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
@@ -69,13 +63,13 @@ class JogHandler:
         self._queue_jog_cmd()
         # shared_data.clear_data_queue_out()
 
-    def _parse_jog_button(self, btn) -> Tuple[int | None, int | None]:
+    def _parse_jog_button(self, btn: QPushButton) -> Tuple[int | None, int | None]:
         """Parse jog button name to get joint and direction"""
         btn_name = btn.objectName()
-        parts = btn_name.split("_")
+        parts = btn_name.split("-")
         if len(parts) == 4:
-            joint: str = parts[1].upper()  # J1-J6
-            dir_str: str = parts[2].upper()  # POS || NEG
+            joint: str = parts[2].upper()  # J1-J6
+            dir_str: str = parts[3].upper()  # POS || NEG
             joint_i = int(joint[-1]) - 1
             dir: int
             if dir_str == "POS":
@@ -99,7 +93,7 @@ class JogHandler:
 
     def _handle_jog_slider_change(self):
         """Handle jog slider value change"""
-        self._ui.left_panel.ctrl.jog_speed_slider_val = (
-            round(self._ui.left_panel.ctrl.jog_speed_slider.value() / 10) * 10
-        )
-        self._slider_value = self._ui.left_panel.ctrl.jog_speed_slider_val
+        raw_val = self._ui.left_panel.ctrl.jog_speed_slider_val
+        rounded_val = int(round(raw_val / 10) * 10)
+        self._ui.left_panel.ctrl.jog_speed_slider_val = rounded_val
+        self._slider_value = rounded_val
