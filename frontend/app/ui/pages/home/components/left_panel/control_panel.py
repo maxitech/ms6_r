@@ -227,27 +227,28 @@ class CtrlPanel(QFrame):
         self._slider.setTickInterval(10)
         layout_ctrl_panel.addWidget(self._slider)
 
-        stacked = QStackedWidget()
+        self._stacked = QStackedWidget()
         set1 = QFrame()
         layout_set1 = QGridLayout(set1)
         layout_set1.setContentsMargins(0, 0, 0, 0)
         layout_set1.setSpacing(8)
-        for row in range(6):
-            btn = QPushButton(f"J{row+1}+")
-            btn.setObjectName(f"btn-jog-j{row+1}-pos")
-            btn.setSizePolicy(
-                QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
-            )
-            layout_set1.addWidget(btn, row, 0)
-
         for row in range(6):
             btn = QPushButton(f"J{row+1}-")
             btn.setObjectName(f"btn-jog-j{row+1}-neg")
             btn.setSizePolicy(
                 QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
             )
+            layout_set1.addWidget(btn, row, 0)
+
+        for row in range(6):
+            btn = QPushButton(f"J{row+1}+")
+            btn.setObjectName(f"btn-jog-j{row+1}-pos")
+            btn.setSizePolicy(
+                QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+            )
             layout_set1.addWidget(btn, row, 1)
-        stacked.addWidget(set1)
+
+        self._stacked.addWidget(set1)
 
         set2 = QFrame()
         layout_set2 = QGridLayout(set2)
@@ -255,27 +256,32 @@ class CtrlPanel(QFrame):
         layout_set2.setSpacing(8)
         positive_btn_list = ["X+", "Y+", "Z+", "Rx+", "Ry+", "Rz+"]
         negative_btn_list = ["X-", "Y-", "Z-", "Rx-", "Ry-", "Rz-"]
-        for row, btn in enumerate(positive_btn_list):
+        for row, btn in enumerate(negative_btn_list):
             btn = QPushButton(f"{btn}")
-            btn.setObjectName(f"btn-jog-cart-{row+1}-pos")
+            btn.setObjectName(
+                f"btn-jog-cart-{negative_btn_list[row].lower().strip("-")}-neg"
+            )
             btn.setSizePolicy(
                 QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
             )
             layout_set2.addWidget(btn, row, 0)
 
-        for row, btn in enumerate(negative_btn_list):
+        for row, btn in enumerate(positive_btn_list):
             btn = QPushButton(f"{btn}")
-            btn.setObjectName(f"btn-jog-cart-{row+1}-neg")
+            btn.setObjectName(
+                f"btn-jog-cart-{positive_btn_list[row].lower().strip("+")}-pos"
+            )
             btn.setSizePolicy(
                 QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
             )
             layout_set2.addWidget(btn, row, 1)
-        stacked.addWidget(set2)
 
-        stacked.setCurrentIndex(0)
-        radio1.toggled.connect(lambda: stacked.setCurrentIndex(0))
-        radio2.toggled.connect(lambda: stacked.setCurrentIndex(1))
-        layout_ctrl_panel.addWidget(stacked)
+        self._stacked.addWidget(set2)
+
+        self._stacked.setCurrentIndex(0)
+        radio1.toggled.connect(lambda: self._stacked.setCurrentIndex(0))
+        radio2.toggled.connect(lambda: self._stacked.setCurrentIndex(1))
+        layout_ctrl_panel.addWidget(self._stacked)
 
         btn_home_position = QPushButton("Home Position")
         btn_home_position.setObjectName("btn-home-pos")
@@ -296,3 +302,7 @@ class CtrlPanel(QFrame):
     @jog_speed_slider_val.setter
     def jog_speed_slider_val(self, value: int):
         self._slider.setValue(value)
+
+    @property
+    def button_stack(self) -> QStackedWidget:
+        return self._stacked
