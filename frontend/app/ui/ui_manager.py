@@ -38,6 +38,10 @@ class UIManager:
         con_status_label = self._ui.left_panel.con.con_status_label
         con_status_label.setText(status_text)
 
+    def update_slider_label(self, val: int):
+        self._ui.left_panel.ctrl.label_speed = val
+        self._ui.btm_bar.speed = val
+
     # def update_program_monitor(
     #     self,
     #     cmd,

@@ -211,8 +211,8 @@ class CtrlPanel(QFrame):
         label_slider.setObjectName("label-slider")
         layout_slider_div.addWidget(label_slider)
 
-        label_speed = QLabel("50%")
-        layout_slider_div.addWidget(label_speed)
+        self._label_speed = QLabel("50%")
+        layout_slider_div.addWidget(self._label_speed)
         layout_slider_div.addSpacerItem(
             QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         )
@@ -220,7 +220,7 @@ class CtrlPanel(QFrame):
 
         self._slider = QSlider(QtCore.Qt.Orientation.Horizontal)
         self._slider.setObjectName("jog-speed-slider")
-        self._slider.setMinimum(0)
+        self._slider.setMinimum(10)
         self._slider.setMaximum(100)
         self._slider.setValue(50)
         self._slider.setSingleStep(10)
@@ -290,6 +290,14 @@ class CtrlPanel(QFrame):
         # btn_save_position = QPushButton("Save Position")
         # btn_save_position.setObjectName("btn-save-pos")
         # layout_ctrl_panel.addWidget(btn_save_position)
+
+    @property
+    def label_speed(self) -> QLabel:
+        return self._label_speed
+
+    @label_speed.setter
+    def label_speed(self, val: int):
+        self._label_speed.setText(f"{str(val)}%")
 
     @property
     def jog_speed_slider(self) -> QSlider:

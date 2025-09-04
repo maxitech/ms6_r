@@ -142,4 +142,4 @@ class BottomBar(QFrame):
 
     @speed.setter
     def speed(self, speed: int):
-        self._label_speed.setText(f"Speed: {str(int)}%")
+        self._label_speed.setText(f"Speed: {str(speed)}%")

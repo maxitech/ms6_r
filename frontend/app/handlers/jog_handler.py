@@ -99,4 +99,5 @@ class JogHandler:
         raw_val = self._ui.left_panel.ctrl.jog_speed_slider_val
         rounded_val = int(round(raw_val / 10) * 10)
         self._ui.left_panel.ctrl.jog_speed_slider_val = rounded_val
+        self._ui_manager.update_slider_label(rounded_val)
         self._slider_value = rounded_val
