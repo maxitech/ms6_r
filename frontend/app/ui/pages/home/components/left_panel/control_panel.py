@@ -173,7 +173,7 @@ class CtrlPanel(QFrame):
             }}
             
             QStackedWidget QFrame QPushButton#btn-home-pos {{
-                font-weight: 700;
+                font-weight: 400;
                 font-size: 14px;
             }}
             """
