@@ -48,7 +48,7 @@ class JogHandler:
             print(joint_i, direction)
             if joint_i is not None and direction:
                 self._create_jog_cmd(i=joint_i, dir=direction)
-                # self._queue_jog_cmd()
+                self._queue_jog_cmd()
 
     def _create_jog_cmd(self, i: int, dir: int):
         jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
