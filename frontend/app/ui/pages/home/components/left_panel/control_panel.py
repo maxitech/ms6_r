@@ -218,14 +218,14 @@ class CtrlPanel(QFrame):
         )
         layout_ctrl_panel.addWidget(slider_div)
 
-        slider = QSlider(QtCore.Qt.Orientation.Horizontal)
-        slider.setObjectName("jog-speed-slider")
-        slider.setMinimum(0)
-        slider.setMaximum(100)
-        slider.setValue(50)
-        slider.setSingleStep(10)
-        slider.setTickInterval(10)
-        layout_ctrl_panel.addWidget(slider)
+        self._slider = QSlider(QtCore.Qt.Orientation.Horizontal)
+        self._slider.setObjectName("jog-speed-slider")
+        self._slider.setMinimum(0)
+        self._slider.setMaximum(100)
+        self._slider.setValue(50)
+        self._slider.setSingleStep(10)
+        self._slider.setTickInterval(10)
+        layout_ctrl_panel.addWidget(self._slider)
 
         stacked = QStackedWidget()
         set1 = QFrame()
@@ -284,3 +284,15 @@ class CtrlPanel(QFrame):
         # btn_save_position = QPushButton("Save Position")
         # btn_save_position.setObjectName("btn-save-pos")
         # layout_ctrl_panel.addWidget(btn_save_position)
+
+    @property
+    def jog_speed_slider(self) -> QSlider:
+        return self._slider
+
+    @property
+    def jog_speed_slider_val(self) -> int:
+        return self._slider.value()
+
+    @jog_speed_slider_val.setter
+    def jog_speed_slider_val(self, value: int):
+        self._slider.setValue(value)

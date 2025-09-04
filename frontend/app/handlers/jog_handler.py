@@ -12,13 +12,15 @@ class JogHandler:
         self._helper = helper
         self._ui_manager = ui_manager
         self._pb = PacketBuilder()
-        self._slider_value = ui.jog_slider.value()
+        self._slider_value = ui.left_panel.ctrl.jog_speed_slider
         self._serial_packet: bytes | None = None
 
     def setup_connections(self):
         """Setup jog-related connections"""
         self._setup_jog_buttons()
-        self._ui.jog_slider.valueChanged.connect(self._handle_jog_slider_change)
+        self._ui.left_panel.ctrl.jog_speed_slider.valueChanged.connect(
+            self._handle_jog_slider_change
+        )
 
     def _setup_jog_buttons(self):
         """Setup all jog button connections"""
@@ -94,5 +96,7 @@ class JogHandler:
 
     def _handle_jog_slider_change(self):
         """Handle jog slider value change"""
-        self._ui.jog_slider.setValue(round(self._ui.jog_slider.value() / 10) * 10)
-        self._slider_value = self._ui.jog_slider.value()
+        self._ui.left_panel.ctrl.jog_speed_slider_val = (
+            round(self._ui.left_panel.ctrl.jog_speed_slider.value() / 10) * 10
+        )
+        self._slider_value = self._ui.left_panel.ctrl.jog_speed_slider_val

@@ -38,6 +38,9 @@ class LeftPanel(QFrame):
 
         left_layout.addWidget(ConPanel())
 
-        # ctrl_panel = QFrame()
+        self._ctrl_panel = CtrlPanel()
+        left_layout.addWidget(self._ctrl_panel)
 
-        left_layout.addWidget(CtrlPanel())
+    @property
+    def ctrl(self) -> CtrlPanel:
+        return self._ctrl_panel
