@@ -191,11 +191,11 @@ class CtrlPanel(QFrame):
         group_box = QGroupBox("Jog Mode:")
         layout_group = QHBoxLayout(group_box)
         layout_group.setContentsMargins(0, 0, 0, 0)
-        radio1 = QRadioButton("Joint")
-        radio1.setChecked(True)
-        radio2 = QRadioButton("Cartesian")
-        layout_group.addWidget(radio1)
-        layout_group.addWidget(radio2)
+        self._radio1 = QRadioButton("Joint")
+        self._radio1.setChecked(True)
+        self._radio2 = QRadioButton("Cartesian")
+        layout_group.addWidget(self._radio1)
+        layout_group.addWidget(self._radio2)
         layout_group.addSpacerItem(
             QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         )
@@ -279,8 +279,8 @@ class CtrlPanel(QFrame):
         self._stacked.addWidget(set2)
 
         self._stacked.setCurrentIndex(0)
-        radio1.toggled.connect(lambda: self._stacked.setCurrentIndex(0))
-        radio2.toggled.connect(lambda: self._stacked.setCurrentIndex(1))
+        self._radio1.toggled.connect(lambda: self._stacked.setCurrentIndex(0))
+        self._radio2.toggled.connect(lambda: self._stacked.setCurrentIndex(1))
         layout_ctrl_panel.addWidget(self._stacked)
 
         btn_home_position = QPushButton("Home Position")
@@ -290,6 +290,14 @@ class CtrlPanel(QFrame):
         # btn_save_position = QPushButton("Save Position")
         # btn_save_position.setObjectName("btn-save-pos")
         # layout_ctrl_panel.addWidget(btn_save_position)
+
+    @property
+    def btn_radio1(self) -> QRadioButton:
+        return self._radio1
+
+    @property
+    def btn_radio2(self) -> QRadioButton:
+        return self._radio2
 
     @property
     def label_speed(self) -> QLabel:

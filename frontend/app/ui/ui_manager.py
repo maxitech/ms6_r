@@ -12,6 +12,19 @@ class UIManager:
         self._ui = ui
         self._current_program = None
 
+        self._ui.left_panel.ctrl.btn_radio1.toggled.connect(
+            lambda checked: self._handle_radio_toggle("JOINT") if checked else None
+        )
+        self._ui.left_panel.ctrl.btn_radio2.toggled.connect(
+            lambda checked: self._handle_radio_toggle("CART") if checked else None
+        )
+
+    def _handle_radio_toggle(self, mode: str):
+        if not isinstance(mode, str):
+            return
+        mode = mode.upper()
+        self._ui.btm_bar.mode = self._ui.btm_bar.mode = mode
+
     def update_combo_box(self, ports):
         """Update port combo box"""
         combo_box = self._ui.left_panel.con.combo_box
