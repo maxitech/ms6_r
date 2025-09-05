@@ -47,6 +47,11 @@ class ConPanel(QFrame):
                 margin-top: 4px;
                 padding: 0;
             }}
+            
+            QComboBox#combo-box-comport {{
+                min-height: 30px;
+                padding-left: 8px;
+            }}
             """
         self.setStyleSheet(style)
 
