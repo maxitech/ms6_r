@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QGroupBox,
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTime
 
 
 class ComMonitorPanel(QWidget):
@@ -172,16 +172,41 @@ class ComMonitorPanel(QWidget):
 
     def add_log_entry(self, text):
         frame = QFrame()
-        frame.setFrameShape(QFrame.Shape.StyledPanel)
-        frame.setStyleSheet(
-            "background-color: #999; border: 1px solid #000; max-height: 70px;"
-        )
+        frame.setObjectName("log-container")
+        frame_layout = QVBoxLayout(frame)
 
-        layout = QVBoxLayout(frame)
-        label = QLabel(text)
-        button = QPushButton("Action")
-        layout.addWidget(label)
-        layout.addWidget(button)
+        info_div = QFrame()
+        info_div.setStyleSheet("padding-top: 2px;")
+        info_div_layout = QHBoxLayout(info_div)
+        curr_t = QTime.currentTime().toString("hh:mm:ss.zzz AP")
+        time_label = QLabel(f"{curr_t}")
+        time_label.setStyleSheet("color: #343a40; font-size: 10px; font-weight: 700;")
+        info_div_layout.addWidget(time_label)
+
+        dir_label = QLabel()
+        valid_dirs = {"sys", "tx", "rx"}
+        d = dir.lower().strip()
+
+        if d in valid_dirs:
+            dir_label.setText(f"{dir.upper()}")
+            dir_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            if d == "sys":
+                dir_label.setStyleSheet(
+                    "background-color: #d1d5dc; color: #000; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 5px;"
+                )
+            elif d == "tx":
+                dir_label.setStyleSheet(
+                    "background-color: #BEDBFF; color: #193CB8; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 5px;"
+                )
+            elif d == "rx":
+                dir_label.setStyleSheet(
+                    "background-color: #B9F8CF; color: #1A7946; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 5px;"
+                )
+
+        info_div_layout.addWidget(dir_label)
+        info_div_layout.addStretch()
+
+        frame_layout.addWidget(info_div)
 
         self.content_layout.insertWidget(self.content_layout.count() - 1, frame)
 
