@@ -1,4 +1,5 @@
 import json
+from PySide6.QtCore import Signal, QObject
 from app.core.serial_connection import SerialConnection
 from typing import List
 from app.core.shared.shared_data import shared_data
@@ -14,8 +15,13 @@ if TYPE_CHECKING:
     from main import MainWindow
 
 
-class ConnectionHandler:
+class ConnectionHandler(QObject):
+    connection_changed = Signal(bool)
+
     def __init__(self, ui: "MainWindow", setup, serial: SerialConnection, ui_manager):
+        super().__init__()
+        self._connected: bool = False
+
         self._ui = ui
         self._setup = setup
         self._serial = serial
@@ -45,10 +51,19 @@ class ConnectionHandler:
 
     def check_status(self):
         """Check connection status"""
-        if not self._serial.is_connected():
-            self._ui_manager.update_ui_based_on_connection_status(
-                "Connect", "Disconnected", True, "None"
-            )
+        new_status = self._serial.is_connected()
+        if new_status != self._connected:
+            self._connected = new_status
+            if not new_status:
+                self._ui_manager.update_ui_based_on_connection_status(
+                    "Connect", "Disconnected", True, "None"
+                )
+            self._set_connection_status(new_status)
+
+    def _set_connection_status(self, connected: bool):
+        if connected != self._connected:
+            self._connected = connected
+        self.connection_changed.emit(connected)
 
     def _handle_con_btn_click(self):
         """Handle connect/disconnect button click"""
