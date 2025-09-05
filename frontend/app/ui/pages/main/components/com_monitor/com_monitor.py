@@ -130,11 +130,12 @@ class ComMonitorPanel(QWidget):
         raw_data_check_box.setChecked(True)
         parsed_check_box = QCheckBox("Parsed")
         parsed_check_box.setChecked(True)
-        auto_scroll_check_box = QCheckBox("Auto Scroll")
-        auto_scroll_check_box.setChecked(True)
+        self._auto_scroll_check_box = QCheckBox("Auto Scroll")
+        self._auto_scroll_check_box.setChecked(True)
+        self._auto_scroll_check_box.toggled.connect(self._on_auto_scroll_toggled)
         check_box_group_layout.addWidget(raw_data_check_box)
         check_box_group_layout.addWidget(parsed_check_box)
-        check_box_group_layout.addWidget(auto_scroll_check_box)
+        check_box_group_layout.addWidget(self._auto_scroll_check_box)
 
         clear_btn = QPushButton("Clear")
 
@@ -153,6 +154,7 @@ class ComMonitorPanel(QWidget):
         # Scroll Area
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
+
         bar = self.scroll_area.verticalScrollBar()
         bar.rangeChanged.connect(self.ResizeScroll)
 
@@ -165,7 +167,6 @@ class ComMonitorPanel(QWidget):
 
         # Main Layout
         log_layout = QVBoxLayout(self)
-        # log_layout.setContentsMargins(0, 0, 0, 0)
         log_layout.addWidget(top_container)
         log_layout.addWidget(self.scroll_area)
 
@@ -185,4 +186,10 @@ class ComMonitorPanel(QWidget):
         self.content_layout.insertWidget(self.content_layout.count() - 1, frame)
 
     def ResizeScroll(self, _, max):
-        self.scroll_area.verticalScrollBar().setValue(max)
+        if self._auto_scroll_check_box.isChecked():
+            self.scroll_area.verticalScrollBar().setValue(max)
+
+    def _on_auto_scroll_toggled(self, checked: bool):
+        if checked:
+            bar = self.scroll_area.verticalScrollBar()
+            bar.setValue(bar.maximum())
