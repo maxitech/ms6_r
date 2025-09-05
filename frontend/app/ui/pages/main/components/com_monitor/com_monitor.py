@@ -176,8 +176,9 @@ class ComMonitorPanel(QWidget):
         frame_layout = QVBoxLayout(frame)
 
         info_div = QFrame()
-        info_div.setStyleSheet("padding-top: 2px;")
+        info_div.setStyleSheet("padding-top: 2px; border: none;")
         info_div_layout = QHBoxLayout(info_div)
+        info_div_layout.setContentsMargins(0, 0, 0, 0)
         curr_t = QTime.currentTime().toString("hh:mm:ss.zzz AP")
         time_label = QLabel(f"{curr_t}")
         time_label.setStyleSheet("color: #343a40; font-size: 10px; font-weight: 700;")
@@ -219,23 +220,29 @@ class ComMonitorPanel(QWidget):
                 type_label.setStyleSheet(
                     "background-color: #d1d5dc; color: #000; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
                 )
+                frame.setStyleSheet("border: none; border-left: 4px solid #99a1af;")
             elif t == "data":
                 type_label.setStyleSheet(
                     "background-color: #BEDBFF; color: #193CB8; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
                 )
+                frame.setStyleSheet("border: none; border-left: 4px solid #193CB8;")
             elif t == "error":
                 type_label.setStyleSheet(
                     "background-color: #FFC9C9; color: #9F0712; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
                 )
+                frame.setStyleSheet("border: none; border-left: 4px solid #9F0712;")
             elif t == "warning":
                 type_label.setStyleSheet(
                     "background-color: #fff8d6; color: #ff7b00; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
                 )
+                frame.setStyleSheet("border: none; border-left: 4px solid #ff7b00;")
             else:
                 dir_label.setText("ERROR: Unknown type label! Function error.")
                 dir_label.setStyleSheet(
                     "background-color: #FFC9C9; color: #9F0712; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
                 )
+                frame.setStyleSheet("border: none; border-left: 4px solid #9F0712;")
+
         info_div_layout.addWidget(dir_label)
         info_div_layout.addWidget(type_label)
         info_div_layout.addStretch()
