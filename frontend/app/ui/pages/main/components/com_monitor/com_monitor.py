@@ -202,10 +202,43 @@ class ComMonitorPanel(QWidget):
                 dir_label.setStyleSheet(
                     "background-color: #B9F8CF; color: #1A7946; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 5px;"
                 )
+            else:
+                dir_label.setText("ERROR: Unknown dir label! Function error.")
+                dir_label.setStyleSheet(
+                    "background-color: #FFC9C9; color: #9F0712; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 5px;"
+                )
 
+        type_label = QLabel()
+        valid_types = {"data", "error", "info", "warning"}
+        t = type.lower().strip()
+
+        if t in valid_types:
+            type_label.setText(f"{type.upper()}")
+            type_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            if t == "info":
+                type_label.setStyleSheet(
+                    "background-color: #d1d5dc; color: #000; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
+                )
+            elif t == "data":
+                type_label.setStyleSheet(
+                    "background-color: #BEDBFF; color: #193CB8; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
+                )
+            elif t == "error":
+                type_label.setStyleSheet(
+                    "background-color: #FFC9C9; color: #9F0712; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
+                )
+            elif t == "warning":
+                type_label.setStyleSheet(
+                    "background-color: #fff8d6; color: #ff7b00; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
+                )
+            else:
+                dir_label.setText("ERROR: Unknown type label! Function error.")
+                dir_label.setStyleSheet(
+                    "background-color: #FFC9C9; color: #9F0712; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
+                )
         info_div_layout.addWidget(dir_label)
+        info_div_layout.addWidget(type_label)
         info_div_layout.addStretch()
-
         frame_layout.addWidget(info_div)
 
         self.content_layout.insertWidget(self.content_layout.count() - 1, frame)
