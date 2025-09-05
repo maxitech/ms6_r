@@ -231,8 +231,8 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         print("Closing application...")
         packet: bytes = self._pb.build_packet(cmd_id=CMD_IDLE, data=NOP)
-        # self.controller.set_data_out(packet)
-        # self.controller.serial.disconnect()
+        self.controller.set_data_out(packet)
+        self.controller.serial.disconnect()
         # TODO: Settings persistence
         event.accept()
 
