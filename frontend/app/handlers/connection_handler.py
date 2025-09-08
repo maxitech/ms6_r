@@ -8,6 +8,7 @@ from app.constants.com_protocol import *
 from app.core.packet_builder import PacketBuilder
 from app.core.packet_processor import PacketProcessor
 from app.core.packet_parser import PacketParser
+from app.ui.ui_manager import UIManager
 
 from typing import TYPE_CHECKING
 
@@ -18,7 +19,9 @@ if TYPE_CHECKING:
 class ConnectionHandler(QObject):
     connection_changed = Signal(bool)
 
-    def __init__(self, ui: "MainWindow", setup, serial: SerialConnection, ui_manager):
+    def __init__(
+        self, ui: "MainWindow", setup, serial: SerialConnection, ui_manager: UIManager
+    ):
         super().__init__()
         self._connected: bool = False
 
@@ -92,12 +95,12 @@ class ConnectionHandler(QObject):
             self._ui_manager.update_ui_based_on_connection_status(
                 "Disconnect", f"Connected", False, selected_port
             )
-            self._ui_manager.log_message("INFO", "Connection established", "lightblue")
-        else:
-            self._ui_manager.update_connection_status(
-                f"Failed to connect to {selected_port}"
+            self._ui_manager.update_com_monitor(
+                "sys", "info", "Connection established."
             )
-            self._ui_manager.log_message("ERROR", "Failed to connect", "red")
+        else:
+            self._ui_manager.update_connection_status(f"Failed!")
+            self._ui_manager.update_com_monitor("sys", "error", "Failed to connect.")
 
     def _is_valid_format(self, data_str):
         """Check if data format is valid"""
@@ -116,15 +119,17 @@ class ConnectionHandler(QObject):
             self._ui_manager.update_ui_based_on_connection_status(
                 "Connect", "Disconnected", True, "None"
             )
-            self._ui_manager.log_message("INFO", "Disconnected", "lightblue")
+            self._set_connection_status(False)
+            self._ui_manager.update_com_monitor("sys", "info", "Disconnected.")
+
         else:
             self._ui_manager.update_connection_status("Failed to disconnect")
-            self._ui_manager.log_message("ERROR", "Failed to disconnect", "red")
+            self._ui_manager.update_com_monitor("sys", "error", "Failed to disconnect")
 
     def handle_unexpected_disconnect(self):
         """Handle unexpected disconnection"""
-        self._ui_manager.log_message(
-            "ERROR", "Connection lost! Device may be disconnected.", "red"
+        self._ui_manager.update_com_monitor(
+            "sys", "error", "Connection lost! Device may be disconnected."
         )
 
     def _on_serial_data_received(self, raw_data: bytes):

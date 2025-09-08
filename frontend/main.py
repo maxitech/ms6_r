@@ -158,12 +158,12 @@ class MainWindow(QMainWindow):
         self.center_stack = QStackedWidget()
 
         editor_panel = EditorPanel()
-        com_monitor_panel = ComMonitorPanel()
+        self.com_monitor_panel = ComMonitorPanel()
         io_monitor_panel = IOMonitorPanel()
 
         # add pages to stack
+        self.center_stack.addWidget(self.com_monitor_panel)
         self.center_stack.addWidget(editor_panel)
-        self.center_stack.addWidget(com_monitor_panel)
         self.center_stack.addWidget(io_monitor_panel)
 
         center_layout.addWidget(self.center_stack)

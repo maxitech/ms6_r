@@ -78,6 +78,21 @@ class UIManager:
         self._ui.left_panel.ctrl.label_speed = val
         self._ui.btm_bar.speed = val
 
+    def update_com_monitor(
+        self,
+        dir: str,
+        type: str,
+        msg: str,
+        received_bytes: bytes | None = None,
+        parsed: str = "",
+    ):
+        is_raw_data = bool(received_bytes)
+        com_monitor_component = self._ui.com_monitor_panel
+        if is_raw_data:
+            com_monitor_component.add_log_entry(dir, type, msg, received_bytes, parsed)
+        else:
+            com_monitor_component.add_log_entry(dir, type, msg)
+
     # def update_program_monitor(
     #     self,
     #     cmd,
