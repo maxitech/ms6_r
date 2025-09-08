@@ -397,6 +397,7 @@ class ComMonitorPanel(QWidget):
             widget = item.widget()
             if widget is not None:
                 widget.deleteLater()
+        self._content_layout.addStretch()
 
     def _on_filter_changed(self):
         selected_dir_filter = self._dir_combo_box.currentText()
