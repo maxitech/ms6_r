@@ -25,7 +25,7 @@ class ComMonitorPanel(QWidget):
         self._setup_style()
         self._create_layout()
 
-        self.add_log_entry("test")
+        self._raw_data_labels: list[QLabel] = []
 
     def _setup_style(self):
         bg_color = "#e5e7eb"
@@ -162,6 +162,14 @@ class ComMonitorPanel(QWidget):
             font-weight: 700;
             color: {col_text}
         }}
+        
+        QFrame#log-container QLabel#raw-data-label {{
+            color: #193CB8;
+            font-size: 12px;
+            padding: 2px 2px;
+            padding-top: 4px;
+            border: 1px solid {col_light_gray};
+        }}
         """
         self.setStyleSheet(style)
 
@@ -209,14 +217,15 @@ class ComMonitorPanel(QWidget):
         check_box_group = QGroupBox()
         check_box_group_layout = QHBoxLayout(check_box_group)
         check_box_group_layout.setContentsMargins(0, 0, 0, 0)
-        raw_data_check_box = QCheckBox("Raw Data")
-        raw_data_check_box.setChecked(True)
+        self._raw_data_check_box = QCheckBox("Raw Data")
+        self._raw_data_check_box.setChecked(True)
+        self._raw_data_check_box.toggled.connect(self._on_raw_data_toggled)
         parsed_check_box = QCheckBox("Parsed")
         parsed_check_box.setChecked(True)
         self._auto_scroll_check_box = QCheckBox("Auto Scroll")
         self._auto_scroll_check_box.setChecked(True)
         self._auto_scroll_check_box.toggled.connect(self._on_auto_scroll_toggled)
-        check_box_group_layout.addWidget(raw_data_check_box)
+        check_box_group_layout.addWidget(self._raw_data_check_box)
         check_box_group_layout.addWidget(parsed_check_box)
         check_box_group_layout.addWidget(self._auto_scroll_check_box)
 
@@ -325,13 +334,33 @@ class ComMonitorPanel(QWidget):
         msg_label = QLabel(f"{msg}")
         msg_label.setObjectName("msg-label")
 
+        # Toggle
+        self._raw_data_label = QLabel()
+        self._raw_data_label.setIndent(0)
+        self._raw_data_label.setObjectName("raw-data-label")
+        self._raw_data_labels.append(self._raw_data_label)
+        if not isinstance(received_bytes, (bytes, bytearray)):
+            received_bytes = b""
+        try:
+            raw_data_str = "Raw: " + " ".join(f"{b:02X}" for b in received_bytes)
+        except Exception as e:
+            raw_data_str = f"Raw: <error: {e}>"
+        self._raw_data_label.setText(raw_data_str)
+
+        self._raw_data_label.setVisible(True)
+
         frame_layout.addWidget(info_div)
         frame_layout.addWidget(msg_label)
+        frame_layout.addWidget(self._raw_data_label)
         self.content_layout.insertWidget(self.content_layout.count() - 1, frame)
 
     def ResizeScroll(self, _, max):
         if self._auto_scroll_check_box.isChecked():
             self.scroll_area.verticalScrollBar().setValue(max)
+
+    def _on_raw_data_toggled(self, checked: bool):
+        for lbl in self._raw_data_labels:
+            lbl.setVisible(checked)
 
     def _on_auto_scroll_toggled(self, checked: bool):
         if checked:
