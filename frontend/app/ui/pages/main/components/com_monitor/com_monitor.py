@@ -235,6 +235,7 @@ class ComMonitorPanel(QWidget):
         self._raw_data_check_box.toggled.connect(self._on_raw_data_toggled)
         parsed_check_box = QCheckBox("Parsed")
         parsed_check_box.setChecked(True)
+        parsed_check_box.toggled.connect(self._on_parsed_toggled)
         self._auto_scroll_check_box = QCheckBox("Auto Scroll")
         self._auto_scroll_check_box.setChecked(True)
         self._auto_scroll_check_box.toggled.connect(self._on_auto_scroll_toggled)
@@ -275,7 +276,9 @@ class ComMonitorPanel(QWidget):
         log_layout.addWidget(top_container)
         log_layout.addWidget(self.scroll_area)
 
-    def add_log_entry(self, text):
+    def add_log_entry(
+        self, dir: str, type: str, msg: str, received_bytes: bytes, parsed: str
+    ):
         frame = QFrame()
         frame.setObjectName("log-container")
         frame_layout = QVBoxLayout(frame)
@@ -363,9 +366,15 @@ class ComMonitorPanel(QWidget):
 
         self._raw_data_label.setVisible(True)
 
+        parsed_label = QLabel(f">> {parsed}")
+        parsed_label.setIndent(0)
+        parsed_label.setObjectName("parsed-label")
+        self._parsed_labels.append(parsed_label)
+
         frame_layout.addWidget(info_div)
         frame_layout.addWidget(msg_label)
         frame_layout.addWidget(self._raw_data_label)
+        frame_layout.addWidget(parsed_label)
         self.content_layout.insertWidget(self.content_layout.count() - 1, frame)
 
     def ResizeScroll(self, _, max):
@@ -374,6 +383,10 @@ class ComMonitorPanel(QWidget):
 
     def _on_raw_data_toggled(self, checked: bool):
         for lbl in self._raw_data_labels:
+            lbl.setVisible(checked)
+
+    def _on_parsed_toggled(self, checked: bool):
+        for lbl in self._parsed_labels:
             lbl.setVisible(checked)
 
     def _on_auto_scroll_toggled(self, checked: bool):
