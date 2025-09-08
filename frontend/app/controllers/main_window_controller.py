@@ -37,7 +37,7 @@ class MainWindowController:
         self._connection_handler.setup_connections()
         # self._command_handler.setup_connections()
         self._jog_handler.setup_connections()
-        # self._program_handler.setup_connections()
+        self._program_handler.setup_connections()
 
         # Setup specific connections
         # self._ui.setup_save_btn.clicked.connect(self._handle_setup_save)

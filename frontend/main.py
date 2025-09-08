@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
     QLabel,
 )
 from PySide6.QtGui import QFont, QAction
+from PySide6.QtCore import Signal
 
 from app.controllers.main_window_controller import MainWindowController
 from app.constants.com_protocol import CMD_IDLE, NOP
@@ -39,6 +40,8 @@ def make_panel(name):
 
 
 class MainWindow(QMainWindow):
+    robotActionTriggered = Signal(str)
+
     def __init__(self):
         super().__init__()
         self._pb = PacketBuilder()
@@ -206,11 +209,16 @@ class MainWindow(QMainWindow):
                 self._show_center_page(key)
             elif scope == "main":
                 self._show_main_page(key)
+            elif scope == "robot_action":
+                self._handle_robot_action(key)
             elif scope == "noop":
-                print("noop action:", key)
+                print("noop: ", key)
         else:
             # fallback: handle unknown actions if needed(later)
             pass
+
+    def _handle_robot_action(self, action: str):
+        self.robotActionTriggered.emit(action)
 
     def _show_main_page(self, page: str):
         mapping = {"main_page": 0, "general_settings": 1, "about_page": 2}

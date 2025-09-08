@@ -76,35 +76,34 @@ class RightPanel(QFrame):
 
         # Row 1
         op_btn_div_row1 = QHBoxLayout()
-        run_btn = QPushButton("Run")
-        run_btn.setObjectName("btn-run")
-        run_btn.setCheckable(True)
-        run_btn.setChecked(True)
-        run_btn.setEnabled(False)
-        op_btn_div_row1.addWidget(run_btn)
+        self._run_btn = QPushButton("Run")
+        self._run_btn.setObjectName("btn-run")
+        self._run_btn.setCheckable(True)
+        self._run_btn.setEnabled(False)
+        op_btn_div_row1.addWidget(self._run_btn)
 
-        stop_btn = QPushButton("Stop")
-        stop_btn.setObjectName("btn-stop")
-        stop_btn.setCheckable(True)
-        stop_btn.setEnabled(False)
-        op_btn_div_row1.addWidget(stop_btn)
+        self._stop_btn = QPushButton("Stop")
+        self._stop_btn.setObjectName("btn-stop")
+        self._stop_btn.setCheckable(True)
+        self._stop_btn.setEnabled(False)
+        op_btn_div_row1.addWidget(self._stop_btn)
 
         group = QButtonGroup(op_btn_div)
         group.setExclusive(True)
-        group.addButton(run_btn)
-        group.addButton(stop_btn)
+        group.addButton(self._run_btn)
+        group.addButton(self._stop_btn)
 
-        step_btn = QPushButton("Step")
-        step_btn.setObjectName("btn-step")
-        step_btn.setEnabled(False)
-        op_btn_div_row1.addWidget(step_btn)
+        self._step_btn = QPushButton("Step")
+        self._step_btn.setObjectName("btn-step")
+        self._step_btn.setEnabled(False)
+        op_btn_div_row1.addWidget(self._step_btn)
 
         # Row 2
         op_btn_div_row2 = QHBoxLayout()
-        load_btn = QPushButton("Load Program to Robot")
-        load_btn.setObjectName("btn-load-to-rbt")
-        load_btn.setEnabled(False)
-        op_btn_div_row2.addWidget(load_btn)
+        self._load_btn = QPushButton("Load Program to Robot")
+        self._load_btn.setObjectName("btn-load-to-rbt")
+        self._load_btn.setEnabled(False)
+        op_btn_div_row2.addWidget(self._load_btn)
 
         # Add rows to frame layout
         layout_op_btn_div.addLayout(op_btn_div_row1)
@@ -117,3 +116,19 @@ class RightPanel(QFrame):
             QSpacerItem(0, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         )
         right_layout.addWidget(program_ctrl)
+
+    @property
+    def run_btn(self) -> QPushButton:
+        return self._run_btn
+
+    @property
+    def stop_btn(self) -> QPushButton:
+        return self._stop_btn
+
+    @property
+    def step_btn(self) -> QPushButton:
+        return self._step_btn
+
+    @property
+    def load_btn(self) -> QPushButton:
+        return self._load_btn

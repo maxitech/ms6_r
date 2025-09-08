@@ -98,6 +98,8 @@ class MenuBar(QMenuBar):
         # Predefined Programs submenu
         predefined_menu = robot_menu.addMenu("Predefined Programs")
         ping_action = QAction("Ping", self)
+        ping_action.setData("robot_action:ping")
+        self._actions.append(ping_action)
         predefined_menu.addAction(ping_action)
 
         test_switches_action = QAction("Test Switches", self)

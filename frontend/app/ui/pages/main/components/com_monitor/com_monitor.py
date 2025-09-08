@@ -277,7 +277,7 @@ class ComMonitorPanel(QWidget):
         dir: str,
         type: str,
         msg: str,
-        received_bytes: bytes | None = None,
+        raw_bytes: bytes | None = None,
         parsed: str = "",
     ):
         frame = QFrame()
@@ -356,16 +356,16 @@ class ComMonitorPanel(QWidget):
         frame_layout.addWidget(info_div)
         frame_layout.addWidget(msg_label)
 
-        show_raw_data = bool(received_bytes)
+        show_raw_data = bool(raw_bytes)
         if show_raw_data:
             raw_data_label = QLabel()
             raw_data_label.setIndent(0)
             raw_data_label.setObjectName("raw-data-label")
             self._raw_data_labels.append(raw_data_label)
-            if not isinstance(received_bytes, (bytes, bytearray)):
+            if not isinstance(raw_bytes, (bytes, bytearray)):
                 received_bytes = b""
             try:
-                raw_data_str = "Raw: " + " ".join(f"{b:02X}" for b in received_bytes)
+                raw_data_str = "Raw: " + " ".join(f"{b:02X}" for b in raw_bytes)
             except Exception as e:
                 raw_data_str = f"Raw: <error: {e}>"
             raw_data_label.setText(raw_data_str)
