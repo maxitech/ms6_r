@@ -76,6 +76,7 @@ class ComMonitorPanel(QWidget):
         
         QFrame#top-container QFrame#top-inner-div QPushButton {{
             padding: 4px 16px;
+            padding-top: 6px;
             font-size: 12px;
             font-weight: 700;
         }}
@@ -158,7 +159,7 @@ class ComMonitorPanel(QWidget):
 
         QFrame#log-container QLabel#msg-label {{
             border: none;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 700;
             color: {col_text}
         }}
@@ -273,6 +274,7 @@ class ComMonitorPanel(QWidget):
         info_div_layout.setContentsMargins(0, 0, 0, 0)
         curr_t = QTime.currentTime().toString("hh:mm:ss.zzz AP")
         time_label = QLabel(f"{curr_t}")
+        time_label.setIndent(0)
         time_label.setStyleSheet("color: #343a40; font-size: 10px; font-weight: 700;")
         info_div_layout.addWidget(time_label)
 
