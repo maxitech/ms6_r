@@ -261,6 +261,7 @@ class ComMonitorPanel(QWidget):
 
         # Content Widget inside Scroll Area
         content_widget = QWidget()
+        content_widget.setObjectName("content-widget")
         self._content_layout = QVBoxLayout(content_widget)
         self._content_layout.addStretch()
 
