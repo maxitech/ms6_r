@@ -79,6 +79,89 @@ class ComMonitorPanel(QWidget):
             font-size: 12px;
             font-weight: 700;
         }}
+        
+        QFrame#log-container {{
+           border: none;
+           border-left: 4px solid {col_mid_gray};
+        }}
+        
+        QFrame#log-container[logType="info"] {{
+            border-left: 4px solid {col_mid_gray};
+        }}
+
+        QFrame#log-container[logType="data"] {{
+            border-left: 4px solid #193CB8;
+        }}
+
+        QFrame#log-container[logType="error"] {{
+            border-left: 4px solid #9F0712;
+        }}
+
+        QFrame#log-container[logType="warning"] {{
+            border-left: 4px solid #ff7b00;
+        }}
+    
+        QLabel#dir-label {{
+            padding: 2px 6px 0 6px;
+            font-weight: 700;
+            border: 2px solid {col_mid_gray};
+            border-radius: 5px;          
+        }}
+        
+        QLabel#dir-label[logType="sys"] {{
+            background-color: #d1d5dc;
+            color: {col_text};
+        }}
+
+        QLabel#dir-label[logType="tx"] {{
+            background-color: #BEDBFF;
+            color: #193CB8;
+        }}
+
+        QLabel#dir-label[logType="rx"] {{
+            background-color: #B9F8CF;
+            color: #1A7946;
+        }}
+
+        QLabel#dir-label[logType="error"] {{
+            background-color: #FFC9C9;
+            color: #9F0712;
+        }}
+
+        QLabel#type-label {{
+            padding: 2px 6px 0 6px;
+            font-weight: 700;
+            border: 2px solid {col_mid_gray};
+            border-radius: 3px;
+        }}
+
+        QLabel#type-label[logType="info"] {{
+            background-color: {col_light_gray};
+            color: {col_text};
+        }}
+
+        QLabel#type-label[logType="data"] {{
+            background-color: #BEDBFF;
+            color: #193CB8;
+        }}
+
+        QLabel#type-label[logType="error"] {{
+            background-color: #FFC9C9;
+            color: #9F0712;
+        }}
+
+        QLabel#type-label[logType="warning"] {{
+            background-color: #fff8d6;
+            color: #ff7b00;
+        }}
+
+
+        QFrame#log-container QLabel#msg-label {{
+            border: none;
+            font-size: 10px;
+            font-weight: 700;
+            color: {col_text}
+        }}
         """
         self.setStyleSheet(style)
 
@@ -185,69 +268,65 @@ class ComMonitorPanel(QWidget):
         info_div_layout.addWidget(time_label)
 
         dir_label = QLabel()
+        dir_label.setObjectName("dir-label")
+        dir_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
         valid_dirs = {"sys", "tx", "rx"}
         d = dir.lower().strip()
-
         if d in valid_dirs:
+            dir_label.setProperty("logType", d)
             dir_label.setText(f"{dir.upper()}")
-            dir_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            if d == "sys":
-                dir_label.setStyleSheet(
-                    "background-color: #d1d5dc; color: #000; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 5px;"
-                )
-            elif d == "tx":
-                dir_label.setStyleSheet(
-                    "background-color: #BEDBFF; color: #193CB8; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 5px;"
-                )
-            elif d == "rx":
-                dir_label.setStyleSheet(
-                    "background-color: #B9F8CF; color: #1A7946; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 5px;"
-                )
-            else:
-                dir_label.setText("ERROR: Unknown dir label! Function error.")
-                dir_label.setStyleSheet(
-                    "background-color: #FFC9C9; color: #9F0712; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 5px;"
-                )
+        else:
+            dir_label.setProperty("logType", "error")
+            dir_label.setText("ERROR: Unknown dir label!")
+
+        dir_label.setStyleSheet(self.styleSheet())
+
+        # if d == "sys":
+        #     pass
+        # elif d == "tx":
+        #     pass
+        # elif d == "rx":
+        #     pass
+        # else:
+        #     pass
 
         type_label = QLabel()
+        type_label.setObjectName("type-label")
+        type_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         valid_types = {"data", "error", "info", "warning"}
         t = type.lower().strip()
 
         if t in valid_types:
             type_label.setText(f"{type.upper()}")
-            type_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            if t == "info":
-                type_label.setStyleSheet(
-                    "background-color: #d1d5dc; color: #000; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
-                )
-                frame.setStyleSheet("border: none; border-left: 4px solid #99a1af;")
-            elif t == "data":
-                type_label.setStyleSheet(
-                    "background-color: #BEDBFF; color: #193CB8; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
-                )
-                frame.setStyleSheet("border: none; border-left: 4px solid #193CB8;")
-            elif t == "error":
-                type_label.setStyleSheet(
-                    "background-color: #FFC9C9; color: #9F0712; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
-                )
-                frame.setStyleSheet("border: none; border-left: 4px solid #9F0712;")
-            elif t == "warning":
-                type_label.setStyleSheet(
-                    "background-color: #fff8d6; color: #ff7b00; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
-                )
-                frame.setStyleSheet("border: none; border-left: 4px solid #ff7b00;")
-            else:
-                dir_label.setText("ERROR: Unknown type label! Function error.")
-                dir_label.setStyleSheet(
-                    "background-color: #FFC9C9; color: #9F0712; padding: 2px 6px 0 6px; font-weight: 700; border: 2px solid #99a1af; border-radius: 3px;"
-                )
-                frame.setStyleSheet("border: none; border-left: 4px solid #9F0712;")
+            type_label.setProperty("logType", t)
+            frame.setProperty("logType", t)
+        else:
+            type_label.setProperty("logType", "error")
+            frame.setProperty("logType", "error")
+            type_label.setText("ERROR: Unknown type label!")
+        type_label.setStyleSheet(self.styleSheet())
+
+        # if t == "info":
+        #     pass
+        # elif t == "data":
+        #     pass
+        # elif t == "error":
+        #     pass
+        # elif t == "warning":
+        #     pass
+        # else:
+        #     pass
 
         info_div_layout.addWidget(dir_label)
         info_div_layout.addWidget(type_label)
         info_div_layout.addStretch()
-        frame_layout.addWidget(info_div)
 
+        msg_label = QLabel(f"{msg}")
+        msg_label.setObjectName("msg-label")
+
+        frame_layout.addWidget(info_div)
+        frame_layout.addWidget(msg_label)
         self.content_layout.insertWidget(self.content_layout.count() - 1, frame)
 
     def ResizeScroll(self, _, max):
