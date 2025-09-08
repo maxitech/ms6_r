@@ -86,22 +86,6 @@ class ComMonitorPanel(QWidget):
            border: none;
            border-left: 4px solid {col_mid_gray};
         }}
-        
-        QFrame#log-container[logType="info"] {{
-            border-left: 4px solid {col_mid_gray};
-        }}
-
-        QFrame#log-container[logType="data"] {{
-            border-left: 4px solid #193CB8;
-        }}
-
-        QFrame#log-container[logType="error"] {{
-            border-left: 4px solid #9F0712;
-        }}
-
-        QFrame#log-container[logType="warning"] {{
-            border-left: 4px solid #ff7b00;
-        }}
     
         QLabel#dir-label {{
             font-size: 11px;
