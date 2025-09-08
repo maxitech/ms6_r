@@ -82,9 +82,17 @@ class ComMonitorPanel(QWidget):
             font-weight: 700;
         }}
         
+        QWidget#content-widget {{
+            background-color: #fff;
+        }}
+        
+        QFrame#log-container, QFrame#log-container QFrame {{
+            background-color: #F9FAFB;
+        }}
+        
         QFrame#log-container {{
            border: none;
-           border-left: 4px solid {col_mid_gray};
+           border-left: 2px solid {col_mid_gray};
         }}
     
         QLabel#dir-label {{
