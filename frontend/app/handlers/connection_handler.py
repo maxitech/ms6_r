@@ -96,11 +96,10 @@ class ConnectionHandler(QObject):
                 "Disconnect", f"Connected", False, selected_port
             )
             self._ui_manager.update_com_monitor(
-                "sys", "info", "Connection established."
+                "sys", "info", f"Connection to {self._serial.port} established."
             )
         else:
             self._ui_manager.update_connection_status(f"Failed!")
-            self._ui_manager.update_com_monitor("sys", "error", "Failed to connect.")
 
     def _is_valid_format(self, data_str):
         """Check if data format is valid"""
@@ -120,7 +119,6 @@ class ConnectionHandler(QObject):
                 "Connect", "Disconnected", True, "None"
             )
             self._set_connection_status(False)
-            self._ui_manager.update_com_monitor("sys", "info", "Disconnected.")
 
         else:
             self._ui_manager.update_connection_status("Failed to disconnect")

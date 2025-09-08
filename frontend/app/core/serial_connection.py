@@ -9,10 +9,11 @@ from app.core.threads.serial_writer_thread import SerialWriterThread
 from app.core.threads.motion_planner_thread import MotionPlannerThread
 from app.constants.com_protocol import START_BYTES, END_BYTES
 from app.core.shared.shared_data import shared_data
+from app.ui.ui_manager import UIManager
 
 
 class SerialConnection(Serial):
-    def __init__(self, helper, ui_manager, baudrate=115200):
+    def __init__(self, helper, ui_manager: UIManager, baudrate=115200):
         self._helper = helper
         self._ui_manager = ui_manager
         self._connection_handler: ConnectionHandler | None = None
@@ -49,9 +50,11 @@ class SerialConnection(Serial):
 
             self._motion_planner_t = MotionPlannerThread(self._serial)
             self._motion_planner_t.start()
-            print(f"Connected to {self._port} at {self._baudrate} baud.")
         except serial.SerialException as e:
             print(f"Error connecting to {self._port}: {e}")
+            self._ui_manager.update_com_monitor(
+                "sys", "error", f"Error connecting to {self._port}: {e}"
+            )
 
     def disconnect(self):
         if self._serial_reader_t and self._serial_writer_t and self._motion_planner_t:
@@ -61,7 +64,9 @@ class SerialConnection(Serial):
             shared_data.unsubscribe()
         if self._serial and self._serial.is_open:
             self._serial.close()
-            print(f"Disconnected from {self._port}.")
+            self._ui_manager.update_com_monitor(
+                "sys", "info", f"Disconnected from {self._port}."
+            )
 
     def is_connected(self):
         if self._serial and self._serial.is_open:
@@ -71,9 +76,6 @@ class SerialConnection(Serial):
             if self._port in available_ports:
                 return True
             else:
-                print(
-                    f"Warning: {self._port} no longer available, device may be disconnected."
-                )
                 if self._connection_handler:
                     self._connection_handler.handle_unexpected_disconnect()
                 self.disconnect()
@@ -91,9 +93,13 @@ class SerialConnection(Serial):
                 if self._is_valid_packet(data):
                     self._set_data_out(data)
                 else:
-                    self._ui_manager.log_message("ERROR", "Invalid data format!", "red")
+                    self._ui_manager.update_com_monitor(
+                        "sys", "error", "ERROR: Invalid data format!"
+                    )
             else:
-                self._ui_manager.log_message("ERROR", "Not connected!", "red")
+                self._ui_manager.update_com_monitor(
+                    "sys", "error", "ERROR Not connected!"
+                )
 
     def _is_valid_packet(self, packet: bytes):
         """Check if data format is valid"""
