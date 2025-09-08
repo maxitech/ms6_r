@@ -243,14 +243,15 @@ class ComMonitorPanel(QWidget):
         check_box_group_layout.addWidget(parsed_check_box)
         check_box_group_layout.addWidget(self._auto_scroll_check_box)
 
-        clear_btn = QPushButton("Clear")
+        self._clear_btn = QPushButton("Clear")
+        self._clear_btn.clicked.connect(self._on_clear_log_entries)
 
         # Add elements to inner div
         top_inner_div_layout.addWidget(dir_box)
         top_inner_div_layout.addWidget(type_box)
         top_inner_div_layout.addWidget(check_box_group)
         top_inner_div_layout.addStretch()
-        top_inner_div_layout.addWidget(clear_btn)
+        top_inner_div_layout.addWidget(self._clear_btn)
 
         # Add elements to top container
         top_container_layout.addWidget(h1)
@@ -379,7 +380,19 @@ class ComMonitorPanel(QWidget):
 
     def ResizeScroll(self, _, max):
         if self._auto_scroll_check_box.isChecked():
-            self.scroll_area.verticalScrollBar().setValue(max)
+            self._scroll_area.verticalScrollBar().setValue(max)
+
+    def _on_clear_log_entries(self):
+        self._clear_btn.setEnabled(False)
+        self._clear_log_entries()
+        self._clear_btn.setEnabled(True)
+
+    def _clear_log_entries(self):
+        while self._content_layout.count():
+            item = self._content_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
 
     def _on_raw_data_toggled(self, checked: bool):
         for lbl in self._raw_data_labels:
