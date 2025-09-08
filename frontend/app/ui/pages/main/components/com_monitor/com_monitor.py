@@ -111,22 +111,22 @@ class ComMonitorPanel(QWidget):
             border-radius: 5px;          
         }}
         
-        QLabel#dir-label[logType="sys"] {{
+        QLabel#dir-label[dirType="sys"] {{
             background-color: #d1d5dc;
             color: {col_text};
         }}
 
-        QLabel#dir-label[logType="tx"] {{
+        QLabel#dir-label[dirType="tx"] {{
             background-color: #BEDBFF;
             color: #193CB8;
         }}
 
-        QLabel#dir-label[logType="rx"] {{
+        QLabel#dir-label[dirType="rx"] {{
             background-color: #B9F8CF;
             color: #016630;
         }}
 
-        QLabel#dir-label[logType="error"] {{
+        QLabel#dir-label[dirType="error"] {{
             background-color: #FFC9C9;
             color: #9F0712;
         }}
@@ -139,22 +139,22 @@ class ComMonitorPanel(QWidget):
             border-radius: 3px;
         }}
 
-        QLabel#type-label[logType="info"] {{
+        QLabel#type-label[msgType="info"] {{
             background-color: {col_light_gray};
             color: {col_text};
         }}
 
-        QLabel#type-label[logType="data"] {{
+        QLabel#type-label[msgType="data"] {{
             background-color: #BEDBFF;
             color: #193CB8;
         }}
 
-        QLabel#type-label[logType="error"] {{
+        QLabel#type-label[msgType="error"] {{
             background-color: #FFC9C9;
             color: #9F0712;
         }}
 
-        QLabel#type-label[logType="warning"] {{
+        QLabel#type-label[msgType="warning"] {{
             background-color: #fff8d6;
             color: #ff7b00;
         }}
@@ -207,25 +207,27 @@ class ComMonitorPanel(QWidget):
         dir_label = QLabel("Direction:")
         dir_label.setIndent(0)
         dir_box_layout.addWidget(dir_label)
-        dir_combo_box = QComboBox()
-        dir_combo_box.addItem("All")
-        dir_combo_box.addItem("TX")
-        dir_combo_box.addItem("RX")
-        dir_combo_box.addItem("SYS")
-        dir_box_layout.addWidget(dir_combo_box)
+        self._dir_combo_box = QComboBox()
+        self._dir_combo_box.addItem("All")
+        self._dir_combo_box.addItem("TX")
+        self._dir_combo_box.addItem("RX")
+        self._dir_combo_box.addItem("SYS")
+        self._dir_combo_box.currentTextChanged.connect(self._on_filter_changed)
+        dir_box_layout.addWidget(self._dir_combo_box)
 
         type_box = QWidget()
         type_box_layout = QHBoxLayout(type_box)
         type_label = QLabel("Type:")
         type_label.setIndent(0)
         type_box_layout.addWidget(type_label)
-        type_combo_box = QComboBox()
-        type_combo_box.addItem("All")
-        type_combo_box.addItem("Data")
-        type_combo_box.addItem("Error")
-        type_combo_box.addItem("Info")
-        type_combo_box.addItem("Warning")
-        type_box_layout.addWidget(type_combo_box)
+        self._type_combo_box = QComboBox()
+        self._type_combo_box.addItem("All")
+        self._type_combo_box.addItem("Data")
+        self._type_combo_box.addItem("Error")
+        self._type_combo_box.addItem("Info")
+        self._type_combo_box.addItem("Warning")
+        self._type_combo_box.currentTextChanged.connect(self._on_filter_changed)
+        type_box_layout.addWidget(self._type_combo_box)
 
         check_box_group = QGroupBox()
         check_box_group_layout = QHBoxLayout(check_box_group)
@@ -301,10 +303,11 @@ class ComMonitorPanel(QWidget):
         valid_dirs = {"sys", "tx", "rx"}
         d = dir.lower().strip()
         if d in valid_dirs:
-            dir_label.setProperty("logType", d)
+            dir_label.setProperty("dirType", d)
             dir_label.setText(f"{dir.upper()}")
+            frame.setProperty("dirType", d)
         else:
-            dir_label.setProperty("logType", "error")
+            dir_label.setProperty("dirType", "error")
             dir_label.setText("ERROR: Unknown dir label!")
 
         dir_label.setStyleSheet(self.styleSheet())
@@ -326,11 +329,11 @@ class ComMonitorPanel(QWidget):
 
         if t in valid_types:
             type_label.setText(f"{type.upper()}")
-            type_label.setProperty("logType", t)
-            # frame.setProperty("logType", t)
+            type_label.setProperty("msgType", t)
+            frame.setProperty("msgType", t)
         else:
-            type_label.setProperty("logType", "error")
-            # frame.setProperty("logType", "error")
+            type_label.setProperty("msgType", "error")
+            frame.setProperty("msgType", "error")
             type_label.setText("ERROR: Unknown type label!")
         type_label.setStyleSheet(self.styleSheet())
 
@@ -393,6 +396,26 @@ class ComMonitorPanel(QWidget):
             widget = item.widget()
             if widget is not None:
                 widget.deleteLater()
+
+    def _on_filter_changed(self):
+        selected_dir_filter = self._dir_combo_box.currentText()
+        selected_type_filter = self._type_combo_box.currentText()
+        self._filter_log_entries(selected_dir_filter, selected_type_filter)
+
+    def _filter_log_entries(self, selected_dir: str, selected_type):
+        selected_dir = selected_dir.lower()
+        selected_type = selected_type.lower()
+
+        for i in range(self._content_layout.count()):
+            item = self._content_layout.itemAt(i)
+            widget = item.widget()
+            if widget:
+                dir_type = widget.property("dirType")
+                msg_type = widget.property("msgType")
+                show = (selected_dir == "all" or dir_type == selected_dir) and (
+                    selected_type == "all" or msg_type == selected_type
+                )
+                widget.setVisible(show)
 
     def _on_raw_data_toggled(self, checked: bool):
         for lbl in self._raw_data_labels:
