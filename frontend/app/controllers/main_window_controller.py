@@ -4,7 +4,7 @@ from app.core.setup import Setup
 from app.utils.helper import Helper
 from app.ui.ui_manager import UIManager
 from app.handlers.connection_handler import ConnectionHandler
-from app.handlers.command_handler import CommandHandler
+
 from app.handlers.jog_handler import JogHandler
 from app.handlers.program_handler import ProgramHandler
 from typing import TYPE_CHECKING
@@ -25,7 +25,6 @@ class MainWindowController:
             ui, self._setup, self.serial, self._ui_manager
         )
         self.serial.set_connection_handler(self._connection_handler)
-        self._command_handler = CommandHandler(ui, self._ui_manager)
         self._program_handler = ProgramHandler(ui, self.serial, self._ui_manager)
         self._jog_handler = JogHandler(ui, self.serial, self._helper, self._ui_manager)
 
@@ -35,7 +34,6 @@ class MainWindowController:
     def _setup_connections(self):
         """Setup all UI connections"""
         self._connection_handler.setup_connections()
-        # self._command_handler.setup_connections()
         self._jog_handler.setup_connections()
         self._program_handler.setup_connections()
 
