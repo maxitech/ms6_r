@@ -26,6 +26,7 @@ class ComMonitorPanel(QWidget):
         self._create_layout()
 
         self._raw_data_labels: list[QLabel] = []
+        self._parsed_labels: list[QLabel] = []
 
     def _setup_style(self):
         bg_color = "#e5e7eb"
@@ -103,7 +104,8 @@ class ComMonitorPanel(QWidget):
         }}
     
         QLabel#dir-label {{
-            padding: 2px 6px 0 6px;
+            font-size: 11px;
+            padding: 2px 4px 0 4px;
             font-weight: 700;
             border: 2px solid {col_mid_gray};
             border-radius: 5px;          
@@ -121,7 +123,7 @@ class ComMonitorPanel(QWidget):
 
         QLabel#dir-label[logType="rx"] {{
             background-color: #B9F8CF;
-            color: #1A7946;
+            color: #016630;
         }}
 
         QLabel#dir-label[logType="error"] {{
@@ -130,7 +132,8 @@ class ComMonitorPanel(QWidget):
         }}
 
         QLabel#type-label {{
-            padding: 2px 6px 0 6px;
+            padding: 2px 4px 0 4px;
+            font-size: 11px;
             font-weight: 700;
             border: 2px solid {col_mid_gray};
             border-radius: 3px;
@@ -161,11 +164,20 @@ class ComMonitorPanel(QWidget):
             border: none;
             font-size: 12px;
             font-weight: 700;
-            color: {col_text}
+            color: {col_text};
         }}
         
         QFrame#log-container QLabel#raw-data-label {{
             color: #193CB8;
+            font-size: 12px;
+            padding: 2px 2px;
+            padding-top: 4px;
+            border: 1px solid {col_light_gray};
+        }}
+        
+        QFrame#log-container QLabel#parsed-label {{
+            color: #016630;
+            font-weight: 700;
             font-size: 12px;
             padding: 2px 2px;
             padding-top: 4px;
@@ -311,10 +323,10 @@ class ComMonitorPanel(QWidget):
         if t in valid_types:
             type_label.setText(f"{type.upper()}")
             type_label.setProperty("logType", t)
-            frame.setProperty("logType", t)
+            # frame.setProperty("logType", t)
         else:
             type_label.setProperty("logType", "error")
-            frame.setProperty("logType", "error")
+            # frame.setProperty("logType", "error")
             type_label.setText("ERROR: Unknown type label!")
         type_label.setStyleSheet(self.styleSheet())
 
