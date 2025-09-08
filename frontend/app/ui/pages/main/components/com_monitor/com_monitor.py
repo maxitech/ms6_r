@@ -264,7 +264,12 @@ class ComMonitorPanel(QWidget):
         log_layout.addWidget(self._scroll_area)
 
     def add_log_entry(
-        self, dir: str, type: str, msg: str, received_bytes: bytes, parsed: str
+        self,
+        dir: str,
+        type: str,
+        msg: str,
+        received_bytes: bytes | None = None,
+        parsed: str = "",
     ):
         frame = QFrame()
         frame.setObjectName("log-container")
@@ -339,30 +344,33 @@ class ComMonitorPanel(QWidget):
         msg_label = QLabel(f"{msg}")
         msg_label.setObjectName("msg-label")
 
-        # Toggle
-        self._raw_data_label = QLabel()
-        self._raw_data_label.setIndent(0)
-        self._raw_data_label.setObjectName("raw-data-label")
-        self._raw_data_labels.append(self._raw_data_label)
-        if not isinstance(received_bytes, (bytes, bytearray)):
-            received_bytes = b""
-        try:
-            raw_data_str = "Raw: " + " ".join(f"{b:02X}" for b in received_bytes)
-        except Exception as e:
-            raw_data_str = f"Raw: <error: {e}>"
-        self._raw_data_label.setText(raw_data_str)
-
-        self._raw_data_label.setVisible(True)
-
-        parsed_label = QLabel(f">> {parsed}")
-        parsed_label.setIndent(0)
-        parsed_label.setObjectName("parsed-label")
-        self._parsed_labels.append(parsed_label)
-
         frame_layout.addWidget(info_div)
         frame_layout.addWidget(msg_label)
-        frame_layout.addWidget(self._raw_data_label)
-        frame_layout.addWidget(parsed_label)
+
+        show_raw_data = bool(received_bytes)
+        if show_raw_data:
+            raw_data_label = QLabel()
+            raw_data_label.setIndent(0)
+            raw_data_label.setObjectName("raw-data-label")
+            self._raw_data_labels.append(raw_data_label)
+            if not isinstance(received_bytes, (bytes, bytearray)):
+                received_bytes = b""
+            try:
+                raw_data_str = "Raw: " + " ".join(f"{b:02X}" for b in received_bytes)
+            except Exception as e:
+                raw_data_str = f"Raw: <error: {e}>"
+            raw_data_label.setText(raw_data_str)
+
+            raw_data_label.setVisible(True)
+
+            parsed_label = QLabel()
+            parsed_label.setText(f">> {parsed}")
+            parsed_label.setIndent(0)
+            parsed_label.setObjectName("parsed-label")
+            self._parsed_labels.append(parsed_label)
+
+            frame_layout.addWidget(raw_data_label)
+            frame_layout.addWidget(parsed_label)
         self._content_layout.insertWidget(self._content_layout.count() - 1, frame)
 
     def ResizeScroll(self, _, max):
