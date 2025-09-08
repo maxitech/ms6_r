@@ -259,23 +259,23 @@ class ComMonitorPanel(QWidget):
         # top_container_layout.addStretch()
 
         # Scroll Area
-        self.scroll_area = QScrollArea()
-        self.scroll_area.setWidgetResizable(True)
+        self._scroll_area = QScrollArea()
+        self._scroll_area.setWidgetResizable(True)
 
-        bar = self.scroll_area.verticalScrollBar()
+        bar = self._scroll_area.verticalScrollBar()
         bar.rangeChanged.connect(self.ResizeScroll)
 
         # Content Widget inside Scroll Area
         content_widget = QWidget()
-        self.content_layout = QVBoxLayout(content_widget)
-        self.content_layout.addStretch()
+        self._content_layout = QVBoxLayout(content_widget)
+        self._content_layout.addStretch()
 
-        self.scroll_area.setWidget(content_widget)
+        self._scroll_area.setWidget(content_widget)
 
         # Main Layout
         log_layout = QVBoxLayout(self)
         log_layout.addWidget(top_container)
-        log_layout.addWidget(self.scroll_area)
+        log_layout.addWidget(self._scroll_area)
 
     def add_log_entry(
         self, dir: str, type: str, msg: str, received_bytes: bytes, parsed: str
@@ -376,7 +376,7 @@ class ComMonitorPanel(QWidget):
         frame_layout.addWidget(msg_label)
         frame_layout.addWidget(self._raw_data_label)
         frame_layout.addWidget(parsed_label)
-        self.content_layout.insertWidget(self.content_layout.count() - 1, frame)
+        self._content_layout.insertWidget(self._content_layout.count() - 1, frame)
 
     def ResizeScroll(self, _, max):
         if self._auto_scroll_check_box.isChecked():
@@ -404,5 +404,5 @@ class ComMonitorPanel(QWidget):
 
     def _on_auto_scroll_toggled(self, checked: bool):
         if checked:
-            bar = self.scroll_area.verticalScrollBar()
+            bar = self._scroll_area.verticalScrollBar()
             bar.setValue(bar.maximum())
