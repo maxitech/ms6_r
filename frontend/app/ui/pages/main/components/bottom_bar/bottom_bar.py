@@ -89,7 +89,7 @@ class BottomBar(QFrame):
 
         self._label_program = QLabel()
         self._label_program.setObjectName("label-program")
-        self._label_program.setText("Active Program: None")
+        self._label_program.setText("Selected Program: None")
         self._label_program.setContentsMargins(0, 0, 0, 0)
         layout_bar.addWidget(self._label_program)
 
@@ -160,4 +160,4 @@ class BottomBar(QFrame):
 
     @program.setter
     def program(self, prog: str):
-        self._label_program.setText(f"Active Program: {prog}")
+        self._label_program.setText(f"Selected Program: {prog}")
