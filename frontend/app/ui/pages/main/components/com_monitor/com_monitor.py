@@ -224,17 +224,17 @@ class ComMonitorPanel(QWidget):
         check_box_group = QGroupBox()
         check_box_group_layout = QHBoxLayout(check_box_group)
         check_box_group_layout.setContentsMargins(0, 0, 0, 0)
-        raw_data_check_box = QCheckBox("Raw Data")
-        raw_data_check_box.setChecked(True)
-        raw_data_check_box.toggled.connect(self._on_raw_data_toggled)
-        parsed_check_box = QCheckBox("Parsed")
-        parsed_check_box.setChecked(True)
-        parsed_check_box.toggled.connect(self._on_parsed_toggled)
+        self._raw_data_check_box = QCheckBox("Raw Data")
+        self._raw_data_check_box.setChecked(True)
+        self._raw_data_check_box.toggled.connect(self._on_raw_data_toggled)
+        self._parsed_check_box = QCheckBox("Parsed")
+        self._parsed_check_box.setChecked(True)
+        self._parsed_check_box.toggled.connect(self._on_parsed_toggled)
         self._auto_scroll_check_box = QCheckBox("Auto Scroll")
         self._auto_scroll_check_box.setChecked(True)
         self._auto_scroll_check_box.toggled.connect(self._on_auto_scroll_toggled)
-        check_box_group_layout.addWidget(raw_data_check_box)
-        check_box_group_layout.addWidget(parsed_check_box)
+        check_box_group_layout.addWidget(self._raw_data_check_box)
+        check_box_group_layout.addWidget(self._parsed_check_box)
         check_box_group_layout.addWidget(self._auto_scroll_check_box)
 
         self._clear_btn = QPushButton("Clear")
@@ -378,6 +378,24 @@ class ComMonitorPanel(QWidget):
             parsed_label.setObjectName("parsed-label")
             self._parsed_labels.append(parsed_label)
 
+            # Set visibility of the raw data and parsed labels based on the current checkbox states
+            show_raw = self._raw_data_check_box.isChecked() and bool(raw_bytes)
+            raw_data_label.setVisible(show_raw)
+
+            show_parsed = self._parsed_check_box.isChecked() and bool(parsed)
+            parsed_label.setVisible(show_parsed)
+
+            # Set visibility of the entire log frame based on the current filter selection
+            dir_match = (
+                self._dir_combo_box.currentText().lower() == "all"
+                or d == self._dir_combo_box.currentText().lower()
+            )
+            type_match = (
+                self._type_combo_box.currentText().lower() == "all"
+                or t == self._type_combo_box.currentText().lower()
+            )
+            frame.setVisible(dir_match and type_match)
+
             frame_layout.addWidget(raw_data_label)
             frame_layout.addWidget(parsed_label)
         self._content_layout.insertWidget(self._content_layout.count() - 1, frame)
@@ -398,6 +416,8 @@ class ComMonitorPanel(QWidget):
             if widget is not None:
                 widget.deleteLater()
         self._content_layout.addStretch()
+        self._raw_data_labels.clear()
+        self._parsed_labels.clear()
 
     def _on_filter_changed(self):
         selected_dir_filter = self._dir_combo_box.currentText()
