@@ -43,8 +43,6 @@ class ProgramHandler:
         if self._serial.is_connected():
             if self._current_program is not None:
                 self._ui_right_panel.load_btn.setEnabled(True)
-        else:
-            print("Connect first")
 
     def setup_connections(self):
         """Setup program-related connections"""

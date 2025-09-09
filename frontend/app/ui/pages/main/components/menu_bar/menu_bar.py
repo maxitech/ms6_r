@@ -12,6 +12,7 @@ class MenuBar(QMenuBar):
     def _setup_style(self):
         bg_color = "#e5e7eb"
         col_text = "#000000"
+        col_text_disabled = "#6b7280"
         col_light_gray = "#d1d5dc"
         col_mid_gray = "#99a1af"
 
@@ -40,6 +41,11 @@ class MenuBar(QMenuBar):
             
             QMenu::item:selected, QMenu::item:pressed {{
                 background-color: {col_light_gray};
+            }}
+            
+            QMenu::item:disabled {{
+                background-color: {col_mid_gray};
+                color: {col_text_disabled};
             }}
             """
         self.setStyleSheet(style)
@@ -99,13 +105,20 @@ class MenuBar(QMenuBar):
         predefined_menu = robot_menu.addMenu("Predefined Programs")
         ping_action = QAction("Ping", self)
         ping_action.setData("robot_action:ping")
+        ping_action.setEnabled(False)
         self._actions.append(ping_action)
         predefined_menu.addAction(ping_action)
 
         test_switches_action = QAction("Test Switches", self)
+        test_switches_action.setData("robot_action:test_switches")
+        test_switches_action.setEnabled(False)
+        self._actions.append(test_switches_action)
         predefined_menu.addAction(test_switches_action)
 
         home_action = QAction("Home Robot", self)
+        home_action.setData("robot_action:home")
+        home_action.setEnabled(False)
+        self._actions.append(home_action)
         predefined_menu.addAction(home_action)
 
         view_menu = self.addMenu("View")

@@ -78,13 +78,11 @@ class RightPanel(QFrame):
         op_btn_div_row1 = QHBoxLayout()
         self._run_btn = QPushButton("Run")
         self._run_btn.setObjectName("btn-run")
-        self._run_btn.setCheckable(True)
         self._run_btn.setEnabled(False)
         op_btn_div_row1.addWidget(self._run_btn)
 
         self._stop_btn = QPushButton("Stop")
         self._stop_btn.setObjectName("btn-stop")
-        self._stop_btn.setCheckable(True)
         self._stop_btn.setEnabled(False)
         op_btn_div_row1.addWidget(self._stop_btn)
 

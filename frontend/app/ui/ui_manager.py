@@ -66,8 +66,30 @@ class UIManager:
 
         left_panel_ctrl.btn_home_pos.setEnabled(not is_enabled)
         central_btm_panel.btn_teach_pos.setEnabled(not is_enabled)
+        self._toggle_predefined_programs(is_enabled)
+
+        self._disable_prog_ctrl()
 
         # self._ui.setup_save_btn.setEnabled(is_enabled)
+
+    def _toggle_predefined_programs(self, is_enabled: bool):
+        for key in [
+            "robot_action:ping",
+            "robot_action:test_switches",
+            "robot_action:home",
+        ]:
+            action = self._ui.get_action_by_data(key)
+            if action:
+                action.setEnabled(not is_enabled)
+            else:
+                print(f"Missing action for: {key}")
+
+    def _disable_prog_ctrl(self):
+        right_panel = self._ui.right_panel
+        btns = [right_panel.load_btn, right_panel.run_btn, right_panel.stop_btn]
+        for btn in btns:
+            if btn.isEnabled():
+                btn.setEnabled(False)
 
     def update_connection_status(self, status_text):
         """Update connection status label"""

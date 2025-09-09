@@ -197,6 +197,12 @@ class MainWindow(QMainWindow):
         for act in getattr(mb, "_actions", []):
             act.triggered.connect(self._on_menu_action_triggered)
 
+    def get_action_by_data(self, data_str: str) -> QAction | None:
+        for action in getattr(self.menuBar(), "_actions", []):
+            if action.data() == data_str:
+                return action
+        return None
+
     def _on_menu_action_triggered(self):
         sender = self.sender()
         if not isinstance(sender, QAction):
