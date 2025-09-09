@@ -98,16 +98,16 @@ class ConnectionHandler(QObject):
             checksum = self._helper.calc_checksum(data)
             setup_data_str = f"${data}*{checksum}#"
 
-            if self._is_valid_format(setup_data_str):
-                setup_bytes = setup_data_str.encode("utf-8")
-                self._serial.set_data_out(setup_bytes)
-
             self._ui_manager.update_ui_based_on_connection_status(
                 "Disconnect", f"Connected", False, selected_port
             )
             self._ui_manager.update_com_monitor(
                 "sys", "info", f"Connection to {self._serial.port} established."
             )
+
+            if self._is_valid_format(setup_data_str):
+                setup_bytes = setup_data_str.encode("utf-8")
+                self._serial.set_data_out(setup_bytes)
         else:
             self._ui_manager.update_connection_status(f"Failed!")
 

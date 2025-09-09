@@ -97,6 +97,12 @@ class SerialConnection(Serial):
             if self.is_connected():
                 if self._is_valid_packet(data):
                     self._set_data_out(data)
+                    if data[0] == ord("$") and data[-1] == ord("#"):
+                        self._ui_manager.update_com_monitor(
+                            "tx", "data", "Sending setup to Robot."
+                        )
+                    else:
+                        self._log_tx(data)
                 else:
                     self._ui_manager.update_com_monitor(
                         "sys", "error", "ERROR: Invalid data format!"
