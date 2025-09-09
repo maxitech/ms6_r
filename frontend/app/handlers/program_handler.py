@@ -70,7 +70,7 @@ class ProgramHandler:
         """Handle start button click"""
         if self._check_for_program():
             packet: bytes = self._pb.build_packet(cmd_id=CMD_START, data=NOP)
-            self._serial.set_data_out(packet, "Run execution of selected program.")
+            self._serial.set_data_out(packet, "Run selected program.")
             self._ui_right_panel.run_btn.setEnabled(False)
             self._ui_right_panel.stop_btn.setEnabled(True)
 
