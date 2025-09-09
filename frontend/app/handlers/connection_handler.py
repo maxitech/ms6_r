@@ -9,6 +9,7 @@ from app.core.packet_builder import PacketBuilder
 from app.core.packet_processor import PacketProcessor
 from app.core.packet_parser import PacketParser
 from app.ui.ui_manager import UIManager
+from app.core.setup import Setup
 
 from typing import TYPE_CHECKING
 
@@ -20,7 +21,11 @@ class ConnectionHandler(QObject):
     connection_changed = Signal(bool)
 
     def __init__(
-        self, ui: "MainWindow", setup, serial: SerialConnection, ui_manager: UIManager
+        self,
+        ui: "MainWindow",
+        setup: Setup,
+        serial: SerialConnection,
+        ui_manager: UIManager,
     ):
         super().__init__()
         self._connected: bool = False
