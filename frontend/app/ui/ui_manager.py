@@ -243,11 +243,3 @@ class UIManager:
     #             txt_color="lightgrey",
     #             with_brackets=False,
     #         )
-
-    def set_current_program(self, program):
-        """Set current program"""
-        self._current_program = program
-
-    def get_current_program(self):
-        """Get current program"""
-        return self._current_program
