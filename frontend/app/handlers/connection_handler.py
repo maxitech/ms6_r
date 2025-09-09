@@ -1,6 +1,5 @@
 import json
 from PySide6.QtCore import Signal, QObject
-from app.core.serial_connection import SerialConnection
 from typing import List
 from app.core.shared.shared_data import shared_data
 from app.utils.helper import Helper
@@ -10,6 +9,8 @@ from app.core.packet_processor import PacketProcessor
 from app.core.packet_parser import PacketParser
 from app.ui.ui_manager import UIManager
 from app.core.setup import Setup
+from app.handlers.program_handler import ProgramHandler
+from app.core.serial_connection import SerialConnection
 
 from typing import TYPE_CHECKING
 
@@ -34,12 +35,16 @@ class ConnectionHandler(QObject):
         self._setup = setup
         self._serial = serial
         self._ui_manager = ui_manager
+        self._prog_handler: ProgramHandler | None = None
         self._helper = Helper()
         self._pb = PacketBuilder()
         self._pp = PacketProcessor()
         self._parser = PacketParser()
         self._current_ports: List[str] = []
         shared_data.subscribe("new_steps", self._update_ui)
+
+    def set_prog_handler(self, prog_handler: ProgramHandler):
+        self._prog_handler = prog_handler
 
     def _update_ui(self, data):
         print("Updated UI", data)
@@ -119,6 +124,9 @@ class ConnectionHandler(QObject):
         packet: bytes = self._pb.build_packet(cmd_id=CMD_IDLE, data=NOP)
         self._serial.set_data_out(packet)
         self._serial.disconnect()
+        if self._prog_handler:
+            self._prog_handler.set_current_program(None)
+            self._ui.btm_bar.program = "None"
         if not self._serial.is_connected():
             self._ui_manager.update_ui_based_on_connection_status(
                 "Connect", "Disconnected", True, "None"

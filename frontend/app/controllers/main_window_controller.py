@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 class MainWindowController:
     def __init__(self, ui: "MainWindow"):
-        # Note: Do not change order of init!
+        #! Note: Do not change order of init!
         self._ui = ui
         self._helper = Helper()
         self._ui_manager = UIManager(ui)
@@ -24,8 +24,9 @@ class MainWindowController:
         self._connection_handler = ConnectionHandler(
             ui, self._setup, self.serial, self._ui_manager
         )
-        self.serial.set_connection_handler(self._connection_handler)
         self._program_handler = ProgramHandler(ui, self.serial, self._ui_manager)
+        self.serial.set_connection_handler(self._connection_handler)
+        self.serial.set_prog_handler(self._program_handler)
         self._jog_handler = JogHandler(ui, self.serial, self._helper, self._ui_manager)
 
         self._setup_connections()

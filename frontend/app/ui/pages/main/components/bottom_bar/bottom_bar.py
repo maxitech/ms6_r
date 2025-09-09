@@ -42,6 +42,10 @@ class BottomBar(QFrame):
                 border-right: 1px solid {col_mid_gray};
             }}
 
+            QFrame#btm-bar QLabel#label-program {{
+                border-left: 1px solid {col_mid_gray};
+            }}
+
             QFrame#btm-bar QLabel#label-app-info {{
                 border: none;
             }}
@@ -82,6 +86,12 @@ class BottomBar(QFrame):
         self._label_speed.setText("Speed: 50%")
         self._label_speed.setContentsMargins(0, 0, 0, 0)
         layout_bar.addWidget(self._label_speed)
+
+        self._label_program = QLabel()
+        self._label_program.setObjectName("label-program")
+        self._label_program.setText("Active Program: None")
+        self._label_program.setContentsMargins(0, 0, 0, 0)
+        layout_bar.addWidget(self._label_program)
 
         layout_bar.addSpacerItem(
             QSpacerItem(0, 0, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
@@ -143,3 +153,11 @@ class BottomBar(QFrame):
     @speed.setter
     def speed(self, speed: int):
         self._label_speed.setText(f"Speed: {str(speed)}%")
+
+    @property
+    def program(self) -> QLabel:
+        return self._label_program
+
+    @program.setter
+    def program(self, prog: str):
+        self._label_program.setText(f"Active Program: {prog}")

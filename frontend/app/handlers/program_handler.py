@@ -32,16 +32,22 @@ class ProgramHandler:
         self._ui_right_panel = self._ui.right_panel
         self._ui.robotActionTriggered.connect(self.handle_program_select)
         self._predefined_programs_map = {
-            "ping": PRG_PING,
-            "home": PRG_HOME,
-            "test_switches": PRG_TEST_SWITCHES,
+            "ping": ("Ping", PRG_PING),
+            "home": ("Home", PRG_HOME),
+            "test_switches": ("Test Switches", PRG_TEST_SWITCHES),
         }
 
+    def set_current_program(self, program: int | None):
+        """Set current program"""
+        self._current_program = program
+
     def handle_program_select(self, program: str):
+        program_name: str | None = None
         if program in self._predefined_programs_map:
-            self._current_program = self._predefined_programs_map[program]
+            program_name, self._current_program = self._predefined_programs_map[program]
         if self._serial.is_connected():
-            if self._current_program is not None:
+            if self._current_program is not None and program_name is not None:
+                self._ui.btm_bar.program = program_name.upper()
                 self._ui_right_panel.load_btn.setEnabled(True)
 
     def setup_connections(self):

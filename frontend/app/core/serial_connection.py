@@ -3,6 +3,7 @@ from serial import Serial
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from app.handlers.program_handler import ProgramHandler
     from app.handlers.connection_handler import ConnectionHandler
 from app.core.threads.serial_reader_thread import SerialReaderThread
 from app.core.threads.serial_writer_thread import SerialWriterThread
@@ -25,8 +26,12 @@ class SerialConnection(Serial):
         self._ports = []
         self._port = None
 
-    def set_connection_handler(self, handler):
+    def set_connection_handler(self, handler: "ConnectionHandler"):
         self._connection_handler = handler
+
+    def set_prog_handler(self, prog_handler: "ProgramHandler"):
+        if self._connection_handler:
+            self._connection_handler.set_prog_handler(prog_handler)
 
     def getPorts(self):
         self._load_ports()
