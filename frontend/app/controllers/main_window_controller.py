@@ -17,9 +17,9 @@ class MainWindowController:
     def __init__(self, ui: "MainWindow"):
         # Note: Do not change order of init!
         self._ui = ui
-        self._setup = Setup(ui=self._ui)
         self._helper = Helper()
         self._ui_manager = UIManager(ui)
+        self._setup = Setup(ui_manager=self._ui_manager, ui=self._ui)
         self.serial: SerialConnection = SerialConnection(self._helper, self._ui_manager)
         self._connection_handler = ConnectionHandler(
             ui, self._setup, self.serial, self._ui_manager

@@ -1,9 +1,15 @@
 import json
 import os
+from app.ui.ui_manager import UIManager
 
 
 class Setup:
-    def __init__(self, ui=None):
+    def __init__(
+        self,
+        ui_manager: UIManager,
+        ui=None,
+    ):
+        self._ui_manager = ui_manager
         self._ui = ui
         self._default_val = "0"
         self._curr_dir = os.path.dirname(os.path.abspath(__file__))
@@ -19,14 +25,20 @@ class Setup:
         self._write_setup_to_file()
 
     def get_setup(self):
-        return self._read_setup_from_file()
+        # return self._read_setup_from_file()
+        return
 
     # *************************Private Methods****************************
     def _load_or_init_setup(self):
         if not os.path.exists(self._file_path):
+            self._ui_manager.update_com_monitor("sys", "info", "No setup file found.")
             print(f"No setup file found.")
-            return self._init_dicts_with_def_val()
+            # return self._init_dicts_with_def_val()
+            return
         else:
+            self._ui_manager.update_com_monitor(
+                "sys", "info", "Loading setup from file."
+            )
             print("Loading setup from file.")
             return self.get_setup()
 
@@ -275,9 +287,9 @@ class Setup:
             "acc": "motor_{}_acc",
         }
 
-        self._set_ui_fields(setup.get("dh_params", {}), "joint", dh_fields)
-        self._set_ui_fields(setup.get("homing_params", {}), "motor", homing_fields)
-        self._set_ui_fields(setup.get("speed_a_accel", {}), "motor", speed_accel_fields)
+        # self._set_ui_fields(setup.get("dh_params", {}), "joint", dh_fields)
+        # self._set_ui_fields(setup.get("homing_params", {}), "motor", homing_fields)
+        # self._set_ui_fields(setup.get("speed_a_accel", {}), "motor", speed_accel_fields)
 
     def _set_ui_fields(self, params, key_prefix, fields):
         for i in range(1, 7):
