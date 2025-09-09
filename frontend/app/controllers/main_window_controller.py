@@ -55,9 +55,9 @@ class MainWindowController:
         interval = 250 if not connected else 500
         self._port_timer.start(interval)
 
-    def set_data_out(self, packet):
+    def set_data_out(self, packet: bytes, data_str: str):
         """Send data through serial connection"""
-        self.serial.set_data_out(packet)
+        self.serial.set_data_out(packet, data_str)
 
     def _handle_setup_save(self):
         """Handle setup save"""

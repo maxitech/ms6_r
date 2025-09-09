@@ -122,7 +122,7 @@ class ConnectionHandler(QObject):
     def _disconnect(self):
         """Disconnect from current port"""
         packet: bytes = self._pb.build_packet(cmd_id=CMD_IDLE, data=NOP)
-        self._serial.set_data_out(packet)
+        self._serial.set_data_out(packet, "Set execution state to idle.")
         self._serial.disconnect()
         if self._prog_handler:
             self._prog_handler.set_current_program(None)

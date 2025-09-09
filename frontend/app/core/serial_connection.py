@@ -8,7 +8,21 @@ if TYPE_CHECKING:
 from app.core.threads.serial_reader_thread import SerialReaderThread
 from app.core.threads.serial_writer_thread import SerialWriterThread
 from app.core.threads.motion_planner_thread import MotionPlannerThread
-from app.constants.com_protocol import START_BYTES, END_BYTES
+from app.constants.com_protocol import (
+    START_BYTES,
+    END_BYTES,
+    CMD_START,
+    CMD_STOP,
+    CMD_IDLE,
+    CMD_SETUP,
+    CMD_JOG,
+    CMD_MOVE_TO_POS,
+    CMD_LOAD,
+    PRG_PING,
+    PRG_TEST_SWITCHES,
+    PRG_HOME,
+    PRG_MAIN,
+)
 from app.core.shared.shared_data import shared_data
 from app.ui.ui_manager import UIManager
 
@@ -91,7 +105,7 @@ class SerialConnection(Serial):
         if isinstance(data, bytes):
             shared_data.set_data_out(data)
 
-    def set_data_out(self, data):
+    def set_data_out(self, data: bytes, data_str: str = ""):
         """Public Send data function."""
         if isinstance(data, bytes) and len(data) > 0:
             if self.is_connected():
@@ -102,7 +116,7 @@ class SerialConnection(Serial):
                             "tx", "data", "Sending setup to Robot."
                         )
                     else:
-                        self._log_tx(data)
+                        self._log_tx(data, data_str)
                 else:
                     self._ui_manager.update_com_monitor(
                         "sys", "error", "ERROR: Invalid data format!"
@@ -121,3 +135,60 @@ class SerialConnection(Serial):
 
     def _load_ports(self):
         self._ports = serial.tools.list_ports.comports()
+
+    def _log_tx(self, data: bytes, data_str: str):
+        CMD_MAP = {
+            CMD_START: "Start",
+            CMD_STOP: "Stop",
+            CMD_IDLE: "Idle",
+            CMD_SETUP: "Setup",
+            CMD_JOG: "Jog",
+            CMD_MOVE_TO_POS: "Move To Position",
+            CMD_LOAD: "Load",
+        }
+        PRG_MAP = {
+            PRG_PING: "Ping",
+            PRG_TEST_SWITCHES: "Test Switches",
+            PRG_HOME: "Home Robot",
+            PRG_MAIN: "Main",
+        }
+
+        cmd = data[4]
+        prg = data[5] if cmd == CMD_LOAD else None
+
+        cmd_name = CMD_MAP.get(cmd, "Unknown Command")
+        tx_msg = f"TX: {cmd_name.upper()}"
+
+        if cmd == CMD_LOAD and prg is not None:
+            prg_name = PRG_MAP.get(prg, "Unknown Program")
+            if not data_str:
+                parsed_cmd_label = f"Program={prg_name.upper()}"
+            else:
+                parsed_cmd_label = f"Program={prg_name.upper()}::{data_str}"
+        else:
+            if not data_str:
+                parsed_cmd_label = f"Execute={cmd_name.upper()}"
+            else:
+                parsed_cmd_label = f"Execute={cmd_name.upper()}::{data_str}"
+
+        self._ui_manager.update_com_monitor(
+            "tx", "data", tx_msg, data, parsed_cmd_label
+        )
+
+
+# cmd = data[4]
+# # if cmd is load then the byte after cmd is the program
+# prg = data[5]
+
+# tx_msg = f"Transmitting '{CMD_MAP.get(cmd, "Unknown Command").upper()}' command to robot."
+
+# parsed_cmd_label = ""
+# if cmd == CMD_LOAD:
+#     parsed_cmd_label = f"Loading program: {PRG_MAP.get(prg, "Unknown Program").upper()} to robot."
+# else:
+#     parsed_cmd_label = (
+#         f"Executing: {CMD_MAP.get(cmd, "Unknown Command").upper()}"
+#     )
+# self._ui_manager.update_com_monitor(
+#     "tx", "data", f"{tx_msg}", data, parsed_cmd_label
+# )

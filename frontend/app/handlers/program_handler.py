@@ -62,8 +62,7 @@ class ProgramHandler:
             packet: bytes = self._pb.build_packet(
                 cmd_id=CMD_LOAD, data=self._current_program
             )
-            print(packet)
-            self._serial.set_data_out(packet)
+            self._serial.set_data_out(packet, "Load selected program.")
             self._ui_right_panel.run_btn.setEnabled(True)
             self._ui_right_panel.stop_btn.setEnabled(False)
 
@@ -71,7 +70,7 @@ class ProgramHandler:
         """Handle start button click"""
         if self._check_for_program():
             packet: bytes = self._pb.build_packet(cmd_id=CMD_START, data=NOP)
-            self._serial.set_data_out(packet)
+            self._serial.set_data_out(packet, "Run execution of selected program.")
             self._ui_right_panel.run_btn.setEnabled(False)
             self._ui_right_panel.stop_btn.setEnabled(True)
 
@@ -79,14 +78,14 @@ class ProgramHandler:
         """Handle stop button click"""
         if self._check_for_program():
             packet: bytes = self._pb.build_packet(cmd_id=CMD_STOP, data=NOP)
-            self._serial.set_data_out(packet)
+            self._serial.set_data_out(packet, "Stop execution of selected program.")
             self._ui_right_panel.stop_btn.setEnabled(False)
             self._ui_right_panel.run_btn.setEnabled(True)
 
     def _handle_clear_btn_click(self):
         # self._ui_manager.log_message("[INFO]", "Program cleared", "lightblue")
         packet: bytes = self._pb.build_packet(cmd_id=CMD_IDLE, data=NOP)
-        self._serial.set_data_out(packet)
+        self._serial.set_data_out(packet, "Set execution state to idle.")
         self._current_program = None
         self._ui_right_panel.load_btn.setEnabled(False)
         self._ui_right_panel.run_btn.setEnabled(False)

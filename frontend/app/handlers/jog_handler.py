@@ -45,24 +45,28 @@ class JogHandler:
             print("handle-jog-cart-btn-click")
         else:
             joint_i, direction = self._parse_jog_button(btn)
-            print(joint_i, direction)
             if joint_i is not None and direction:
                 self._create_jog_cmd(i=joint_i, dir=direction)
                 self._queue_jog_cmd()
 
     def _create_jog_cmd(self, i: int, dir: int):
-        jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
+        self._jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
         speed = self._calculate_jog_speed(i)
-        jog_speeds[i] = speed * dir
-        self._serial_packet = self._pb.build_packet(cmd_id=CMD_JOG, data=jog_speeds)
+        self._jog_speeds[i] = speed * dir
+        self._serial_packet = self._pb.build_packet(
+            cmd_id=CMD_JOG, data=self._jog_speeds
+        )
 
     def _queue_jog_cmd(self):
-        self._serial.set_data_out(self._serial_packet)
+        if self._serial_packet:
+            self._serial.set_data_out(self._serial_packet, str(self._jog_speeds))
 
     def _handle_jog_btn_release(self):
         """Handle jog button release"""
-        jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
-        self._serial_packet = self._pb.build_packet(cmd_id=CMD_JOG, data=jog_speeds)
+        self._jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
+        self._serial_packet = self._pb.build_packet(
+            cmd_id=CMD_JOG, data=self._jog_speeds
+        )
         self._queue_jog_cmd()
         # shared_data.clear_data_queue_out()
 
