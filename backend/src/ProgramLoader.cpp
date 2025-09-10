@@ -245,26 +245,18 @@ void ProgramLoader::_home()
 
 void ProgramLoader::_main()
 {
-    static bool     warningShown = false;
     static JogState currJogState = IDLE_JOG;
 
     if (_cmdId == CMD_JOG && _isHomingDone)
     {
         _jogCtrl->jogJoint(_jogSpeeds, currJogState);
-        if (warningShown)
-        {
-            warningShown = false;
-        }
     }
     else
     {
         currJogState = IDLE_JOG;
-        if (!warningShown)
-        {
-            Utils::createAndSendPacket(_cmdId, STATUS_OK, WARN_ARM_NOT_HOMED);
-            LOG(LOG_WARN, "Arm not homed - home first");
-            warningShown = true;
-        }
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, WARN_ARM_NOT_HOMED);
+        LOG(LOG_WARN, "Arm not homed - home first");
+        _setState(IDLE);
     }
 }
 

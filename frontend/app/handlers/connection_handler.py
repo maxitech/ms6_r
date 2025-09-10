@@ -38,7 +38,7 @@ class ConnectionHandler(QObject):
         self._prog_handler: ProgramHandler | None = None
         self._helper = Helper()
         self._pb = PacketBuilder()
-        self._pp = PacketProcessor()
+        self._pp = PacketProcessor(self._ui_manager)
         self._parser = PacketParser()
         self._current_ports: List[str] = []
         shared_data.subscribe("new_steps", self._update_ui)
