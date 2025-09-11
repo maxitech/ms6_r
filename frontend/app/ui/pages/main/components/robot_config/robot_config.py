@@ -120,7 +120,6 @@ class RobotConfigPanel(QWidget):
         top_container = QFrame()
         top_container.setObjectName("top-frame")
         top_container_layout = QHBoxLayout(top_container)
-        # top_container_layout.setContentsMargins(8, 8, 8, 0)
         top_container_layout.setContentsMargins(0, 0, 0, 0)
         h1 = QLabel("Robot Configuration")
         h1.setObjectName("h1")
