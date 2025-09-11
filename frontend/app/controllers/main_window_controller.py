@@ -39,7 +39,7 @@ class MainWindowController:
         self._program_handler.setup_connections()
 
         # Setup specific connections
-        # self._ui.setup_save_btn.clicked.connect(self._handle_setup_save)
+        self._ui.robot_config.save_btn.clicked.connect(self._handle_setup_save)
 
     def _setup_timers(self):
         """Setup all timers"""
