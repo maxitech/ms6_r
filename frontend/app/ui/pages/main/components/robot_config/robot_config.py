@@ -159,18 +159,22 @@ class RobotConfigPanel(QWidget):
         layout = QGridLayout(dh_table)
         self._dh_inputs: dict[tuple[int, str], QLineEdit] = {}  # Dict for read
 
-        # Header-Zeile
-        headers = ["θ (deg)", "α (rad)", "d (mm)", "a (mm)"]
+        headers = [
+            ("theta_offset", "θ (deg)"),
+            ("alpha", "α (rad)"),
+            ("d", "d (mm)"),
+            ("a", "a (mm)"),
+        ]
         tooltips = {
             "θ (deg)": "Theta offset (in degrees) default 0",
             "α (rad)": "Link twist (in radians)",
             "d (mm)": "Offset along previous z-axis",
             "a (mm)": "Length of common normal (link length)",
         }
-        for col, name in enumerate(headers):
-            label = QLabel(name)
+        for col, (key, label_text) in enumerate(headers):
+            label = QLabel(label_text)
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            label.setToolTip(tooltips.get(name, ""))
+            label.setToolTip(tooltips.get(label_text, ""))
             layout.addWidget(label, 0, col + 1)
 
         corner = QLabel("")  # Empty label for corner style
@@ -183,7 +187,7 @@ class RobotConfigPanel(QWidget):
             joint_label.setObjectName("joint")
             layout.addWidget(joint_label, row + 1, 0)
 
-            for col, param in enumerate(headers):
+            for col, (key, _) in enumerate(headers):
                 field = QLineEdit()
                 field.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 field.setText("0.0")
