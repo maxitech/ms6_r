@@ -157,7 +157,7 @@ class RobotConfigPanel(QWidget):
         dh_table = QFrame()
         dh_table.setObjectName("dh-table")
         layout = QGridLayout(dh_table)
-        self._dh_inputs = {}  # Dict for read
+        self._dh_inputs: dict[tuple[int, str], QLineEdit] = {}  # Dict for read
 
         # Header-Zeile
         headers = ["θ (deg)", "α (rad)", "d (mm)", "a (mm)"]
@@ -190,9 +190,14 @@ class RobotConfigPanel(QWidget):
                 layout.setSpacing(0)
                 layout.setContentsMargins(0, 0, 0, 0)
                 layout.addWidget(field, row + 1, col + 1)
-                self._dh_inputs[(row, param)] = field
+                self._dh_inputs[(row, key)] = field
 
         return dh_table
+
+    @property
+    def dh_inputs(self) -> dict[tuple[int, str], QLineEdit]:
+        return self._dh_inputs
+
     @property
     def save_btn(self) -> QPushButton:
         return self._save_btn
