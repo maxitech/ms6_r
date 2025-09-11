@@ -27,6 +27,7 @@ from app.ui import (
     SettingsPage,
     AboutPage,
     ComMonitorPanel,
+    RobotConfigPanel,
 )
 
 os.environ["QT_STYLE_OVERRIDE"] = "Fusion"

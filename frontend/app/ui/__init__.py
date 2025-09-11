@@ -8,6 +8,7 @@ from .pages.main.components.menu_bar.menu_bar import MenuBar
 from .pages.main.components.monitor.i_o_monitor import IOMonitorPanel
 from .pages.main.components.com_monitor.com_monitor import ComMonitorPanel
 from .pages.main.components.right_panel.right_panel import RightPanel
+from .pages.main.components.robot_config.robot_config import RobotConfigPanel
 
 
 from .pages.settings.settings_page import SettingsPage
