@@ -1,14 +1,14 @@
 import json
 import os
 from app.ui.ui_manager import UIManager
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from main import MainWindow
 
 
 class Setup:
-    def __init__(
-        self,
-        ui_manager: UIManager,
-        ui=None,
-    ):
+    def __init__(self, ui_manager: UIManager, ui: "MainWindow"):
         self._ui_manager = ui_manager
         self._ui = ui
         self._default_val = "0"
@@ -25,16 +25,14 @@ class Setup:
         self._write_setup_to_file()
 
     def get_setup(self):
-        # return self._read_setup_from_file()
-        return
+        return self._read_setup_from_file()
 
     # *************************Private Methods****************************
     def _load_or_init_setup(self):
         if not os.path.exists(self._file_path):
             self._ui_manager.update_com_monitor("sys", "info", "No setup file found.")
             print(f"No setup file found.")
-            # return self._init_dicts_with_def_val()
-            return
+            return self._init_dicts_with_def_val()
         else:
             self._ui_manager.update_com_monitor(
                 "sys", "info", "Loading setup from file."
@@ -84,138 +82,94 @@ class Setup:
         if not self._ui:
             return
         setup = {
-            "dh_params": {
-                "joint1": {
-                    "theta_offset": self._ui.dh_j1_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j1_aph_v.toPlainText(),
-                    "d": self._ui.dh_j1_d_v.toPlainText(),
-                    "a": self._ui.dh_j1_a_v.toPlainText(),
-                },
-                "joint2": {
-                    "theta_offset": self._ui.dh_j2_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j2_aph_v.toPlainText(),
-                    "d": self._ui.dh_j2_d_v.toPlainText(),
-                    "a": self._ui.dh_j2_a_v.toPlainText(),
-                },
-                "joint3": {
-                    "theta_offset": self._ui.dh_j3_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j3_aph_v.toPlainText(),
-                    "d": self._ui.dh_j3_d_v.toPlainText(),
-                    "a": self._ui.dh_j3_a_v.toPlainText(),
-                },
-                "joint4": {
-                    "theta_offset": self._ui.dh_j4_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j4_aph_v.toPlainText(),
-                    "d": self._ui.dh_j4_d_v.toPlainText(),
-                    "a": self._ui.dh_j4_a_v.toPlainText(),
-                },
-                "joint5": {
-                    "theta_offset": self._ui.dh_j5_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j5_aph_v.toPlainText(),
-                    "d": self._ui.dh_j5_d_v.toPlainText(),
-                    "a": self._ui.dh_j5_a_v.toPlainText(),
-                },
-                "joint6": {
-                    "theta_offset": self._ui.dh_j6_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j6_aph_v.toPlainText(),
-                    "d": self._ui.dh_j6_d_v.toPlainText(),
-                    "a": self._ui.dh_j6_a_v.toPlainText(),
-                },
-            },
-            "homing_params": {
-                "motor1": {
-                    # "vel": self._ui.home_mtr_1_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_1_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_1_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_1_h_pos.toPlainText(),
-                },
-                "motor2": {
-                    # "vel": self._ui.home_mtr_2_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_2_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_2_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_2_h_pos.toPlainText(),
-                },
-                "motor3": {
-                    # "vel": self._ui.home_mtr_3_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_3_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_3_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_3_h_pos.toPlainText(),
-                },
-                "motor4": {
-                    # "vel": self._ui.home_mtr_4_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_4_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_4_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_4_h_pos.toPlainText(),
-                },
-                "motor5": {
-                    # "vel": self._ui.home_mtr_5_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_5_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_5_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_5_h_pos.toPlainText(),
-                },
-                "motor6": {
-                    # "vel": self._ui.home_mtr_6_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_6_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_6_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_6_h_pos.toPlainText(),
-                },
-            },
-            "speed_a_accel": {
-                "motor1": {
-                    "max_speed": self._ui.motor_1_max_speed.toPlainText(),
-                    "acc": self._ui.motor_1_acc.toPlainText(),
-                },
-                "motor2": {
-                    "max_speed": self._ui.motor_2_max_speed.toPlainText(),
-                    "acc": self._ui.motor_2_acc.toPlainText(),
-                },
-                "motor3": {
-                    "max_speed": self._ui.motor_3_max_speed.toPlainText(),
-                    "acc": self._ui.motor_3_acc.toPlainText(),
-                },
-                "motor4": {
-                    "max_speed": self._ui.motor_4_max_speed.toPlainText(),
-                    "acc": self._ui.motor_4_acc.toPlainText(),
-                },
-                "motor5": {
-                    "max_speed": self._ui.motor_5_max_speed.toPlainText(),
-                    "acc": self._ui.motor_5_acc.toPlainText(),
-                },
-                "motor6": {
-                    "max_speed": self._ui.motor_6_max_speed.toPlainText(),
-                    "acc": self._ui.motor_6_acc.toPlainText(),
-                },
-            },
+            "dh_params": {},
+            # "homing_params": {
+            #     "motor1": {
+            #         # "vel": self._ui.home_mtr_1_vel.toPlainText(),
+            #         # "away_vel": self._ui.home_mtr_1_aw_vel.toPlainText(),
+            #         # "back_vel": self._ui.home_mtr_1_bck_vel.toPlainText(),
+            #         "home_pos": self._ui.home_mtr_1_h_pos.toPlainText(),
+            #     },
+            #     "motor2": {
+            #         # "vel": self._ui.home_mtr_2_vel.toPlainText(),
+            #         # "away_vel": self._ui.home_mtr_2_aw_vel.toPlainText(),
+            #         # "back_vel": self._ui.home_mtr_2_bck_vel.toPlainText(),
+            #         "home_pos": self._ui.home_mtr_2_h_pos.toPlainText(),
+            #     },
+            #     "motor3": {
+            #         # "vel": self._ui.home_mtr_3_vel.toPlainText(),
+            #         # "away_vel": self._ui.home_mtr_3_aw_vel.toPlainText(),
+            #         # "back_vel": self._ui.home_mtr_3_bck_vel.toPlainText(),
+            #         "home_pos": self._ui.home_mtr_3_h_pos.toPlainText(),
+            #     },
+            #     "motor4": {
+            #         # "vel": self._ui.home_mtr_4_vel.toPlainText(),
+            #         # "away_vel": self._ui.home_mtr_4_aw_vel.toPlainText(),
+            #         # "back_vel": self._ui.home_mtr_4_bck_vel.toPlainText(),
+            #         "home_pos": self._ui.home_mtr_4_h_pos.toPlainText(),
+            #     },
+            #     "motor5": {
+            #         # "vel": self._ui.home_mtr_5_vel.toPlainText(),
+            #         # "away_vel": self._ui.home_mtr_5_aw_vel.toPlainText(),
+            #         # "back_vel": self._ui.home_mtr_5_bck_vel.toPlainText(),
+            #         "home_pos": self._ui.home_mtr_5_h_pos.toPlainText(),
+            #     },
+            #     "motor6": {
+            #         # "vel": self._ui.home_mtr_6_vel.toPlainText(),
+            #         # "away_vel": self._ui.home_mtr_6_aw_vel.toPlainText(),
+            #         # "back_vel": self._ui.home_mtr_6_bck_vel.toPlainText(),
+            #         "home_pos": self._ui.home_mtr_6_h_pos.toPlainText(),
+            #     },
+            # },
+            # "speed_a_accel": {
+            #     "motor1": {
+            #         "max_speed": self._ui.motor_1_max_speed.toPlainText(),
+            #         "acc": self._ui.motor_1_acc.toPlainText(),
+            #     },
+            #     "motor2": {
+            #         "max_speed": self._ui.motor_2_max_speed.toPlainText(),
+            #         "acc": self._ui.motor_2_acc.toPlainText(),
+            #     },
+            #     "motor3": {
+            #         "max_speed": self._ui.motor_3_max_speed.toPlainText(),
+            #         "acc": self._ui.motor_3_acc.toPlainText(),
+            #     },
+            #     "motor4": {
+            #         "max_speed": self._ui.motor_4_max_speed.toPlainText(),
+            #         "acc": self._ui.motor_4_acc.toPlainText(),
+            #     },
+            #     "motor5": {
+            #         "max_speed": self._ui.motor_5_max_speed.toPlainText(),
+            #         "acc": self._ui.motor_5_acc.toPlainText(),
+            #     },
+            #     "motor6": {
+            #         "max_speed": self._ui.motor_6_max_speed.toPlainText(),
+            #         "acc": self._ui.motor_6_acc.toPlainText(),
+            #     },
+            # },
         }
-        for _, value in setup.items():
-            for _, sub_value in value.items():
-                for field, field_value in sub_value.items():
-                    self._field = (
-                        field  # to ensure the field is accessible in the exception
-                    )
-                    checked_value = field_value.strip()
-                    if not checked_value:
-                        print(f"ERROR: Field '{self._field}' cannot be empty.")
-                        self._is_input_valid = False
-                        return
-                    try:
-                        if (
-                            field == "home_pos"
-                            or field == "max_speed"
-                            or field == "acc"
-                        ):
-                            int(checked_value)
-                        else:
-                            float(checked_value)
-                        self._is_input_valid = True
+        for (row, param), field in self._ui.robot_config.dh_inputs.items():
+            joint_key = f"joint{row+1}"
+            if joint_key not in setup["dh_params"]:
+                setup["dh_params"][joint_key] = {}
 
-                    except Exception as e:
-                        print(f"ERROR: Field '{self._field}' must be a numeric value.")
-                        self._handle_exception(e, "_get_field_vals")
-                        self._is_input_valid = False
-                        return
-                    sub_value[field] = checked_value
+            value = field.text().strip()
+            self._field = param  # For error reporting
 
+            if not value:
+                print(f"ERROR: Field '{self._field}' cannot be empty.")
+                self._is_input_valid = False
+                return
+
+            try:
+                float(value)
+                setup["dh_params"][joint_key][param] = value
+                self._is_input_valid = True
+            except Exception as e:
+                print(f"ERROR: Field '{self._field}' must be a numeric value.")
+                self._handle_exception(e, "_get_field_vals")
+                self._is_input_valid = False
+                return
         return setup
 
     def _detect_changes(self, current_setup, previous_setup):
@@ -270,34 +224,14 @@ class Setup:
         if not self._ui:
             return
         setup = self.get_setup()
+        if setup:
+            self._update_dh_table(setup.get("dh_params", {}))
 
-        dh_fields = {
-            "theta_offset": "dh_j{}_theta_off",
-            "alpha": "dh_j{}_aph_v",
-            "d": "dh_j{}_d_v",
-            "a": "dh_j{}_a_v",
-        }
-
-        homing_fields = {
-            "home_pos": "home_mtr_{}_h_pos",
-        }
-
-        speed_accel_fields = {
-            "max_speed": "motor_{}_max_speed",
-            "acc": "motor_{}_acc",
-        }
-
-        # self._set_ui_fields(setup.get("dh_params", {}), "joint", dh_fields)
-        # self._set_ui_fields(setup.get("homing_params", {}), "motor", homing_fields)
-        # self._set_ui_fields(setup.get("speed_a_accel", {}), "motor", speed_accel_fields)
-
-    def _set_ui_fields(self, params, key_prefix, fields):
-        for i in range(1, 7):
-            key = f"{key_prefix}{i}"
-            if key in params:
-                param_data = params[key]
-                for field_name, ui_attr in fields.items():
-                    if field_name in param_data:
-                        getattr(self._ui, ui_attr.format(i)).setPlainText(
-                            param_data[field_name]
-                        )
+    def _update_dh_table(self, dh_params: dict[str, dict[str, float]]):
+        for joint_name, param_data in dh_params.items():
+            if joint_name.startswith("joint"):
+                row = int(joint_name.replace("joint", "")) - 1
+                for param_key, value in param_data.items():
+                    field = self._ui.robot_config.dh_inputs.get((row, param_key))
+                    if field:
+                        field.setText(str(value))
