@@ -78,6 +78,14 @@ class RobotConfigPanel(QWidget):
                 border: 1px solid {col_mid_gray};
             }}
             
+            QLabel#dh-h1 {{
+                color: {col_text};
+                font-size: 16px;
+                font-weight: 700;
+                border: none;
+                margin: 12px 0 12px 0;
+            }}
+            
             QFrame#dh-table QLabel, QFrame#dh-table QLineEdit {{
                 color: {col_text};
                 font-size: 14px;
@@ -132,6 +140,9 @@ class RobotConfigPanel(QWidget):
         accel_tab = QWidget()
 
         dh_tab_layout = QVBoxLayout(dh_tab)
+        dh_tab_h1 = QLabel("Denavit-Hartenberg Parameters")
+        dh_tab_h1.setObjectName("dh-h1")
+        dh_tab_layout.addWidget(dh_tab_h1)
         dh_tab_layout.addWidget(self._create_dh_table())
         dh_tab_layout.addStretch()
 
