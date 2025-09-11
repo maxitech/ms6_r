@@ -117,13 +117,12 @@ class RobotConfigPanel(QWidget):
         h1 = QLabel("Robot Configuration")
         h1.setObjectName("h1")
 
-        save_btn = QPushButton("Save")
-        save_btn.setObjectName("save-btn")
-        save_btn.setEnabled(False)
+        self._save_btn = QPushButton("Save")
+        self._save_btn.setObjectName("save-btn")
 
         top_container_layout.addWidget(h1)
         top_container_layout.addStretch()
-        top_container_layout.addWidget(save_btn)
+        top_container_layout.addWidget(self._save_btn)
 
         tabs = QTabWidget()
 
@@ -194,3 +193,6 @@ class RobotConfigPanel(QWidget):
                 self._dh_inputs[(row, param)] = field
 
         return dh_table
+    @property
+    def save_btn(self) -> QPushButton:
+        return self._save_btn
