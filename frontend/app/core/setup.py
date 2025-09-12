@@ -83,15 +83,44 @@ class Setup:
     def _get_field_vals(self):
         if not self._ui:
             return
-        setup = {
+        self._setup = {
             "dh_params": {},
             "homing_params": {},
             "speed_a_accel": {},
         }
-        for (row, param), field in self._ui.robot_config.dh_inputs.items():
-            joint_key = f"joint{row+1}"
-            if joint_key not in setup["dh_params"]:
-                setup["dh_params"][joint_key] = {}
+        self._extract_values(
+            stored_inputs=self._ui.robot_config.dh_inputs,
+            prefix="joint",
+            setup_part_key="dh_params",
+            validate_as=float,
+        )
+        self._extract_values(
+            stored_inputs=self._ui.robot_config.home_pos_inputs,
+            prefix="motor",
+            setup_part_key="homing_params",
+            validate_as=int,
+        )
+        self._extract_values(
+            stored_inputs=self._ui.robot_config.speed_a_accel_inputs,
+            prefix="motor",
+            setup_part_key="speed_a_accel",
+            validate_as=int,
+        )
+
+        return self._setup
+
+    def _extract_values(
+        self,
+        stored_inputs: dict[tuple[int, str], QLineEdit],
+        prefix: str,
+        setup_part_key: str,
+        validate_as: type,
+    ):
+        prefix = prefix.lower()
+        for (row, param), field in stored_inputs.items():
+            key = f"{prefix}{row+1}"
+            if key not in self._setup[setup_part_key]:
+                self._setup[setup_part_key][key] = {}
 
             value = field.text().strip()
             self._field = param  # For error reporting
@@ -102,67 +131,14 @@ class Setup:
                 return
 
             try:
-                float(value)
-                setup["dh_params"][joint_key][param] = value
+                validate_as(value)
+                self._setup[setup_part_key][key][param] = value
                 self._is_input_valid = True
             except Exception as e:
                 print(f"ERROR: Field '{self._field}' must be a numeric value.")
-                self._handle_exception(e, "_get_field_vals")
+                self._handle_exception(e, "_extract_values")
                 self._is_input_valid = False
                 return
-
-            # home pos
-            for (row, param), field in self._ui.robot_config.home_pos_inputs.items():
-                motor_key = f"motor{row+1}"
-                if motor_key not in setup["homing_params"]:
-                    setup["homing_params"][motor_key] = {}
-
-                value = field.text().strip()
-                self._field = param  # For error reporting
-
-                if not value:
-                    print(f"ERROR: Field '{self._field}' cannot be empty.")
-                    self._is_input_valid = False
-                    return
-
-                try:
-                    int(value)
-                    setup["homing_params"][motor_key][param] = value
-                    self._is_input_valid = True
-                except Exception as e:
-                    print(f"ERROR: Field '{self._field}' must be a numeric value.")
-                    self._handle_exception(e, "_get_field_vals")
-                    self._is_input_valid = False
-                    return
-
-            # speeds
-            for (
-                row,
-                param,
-            ), field in self._ui.robot_config.speed_a_accel_inputs.items():
-                motor_key = f"motor{row+1}"
-                if motor_key not in setup["speed_a_accel"]:
-                    setup["speed_a_accel"][motor_key] = {}
-
-                value = field.text().strip()
-                self._field = param  # For error reporting
-
-                if not value:
-                    print(f"ERROR: Field '{self._field}' cannot be empty.")
-                    self._is_input_valid = False
-                    return
-
-                try:
-                    int(value)
-                    setup["speed_a_accel"][motor_key][param] = value
-                    self._is_input_valid = True
-                except Exception as e:
-                    print(f"ERROR: Field '{self._field}' must be a numeric value.")
-                    self._handle_exception(e, "_get_field_vals")
-                    self._is_input_valid = False
-                    return
-
-        return setup
 
     def _detect_changes(self, current_setup, previous_setup):
         return json.dumps(current_setup, sort_keys=True) != json.dumps(
