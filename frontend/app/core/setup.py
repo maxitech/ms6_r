@@ -83,70 +83,8 @@ class Setup:
             return
         setup = {
             "dh_params": {},
-            # "homing_params": {
-            #     "motor1": {
-            #         # "vel": self._ui.home_mtr_1_vel.toPlainText(),
-            #         # "away_vel": self._ui.home_mtr_1_aw_vel.toPlainText(),
-            #         # "back_vel": self._ui.home_mtr_1_bck_vel.toPlainText(),
-            #         "home_pos": self._ui.home_mtr_1_h_pos.toPlainText(),
-            #     },
-            #     "motor2": {
-            #         # "vel": self._ui.home_mtr_2_vel.toPlainText(),
-            #         # "away_vel": self._ui.home_mtr_2_aw_vel.toPlainText(),
-            #         # "back_vel": self._ui.home_mtr_2_bck_vel.toPlainText(),
-            #         "home_pos": self._ui.home_mtr_2_h_pos.toPlainText(),
-            #     },
-            #     "motor3": {
-            #         # "vel": self._ui.home_mtr_3_vel.toPlainText(),
-            #         # "away_vel": self._ui.home_mtr_3_aw_vel.toPlainText(),
-            #         # "back_vel": self._ui.home_mtr_3_bck_vel.toPlainText(),
-            #         "home_pos": self._ui.home_mtr_3_h_pos.toPlainText(),
-            #     },
-            #     "motor4": {
-            #         # "vel": self._ui.home_mtr_4_vel.toPlainText(),
-            #         # "away_vel": self._ui.home_mtr_4_aw_vel.toPlainText(),
-            #         # "back_vel": self._ui.home_mtr_4_bck_vel.toPlainText(),
-            #         "home_pos": self._ui.home_mtr_4_h_pos.toPlainText(),
-            #     },
-            #     "motor5": {
-            #         # "vel": self._ui.home_mtr_5_vel.toPlainText(),
-            #         # "away_vel": self._ui.home_mtr_5_aw_vel.toPlainText(),
-            #         # "back_vel": self._ui.home_mtr_5_bck_vel.toPlainText(),
-            #         "home_pos": self._ui.home_mtr_5_h_pos.toPlainText(),
-            #     },
-            #     "motor6": {
-            #         # "vel": self._ui.home_mtr_6_vel.toPlainText(),
-            #         # "away_vel": self._ui.home_mtr_6_aw_vel.toPlainText(),
-            #         # "back_vel": self._ui.home_mtr_6_bck_vel.toPlainText(),
-            #         "home_pos": self._ui.home_mtr_6_h_pos.toPlainText(),
-            #     },
-            # },
-            # "speed_a_accel": {
-            #     "motor1": {
-            #         "max_speed": self._ui.motor_1_max_speed.toPlainText(),
-            #         "acc": self._ui.motor_1_acc.toPlainText(),
-            #     },
-            #     "motor2": {
-            #         "max_speed": self._ui.motor_2_max_speed.toPlainText(),
-            #         "acc": self._ui.motor_2_acc.toPlainText(),
-            #     },
-            #     "motor3": {
-            #         "max_speed": self._ui.motor_3_max_speed.toPlainText(),
-            #         "acc": self._ui.motor_3_acc.toPlainText(),
-            #     },
-            #     "motor4": {
-            #         "max_speed": self._ui.motor_4_max_speed.toPlainText(),
-            #         "acc": self._ui.motor_4_acc.toPlainText(),
-            #     },
-            #     "motor5": {
-            #         "max_speed": self._ui.motor_5_max_speed.toPlainText(),
-            #         "acc": self._ui.motor_5_acc.toPlainText(),
-            #     },
-            #     "motor6": {
-            #         "max_speed": self._ui.motor_6_max_speed.toPlainText(),
-            #         "acc": self._ui.motor_6_acc.toPlainText(),
-            #     },
-            # },
+            "homing_params": {},
+            "speed_a_accel": {},
         }
         for (row, param), field in self._ui.robot_config.dh_inputs.items():
             joint_key = f"joint{row+1}"
