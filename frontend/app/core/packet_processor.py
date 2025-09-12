@@ -36,7 +36,6 @@ class PacketProcessor:
                     case _ if self._detail == DATA_STEPS:
                         steps: list[int] = self._extract_steps(payload[3:])
                         shared_data.update_steps(steps)
-                        self._log_rx("data", f"[DATA]={str(steps)}")
 
                     case _ if self._detail == INFO_LOADED_PROGRAM:
                         self._log_rx(
