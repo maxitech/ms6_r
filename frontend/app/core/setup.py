@@ -1,6 +1,8 @@
 import json
 import os
+from PySide6.QtWidgets import QLineEdit
 from app.ui.ui_manager import UIManager
+from typing import Union
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -215,13 +217,34 @@ class Setup:
             return
         setup = self.get_setup()
         if setup:
-            self._update_dh_table(setup.get("dh_params", {}))
+            self._update_table(
+                setup_part=setup.get("dh_params", {}),
+                prefix="joint",
+                stored_inputs=self._ui.robot_config.dh_inputs,
+            )
+            self._update_table(
+                setup_part=setup.get("homing_params", {}),
+                prefix="motor",
+                stored_inputs=self._ui.robot_config.home_pos_inputs,
+            )
+            self._update_table(
+                setup_part=setup.get("speed_a_accel", {}),
+                prefix="motor",
+                stored_inputs=self._ui.robot_config.speed_a_accel_inputs,
+            )
 
-    def _update_dh_table(self, dh_params: dict[str, dict[str, float]]):
-        for joint_name, param_data in dh_params.items():
-            if joint_name.startswith("joint"):
-                row = int(joint_name.replace("joint", "")) - 1
+    def _update_table(
+        self,
+        setup_part: dict[str, dict[str, Union[int, float]]],
+        prefix: str,
+        stored_inputs: dict[tuple[int, str], QLineEdit],
+    ):
+        prefix = prefix.lower()
+
+        for field_name, param_data in setup_part.items():
+            if field_name.startswith(prefix):
+                row = int(field_name.replace(prefix, "")) - 1
                 for param_key, value in param_data.items():
-                    field = self._ui.robot_config.dh_inputs.get((row, param_key))
+                    field = stored_inputs.get((row, param_key))
                     if field:
                         field.setText(str(value))
