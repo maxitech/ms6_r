@@ -263,5 +263,13 @@ class RobotConfigPanel(QWidget):
         return self._dh_inputs
 
     @property
+    def home_pos_inputs(self) -> dict[tuple[int, str], QLineEdit]:
+        return self._home_pos_inputs
+
+    @property
+    def speed_a_accel_inputs(self) -> dict[tuple[int, str], QLineEdit]:
+        return self._speed_a_accel_inputs
+
+    @property
     def save_btn(self) -> QPushButton:
         return self._save_btn
