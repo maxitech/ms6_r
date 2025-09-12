@@ -168,11 +168,7 @@ class RobotConfigPanel(QWidget):
         rbt_config_layout.addWidget(tabs)
 
     def _create_dh_table(self) -> QFrame:
-        dh_table = QFrame()
-        dh_table.setObjectName("dh-table")
-        layout = QGridLayout(dh_table)
         self._dh_inputs: dict[tuple[int, str], QLineEdit] = {}  # Dict for read
-
         headers = [
             ("theta_offset", "θ (deg)"),
             ("alpha", "α (rad)"),
@@ -185,7 +181,53 @@ class RobotConfigPanel(QWidget):
             "d (mm)": "Offset along previous z-axis",
             "a (mm)": "Length of common normal (link length)",
         }
-        for col, (key, label_text) in enumerate(headers):
+        return self._create_table(
+            label_first_col_text="Joint",
+            default_init_val="0.0",
+            headers=headers,
+            storage=self._dh_inputs,
+            tooltips=tooltips,
+        )
+
+    def _create_home_pos_table(self) -> QFrame:
+        self._home_pos_inputs: dict[tuple[int, str], QLineEdit] = {}
+        headers = [
+            ("home_pos", "Home Position (steps)"),
+        ]
+        return self._create_table(
+            label_first_col_text="Motor",
+            default_init_val="0",
+            headers=headers,
+            storage=self._home_pos_inputs,
+        )
+
+    def _create_speed_a_accel_table(self) -> QFrame:
+        self._speed_a_accel_inputs: dict[tuple[int, str], QLineEdit] = {}
+        headers = [
+            ("max_speed", "Max Speed (steps)"),
+            ("acc", "Max Acceleration (steps)"),
+        ]
+        return self._create_table(
+            label_first_col_text="Motor",
+            default_init_val="0",
+            headers=headers,
+            storage=self._speed_a_accel_inputs,
+        )
+
+    def _create_table(
+        self,
+        label_first_col_text: str,
+        default_init_val: str,
+        headers: list[tuple[str, str]],
+        storage: dict[tuple[int, str], QLineEdit],
+        tooltips: dict[str, str] = {},
+        num_rows: int = 6,
+    ) -> QFrame:
+        table = QFrame()
+        table.setObjectName("table")
+        layout = QGridLayout(table)
+
+        for col, (_, label_text) in enumerate(headers):
             label = QLabel(label_text)
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             label.setToolTip(tooltips.get(label_text, ""))
@@ -195,22 +237,22 @@ class RobotConfigPanel(QWidget):
         corner.setObjectName("corner")
         layout.addWidget(corner, 0, 0)
 
-        # Input fields for 6 Joints
-        for row in range(6):
-            joint_label = QLabel(f"Joint {row + 1}")
-            joint_label.setObjectName("joint")
-            layout.addWidget(joint_label, row + 1, 0)
+        # Input fields
+        for row in range(num_rows):
+            label = QLabel(f"{label_first_col_text} {row + 1}")
+            label.setObjectName("first-col")
+            layout.addWidget(label, row + 1, 0)
 
             for col, (key, _) in enumerate(headers):
                 field = QLineEdit()
                 field.setAlignment(Qt.AlignmentFlag.AlignCenter)
-                field.setText("0.0")
+                field.setText(default_init_val)
                 layout.setSpacing(0)
                 layout.setContentsMargins(0, 0, 0, 0)
                 layout.addWidget(field, row + 1, col + 1)
-                self._dh_inputs[(row, key)] = field
+                storage[(row, key)] = field
 
-        return dh_table
+        return table
 
     @property
     def dh_inputs(self) -> dict[tuple[int, str], QLineEdit]:
