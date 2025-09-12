@@ -139,10 +139,17 @@ class RobotConfigPanel(QWidget):
         tool_frame_tab_layout.addWidget(QLabel("TOOL FRAME TAB"))
 
         home_pos_tab_layout = QVBoxLayout(home_pos_tab)
-        home_pos_tab_layout.addWidget(QLabel("HOME POS TAB"))
-
-        accel_tab_layout = QVBoxLayout(accel_tab)
-        accel_tab_layout.addWidget(QLabel("ACCELERATION TAB"))
+        home_pos_tab_h1 = QLabel("Home Positions")
+        home_pos_tab_h1.setObjectName("tab-h1")
+        home_pos_inner_div = QFrame()
+        home_pos_inner_div.setObjectName("hp-inner-div")
+        hp_inner_div_layout = QHBoxLayout(home_pos_inner_div)
+        hp_inner_div_layout.setContentsMargins(0, 0, 0, 0)
+        hp_inner_div_layout.addWidget(self._create_home_pos_table())
+        hp_inner_div_layout.addStretch()
+        home_pos_tab_layout.addWidget(home_pos_tab_h1)
+        home_pos_tab_layout.addWidget(home_pos_inner_div)
+        home_pos_tab_layout.addStretch()
 
         tabs.addTab(dh_tab, "DH Parameters")
         tabs.addTab(tool_frame_tab, "Tool Frame")
