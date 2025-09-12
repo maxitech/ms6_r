@@ -74,7 +74,8 @@ class MainWindow(QMainWindow):
         self.controller = MainWindowController(self)
 
     def setup_style(self):
-        bg_color = "#e5e7eb"
+        # bg_color = "#e5e7eb"  # F3F4F6
+        bg_color = "#F3F4F6"
         col_text = "#000000"
         col_text_disabled = "#6b7280"
         col_light_gray = "#d1d5dc"
@@ -164,11 +165,14 @@ class MainWindow(QMainWindow):
         editor_panel = EditorPanel()
         self.com_monitor_panel = ComMonitorPanel()
         io_monitor_panel = IOMonitorPanel()
+        self.robot_config = RobotConfigPanel()
 
-        # add pages to stack
-        self.center_stack.addWidget(self.com_monitor_panel)
+        # add pages to stack Note: Order matters.
         self.center_stack.addWidget(editor_panel)
+        self.center_stack.addWidget(self.com_monitor_panel)
         self.center_stack.addWidget(io_monitor_panel)
+        self.center_stack.addWidget(self.robot_config)
+        self.center_stack.setCurrentIndex(1)
 
         center_layout.addWidget(self.center_stack)
         self.central_btm_panel = CentralBottomPanel()
@@ -209,7 +213,7 @@ class MainWindow(QMainWindow):
         if not isinstance(sender, QAction):
             return
         data = sender.data() or ""
-        # format: "center:io_monitor" or "main:settings" or "noop:save"
+        # format: "center:io_monitor" or "main:settings" or "robot_action:ping" or "noop:save"
         if isinstance(data, str) and ":" in data:
             scope, key = data.split(":", 1)
             if scope == "center":
@@ -235,7 +239,7 @@ class MainWindow(QMainWindow):
         self.main_stack.setCurrentIndex(idx)
 
     def _show_center_page(self, page: str):
-        mapping = {"editor": 0, "com_monitor": 1, "io_monitor": 2}
+        mapping = {"editor": 0, "com_monitor": 1, "io_monitor": 2, "robot_config": 3}
         idx = mapping.get(page)
         if idx is None:
             return

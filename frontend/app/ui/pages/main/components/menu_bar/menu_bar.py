@@ -96,9 +96,13 @@ class MenuBar(QMenuBar):
 
         # Robot menu
         robot_menu = self.addMenu("Robot")
-        robot_menu.addAction("Calibrate Axes")
-        robot_menu.addAction("Set Tool Frame")
-        robot_menu.addAction("Set DH Parameters")
+        robot_config_act = QAction("Robot Configuration", self)
+        robot_config_act.setData("center:robot_config")
+        self._actions.append(robot_config_act)
+        robot_menu.addAction(robot_config_act)
+        # robot_menu.addAction("Calibrate Axes")
+        # robot_menu.addAction("Set Tool Frame")
+        # robot_menu.addAction("Set DH Parameters")
         robot_menu.addSeparator()
 
         # Predefined Programs submenu
