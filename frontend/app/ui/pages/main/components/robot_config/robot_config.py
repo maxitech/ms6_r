@@ -103,6 +103,10 @@ class RobotConfigPanel(QWidget):
                 color: {col_text};
                 background-color: #F3F4F6;
             }}
+            
+            QFrame#hp-inner-div {{
+                border: none;
+            }}
         """
         self.setStyleSheet(style)
 
