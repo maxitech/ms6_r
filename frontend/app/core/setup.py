@@ -108,6 +108,58 @@ class Setup:
                 self._handle_exception(e, "_get_field_vals")
                 self._is_input_valid = False
                 return
+
+            # home pos
+            for (row, param), field in self._ui.robot_config.home_pos_inputs.items():
+                motor_key = f"motor{row+1}"
+                if motor_key not in setup["homing_params"]:
+                    setup["homing_params"][motor_key] = {}
+
+                value = field.text().strip()
+                self._field = param  # For error reporting
+
+                if not value:
+                    print(f"ERROR: Field '{self._field}' cannot be empty.")
+                    self._is_input_valid = False
+                    return
+
+                try:
+                    int(value)
+                    setup["homing_params"][motor_key][param] = value
+                    self._is_input_valid = True
+                except Exception as e:
+                    print(f"ERROR: Field '{self._field}' must be a numeric value.")
+                    self._handle_exception(e, "_get_field_vals")
+                    self._is_input_valid = False
+                    return
+
+            # speeds
+            for (
+                row,
+                param,
+            ), field in self._ui.robot_config.speed_a_accel_inputs.items():
+                motor_key = f"motor{row+1}"
+                if motor_key not in setup["speed_a_accel"]:
+                    setup["speed_a_accel"][motor_key] = {}
+
+                value = field.text().strip()
+                self._field = param  # For error reporting
+
+                if not value:
+                    print(f"ERROR: Field '{self._field}' cannot be empty.")
+                    self._is_input_valid = False
+                    return
+
+                try:
+                    int(value)
+                    setup["speed_a_accel"][motor_key][param] = value
+                    self._is_input_valid = True
+                except Exception as e:
+                    print(f"ERROR: Field '{self._field}' must be a numeric value.")
+                    self._handle_exception(e, "_get_field_vals")
+                    self._is_input_valid = False
+                    return
+
         return setup
 
     def _detect_changes(self, current_setup, previous_setup):
