@@ -126,7 +126,7 @@ class RobotConfigPanel(QWidget):
         dh_tab = QWidget()
         tool_frame_tab = QWidget()
         home_pos_tab = QWidget()
-        accel_tab = QWidget()
+        speeds_tab = QWidget()
 
         dh_tab_layout = QVBoxLayout(dh_tab)
         dh_tab_h1 = QLabel("Denavit-Hartenberg Parameters")
@@ -151,10 +151,17 @@ class RobotConfigPanel(QWidget):
         home_pos_tab_layout.addWidget(home_pos_inner_div)
         home_pos_tab_layout.addStretch()
 
+        speeds_tab_layout = QVBoxLayout(speeds_tab)
+        speeds_tab_h1 = QLabel("Home Positions")
+        speeds_tab_h1.setObjectName("tab-h1")
+        speeds_tab_layout.addWidget(speeds_tab_h1)
+        speeds_tab_layout.addWidget(self._create_speed_a_accel_table())
+        speeds_tab_layout.addStretch()
+
         tabs.addTab(dh_tab, "DH Parameters")
         tabs.addTab(tool_frame_tab, "Tool Frame")
         tabs.addTab(home_pos_tab, "Home Positions")
-        tabs.addTab(accel_tab, "Max Accelerations")
+        tabs.addTab(speeds_tab, "Max Speeds")
 
         rbt_config_layout = QVBoxLayout(self)
         rbt_config_layout.addWidget(top_container)
