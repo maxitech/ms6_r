@@ -6,6 +6,7 @@ from app.core.serial_connection import SerialConnection
 from app.core.packet_builder import PacketBuilder
 from app.constants.ms6_r_constants import MS6_R_CONSTANTS as RC
 from app.constants.com_protocol import CMD_JOG
+from app.core.shared.shared_data import shared_data
 
 if TYPE_CHECKING:
     from main import MainWindow
@@ -37,12 +38,21 @@ class JogHandler:
                 button.pressed.connect(
                     lambda btn=button: self._handle_jog_btn_press(btn)
                 )
-                button.released.connect(self._handle_jog_btn_release)
+                button.released.connect(
+                    lambda btn=button: self._handle_jog_btn_release(btn)
+                )
 
     def _handle_jog_btn_press(self, btn: QPushButton):
         """Handle jog button press"""
         if "cart" in btn.objectName():
             print("handle-jog-cart-btn-click")
+            axis_idx, dir = self._parse_cart_jog_btn(btn)
+            if axis_idx and dir:
+                cart_jog_dir = [0, 0, 0, 0, 0, 0]
+                cart_jog_dir[axis_idx] = dir
+                shared_data.set_is_cart_jog_active(True)
+                shared_data.set_cart_jog_dir(cart_jog_dir)
+                shared_data.set_cart_jog_speed(10)  # Change later to dynamic slider val
         else:
             joint_i, direction = self._parse_jog_button(btn)
             if joint_i is not None and direction:
@@ -61,14 +71,20 @@ class JogHandler:
         if self._serial_packet:
             self._serial.set_data_out(self._serial_packet, str(self._jog_speeds))
 
-    def _handle_jog_btn_release(self):
+    def _handle_jog_btn_release(self, btn: QPushButton):
         """Handle jog button release"""
-        self._jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
-        self._serial_packet = self._pb.build_packet(
-            cmd_id=CMD_JOG, data=self._jog_speeds
-        )
-        self._queue_jog_cmd()
-        # shared_data.clear_data_queue_out()
+        if "cart" in btn.objectName():
+            cart_jog_dir = [0, 0, 0, 0, 0, 0]
+            shared_data.set_is_cart_jog_active(False)
+            shared_data.set_cart_jog_dir(cart_jog_dir)
+            print(-1)
+        else:
+            self._jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
+            self._serial_packet = self._pb.build_packet(
+                cmd_id=CMD_JOG, data=self._jog_speeds
+            )
+            self._queue_jog_cmd()
+            # shared_data.clear_data_queue_out()
 
     def _parse_jog_button(self, btn: QPushButton) -> Tuple[int | None, int | None]:
         """Parse jog button name to get joint and direction"""
@@ -84,6 +100,23 @@ class JogHandler:
             else:
                 dir = -1
             return joint_i, dir
+
+        return None, None
+
+    def _parse_cart_jog_btn(self, btn: QPushButton) -> Tuple[int | None, int | None]:
+        btn_name = btn.objectName()
+        parts = btn_name.split("-")  # example: btn-jog-cart-x-neg/pos
+        if len(parts) == 5:
+            axis: str = parts[3].lower()  # x,y,z,rx,ry,rz
+            dir_str: str = parts[4].upper()  # POS || NEG
+            axis_to_idx_map = {"x": 0, "y": 1, "z": 2, "rx": 3, "ry": 4, "rz": 5}
+            axis_idx = axis_to_idx_map[axis]
+            dir: int
+            if dir_str == "POS":
+                dir = 1
+            else:
+                dir = -1
+            return axis_idx, dir
 
         return None, None
 
