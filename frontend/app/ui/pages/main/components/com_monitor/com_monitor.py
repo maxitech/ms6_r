@@ -31,6 +31,11 @@ class ComMonitorPanel(QWidget):
         style = f"""
         QFrame#top-container {{
             border: 2px solid {col_mid_gray};
+            background-color: {bg_color};
+        }}
+        
+        QFrame#top-container QFrame{{
+            background-color: {bg_color};
         }}
 
         QFrame#top-container QLabel, QFrame#top-container QGroupBox QCheckBox {{
