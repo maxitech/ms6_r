@@ -6,7 +6,7 @@
 namespace CommunicationProtocoll
 {
     // *******************Request******************
-    static constexpr int NUM_CMDS = 6;
+    static constexpr int NUM_CMDS = 7;
 
     static constexpr std::array<uint8_t, 3> START_BYTES = {0xAA, 0xAA, 0xAA};
     static constexpr std::array<uint8_t, 2> END_BYTES   = {0x0D, 0x0A}; // CR,LF
@@ -21,6 +21,7 @@ namespace CommunicationProtocoll
     // Movement 0x10 - 0x4F(Jog, MTP, MR, etc.)
     static constexpr uint8_t CMD_JOG         = 0x10;
     static constexpr uint8_t CMD_MOVE_TO_POS = 0x11;
+    static constexpr uint8_t CMD_JOG_CART    = 0x12;
 
     // Program Control 0x50 - 0x7F(Load, etc.)
     static constexpr uint8_t CMD_LOAD = 0x50;
@@ -83,6 +84,6 @@ namespace CommunicationProtocoll
     static constexpr uint8_t ERR_MISSING_FIELD = 0x6D;
 
     static constexpr std::array<uint8_t, NUM_CMDS>
-        CMD_IDS {CMD_JOG, CMD_MOVE_TO_POS, CMD_LOAD, CMD_START, CMD_STOP, CMD_IDLE};
+        CMD_IDS {CMD_JOG, CMD_JOG_CART, CMD_MOVE_TO_POS, CMD_LOAD, CMD_START, CMD_STOP, CMD_IDLE};
 }
 #endif // COMPROTOCOL_H
