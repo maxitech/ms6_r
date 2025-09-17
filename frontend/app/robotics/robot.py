@@ -72,22 +72,23 @@ class Robot(DHRobot):
 
 
 if __name__ == "__main__":
+    pass
     # Debug
-    ms6_r = Robot(constants=MS6_R_CONSTANTS)
-    q = [0, 0, 0, 0, np.deg2rad(90), 0]
-    T = ms6_r.fkine(q=q)
-    print("FK pos:")
-    print(T)
-    print("------------------------------------------------")
-    sol = ms6_r.ikine_LM(T)
-    ms6_r.plot(q=q, backend="pyplot", block=True)
-    print("Steps for j1: ", ms6_r._deg_2_steps(0, 180))
-    print("------------------------------------------------")
-    print("Joint angles in deg: ")
-    TEST_POSITIONS = [40250 + 40000, 42760, -11820, -24080, -16438, -6400 * 2]  # steps
-    for angle in ms6_r.get_joint_angles_deg(TEST_POSITIONS):
-        print(angle)
-    print("------------------------------------------------")
-    print("Joint limits in steps: ")
-    print(ms6_r._get_joint_limits_in_steps())
-    print("------------------------------------------------")
+    # ms6_r = Robot(constants=MS6_R_CONSTANTS)
+    # q = [0, 0, 0, 0, np.deg2rad(90), 0]
+    # T = ms6_r.fkine(q=q)
+    # print("FK pos:")
+    # print(T)
+    # print("------------------------------------------------")
+    # sol = ms6_r.ikine_LM(T)
+    # ms6_r.plot(q=q, backend="pyplot", block=True)
+    # print("Steps for j1: ", ms6_r._deg_2_steps(0, 180))
+    # print("------------------------------------------------")
+    # print("Joint angles in deg: ")
+    # TEST_POSITIONS = [40250 + 40000, 42760, -11820, -24080, -16438, -6400 * 2]  # steps
+    # for angle in ms6_r.get_joint_angles_deg(TEST_POSITIONS):
+    #     print(angle)
+    # print("------------------------------------------------")
+    # print("Joint limits in steps: ")
+    # print(ms6_r._get_joint_limits_in_steps())
+    # print("------------------------------------------------")
