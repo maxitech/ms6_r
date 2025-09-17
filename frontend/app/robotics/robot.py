@@ -62,17 +62,6 @@ class Robot(DHRobot):
             * self._total_ratio(joint_index=joint_index)
         )
 
-    def _steps_2_deg(self, joint_index: int, curr_steps: int) -> float:
-        c = self.constants
-        home_offset: int = c.HOME_POSITIONS[joint_index]
-        relative_steps: int = curr_steps - home_offset
-        return (
-            float(relative_steps) / self._steps_per_rev(joint_index=joint_index) * 360
-        )
-
-    def _deg_2_steps(self, joint_index: int, deg: float) -> int:
-        return int((deg / 360) * self._steps_per_rev(joint_index=joint_index))
-
     def _get_joint_limits_in_steps(self) -> List[List[int]]:
         step_limits = []
         for i, (min_deg, max_deg) in enumerate(self.constants.JOINT_LIMITS):
