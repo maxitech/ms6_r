@@ -32,7 +32,7 @@ class Robot(DHRobot):
     def get_joint_angles_deg(self, curr_steps: List[int]) -> List[float]:
         angles_deg: List[float] = []
         for i in range(len(curr_steps)):
-            deg = self._steps_2_deg(i, curr_steps=curr_steps[i])
+            deg = self.steps_2_deg(i, curr_steps=curr_steps[i])
             angles_deg.append(deg)
         return angles_deg
 
@@ -65,8 +65,8 @@ class Robot(DHRobot):
     def _get_joint_limits_in_steps(self) -> List[List[int]]:
         step_limits = []
         for i, (min_deg, max_deg) in enumerate(self.constants.JOINT_LIMITS):
-            min_steps = self._deg_2_steps(i, min_deg)
-            max_steps = self._deg_2_steps(i, max_deg)
+            min_steps = self.deg_2_steps(i, min_deg)
+            max_steps = self.deg_2_steps(i, max_deg)
             step_limits.append([int(min_steps), int(max_steps)])
         return step_limits
 
