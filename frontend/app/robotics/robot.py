@@ -36,6 +36,17 @@ class Robot(DHRobot):
             angles_deg.append(deg)
         return angles_deg
 
+    def deg_2_steps(self, joint_index: int, deg: float) -> int:
+        return int((deg / 360) * self._steps_per_rev(joint_index=joint_index))
+
+    def steps_2_deg(self, joint_index: int, curr_steps: int) -> float:
+        c = self.constants
+        home_offset: int = c.HOME_POSITIONS[joint_index]
+        relative_steps: int = curr_steps - home_offset
+        return (
+            float(relative_steps) / self._steps_per_rev(joint_index=joint_index) * 360
+        )
+
     # *** Private ***
     def _total_ratio(self, joint_index: int) -> float:
         c = self.constants
