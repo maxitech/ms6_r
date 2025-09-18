@@ -3,9 +3,9 @@ from typing import TYPE_CHECKING
 
 from typing import Tuple
 from app.core.serial_connection import SerialConnection
-from app.core.packet_builder import PacketBuilder
+from app.core.packet_builder import packet_builder
 from app.constants.ms6_r_constants import MS6_R_CONSTANTS as RC
-from app.constants.com_protocol import CMD_JOG
+from app.constants.com_protocol import CMD_JOG, CMD_JOG_CART
 from app.core.shared.shared_data import shared_data
 
 if TYPE_CHECKING:
@@ -18,7 +18,6 @@ class JogHandler:
         self._serial = serial
         self._helper = helper
         self._ui_manager = ui_manager
-        self._pb = PacketBuilder()
         self._slider_value = ui.left_panel.ctrl.jog_speed_slider_val
         self._serial_packet: bytes | None = None
 
@@ -77,10 +76,11 @@ class JogHandler:
             cart_jog_dir = [0, 0, 0, 0, 0, 0]
             shared_data.set_is_cart_jog_active(False)
             shared_data.set_cart_jog_dir(cart_jog_dir)
-            print(-1)
+            packet = packet_builder.build_packet(CMD_JOG_CART, cart_jog_dir)
+            shared_data.set_data_out(packet)
         else:
             self._jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
-            self._serial_packet = self._pb.build_packet(
+            self._serial_packet = packet_builder.build_packet(
                 cmd_id=CMD_JOG, data=self._jog_speeds
             )
             self._queue_jog_cmd()
