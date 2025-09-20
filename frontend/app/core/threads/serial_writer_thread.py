@@ -7,8 +7,6 @@ from app.core.shared.shared_data import shared_data
 
 
 class SerialWriterThread(QThread):
-    INTERVAL_S = 0.01  # 10ms
-
     def __init__(self, serial: serial.Serial):
         super().__init__()
         self._serial_port = serial
