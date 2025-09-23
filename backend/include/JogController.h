@@ -40,7 +40,7 @@ private:
      * @return The JogCommand enum value representing the jog command.
      * @internal
      */
-    JogCommand _getJogCommand(const int index);
+    // JogCommand _getJogCommand(const int index);
     String     _getDir(std::vector<int32_t>& jogSpeedsValid, int index);
 
     std::array<JogFlags, Utils::NUM_DOF> _jogFlags;     /// < Array holding `JogFlags` for each motor. @internal
