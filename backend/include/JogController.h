@@ -31,7 +31,7 @@ public:
      * @param jogSpeeds Reference to the passed optional jogSpeeds vector.
      * @param currJogState Reference to the passed `JogState`.
      */
-    void jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, JogState& currJogState);
+    bool jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, JogState& currJogState);
 
 private:
     /**
@@ -41,7 +41,7 @@ private:
      * @internal
      */
     // JogCommand _getJogCommand(const int index);
-    String     _getDir(std::vector<int32_t>& jogSpeedsValid, int index);
+    String _getDir(std::vector<int32_t>& jogSpeedsValid, int index);
 
     std::array<JogFlags, Utils::NUM_DOF> _jogFlags;     /// < Array holding `JogFlags` for each motor. @internal
     std::vector<MotorConfig*>&           _motorConfigs; ///< Reference to a Vector of motor config pointers for the robot. Note: Setup class has full ownership of this vector. @internal
