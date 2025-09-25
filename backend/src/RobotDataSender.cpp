@@ -18,7 +18,7 @@ void RobotDataSender::sendMotorPosInSteps(const std::vector<MotorConfig*>& motor
         int32_t pos = 0;
         if (_homedMask & (1 << i))
         {
-            pos = motorCoinfigs[i]->motor->getPosition();
+            pos = motorCoinfigs[i]->motor->currentPosition();
         }
         data.push_back((pos >> 16) & 0xFF); // MSB
         data.push_back((pos >> 8) & 0xFF);

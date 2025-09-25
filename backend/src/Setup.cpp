@@ -221,7 +221,7 @@ void Setup::_updateMotionProfiles()
         {
             motors[i]->setMaxSpeed(extractedProfiles[i].max_speed);
             motors[i]->setAcceleration(extractedProfiles[i].accel);
-motors[i]->setSpeed(0);
+            motors[i]->setSpeed(0);
         }
     }
 }

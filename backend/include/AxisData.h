@@ -9,10 +9,11 @@
 #define AXISDATA_H
 
 #include "HomingState.h"
-#include "teensystep4.h"
+// #include "teensystep4.h"
+#include <AccelStepper.h>
 #include <Arduino.h>
 
-using namespace TS4;
+// using namespace TS4;
 
 /**
  * @enum Axes
@@ -42,7 +43,7 @@ struct AxisData
     /**
      * @brief Pointer to the Stepper motor associated with this axis.
      */
-    Stepper* motor;
+    AccelStepper* motor;
 
     /**
      * @brief The identifier for the axis.
