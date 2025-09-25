@@ -202,21 +202,21 @@ private:
 
     // Homing parameters for each axis, negative values indicate direction(CCW)
 
-    const int _HOMING_VELOCITY_J1    = -6000; // 3k
-    const int _MOVE_AWAY_VELOCITY_J1 = 800;
+    const int _HOMING_VELOCITY_J1    = -3000;
+    const int _MOVE_AWAY_VELOCITY_J1 = 400;
     const int _MOVE_BACK_VELOCITY_J1 = -200;
     int       _HOME_POS_J1;
     // const int HOME_POS_J1           = 40'000;
 
-    const int _HOMING_VELOCITY_J2    = -20'000;
-    const int _MOVE_AWAY_VELOCITY_J2 = 4000;
-    const int _MOVE_BACK_VELOCITY_J2 = -2000;
+    const int _HOMING_VELOCITY_J2    = -10'000;
+    const int _MOVE_AWAY_VELOCITY_J2 = 2000;
+    const int _MOVE_BACK_VELOCITY_J2 = -1000;
     int       _HOME_POS_J2;
     // const int HOME_POS_J2           = 55'000;
 
-    const int _HOMING_VELOCITY_J3    = 5'000;
-    const int _MOVE_AWAY_VELOCITY_J3 = -800;
-    const int _MOVE_BACK_VELOCITY_J3 = 400;
+    const int _HOMING_VELOCITY_J3    = 2'000;
+    const int _MOVE_AWAY_VELOCITY_J3 = -400;
+    const int _MOVE_BACK_VELOCITY_J3 = 200;
     int       _HOME_POS_J3;
     // const int HOME_POS_J3           = -20'000;
 
@@ -226,15 +226,15 @@ private:
     int       _HOME_POS_J4;
     // const int HOME_POS_J4           = -24'000;
 
-    const int _HOMING_VELOCITY_J5    = 8000;
-    const int _MOVE_AWAY_VELOCITY_J5 = -800;
-    const int _MOVE_BACK_VELOCITY_J5 = 400;
+    const int _HOMING_VELOCITY_J5    = 5000;
+    const int _MOVE_AWAY_VELOCITY_J5 = -500;
+    const int _MOVE_BACK_VELOCITY_J5 = 250;
     int       _HOME_POS_J5;
     // const int HOME_POS_J5           = -22'000;
 
-    const int _HOMING_VELOCITY_J6    = 4000;
+    const int _HOMING_VELOCITY_J6    = 2500;
     const int _MOVE_AWAY_VELOCITY_J6 = -400;
-    const int _MOVE_BACK_VELOCITY_J6 = 400;
+    const int _MOVE_BACK_VELOCITY_J6 = 200;
     int       _HOME_POS_J6;
     // const int HOME_POS_J6           = -6400;
 

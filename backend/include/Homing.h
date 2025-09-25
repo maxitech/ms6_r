@@ -9,8 +9,16 @@
 #define HOMING_H
 
 #include "AxisGroup.h"
+#include <AccelStepper.h>
 #include <Arduino.h>
 #include <memory>
+
+struct DebounceState
+{
+    bool          lastStableState = HIGH;
+    bool          lastReadState   = HIGH;
+    unsigned long lastChangeTime  = 0;
+};
 
 /**
  * @class Homing
@@ -78,10 +86,11 @@ private:
     /**
      * @brief Reads the state of a limit switch with debounce handling.
      * @param pin The pin number of the limit switch.
+     * @param index The index number of the switch.
      * @return True if the switch is active, false otherwise.
      * @internal
      */
-    bool _debounceRead(byte pin);
+    bool _debounceRead(byte pin, int index);
 
     /**
      * @brief Updates the status of a specific axis based on the limit switch state.
@@ -100,7 +109,8 @@ private:
      */
     void _homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive, AxisData& axisData);
 
-    const std::array<byte, 6>               _limitSwitches;              ///< Array of pin numbers for limit switches. @internal
+    const std::array<byte, 6>               _limitSwitches; ///< Array of pin numbers for limit switches. @internal
+    std::array<DebounceState, 6>            _debounceStates;
     std::vector<std::unique_ptr<AxisGroup>> _axisGroups;                 ///< Vector of axis groups managed by the class. @internal
     uint8_t                                 _PREVIOUS_SWITCH_STATUS = 0; ///< Previous state of all limit switches. @internal
     uint8_t                                 _SWITCH_STATUS          = 0; ///< Current state of all limit switches. @internal
