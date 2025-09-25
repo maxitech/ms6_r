@@ -17,8 +17,9 @@
 #include "MotorConfig.h"
 #include "ProgramLoader.h"
 #include "SerialHandler.h"
-#include "teensystep4.h"
-#include "timers/Teensy4/TMR/TMR.h"
+// #include "teensystep4.h"
+// #include "timers/Teensy4/TMR/TMR.h"
+#include <AccelStepper.h>
 #include <Arduino.h>
 
 #include "Kinematics.h"
@@ -259,7 +260,7 @@ private:
     /**
      * @brief Stepper motor instances.
      */
-    Stepper _motorJ1, _motorJ2, _motorJ3, _motorJ4, _motorJ5, _motorJ6; // int stepPin, int dirPin
+    AccelStepper _motorJ1, _motorJ2, _motorJ3, _motorJ4, _motorJ5, _motorJ6; // int stepPin, int dirPin
 
     // Initialize MotorConfigs
     std::vector<MotorConfig*> _motorConfigs; ///< Vector of MotorConfig pointers @internal
