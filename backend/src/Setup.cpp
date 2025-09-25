@@ -6,7 +6,7 @@
 #define LOG(level, msg) DebugLog::log(level, msg)
 
 using namespace CommunicationProtocoll;
-using namespace TS4;
+// using namespace TS4;
 
 Setup& Setup::getInstance()
 {
