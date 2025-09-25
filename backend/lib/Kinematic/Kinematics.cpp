@@ -114,7 +114,7 @@ std::vector<double> Kinematics::getJointAnglesInRadOrDeg(const int radOrDeg) con
 
     for (const auto& cfg : _motorConfigs)
     {
-        double deg = _stepsToDeg(cfg, cfg->motor->getPosition());
+        double deg = _stepsToDeg(cfg, cfg->motor->currentPosition());
         anglesDeg.push_back(deg);
         anglesRad.push_back(_degToRad(deg));
     }
