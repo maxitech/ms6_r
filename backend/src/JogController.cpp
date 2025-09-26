@@ -13,7 +13,7 @@ JogController::JogController(std::vector<MotorConfig*>& motorConfigs, RobotDataS
     , _rbtDtaSender(rbtDtaSender)
     , _activeIndex(-1) {};
 
-bool JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, JogState& currJogState)
+bool JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds)
 {
     if (!jogSpeeds.has_value() || jogSpeeds->empty())
         return false;

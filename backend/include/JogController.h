@@ -29,9 +29,8 @@ public:
     /**
      * @brief Executes the jog command for a specific joint.
      * @param jogSpeeds Reference to the passed optional jogSpeeds vector.
-     * @param currJogState Reference to the passed `JogState`.
      */
-    bool jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, JogState& currJogState);
+    bool jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds);
 
 private:
     /**

@@ -245,20 +245,11 @@ void ProgramLoader::_home()
 
 void ProgramLoader::_main()
 {
-    static JogState currJogState = IDLE_JOG;
+    static JogState currJogState  = IDLE_JOG;
 
     if (_cmdId == CMD_JOG && _isHomingDone)
     {
-        _jogCtrl->jogJoint(_jogSpeeds, currJogState);
-    }
-    else
-    {
-        currJogState = IDLE_JOG;
-        Utils::createAndSendPacket(_cmdId, STATUS_OK, WARN_ARM_NOT_HOMED);
-        LOG(LOG_WARN, "Arm not homed - home first");
-        _setState(IDLE);
-    }
-}
+        if (!_jogCtrl->jogJoint(_jogSpeeds))
 
 //  ******************************HELPER FUNCTIONS********************************
 
