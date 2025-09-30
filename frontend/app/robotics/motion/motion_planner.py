@@ -7,7 +7,7 @@ from app.robotics.robot import Robot
 from app.constants.ms6_r_constants import MS6_R_CONSTANTS
 from app.core.shared.shared_data import shared_data
 from app.core.packet_builder import packet_builder
-from app.constants.com_protocol import CMD_JOG_CART
+from app.constants.com_protocol import CMD_JOG
 
 
 class MotionPlanner:
