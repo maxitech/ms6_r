@@ -5,7 +5,7 @@ from typing import Tuple
 from app.core.serial_connection import SerialConnection
 from app.core.packet_builder import packet_builder
 from app.constants.ms6_r_constants import MS6_R_CONSTANTS as RC
-from app.constants.com_protocol import CMD_JOG, CMD_JOG_CART
+from app.constants.com_protocol import CMD_JOG
 from app.core.shared.shared_data import shared_data
 
 if TYPE_CHECKING:
@@ -44,14 +44,15 @@ class JogHandler:
     def _handle_jog_btn_press(self, btn: QPushButton):
         """Handle jog button press"""
         if "cart" in btn.objectName():
-            print("handle-jog-cart-btn-click")
             axis_idx, dir = self._parse_cart_jog_btn(btn)
-            if axis_idx and dir:
+            if axis_idx is not None and dir is not None:
                 cart_jog_dir = [0, 0, 0, 0, 0, 0]
                 cart_jog_dir[axis_idx] = dir
                 shared_data.set_is_cart_jog_active(True)
                 shared_data.set_cart_jog_dir(cart_jog_dir)
-                shared_data.set_cart_jog_speed(10)  # Change later to dynamic slider val
+                shared_data.set_cart_jog_speed(
+                    100
+                )  # Change later to dynamic slider val
         else:
             joint_i, direction = self._parse_jog_button(btn)
             if joint_i is not None and direction:
@@ -62,7 +63,7 @@ class JogHandler:
         self._jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
         speed = self._calculate_jog_speed(i)
         self._jog_speeds[i] = speed * dir
-        self._serial_packet = self._pb.build_packet(
+        self._serial_packet = packet_builder.build_packet(
             cmd_id=CMD_JOG, data=self._jog_speeds
         )
 
@@ -76,7 +77,7 @@ class JogHandler:
             cart_jog_dir = [0, 0, 0, 0, 0, 0]
             shared_data.set_is_cart_jog_active(False)
             shared_data.set_cart_jog_dir(cart_jog_dir)
-            packet = packet_builder.build_packet(CMD_JOG_CART, cart_jog_dir)
+            packet = packet_builder.build_packet(CMD_JOG, cart_jog_dir)
             shared_data.set_data_out(packet)
         else:
             self._jog_speeds = [0, 0, 0, 0, 0, 0]  # repr: speed for each joint
