@@ -16,6 +16,7 @@ MS6_R_CONSTANTS = RobotConstants(
     DRIVER_PULLEY_TEETH=[16, 16, 16, 16, 16, 1],
     DRIVEN_PULLEY_TEETH=[100, 80, 100, 60, 32, 1],
     GEARBOX_RATIO=[1, 14, 1, 1, 1, 1],
+    JOINT_DIR=[1, 1, -1, 1, 1, 1],  # direction for each joint
     HOME_POSITIONS=[40250, 42760, -11820, -24080, -16438, -6400],  # steps
     # Min and max positions the joint can reach in degrees after homing
     JOINT_LIMITS=[
