@@ -3,6 +3,7 @@ from roboticstoolbox import DHRobot, RevoluteDH
 
 from math import pi
 import numpy as np
+import numpy.typing as npt
 import matplotlib.pyplot as plt
 from typing import List
 
@@ -46,6 +47,16 @@ class Robot(DHRobot):
         return (
             float(relative_steps) / self._steps_per_rev(joint_index=joint_index) * 360
         )
+
+    def steps_to_q_rad(self, steps: list[int]) -> npt.NDArray[np.float64]:
+        """Konvertiert Steps zu Joint angles in Radians."""
+        degs: list[float] = self.get_joint_angles_deg(steps)
+
+        #  Adjust the sign according to the mechanical installation direction.
+        dirs = np.array(self.constants.JOINT_DIR, dtype=float)
+        degs = degs * dirs
+
+        return np.deg2rad(degs)
 
     # *** Private ***
     def _total_ratio(self, joint_index: int) -> float:
