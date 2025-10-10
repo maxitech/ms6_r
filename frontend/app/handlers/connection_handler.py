@@ -1,5 +1,5 @@
 import json
-from PySide6.QtCore import Signal, QObject
+from PySide6.QtCore import Signal, QObject, QTimer
 from typing import List
 from app.core.shared.shared_data import shared_data
 from app.utils.helper import Helper
@@ -11,6 +11,7 @@ from app.ui.ui_manager import UIManager
 from app.core.setup import Setup
 from app.handlers.program_handler import ProgramHandler
 from app.core.serial_connection import SerialConnection
+
 
 from typing import TYPE_CHECKING
 
@@ -41,13 +42,29 @@ class ConnectionHandler(QObject):
         self._pp = PacketProcessor(self._ui_manager)
         self._parser = PacketParser()
         self._current_ports: List[str] = []
-        shared_data.subscribe("new_steps", self._update_ui)
+        self._latest_data = None
+        shared_data.subscribe("new_steps", self._on_new_data)
+
+        # Timer for ui updates
+        self.timer = QTimer()
+        self.timer.timeout.connect(self._on_timer)
+        self.timer.start(100)  # 100 ms
 
     def set_prog_handler(self, prog_handler: ProgramHandler):
         self._prog_handler = prog_handler
 
-    def _update_ui(self, data):
-        print("Updated UI", data)
+    def _on_new_data(self, data):
+        self._latest_data = data
+
+    def _on_timer(self):
+        if self._latest_data is None:
+            return
+        self._update_ui(self._latest_data)
+
+    def _update_ui(self, steps: list[int]):
+        # update every 100ms
+        self._ui_manager.display_joint_angles(steps)
+        self._ui_manager.display_fk_pose(steps)
 
     def setup_connections(self):
         """Setup connection-related UI connections"""

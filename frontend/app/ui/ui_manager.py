@@ -1,6 +1,9 @@
 import datetime
 import re
 
+from app.robotics.robot import Robot
+from app.constants.ms6_r_constants import MS6_R_CONSTANTS
+
 from PySide6.QtWidgets import QPushButton
 from PySide6.QtGui import QTextCharFormat, QColor, QTextCursor
 from typing import TYPE_CHECKING
@@ -12,6 +15,7 @@ if TYPE_CHECKING:
 class UIManager:
     def __init__(self, ui: "MainWindow"):
         self._ui = ui
+        self.R = Robot(constants=MS6_R_CONSTANTS)
         self._current_program = None
 
         self._ui.left_panel.ctrl.btn_radio1.toggled.connect(
@@ -114,6 +118,19 @@ class UIManager:
             com_monitor_component.add_log_entry(dir, type, msg, received_bytes, parsed)
         else:
             com_monitor_component.add_log_entry(dir, type, msg)
+
+    def display_joint_angles(self, steps: list[int]):
+        joint_angles = self.R.get_joint_angles_deg(steps)
+        for i in range(len(joint_angles)):
+            joint_angles[i] = round(joint_angles[i], 2)
+        self._ui.central_btm_panel.set_joint_positions(joint_angles)
+
+    def display_fk_pose(self, steps: list[int]):
+        joint_angles_rad = self.R.steps_to_q_rad(steps)
+        T = self.R.fkine(joint_angles_rad)
+        x, y, z = T.t * 1000  # in mm
+        rx, ry, rz = T.rpy(order="xyz", unit="deg")
+        self._ui.central_btm_panel.set_tool_position([x, y, z, rx, ry, rz])
 
     # def update_program_monitor(
     #     self,
