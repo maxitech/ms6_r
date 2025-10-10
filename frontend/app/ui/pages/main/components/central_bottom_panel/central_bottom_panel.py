@@ -15,6 +15,8 @@ class CentralBottomPanel(QFrame):
     def __init__(self):
         super().__init__()
         self._setup_style()
+        self._joint_labels = {}
+        self._cart_labels = {}
         self._create_layout()
 
     def _setup_style(self):
@@ -103,7 +105,6 @@ class CentralBottomPanel(QFrame):
 
     def _create_pos_row(self, mode: bool) -> QFrame:
         row_joint_pos = QFrame()
-        row_joint_pos.setObjectName("row-joint-pos")
         layout_row_joint_pos = QHBoxLayout(row_joint_pos)
         layout_row_joint_pos.setContentsMargins(0, 0, 0, 0)
 
@@ -111,23 +112,21 @@ class CentralBottomPanel(QFrame):
 
         for i in range(6):
             div_joint_pos = QFrame()
-            div_joint_pos.setContentsMargins(0, 0, 0, 0)
             layout_div = QVBoxLayout(div_joint_pos)
             layout_div.setContentsMargins(0, 0, 0, 0)
             layout_div.setSpacing(0)
 
-            div_h2 = QLabel()
-            div_h2.setText(f"J{i+1}" if mode else f"{cart_list[i]}")
+            name = f"J{i+1}" if mode else cart_list[i]
+
+            div_h2 = QLabel(name)
             div_h2.setStyleSheet(
                 "font-size: 12px; font-weight: 700; margin-bottom: 4px;"
             )
             div_h2.setAlignment(Qt.AlignmentFlag.AlignCenter)
             layout_div.addWidget(div_h2)
 
-            label_div_pos = QLabel()
-            label_div_pos.setText("0.0°" if mode else f"0.0{' mm' if i < 3 else '°'}")
+            label_div_pos = QLabel("0.0°" if mode else f"0.0{' mm' if i < 3 else '°'}")
             label_div_pos.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            label_div_pos.setContentsMargins(0, 0, 0, 0)
             label_div_pos.setStyleSheet(
                 "border: 1px solid #99a1af; background-color: #fff; padding-top: 2px; min-height: 18px;"
             )
@@ -135,8 +134,23 @@ class CentralBottomPanel(QFrame):
 
             layout_row_joint_pos.addWidget(div_joint_pos)
 
+            # -> Speichere Referenz
+            if mode:
+                self._joint_labels[name] = label_div_pos
+            else:
+                self._cart_labels[name] = label_div_pos
+
         return row_joint_pos
 
     @property
     def btn_teach_pos(self) -> QPushButton:
         return self._btn_teach_pos
+
+    def set_joint_positions(self, values: list[float]):
+        for i, val in enumerate(values):
+            self._joint_labels[f"J{i+1}"].setText(f"{val:.2f}°")
+
+    def set_tool_position(self, xyzrpy: list[float]):
+        for key, val in zip(["X", "Y", "Z", "Rx", "Ry", "Rz"], xyzrpy):
+            unit = "mm" if key in ["X", "Y", "Z"] else "°"
+            self._cart_labels[key].setText(f"{val:.2f}{unit}")
