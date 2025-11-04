@@ -63,3 +63,6 @@ class PacketBuilder:
         for val in speeds:
             payload.extend(self._int_to_3_bytes(val))
         return bytes(payload)
+
+
+packet_builder = PacketBuilder()

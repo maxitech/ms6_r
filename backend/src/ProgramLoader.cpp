@@ -1,5 +1,6 @@
 #include "ProgramLoader.h"
 #include "DebugLog.h"
+#include "PacketBuilder.h"
 #include "Setup.h"
 #include "Utils.h"
 #include <map>
@@ -245,49 +246,38 @@ void ProgramLoader::_home()
 
 void ProgramLoader::_main()
 {
-    static bool     warningShown = false;
     static JogState currJogState = IDLE_JOG;
 
     if (_cmdId == CMD_JOG && _isHomingDone)
     {
-        _jogCtrl->jogJoint(_jogSpeeds, currJogState);
-        if (warningShown)
-        {
-            warningShown = false;
-        }
-    }
-    else
-    {
-        currJogState = IDLE_JOG;
-        if (!warningShown)
-        {
-            Utils::createAndSendPacket(_cmdId, STATUS_OK, WARN_ARM_NOT_HOMED);
-            LOG(LOG_WARN, "Arm not homed - home first");
-            warningShown = true;
-        }
-    }
-}
 
-//  ******************************HELPER FUNCTIONS********************************
-
-void ProgramLoader::_stopMotors()
-{
-    for (MotorConfig* cfg : _motorConfigs)
-    {
-        if (cfg->motor != nullptr && cfg->motor->isMoving)
+        if (!_jogCtrl->jogJoint(_jogSpeeds))
         {
-            cfg->motor->stopAsync(); // Stop all motors if they are moving(smooth)
+            _setState(IDLE);
+            _cmdId = NOP;
+        };
+    }
+
+    //  ******************************HELPER FUNCTIONS********************************
+
+    void ProgramLoader::_stopMotors()
+    {
+        for (MotorConfig* cfg : _motorConfigs)
+        {
+            if (cfg->motor != nullptr && cfg->motor->isRunning())
+            {
+                cfg->motor->stop(); // Stop all motors if they are moving(smooth)
+            }
         }
     }
-}
 
-void ProgramLoader::_eStopMotors()
-{
-    for (MotorConfig* cfg : _motorConfigs)
+    void ProgramLoader::_eStopMotors()
     {
-        if (cfg->motor != nullptr && cfg->motor->isMoving)
+        for (MotorConfig* cfg : _motorConfigs)
         {
-            cfg->motor->emergencyStop(); // Stop all motors if they are moving(hard)
+            if (cfg->motor != nullptr && cfg->motor->isRunning())
+            {
+                cfg->motor->setSpeed(0); // Stop all motors if they are moving(hard)
+            }
         }
     }
-}

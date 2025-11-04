@@ -10,6 +10,7 @@ class RobotConstants:
     DRIVER_PULLEY_TEETH: List[int]
     DRIVEN_PULLEY_TEETH: List[int]
     GEARBOX_RATIO: List[int]
+    JOINT_DIR: List[int]
     HOME_POSITIONS: List[int]
     JOINT_LIMITS: List[List[float]]
     JOINT_JOG_SPEED_RANGE: List[int]

@@ -13,186 +13,80 @@ JogController::JogController(std::vector<MotorConfig*>& motorConfigs, RobotDataS
     , _rbtDtaSender(rbtDtaSender)
     , _activeIndex(-1) {};
 
-void JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds, JogState& currJogState)
+bool JogController::jogJoint(std::optional<std::vector<int32_t>>& jogSpeeds)
 {
-    if (!jogSpeeds.has_value())
-    {
-        return;
-    }
-    std::vector<int32_t> jogSpeedsValid = jogSpeeds.value();
+    if (!jogSpeeds.has_value() || jogSpeeds->empty())
+        return false;
 
-    if (jogSpeedsValid.empty())
-    {
-        return;
-    }
+    std::vector<int32_t> jogSpeedsValid = jogSpeeds.value();
 
     if (jogSpeedsValid.size() > _motorConfigs.size())
     {
         Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INDEX_OOB);
         LOG(LOG_ERROR, "Vector 'jogSpeeds' too large.");
-        return;
+        return false;
     }
 
-    int index = -1;
+    bool                anyActive   = false;
+    std::vector<double> jointAngles = Setup::getInstance().getKinematics()->getJointAnglesInRadOrDeg(0);
     for (size_t i = 0; i < jogSpeedsValid.size(); ++i)
     {
-        if (jogSpeedsValid[i] != 0)
-        {
-            index = static_cast<int>(i);
-            break;
-        }
-    }
+        JogFlags* jogFlags  = &_jogFlags[i];
+        String    direction = _getDir(jogSpeedsValid, i);
 
-    JogCommand jogCmd;
-    String     direction;
-    JogFlags*  jogFlags = nullptr;
+        float currPosDeg = jointAngles[i];
 
-    if (index == -1)
-    {
-        jogCmd    = JOG_STOP;
-        direction = "";
-    }
-    else
-    {
-        if (index >= static_cast<int>(_motorConfigs.size()) || index < 0)
-        {
-            Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INDEX_OOB);
-            String debugMsg = "Invalid motor index: " + String(index) + ".";
-            LOG(LOG_ERROR, debugMsg);
-            return;
-        }
-
-        if (index >= static_cast<int>(_jogFlags.size()))
-        {
-            Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INDEX_OOB);
-            String debugMsg = "'jogFlags' index out of bounds: " + String(index) + ".";
-            LOG(LOG_ERROR, debugMsg);
-            return;
-        }
-
-        jogCmd       = JOG_START;
-        direction    = _getDir(jogSpeedsValid, index);
-        _activeIndex = index;
-        jogFlags     = &_jogFlags[index];
-    }
-
-    if (currJogState == JOGGING)
-    {
-        if (_activeIndex >= 0 && _activeIndex < static_cast<int>(_motorConfigs.size()))
-        {
-            static unsigned long lastSendTime = 0;
-            if (Utils::nonBlockingDelay(5, lastSendTime))
-            {
-                _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
-            }
-        }
-    }
-
-    switch (jogCmd)
-    {
-    case JOG_START:
-        if (!jogFlags)
-        {
-            return;
-        }
-
-        if (index < 0 || index >= static_cast<int>(_motorConfigs.size()))
-        {
-            Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INDEX_OOB);
-            LOG(LOG_ERROR, "Invalid index for 'JOG_START'.");
-            return;
-        }
-
-        if (jogFlags->limitReached && direction == jogFlags->blockedDir && !jogFlags->runOnce)
+        // Check limits
+        if (jogFlags->limitReached && direction == jogFlags->blockedDir && jogSpeedsValid[i] != 0)
         {
             Utils::createAndSendPacket(CMD_JOG, STATUS_OK, WARN_LIMIT_HIT);
             String debugMsg = "Cannot jog in '" + direction + "' direction - limit reached.";
             LOG(LOG_INFO, debugMsg);
-            jogFlags->runOnce = true;
-            return;
+            return false;
         }
 
+        // Reset flags
         if (jogFlags->limitReached && direction != jogFlags->blockedDir)
         {
             jogFlags->limitReached = false;
-            jogFlags->runOnce      = false;
             jogFlags->blockedDir   = "";
         }
 
-        if (currJogState != JOGGING && !jogFlags->limitReached)
+        // Limit reached
+        if ((currPosDeg >= _motorConfigs[i]->maxAngleDeg && jogSpeedsValid[i] > 0) || (currPosDeg <= _motorConfigs[i]->minAngleDeg && jogSpeedsValid[i] < 0))
+        {
+            _motorConfigs[i]->motor->setSpeed(0);
+            jogFlags->limitReached = true;
+            jogFlags->blockedDir   = direction;
+            Utils::createAndSendPacket(CMD_JOG, STATUS_OK, WARN_LIMIT_HIT);
+            continue;
+        }
+
+        // Start jogging
+        if (!jogFlags->limitReached && jogSpeedsValid[i] != 0)
         {
             // start
-            currJogState = JOGGING;
-
             if (direction != "POS" && direction != "NEG")
             {
                 Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INVALID_DIR);
                 String debugMsg = "Invalid direction string: '" + direction + "'.";
                 LOG(LOG_ERROR, debugMsg);
-                return;
+                return false;
             }
 
-            int dirVel = jogSpeedsValid[index];
-            _motorConfigs[index]->motor->rotateAsync(dirVel);
+            _motorConfigs[i]->motor->setSpeed(jogSpeedsValid[i]);
+            _motorConfigs[i]->motor->runSpeed();
+            anyActive = true;
         }
-        else if (currJogState == JOGGING && !jogFlags->limitReached)
-        {
-            std::vector<double> jointAngles = Setup::getInstance().getKinematics()->getJointAnglesInRadOrDeg(0);
-
-            if (index >= static_cast<int>(jointAngles.size()))
-            {
-                Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_INDEX_OOB);
-                LOG(LOG_ERROR, "Joint angles index out of bounds.");
-                return;
-            }
-
-            float currPosDeg = jointAngles[index];
-
-            if ((currPosDeg <= (_motorConfigs[index]->maxAngleDeg)) ||
-                (currPosDeg >= (_motorConfigs[index]->minAngleDeg)))
-            {
-                _motorConfigs[index]->motor->emergencyStop();
-
-                currJogState           = IDLE_JOG;
-                jogFlags->limitReached = true;
-                jogFlags->blockedDir   = direction;
-
-                _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
-            }
-        }
-        break;
-
-    case JOG_STOP:
-        if (_activeIndex >= 0 &&
-            _activeIndex < static_cast<int>(_motorConfigs.size()) &&
-            _activeIndex < static_cast<int>(_jogFlags.size()) &&
-            currJogState == JOGGING)
-        {
-            JogFlags& activeFlags = _jogFlags[_activeIndex];
-
-            if (!activeFlags.limitReached)
-            {
-                // _motorConfigs[_activeIndex]->motor->stopAsync();
-                _motorConfigs[_activeIndex]->motor->emergencyStop();
-                currJogState = IDLE_JOG;
-
-                _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
-            }
-            _activeIndex = -1;
-        }
-        else if (_activeIndex != -1)
-        {
-            _activeIndex = -1;
-            currJogState = IDLE_JOG;
-        }
-        break;
-
-    case JOG_UNKNOWN:
-    default:
-        Utils::createAndSendPacket(CMD_JOG, STATUS_ERROR, ERR_UNKNOWN);
-        LOG(LOG_ERROR, "Unknown JOG state.");
-        break;
     }
+
+    // Send periodic updates if any motor is active
+    static unsigned long lastSendTime = 0;
+    if (Utils::nonBlockingDelay(50, lastSendTime))
+    {
+        _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
+    }
+    return anyActive;
 }
 
 String JogController::_getDir(std::vector<int32_t>& jogSpeedsValid, int index)

@@ -17,7 +17,6 @@ CMD_SETUP = 0x04  # only used for errors while processing setup data
 CMD_JOG = 0x10
 CMD_MOVE_TO_POS = 0x11
 
-
 # Program Control 0x50-0x7F(Load, etc.)
 CMD_LOAD = 0x50
 # CMD_SELECT_PRG = 0x51

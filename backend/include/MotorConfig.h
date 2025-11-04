@@ -9,7 +9,7 @@
 #include "Compat.h"
 #include <memory>
 
-using namespace TS4;
+// using namespace TS4;
 
 /**
  * @brief Configuration structure for a stepper motor setup.
@@ -22,7 +22,7 @@ struct MotorConfig
     /**
      * @brief Pointer to the Stepper motor instance.
      */
-    Stepper* motor;
+    AccelStepper* motor;
 
     /**
      * @brief Number of full steps the motor takes per revolution.
@@ -81,7 +81,7 @@ struct MotorConfig
      * @param dnt Number of teeth on the driven pulley (default 1.0).
      * @param gr Gearbox ratio applied to the motor (default 1.0).
      */
-    MotorConfig(Stepper* motor, int homeOffset, float minAngleDeg, float maxAngleDeg, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
+    MotorConfig(AccelStepper* motor, int homeOffset, float minAngleDeg, float maxAngleDeg, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
         : motor(motor)
         , stepsPerRev(spr)
         , microsteps(ms)

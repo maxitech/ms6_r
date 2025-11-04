@@ -6,7 +6,7 @@
 namespace CommunicationProtocoll
 {
     // *******************Request******************
-    static constexpr int NUM_CMDS = 6;
+    static constexpr int NUM_CMDS = 7;
 
     static constexpr std::array<uint8_t, 3> START_BYTES = {0xAA, 0xAA, 0xAA};
     static constexpr std::array<uint8_t, 2> END_BYTES   = {0x0D, 0x0A}; // CR,LF

@@ -6,7 +6,7 @@
 #define LOG(level, msg) DebugLog::log(level, msg)
 
 using namespace CommunicationProtocoll;
-using namespace TS4;
+// using namespace TS4;
 
 Setup& Setup::getInstance()
 {
@@ -15,12 +15,12 @@ Setup& Setup::getInstance()
 }
 
 Setup::Setup()
-    : _motorJ1(_motorJ1Step, _motorJ1Dir) // int stepPin, int dirPin
-    , _motorJ2(_motorJ2Step, _motorJ2Dir)
-    , _motorJ3(_motorJ3Step, _motorJ3Dir)
-    , _motorJ4(_motorJ4Step, _motorJ4Dir)
-    , _motorJ5(_motorJ5Step, _motorJ5Dir)
-    , _motorJ6(_motorJ6Step, _motorJ6Dir)
+    : _motorJ1(AccelStepper::DRIVER, STP1, DIR1)
+    , _motorJ2(AccelStepper::DRIVER, STP2, DIR2)
+    , _motorJ3(AccelStepper::DRIVER, STP3, DIR3)
+    , _motorJ4(AccelStepper::DRIVER, STP4, DIR4)
+    , _motorJ5(AccelStepper::DRIVER, STP5, DIR5)
+    , _motorJ6(AccelStepper::DRIVER, STP6, DIR6)
     , _limitSwitches(_ledPin, _limitSwitchPins)
     , _homingManager(_limitSwitchPins)
     , _programLoader(&_homingManager, _motorConfigs, _limitSwitches)
@@ -216,10 +216,12 @@ void Setup::_updateMotionProfiles()
     std::array<MotionProfile, Utils::NUM_DOF> extractedProfiles = _extractMotionProfiles();
     if (extractedProfiles.size() == Utils::NUM_DOF)
     {
-        Stepper* motors[] = {&_motorJ1, &_motorJ2, &_motorJ3, &_motorJ4, &_motorJ5, &_motorJ6};
+        AccelStepper* motors[] = {&_motorJ1, &_motorJ2, &_motorJ3, &_motorJ4, &_motorJ5, &_motorJ6};
         for (size_t i = 0; i < extractedProfiles.size(); ++i)
         {
-            motors[i]->setMaxSpeed(extractedProfiles[i].max_speed).setAcceleration(extractedProfiles[i].accel);
+            motors[i]->setMaxSpeed(extractedProfiles[i].max_speed);
+            motors[i]->setAcceleration(extractedProfiles[i].accel);
+            motors[i]->setSpeed(0);
         }
     }
 }
@@ -333,8 +335,8 @@ void Setup::update(const String& jsonString)
 void Setup::init()
 {
     // Runs in setup() of main.cpp
-    TS4::begin();
-    TimerFactory::attachModule(new TMRModule<0>());
+    // TS4::begin();
+    // TimerFactory::attachModule(new TMRModule<0>());
 
     pinMode(_motorJ1En, OUTPUT);
     pinMode(_motorJ2En, OUTPUT);

@@ -1,0 +1,13 @@
+name: ms6r
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12.3
+  - crcmod
+  - roboticstoolbox-python
+  - watchdog
+  - pyserial
+  - pip:
+      - pyside6
+      - oclock

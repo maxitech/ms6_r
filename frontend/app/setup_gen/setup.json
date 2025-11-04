@@ -60,23 +60,23 @@
     "speed_a_accel": {
         "motor1": {
             "max_speed": "50000",
-            "acc": "26000"
+            "acc": "5000"
         },
         "motor2": {
-            "max_speed": "160000",
-            "acc": "50000"
+            "max_speed": "50000",
+            "acc": "5000"
         },
         "motor3": {
-            "max_speed": "60000",
-            "acc": "30000"
+            "max_speed": "50000",
+            "acc": "5000"
         },
         "motor4": {
-            "max_speed": "40000",
-            "acc": "30000"
+            "max_speed": "50000",
+            "acc": "5500"
         },
         "motor5": {
-            "max_speed": "40000",
-            "acc": "20000"
+            "max_speed": "20000",
+            "acc": "5000"
         },
         "motor6": {
             "max_speed": "15000",

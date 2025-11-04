@@ -1,10 +1,13 @@
 import crcmod
 from app.constants.com_protocol import *
 from app.core.shared.shared_data import shared_data
+from app.ui.ui_manager import UIManager
 
 
 class PacketProcessor:
-    def __init__(self):
+    def __init__(self, ui_manager: UIManager):
+        self._ui_manager = ui_manager
+
         self._cmd_id = None
         self._status = None
         self._detail = None
@@ -14,6 +17,7 @@ class PacketProcessor:
             print("Invalid packet received.")
             return
 
+        self._raw_data = raw_data
         # extract data
         pl_len = raw_data[3]
         payload = raw_data[4 : 4 + pl_len]
@@ -26,76 +30,109 @@ class PacketProcessor:
             case _ if self._status == STATUS_OK:
                 match self._detail:
                     case _ if self._detail == DATA_NONE:
-                        print("[INFO] No data available.")
+                        self._log_rx("info", "[INFO] No data available.")
+                        # print("[INFO] No data available.")
+
                     case _ if self._detail == DATA_STEPS:
-                        steps = self._extract_steps(payload[3:])
+                        steps: list[int] = self._extract_steps(payload[3:])
                         shared_data.update_steps(steps)
+
                     case _ if self._detail == INFO_LOADED_PROGRAM:
-                        print(f"[INFO] Program: 0x{payload[3]:02X} loaded.")
+                        self._log_rx(
+                            "info", f"[INFO] Program: 0x{payload[3]:02X} loaded."
+                        )
+
                     case _ if self._detail == INFO_RELOADED_PROGRAM:
-                        print(f"[INFO] Program: 0x{payload[3]:02X} reloaded.")
+                        self._log_rx(
+                            "info", f"[INFO] Program: 0x{payload[3]:02X} reloaded."
+                        )
+
                     case _ if self._detail == INFO_ALREADY_RUNNING:
-                        print(f"[INFO] Program: 0x{payload[3]:02X} already running.")
+                        self._log_rx(
+                            "info",
+                            f"[INFO] Program: 0x{payload[3]:02X} already running.",
+                        )
+
                     case _ if self._detail == INFO_HOMING_ALREADY_DONE:
-                        print("[INFO] Homing already done.")
+                        self._log_rx("info", "[INFO] Homing already done.")
+
                     case _ if self._detail == INFO_PING:
-                        print("[INFO] Ping OK.")
+                        self._log_rx("info", "[INFO] Ping OK.")
+
                     case _ if self._detail == WARN_NOP_IGNORED:
-                        print("[WARN] No operation ignored.")
+                        self._log_rx("warning", "[WARN] No operation ignored.")
+
                     case _ if self._detail == WARN_NO_PROGRAM_LOADED:
-                        print("[WARN] No program loaded.")
+                        self._log_rx("warning", "[WARN] No program loaded.")
+
                     case _ if self._detail == WARN_LIMIT_HIT:
-                        print("[WARN] Limit reached.")
+                        self._log_rx("warning", "[WARN] Limit reached.")
+
                     case _ if self._detail == WARN_ARM_NOT_HOMED:
-                        print("[WARN] Arm not homed.")
+                        self._log_rx("warning", "[WARN] Arm not homed.")
+
                     case _:
                         print("[ERROR] Unknown STATUS_OK detail")
+                        self._log_rx("error", "[ERROR] Unknown STATUS_OK detail")
+
             case _ if self._status == STATUS_ERROR:
                 match self._detail:
                     case _ if self._detail == ERR_UNKNOWN:
-                        print("[ERROR] Unknown error occurred.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] Unknown error occurred.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_INVALID_PACKET:
-                        print("[ERROR] Invalid packet received.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] Invalid packet received.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_TIMEOUT:
-                        print("[ERROR] Operation timed out.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] Operation timed out.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_CHECKSUM:
-                        print("[ERROR] Checksum error.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] Checksum error.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_NO_PROCESSOR:
-                        print("[ERROR] No processor available.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] No processor available.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_BUFFER_OVERFLOW:
-                        print("[ERROR] Buffer overflow.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] Buffer overflow.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_INVALID_CMD:
-                        print("[ERROR] Invalid command.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] Invalid command.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_INVALID_TELEMETRY_FLAG:
-                        print("[ERROR] Invalid telemetry flag.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] Invalid telemetry flag.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_UNKNOWN_PROGRAM:
-                        print(
-                            f"[ERROR] Program: {payload[3].to_bytes(1, "big").hex()} unknown."
-                        )
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        msg = f"[ERROR] Program: {payload[3].to_bytes(1, 'big').hex()} unknown."
+                        self._log_rx("error", msg)
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_INDEX_OOB:
-                        print("[ERROR] Index out of bounds.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] Index out of bounds.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_INVALID_DIR:
-                        print("[ERROR] Invalid direction.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] Invalid direction.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_JSON_PARSE:
-                        print("[ERROR] JSON parse error.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] JSON parse error.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_ALLOC_FAIL:
-                        print("[ERROR] Allocation failed.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] Allocation failed.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
+
                     case _ if self._detail == ERR_MISSING_FIELD:
-                        print("[ERROR] Missing field.")
-                        self._logErrorDetail(self._cmd_id, self._status, self._detail)
+                        self._log_rx("error", "[ERROR] Missing field.")
+                        self._log_error_detail(self._cmd_id, self._status, self._detail)
                     case _:
                         print("[ERROR] Unknown STATUS_ERROR detail.")
             case _:
@@ -122,16 +159,32 @@ class PacketProcessor:
 
         return True
 
-    def _extract_steps(self, data: bytes):
-        values = []
+    def _extract_steps(self, data: bytes) -> list[int]:
+        values: list[int] = []
         for i in range(0, len(data), 3):
             chunk = data[i : i + 3]
             value = int.from_bytes(chunk, byteorder="big", signed=True)
             values.append(value)
         return values
 
-    def _logErrorDetail(self, cmd_id: int, status: int, detail: int):
+    def _log_error_detail(self, cmd_id: int, status: int, detail: int):
         print(f"Command ID: 0x{cmd_id:02X}")
         print(f"Status:     0x{status:02X}")
         print(f"Detail:     0x{detail:02X}")
         print("-----------------------------------------------------------------")
+
+    def _log_rx(self, type: str, detail: str):
+        status = ""
+        if self._status == STATUS_OK:
+            status = "OK"
+        elif self._status == STATUS_ERROR:
+            status = "ERROR"
+        else:
+            status = "UNKNOWN"
+
+        rx_msg = f"RX: [{status}] :: Robot response received."
+        parsed_response_label = detail if detail else f"[{status}]"
+
+        self._ui_manager.update_com_monitor(
+            "rx", type, rx_msg, self._raw_data, parsed_response_label
+        )

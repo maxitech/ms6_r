@@ -17,8 +17,9 @@
 #include "MotorConfig.h"
 #include "ProgramLoader.h"
 #include "SerialHandler.h"
-#include "teensystep4.h"
-#include "timers/Teensy4/TMR/TMR.h"
+// #include "teensystep4.h"
+// #include "timers/Teensy4/TMR/TMR.h"
+#include <AccelStepper.h>
 #include <Arduino.h>
 
 #include "Kinematics.h"
@@ -176,47 +177,49 @@ private:
     const std::array<byte, 6> _limitSwitchPins = {_limitJ1, _limitJ2, _limitJ3, _limitJ4, _limitJ5, _limitJ6};
 
     // Motor pins
-    const int _motorJ1En   = 6;
-    const int _motorJ1Step = 9;
-    const int _motorJ1Dir  = 10;
 
-    const int _motorJ2En   = 11;
-    const int _motorJ2Step = 12;
-    const int _motorJ2Dir  = 24;
+    // Motor pins
+    const int        _motorJ1En = 6;
+    static const int STP1       = 9;
+    static const int DIR1       = 10;
 
-    const int _motorJ3En   = 25;
-    const int _motorJ3Step = 26;
-    const int _motorJ3Dir  = 27;
+    const int        _motorJ2En = 11;
+    static const int STP2       = 12;
+    static const int DIR2       = 24;
 
-    const int _motorJ4En   = 28;
-    const int _motorJ4Step = 29;
-    const int _motorJ4Dir  = 30;
+    const int        _motorJ3En = 25;
+    static const int STP3       = 26;
+    static const int DIR3       = 27;
 
-    const int _motorJ5En   = 38;
-    const int _motorJ5Step = 37;
-    const int _motorJ5Dir  = 36;
+    const int        _motorJ4En = 28;
+    static const int STP4       = 29;
+    static const int DIR4       = 30;
 
-    const int _motorJ6En   = 35;
-    const int _motorJ6Step = 34;
-    const int _motorJ6Dir  = 33;
+    const int        _motorJ5En = 38;
+    static const int STP5       = 37;
+    static const int DIR5       = 36;
+
+    const int        _motorJ6En = 35;
+    static const int STP6       = 34;
+    static const int DIR6       = 33;
 
     // Homing parameters for each axis, negative values indicate direction(CCW)
 
-    const int _HOMING_VELOCITY_J1    = -6000; // 3k
-    const int _MOVE_AWAY_VELOCITY_J1 = 800;
+    const int _HOMING_VELOCITY_J1    = -3000;
+    const int _MOVE_AWAY_VELOCITY_J1 = 400;
     const int _MOVE_BACK_VELOCITY_J1 = -200;
     int       _HOME_POS_J1;
     // const int HOME_POS_J1           = 40'000;
 
-    const int _HOMING_VELOCITY_J2    = -20'000;
-    const int _MOVE_AWAY_VELOCITY_J2 = 4000;
-    const int _MOVE_BACK_VELOCITY_J2 = -2000;
+    const int _HOMING_VELOCITY_J2    = -10'000;
+    const int _MOVE_AWAY_VELOCITY_J2 = 2000;
+    const int _MOVE_BACK_VELOCITY_J2 = -1000;
     int       _HOME_POS_J2;
     // const int HOME_POS_J2           = 55'000;
 
-    const int _HOMING_VELOCITY_J3    = 5'000;
-    const int _MOVE_AWAY_VELOCITY_J3 = -800;
-    const int _MOVE_BACK_VELOCITY_J3 = 400;
+    const int _HOMING_VELOCITY_J3    = 2'000;
+    const int _MOVE_AWAY_VELOCITY_J3 = -400;
+    const int _MOVE_BACK_VELOCITY_J3 = 200;
     int       _HOME_POS_J3;
     // const int HOME_POS_J3           = -20'000;
 
@@ -226,40 +229,43 @@ private:
     int       _HOME_POS_J4;
     // const int HOME_POS_J4           = -24'000;
 
-    const int _HOMING_VELOCITY_J5    = 8000;
-    const int _MOVE_AWAY_VELOCITY_J5 = -800;
-    const int _MOVE_BACK_VELOCITY_J5 = 400;
+    const int _HOMING_VELOCITY_J5    = 5000;
+    const int _MOVE_AWAY_VELOCITY_J5 = -500;
+    const int _MOVE_BACK_VELOCITY_J5 = 250;
     int       _HOME_POS_J5;
     // const int HOME_POS_J5           = -22'000;
 
-    const int _HOMING_VELOCITY_J6    = 4000;
+    const int _HOMING_VELOCITY_J6    = 2500;
     const int _MOVE_AWAY_VELOCITY_J6 = -400;
-    const int _MOVE_BACK_VELOCITY_J6 = 400;
+    const int _MOVE_BACK_VELOCITY_J6 = 200;
     int       _HOME_POS_J6;
     // const int HOME_POS_J6           = -6400;
 
-    // Note: min values have to be positive
-    const float _minAngleDegJ1 = 152;
-    const float _minAngleDegJ2 = 88;
-    const float _minAngleDegJ3 = 50;
-    const float _minAngleDegJ4 = 180;
-    const float _minAngleDegJ5 = 110;
-    const float _minAngleDegJ6 = 180;
+    // Neue Definition (Min < Max)
+    const float _minAngleDegJ1 = -180;
+    const float _maxAngleDegJ1 = 152;
 
-    // Note: max values have to be negative
-    const float _maxAngleDegJ1 = -180;
-    const float _maxAngleDegJ2 = -14;
-    const float _maxAngleDegJ3 = -57;
-    const float _maxAngleDegJ4 = -166;
-    const float _maxAngleDegJ5 = -120;
-    const float _maxAngleDegJ6 = -174;
+    const float _minAngleDegJ2 = -14;
+    const float _maxAngleDegJ2 = 88;
+
+    const float _minAngleDegJ3 = -57;
+    const float _maxAngleDegJ3 = 50;
+
+    const float _minAngleDegJ4 = -166;
+    const float _maxAngleDegJ4 = 180;
+
+    const float _minAngleDegJ5 = -120;
+    const float _maxAngleDegJ5 = 110;
+
+    const float _minAngleDegJ6 = -174;
+    const float _maxAngleDegJ6 = 180;
 
     // //*********** Initialize Classes *********//
 
     /**
      * @brief Stepper motor instances.
      */
-    Stepper _motorJ1, _motorJ2, _motorJ3, _motorJ4, _motorJ5, _motorJ6; // int stepPin, int dirPin
+    AccelStepper _motorJ1, _motorJ2, _motorJ3, _motorJ4, _motorJ5, _motorJ6; // int stepPin, int dirPin
 
     // Initialize MotorConfigs
     std::vector<MotorConfig*> _motorConfigs; ///< Vector of MotorConfig pointers @internal

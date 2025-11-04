@@ -1,9 +1,17 @@
 import json
 import os
+from PySide6.QtWidgets import QLineEdit
+from app.ui.ui_manager import UIManager
+from typing import Union
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from main import MainWindow
 
 
 class Setup:
-    def __init__(self, ui=None):
+    def __init__(self, ui_manager: UIManager, ui: "MainWindow"):
+        self._ui_manager = ui_manager
         self._ui = ui
         self._default_val = "0"
         self._curr_dir = os.path.dirname(os.path.abspath(__file__))
@@ -24,9 +32,13 @@ class Setup:
     # *************************Private Methods****************************
     def _load_or_init_setup(self):
         if not os.path.exists(self._file_path):
+            self._ui_manager.update_com_monitor("sys", "info", "No setup file found.")
             print(f"No setup file found.")
             return self._init_dicts_with_def_val()
         else:
+            self._ui_manager.update_com_monitor(
+                "sys", "info", "Loading setup from file."
+            )
             print("Loading setup from file.")
             return self.get_setup()
 
@@ -71,140 +83,62 @@ class Setup:
     def _get_field_vals(self):
         if not self._ui:
             return
-        setup = {
-            "dh_params": {
-                "joint1": {
-                    "theta_offset": self._ui.dh_j1_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j1_aph_v.toPlainText(),
-                    "d": self._ui.dh_j1_d_v.toPlainText(),
-                    "a": self._ui.dh_j1_a_v.toPlainText(),
-                },
-                "joint2": {
-                    "theta_offset": self._ui.dh_j2_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j2_aph_v.toPlainText(),
-                    "d": self._ui.dh_j2_d_v.toPlainText(),
-                    "a": self._ui.dh_j2_a_v.toPlainText(),
-                },
-                "joint3": {
-                    "theta_offset": self._ui.dh_j3_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j3_aph_v.toPlainText(),
-                    "d": self._ui.dh_j3_d_v.toPlainText(),
-                    "a": self._ui.dh_j3_a_v.toPlainText(),
-                },
-                "joint4": {
-                    "theta_offset": self._ui.dh_j4_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j4_aph_v.toPlainText(),
-                    "d": self._ui.dh_j4_d_v.toPlainText(),
-                    "a": self._ui.dh_j4_a_v.toPlainText(),
-                },
-                "joint5": {
-                    "theta_offset": self._ui.dh_j5_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j5_aph_v.toPlainText(),
-                    "d": self._ui.dh_j5_d_v.toPlainText(),
-                    "a": self._ui.dh_j5_a_v.toPlainText(),
-                },
-                "joint6": {
-                    "theta_offset": self._ui.dh_j6_theta_off.toPlainText(),
-                    "alpha": self._ui.dh_j6_aph_v.toPlainText(),
-                    "d": self._ui.dh_j6_d_v.toPlainText(),
-                    "a": self._ui.dh_j6_a_v.toPlainText(),
-                },
-            },
-            "homing_params": {
-                "motor1": {
-                    # "vel": self._ui.home_mtr_1_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_1_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_1_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_1_h_pos.toPlainText(),
-                },
-                "motor2": {
-                    # "vel": self._ui.home_mtr_2_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_2_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_2_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_2_h_pos.toPlainText(),
-                },
-                "motor3": {
-                    # "vel": self._ui.home_mtr_3_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_3_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_3_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_3_h_pos.toPlainText(),
-                },
-                "motor4": {
-                    # "vel": self._ui.home_mtr_4_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_4_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_4_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_4_h_pos.toPlainText(),
-                },
-                "motor5": {
-                    # "vel": self._ui.home_mtr_5_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_5_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_5_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_5_h_pos.toPlainText(),
-                },
-                "motor6": {
-                    # "vel": self._ui.home_mtr_6_vel.toPlainText(),
-                    # "away_vel": self._ui.home_mtr_6_aw_vel.toPlainText(),
-                    # "back_vel": self._ui.home_mtr_6_bck_vel.toPlainText(),
-                    "home_pos": self._ui.home_mtr_6_h_pos.toPlainText(),
-                },
-            },
-            "speed_a_accel": {
-                "motor1": {
-                    "max_speed": self._ui.motor_1_max_speed.toPlainText(),
-                    "acc": self._ui.motor_1_acc.toPlainText(),
-                },
-                "motor2": {
-                    "max_speed": self._ui.motor_2_max_speed.toPlainText(),
-                    "acc": self._ui.motor_2_acc.toPlainText(),
-                },
-                "motor3": {
-                    "max_speed": self._ui.motor_3_max_speed.toPlainText(),
-                    "acc": self._ui.motor_3_acc.toPlainText(),
-                },
-                "motor4": {
-                    "max_speed": self._ui.motor_4_max_speed.toPlainText(),
-                    "acc": self._ui.motor_4_acc.toPlainText(),
-                },
-                "motor5": {
-                    "max_speed": self._ui.motor_5_max_speed.toPlainText(),
-                    "acc": self._ui.motor_5_acc.toPlainText(),
-                },
-                "motor6": {
-                    "max_speed": self._ui.motor_6_max_speed.toPlainText(),
-                    "acc": self._ui.motor_6_acc.toPlainText(),
-                },
-            },
+        self._setup = {
+            "dh_params": {},
+            "homing_params": {},
+            "speed_a_accel": {},
         }
-        for _, value in setup.items():
-            for _, sub_value in value.items():
-                for field, field_value in sub_value.items():
-                    self._field = (
-                        field  # to ensure the field is accessible in the exception
-                    )
-                    checked_value = field_value.strip()
-                    if not checked_value:
-                        print(f"ERROR: Field '{self._field}' cannot be empty.")
-                        self._is_input_valid = False
-                        return
-                    try:
-                        if (
-                            field == "home_pos"
-                            or field == "max_speed"
-                            or field == "acc"
-                        ):
-                            int(checked_value)
-                        else:
-                            float(checked_value)
-                        self._is_input_valid = True
+        self._extract_values(
+            stored_inputs=self._ui.robot_config.dh_inputs,
+            prefix="joint",
+            setup_part_key="dh_params",
+            validate_as=float,
+        )
+        self._extract_values(
+            stored_inputs=self._ui.robot_config.home_pos_inputs,
+            prefix="motor",
+            setup_part_key="homing_params",
+            validate_as=int,
+        )
+        self._extract_values(
+            stored_inputs=self._ui.robot_config.speed_a_accel_inputs,
+            prefix="motor",
+            setup_part_key="speed_a_accel",
+            validate_as=int,
+        )
 
-                    except Exception as e:
-                        print(f"ERROR: Field '{self._field}' must be a numeric value.")
-                        self._handle_exception(e, "_get_field_vals")
-                        self._is_input_valid = False
-                        return
-                    sub_value[field] = checked_value
+        return self._setup
 
-        return setup
+    def _extract_values(
+        self,
+        stored_inputs: dict[tuple[int, str], QLineEdit],
+        prefix: str,
+        setup_part_key: str,
+        validate_as: type,
+    ):
+        prefix = prefix.lower()
+        for (row, param), field in stored_inputs.items():
+            key = f"{prefix}{row+1}"
+            if key not in self._setup[setup_part_key]:
+                self._setup[setup_part_key][key] = {}
+
+            value = field.text().strip()
+            self._field = param  # For error reporting
+
+            if not value:
+                print(f"ERROR: Field '{self._field}' cannot be empty.")
+                self._is_input_valid = False
+                return
+
+            try:
+                validate_as(value)
+                self._setup[setup_part_key][key][param] = value
+                self._is_input_valid = True
+            except Exception as e:
+                print(f"ERROR: Field '{self._field}' must be a numeric value.")
+                self._handle_exception(e, "_extract_values")
+                self._is_input_valid = False
+                return
 
     def _detect_changes(self, current_setup, previous_setup):
         return json.dumps(current_setup, sort_keys=True) != json.dumps(
@@ -258,34 +192,35 @@ class Setup:
         if not self._ui:
             return
         setup = self.get_setup()
+        if setup:
+            self._update_table(
+                setup_part=setup.get("dh_params", {}),
+                prefix="joint",
+                stored_inputs=self._ui.robot_config.dh_inputs,
+            )
+            self._update_table(
+                setup_part=setup.get("homing_params", {}),
+                prefix="motor",
+                stored_inputs=self._ui.robot_config.home_pos_inputs,
+            )
+            self._update_table(
+                setup_part=setup.get("speed_a_accel", {}),
+                prefix="motor",
+                stored_inputs=self._ui.robot_config.speed_a_accel_inputs,
+            )
 
-        dh_fields = {
-            "theta_offset": "dh_j{}_theta_off",
-            "alpha": "dh_j{}_aph_v",
-            "d": "dh_j{}_d_v",
-            "a": "dh_j{}_a_v",
-        }
+    def _update_table(
+        self,
+        setup_part: dict[str, dict[str, Union[int, float]]],
+        prefix: str,
+        stored_inputs: dict[tuple[int, str], QLineEdit],
+    ):
+        prefix = prefix.lower()
 
-        homing_fields = {
-            "home_pos": "home_mtr_{}_h_pos",
-        }
-
-        speed_accel_fields = {
-            "max_speed": "motor_{}_max_speed",
-            "acc": "motor_{}_acc",
-        }
-
-        self._set_ui_fields(setup.get("dh_params", {}), "joint", dh_fields)
-        self._set_ui_fields(setup.get("homing_params", {}), "motor", homing_fields)
-        self._set_ui_fields(setup.get("speed_a_accel", {}), "motor", speed_accel_fields)
-
-    def _set_ui_fields(self, params, key_prefix, fields):
-        for i in range(1, 7):
-            key = f"{key_prefix}{i}"
-            if key in params:
-                param_data = params[key]
-                for field_name, ui_attr in fields.items():
-                    if field_name in param_data:
-                        getattr(self._ui, ui_attr.format(i)).setPlainText(
-                            param_data[field_name]
-                        )
+        for field_name, param_data in setup_part.items():
+            if field_name.startswith(prefix):
+                row = int(field_name.replace(prefix, "")) - 1
+                for param_key, value in param_data.items():
+                    field = stored_inputs.get((row, param_key))
+                    if field:
+                        field.setText(str(value))

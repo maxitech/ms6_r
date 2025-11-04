@@ -8,8 +8,10 @@
 #endif
 
 #ifdef TEENSY41
-#include "teensystep4.h"
+// #include "teensystep4.h"
+#include <AccelStepper.h>
 #include <Arduino.h>
+
 #else
 #include "d_teensystep4.h"
 #include <iomanip>
