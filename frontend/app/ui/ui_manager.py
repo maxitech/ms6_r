@@ -73,6 +73,7 @@ class UIManager:
         self._toggle_predefined_programs(is_enabled)
 
         self._disable_prog_ctrl()
+        self._ui.central_btm_panel.btn_teach_pos.setEnabled(not is_enabled)
 
         # self._ui.setup_save_btn.setEnabled(is_enabled)
 
