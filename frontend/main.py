@@ -257,9 +257,6 @@ class MainWindow(QMainWindow):
 def main():
     """Main entry point for the application."""
     app = QApplication(sys.argv)
-    font = QFont("Courier New", 10)
-    font.setLetterSpacing(QFont.SpacingType.PercentageSpacing, 95)
-    app.setFont(font)
 
     # Set application properties
     app.setApplicationName("MS6_R Software Suite")
