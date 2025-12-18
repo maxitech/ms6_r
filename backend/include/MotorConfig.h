@@ -20,6 +20,16 @@
 struct MotorConfig
 {
     /**
+     * @brief Arduino digital pin number for the step control.
+     */
+    int stepPin;
+
+    /**
+     * @brief Arduino digital pin number for the direction control.
+     */
+    int dirPin;
+
+    /**
      * @brief Pointer to the Stepper motor instance.
      */
     AccelStepper* motor;
@@ -70,7 +80,8 @@ struct MotorConfig
 
     /**
      * @brief Constructs a new MotorConfig object.
-     *
+     * @param stepPin Arduino digital pin number for the step control.
+     * @param dirPin Arduino digital pin number for the direction control.
      * @param motor Pointer to the Stepper motor instance.
      * @param homeOffset Offset in steps from limit switch(=== HOME_POS).
      * @param minAngleDeg Minimum angle limit of the motor/joint
@@ -81,8 +92,10 @@ struct MotorConfig
      * @param dnt Number of teeth on the driven pulley (default 1.0).
      * @param gr Gearbox ratio applied to the motor (default 1.0).
      */
-    MotorConfig(AccelStepper* motor, int homeOffset, float minAngleDeg, float maxAngleDeg, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
-        : motor(motor)
+    MotorConfig(int stepPin, int dirPin, AccelStepper* motor, int homeOffset, float minAngleDeg, float maxAngleDeg, int spr, int ms, float drt = 1.0f, float dnt = 1.0f, float gr = 1.0f)
+        : stepPin(stepPin)
+        , dirPin(dirPin)
+        , motor(motor)
         , stepsPerRev(spr)
         , microsteps(ms)
         , driverTeeth(drt)
