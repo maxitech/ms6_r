@@ -44,33 +44,14 @@ private:
     void coordinatedM5Move();
     void coordinatedM6Move();
 
-    // Motor pins
-    const int STP1 = _motorConfigs[0]->stepPin;
-    const int DIR1 = _motorConfigs[0]->dirPin;
+    long MAX_SPEED_M1 = 10000;
+    long MAX_SPEED_M2 = 10000;
+    long MAX_SPEED_M3 = 10000;
+    long MAX_SPEED_M4 = 10000;
+    long MAX_SPEED_M5 = 10000;
+    long MAX_SPEED_M6 = 10000;
 
-    const int STP2 = _motorConfigs[1]->stepPin;
-    const int DIR2 = _motorConfigs[1]->dirPin;
-
-    const int STP3 = _motorConfigs[2]->stepPin;
-    const int DIR3 = _motorConfigs[2]->dirPin;
-
-    const int STP4 = _motorConfigs[3]->stepPin;
-    const int DIR4 = _motorConfigs[3]->dirPin;
-
-    const int STP5 = _motorConfigs[4]->stepPin;
-    const int DIR5 = _motorConfigs[4]->dirPin;
-
-    const int STP6 = _motorConfigs[5]->stepPin;
-    const int DIR6 = _motorConfigs[5]->dirPin;
-
-    long MAX_SPEED_M1 = 30000;
-    long MAX_SPEED_M2 = 30000;
-    long MAX_SPEED_M3 = 30000;
-    long MAX_SPEED_M4 = 30000;
-    long MAX_SPEED_M5 = 30000;
-    long MAX_SPEED_M6 = 30000;
-
-    long MAX_Acc = 10000;
+    long MAX_Acc = 6000;
 
     // Variables for void runAllSimultaneously()
     float  longestD2G;
@@ -108,13 +89,6 @@ private:
     int motorM6Dir;
 
     const int minPulseWidth = 20; // minimum pulse (in microseconds) width of manual steps initiated in Coordinated Move functions
-
-    AccelStepper* motor1 = _motorConfigs[0]->motor;
-    AccelStepper* motor2 = _motorConfigs[1]->motor;
-    AccelStepper* motor3 = _motorConfigs[2]->motor;
-    AccelStepper* motor4 = _motorConfigs[3]->motor;
-    AccelStepper* motor5 = _motorConfigs[4]->motor;
-    AccelStepper* motor6 = _motorConfigs[5]->motor;
 
     enum TestState
     {
