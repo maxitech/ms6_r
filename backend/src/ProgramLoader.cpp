@@ -257,27 +257,27 @@ void ProgramLoader::_main()
             _cmdId = NOP;
         };
     }
+}
+//  ******************************HELPER FUNCTIONS********************************
 
-    //  ******************************HELPER FUNCTIONS********************************
-
-    void ProgramLoader::_stopMotors()
+void ProgramLoader::_stopMotors()
+{
+    for (MotorConfig* cfg : _motorConfigs)
     {
-        for (MotorConfig* cfg : _motorConfigs)
+        if (cfg->motor != nullptr && cfg->motor->isRunning())
         {
-            if (cfg->motor != nullptr && cfg->motor->isRunning())
-            {
-                cfg->motor->stop(); // Stop all motors if they are moving(smooth)
-            }
+            cfg->motor->stop(); // Stop all motors if they are moving(smooth)
         }
     }
+}
 
-    void ProgramLoader::_eStopMotors()
+void ProgramLoader::_eStopMotors()
+{
+    for (MotorConfig* cfg : _motorConfigs)
     {
-        for (MotorConfig* cfg : _motorConfigs)
+        if (cfg->motor != nullptr && cfg->motor->isRunning())
         {
-            if (cfg->motor != nullptr && cfg->motor->isRunning())
-            {
-                cfg->motor->setSpeed(0); // Stop all motors if they are moving(hard)
-            }
+            cfg->motor->setSpeed(0); // Stop all motors if they are moving(hard)
         }
     }
+}
