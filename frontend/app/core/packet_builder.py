@@ -10,10 +10,16 @@ class PacketBuilder:
     def __init__(self):
         self.payload_map = {
             CMD_JOG: self._pack_jog_speeds,
+            CMD_MOVE_TO_POS: self._pack_jog_speeds,
             CMD_LOAD: self._pack_load_program,
             CMD_START: self._pack_start_exe,
             CMD_STOP: self._pack_stop_exe,
             CMD_IDLE: self._pack_idle_exe,
+            CMD_TRAJ_START: self._pack_traj_start,
+            CMD_TRAJ_DATA: self._pack_traj_data,
+            CMD_TRAJ_EXEC: lambda _: b"",
+            CMD_TRAJ_CANCEL: lambda _: b"",
+            CMD_TRAJ_END: lambda _: b"",
         }
 
     def build_packet(self, cmd_id: int, data) -> bytes:
@@ -63,6 +69,16 @@ class PacketBuilder:
         for val in speeds:
             payload.extend(self._int_to_3_bytes(val))
         return bytes(payload)
+
+    def _pack_traj_start(self, data: bytes) -> bytes:
+        """Packt CMD_TRAJ_START: (num_points, total_time_ms)"""
+        # data sollte bereits struct.pack('<II', ...) sein
+        return data
+
+    def _pack_traj_data(self, data: bytes) -> bytes:
+        """Packt CMD_TRAJ_DATA: Chunk-Daten"""
+        # data sollte bereits ByteArray mit Chunk-ID und Punkten sein
+        return data
 
 
 packet_builder = PacketBuilder()

@@ -6,7 +6,9 @@ from app.ui.ui_manager import UIManager
 from app.handlers.connection_handler import ConnectionHandler
 
 from app.handlers.jog_handler import JogHandler
+from app.handlers.motion_handler import MotionHandler
 from app.handlers.program_handler import ProgramHandler
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -28,6 +30,7 @@ class MainWindowController:
         self.serial.set_connection_handler(self._connection_handler)
         self.serial.set_prog_handler(self._program_handler)
         self._jog_handler = JogHandler(ui, self.serial, self._helper, self._ui_manager)
+        self._motion_handler = MotionHandler(ui, self.serial, self._helper, self._ui_manager)
 
         self._setup_connections()
         self._setup_timers()
@@ -37,6 +40,7 @@ class MainWindowController:
         self._connection_handler.setup_connections()
         self._jog_handler.setup_connections()
         self._program_handler.setup_connections()
+        self._motion_handler.setup_connections()
 
         # Setup specific connections
         self._ui.robot_config.save_btn.clicked.connect(self._handle_setup_save)

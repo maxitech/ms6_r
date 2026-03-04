@@ -37,26 +37,78 @@ class Robot(DHRobot):
             angles_deg.append(deg)
         return angles_deg
 
-    def deg_2_steps(self, joint_index: int, deg: float) -> int:
-        return int((deg / 360) * self._steps_per_rev(joint_index=joint_index))
+    # def deg_2_steps(self, joint_index: int, deg: float) -> int:
+    #     return int((deg / 360) * self._steps_per_rev(joint_index=joint_index))
 
-    def steps_2_deg(self, joint_index: int, curr_steps: int) -> float:
-        c = self.constants
-        home_offset: int = c.HOME_POSITIONS[joint_index]
-        relative_steps: int = curr_steps - home_offset
+    def deg_2_steps(
+        self, joint_index: int, deg: float, apply_home_offset: bool = True
+    ) -> int:
+        """Umrechnung von Grad zu Steps"""
+        steps = int((deg / 360) * self._steps_per_rev(joint_index=joint_index))
+        if apply_home_offset:
+            steps += self.constants.HOME_POSITIONS[joint_index]
+        return steps
+
+    # def steps_2_deg(self, joint_index: int, curr_steps: int) -> float:
+    #     c = self.constants
+    #     home_offset: int = c.HOME_POSITIONS[joint_index]
+    #     relative_steps: int = curr_steps - home_offset
+    #     return (
+    #         float(relative_steps) / self._steps_per_rev(joint_index=joint_index) * 360
+    #     )
+
+    def steps_2_deg(
+        self, joint_index: int, curr_steps: int, remove_home_offset: bool = True
+    ) -> float:
+        """Umrechnung von Steps zu Grad"""
+        if remove_home_offset:
+            relative_steps = curr_steps - self.constants.HOME_POSITIONS[joint_index]
+        else:
+            relative_steps = curr_steps
+
         return (
             float(relative_steps) / self._steps_per_rev(joint_index=joint_index) * 360
         )
 
-    def steps_to_q_rad(self, steps: list[int]) -> npt.NDArray[np.float64]:
-        """Konvertiert Steps zu Joint angles in Radians."""
-        degs: list[float] = self.get_joint_angles_deg(steps)
+    # def steps_to_q_rad(self, steps: list[int]) -> npt.NDArray[np.float64]:
+    #     """Konvertiert Steps zu Joint angles in Radians."""
+    #     degs: list[float] = self.get_joint_angles_deg(steps)
 
-        #  Adjust the sign according to the mechanical installation direction.
+    #     #  Adjust the sign according to the mechanical installation direction.
+    #     dirs = np.array(self.constants.JOINT_DIR, dtype=float)
+    #     degs = degs * dirs
+
+    #     return np.deg2rad(degs)
+
+    def steps_to_q_rad(
+        self, steps: list[int], remove_home_offset: bool = True
+    ) -> npt.NDArray[np.float64]:
+        """Konvertiert Steps zu Joint angles in Radians."""
+        degs = []
+        for i in range(6):
+            degs.append(self.steps_2_deg(i, steps[i], remove_home_offset))
+
+        # Adjust the sign according to the mechanical installation direction.
         dirs = np.array(self.constants.JOINT_DIR, dtype=float)
         degs = degs * dirs
 
         return np.deg2rad(degs)
+
+    def q_rad_to_steps(
+        self, q_rad: npt.NDArray[np.float64], apply_home_offset: bool = True
+    ) -> List[int]:
+        """Konvertiert Joint angles in Radians zu Steps."""
+        degs = np.rad2deg(q_rad)
+
+        # Reverse the joint direction adjustment
+        dirs = np.array(self.constants.JOINT_DIR, dtype=float)
+        degs = degs * dirs
+
+        steps = []
+        for i in range(6):
+            steps.append(self.deg_2_steps(i, degs[i], apply_home_offset))
+
+        return steps
 
     # *** Private ***
     def _total_ratio(self, joint_index: int) -> float:

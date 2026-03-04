@@ -70,6 +70,8 @@ class UIManager:
 
         left_panel_ctrl.btn_home_pos.setEnabled(not is_enabled)
         central_btm_panel.btn_teach_pos.setEnabled(not is_enabled)
+        central_btm_panel.btn_run_seq.setEnabled(not is_enabled)
+        central_btm_panel.btn_del_last.setEnabled(not is_enabled)
         self._toggle_predefined_programs(is_enabled)
 
         self._disable_prog_ctrl()
@@ -131,6 +133,7 @@ class UIManager:
         x, y, z = T.t * 1000  # in mm
         rx, ry, rz = T.rpy(order="xyz", unit="deg")
         self._ui.central_btm_panel.set_tool_position([x, y, z, rx, ry, rz])
+        
 
     # def update_program_monitor(
     #     self,

@@ -9,8 +9,14 @@ class SharedData:
         self._lock = threading.RLock()
 
         self._data_out: bytes | None = None
-        self._data_in: str | None = None
+        self._data_in: int | None = None
         self._curr_steps: list[int] | None = None
+        self._sequence: list[list[int]] = []
+        self._run_sequence_flag: bool = False
+
+        # Trajektorien-Anfragen
+        self._traj_request_queue = Queue()
+        # self._signals["traj_request"] = []
 
         # *** Cart Jog ***
         self._is_cart_jog_active: bool = False
@@ -19,6 +25,7 @@ class SharedData:
 
         self._signals: Dict[str, list] = {
             "new_steps": [],
+            "data_in": [],
         }
 
     # *** Public ***
@@ -53,11 +60,12 @@ class SharedData:
         with self._lock:
             return self._data_queue_out.get_nowait()
 
-    def set_data_in(self, data: str) -> None:
+    def update_data_in(self, data: int) -> None:
         with self._lock:
             self._data_in = data
+        self._emit_signal("data_in", data)
 
-    def get_data_in(self) -> str | None:
+    def get_data_in(self) -> int | None:
         with self._lock:
             return self._data_in
 
@@ -69,6 +77,40 @@ class SharedData:
     def get_steps(self) -> list[int] | None:
         with self._lock:
             return self._curr_steps
+
+    def add_position_to_sequence(self, pos: list[int]) -> None:
+        with self._lock:
+            self._sequence.append(pos)
+
+    def del_position_from_sequence(self) -> None:
+        with self._lock:
+            self._sequence.pop()
+
+    def get_sequence(self) -> list[list[int]]:
+        with self._lock:
+            return self._sequence
+
+    def set_is_run_sequence(self, is_run: bool) -> None:
+        with self._lock:
+            self._run_sequence_flag = is_run
+
+    def is_run_sequence(self) -> bool:
+        with self._lock:
+            return self._run_sequence_flag
+
+    def request_trajectory(self, request_data: dict):
+        """Stellt eine Trajektorien-Anfrage"""
+        with self._lock:
+            self._traj_request_queue.put(request_data)
+        self._emit_signal("traj_request", request_data)
+
+    def get_traj_request(self):
+        """Holt die nächste Trajektorien-Anfrage"""
+        with self._lock:
+            try:
+                return self._traj_request_queue.get_nowait()
+            except Empty:
+                return None
 
     #  *** Cart Jog ***
     def set_is_cart_jog_active(self, is_active: bool) -> None:

@@ -13,8 +13,10 @@
 #include "JogState.h"
 #include "LimitSwitches.h"
 #include "MotorConfig.h"
+#include "MoveController.h"
 #include "ProcessedData.h"
 #include "RobotDataSender.h"
+#include "TrajectoryExecutor.h"
 #include "Utils.h"
 // #include "teensystep4.h"
 #include <AccelStepper.h>
@@ -40,6 +42,13 @@ enum ExecutionState
     EXEC_RUNNING, ///< A program is currently running.
     EXEC_STOPPED  ///< The program execution has been stopped.
 
+};
+
+enum class MoveState
+{
+    IDLE,
+    MOVING,
+    REACHED
 };
 
 /**
@@ -143,17 +152,21 @@ private:
     void _eStopMotors();
 
     // ******************************MEMBER VARIABLES********************************
-    Homing*                             _homingManager;                   ///< Pointer to the Homing manager for homing routines. @internal
-    std::vector<MotorConfig*>&          _motorConfigs;                    ///< Vector of motor configurations for the robot. Note: Setup class has full ownership of this vector. @internal
-    ProgramState                        _currentProgramState = IDLE;      ///< Current active program state. @internal
-    ExecutionState                      _executionState      = EXEC_IDLE; ///< Current execution state of the program. @internal
-    LimitSwitches&                      _limitSwitches;                   ///< Reference to limit switches for diagnostics. @internal
-    ProcessedData                       _processedDta;                    ///< Struct which contains processed data @internal
-    uint8_t                             _cmdId;                           ///< Current command @internal
-    bool                                _isHomingDone = false;            ///< Flag to check if homing is done. @internal
-    RobotDataSender                     _rbtDtaSender;                    ///< Instance of data sender class for the robot. @internal
-    JogController*                      _jogCtrl;                         ///< Pointer of the jog controller class which handles jog of the robot. @internal
+    Homing*                             _homingManager;                         ///< Pointer to the Homing manager for homing routines. @internal
+    std::vector<MotorConfig*>&          _motorConfigs;                          ///< Vector of motor configurations for the robot. Note: Setup class has full ownership of this vector. @internal
+    ProgramState                        _currentProgramState = IDLE;            ///< Current active program state. @internal
+    ExecutionState                      _executionState      = EXEC_IDLE;       ///< Current execution state of the program. @internal
+    MoveState                           _moveState           = MoveState::IDLE; ///< Current state of the robot if cmd is move. @internal
+    LimitSwitches&                      _limitSwitches;                         ///< Reference to limit switches for diagnostics. @internal
+    ProcessedData                       _processedDta;                          ///< Struct which contains processed data @internal
+    uint8_t                             _cmdId;                                 ///< Current command @internal
+    bool                                _isHomingDone = false;                  ///< Flag to check if homing is done. @internal
+    RobotDataSender                     _rbtDtaSender;                          ///< Instance of data sender class for the robot. @internal
+    JogController*                      _jogCtrl;                               ///< Pointer of the jog controller class which handles jog of the robot. @internal
     std::optional<std::vector<int32_t>> _jogSpeeds;
+    MoveController*                     _moveCtrl; ///< Pointer of the move controller class which handles move commands of the robot. @internal
+    std::optional<std::vector<int32_t>> _targetPositions;
+    TrajectoryExecutor*                 _trajExecutor;
 };
 
 #endif // PROGRAMLOADER_H

@@ -6,7 +6,7 @@
 namespace CommunicationProtocoll
 {
     // *******************Request******************
-    static constexpr int NUM_CMDS = 7;
+    static constexpr int NUM_CMDS = 11;
 
     static constexpr std::array<uint8_t, 3> START_BYTES = {0xAA, 0xAA, 0xAA};
     static constexpr std::array<uint8_t, 2> END_BYTES   = {0x0D, 0x0A}; // CR,LF
@@ -21,6 +21,13 @@ namespace CommunicationProtocoll
     // Movement 0x10 - 0x4F(Jog, MTP, MR, etc.)
     static constexpr uint8_t CMD_JOG         = 0x10;
     static constexpr uint8_t CMD_MOVE_TO_POS = 0x11;
+
+    // Trajectory Commands (0x12-0x1F)
+    static constexpr uint8_t CMD_TRAJ_START  = 0x12; // start trajectory upload
+    static constexpr uint8_t CMD_TRAJ_DATA   = 0x13; // trajectory data chunk
+    static constexpr uint8_t CMD_TRAJ_EXEC   = 0x14; // start trajectory execution
+    static constexpr uint8_t CMD_TRAJ_CANCEL = 0x15; // cancel trajectory
+    static constexpr uint8_t CMD_TRAJ_END    = 0x16; // end trajectory upload
 
     // Program Control 0x50 - 0x7F(Load, etc.)
     static constexpr uint8_t CMD_LOAD = 0x50;
@@ -51,11 +58,16 @@ namespace CommunicationProtocoll
     static constexpr uint8_t DATA_STEPS = 0x01;
 
     // Info range: 0x20–0x3F
-    static constexpr uint8_t INFO_LOADED_PROGRAM      = 0x20;
-    static constexpr uint8_t INFO_RELOADED_PROGRAM    = 0x21;
-    static constexpr uint8_t INFO_ALREADY_RUNNING     = 0x22;
-    static constexpr uint8_t INFO_HOMING_ALREADY_DONE = 0x23;
-    static constexpr uint8_t INFO_PING                = 0x24;
+    static constexpr uint8_t INFO_LOADED_PROGRAM       = 0x20;
+    static constexpr uint8_t INFO_RELOADED_PROGRAM     = 0x21;
+    static constexpr uint8_t INFO_ALREADY_RUNNING      = 0x22;
+    static constexpr uint8_t INFO_HOMING_ALREADY_DONE  = 0x23;
+    static constexpr uint8_t INFO_PING                 = 0x24;
+    static constexpr uint8_t INFO_REACHED              = 0x25;
+    static constexpr uint8_t INFO_TRAJ_START_ACK       = 0x26;
+    static constexpr uint8_t INFO_TRAJ_CHUNK_ACK       = 0x27;
+    static constexpr uint8_t INFO_TRAJ_EXEC_ACK        = 0x28;
+    static constexpr uint8_t INFO_TRAJ_UPLOAD_COMPLETE = 0x29;
 
     // Warn range: 0x40–0x5F
     static constexpr uint8_t WARN_NOP_IGNORED       = 0x40;
@@ -83,6 +95,6 @@ namespace CommunicationProtocoll
     static constexpr uint8_t ERR_MISSING_FIELD = 0x6D;
 
     static constexpr std::array<uint8_t, NUM_CMDS>
-        CMD_IDS {CMD_JOG, CMD_MOVE_TO_POS, CMD_LOAD, CMD_START, CMD_STOP, CMD_IDLE};
+        CMD_IDS {CMD_JOG, CMD_MOVE_TO_POS, CMD_LOAD, CMD_START, CMD_STOP, CMD_IDLE, CMD_TRAJ_START, CMD_TRAJ_DATA, CMD_TRAJ_EXEC, CMD_TRAJ_CANCEL, CMD_TRAJ_END};
 }
 #endif // COMPROTOCOL_H

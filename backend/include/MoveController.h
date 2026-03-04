@@ -19,23 +19,23 @@ enum AccelStage
 };
 
 #ifndef MAX_SPEED_M1
-#define MAX_SPEED_M1 8000.0f
+#define MAX_SPEED_M1 6000.0f
 #endif
 
 #ifndef MAX_SPEED_M2
-#define MAX_SPEED_M2 20000.0f
+#define MAX_SPEED_M2 40000.0f
 #endif
 
 #ifndef MAX_SPEED_M3
-#define MAX_SPEED_M3 15000.0f
+#define MAX_SPEED_M3 20000.0f
 #endif
 
 #ifndef MAX_SPEED_M4
-#define MAX_SPEED_M4 15000.0f
+#define MAX_SPEED_M4 30000.0f
 #endif
 
 #ifndef MAX_SPEED_M5
-#define MAX_SPEED_M5 15000.0f
+#define MAX_SPEED_M5 30000.0f
 #endif
 
 #ifndef MAX_SPEED_M6
@@ -43,14 +43,14 @@ enum AccelStage
 #endif
 
 #ifndef MAX_Acc
-#define MAX_Acc 8000.0f
+#define MAX_Acc 12000.0f
 #endif
 
 class MoveController
 {
 public:
     MoveController(std::vector<MotorConfig*>& motorConfigs, RobotDataSender& rbtDtaSender);
-    void runAllSimultaneously(float m1Pos, float m2Pos, float m3Pos, float m4Pos, float m5Pos, float m6Pos);
+    void runAllSimultaneously(float m1Pos, float m2Pos, float m3Pos, float m4Pos, float m5Pos, float m6Pos, float speedOverride = 1.0f);
     bool motorsAtTarget();
     bool isRunning() const { return _isRunning; }
     void emergencyStop();
@@ -80,6 +80,7 @@ private:
     unsigned long _stepInterval;
     unsigned long _lastStepTime;
     int           _stepCounter;
+    float         _currentAcceleration = 0.0f;
 
     // Legacy variables
     long   longestD2G;

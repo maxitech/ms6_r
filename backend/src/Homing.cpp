@@ -215,7 +215,8 @@ void Homing::_homeAxis(bool isCurrentlyActive, bool wasPreviouslyActive,
         }
         else
         {
-
+            motorJ_x.stop();
+            motorJ_x.setSpeed(0);
             homingStateJ_x = COMPLETE;
         }
 

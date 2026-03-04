@@ -83,6 +83,16 @@ class CentralBottomPanel(QFrame):
         self._btn_teach_pos.setObjectName("btn-teach-pos")
         self._btn_teach_pos.setEnabled(False)
         layout_top_row.addWidget(self._btn_teach_pos)
+        
+        self._btn_run_seq = QPushButton("Run Sequence")
+        self._btn_run_seq.setObjectName("btn-run-seq")
+        self._btn_run_seq.setEnabled(False)
+        layout_top_row.addWidget(self._btn_run_seq)
+        
+        self._btn_del_last = QPushButton("Delete Last")
+        self._btn_del_last.setObjectName("btn-del-last")
+        self._btn_del_last.setEnabled(False)
+        layout_top_row.addWidget(self._btn_del_last)
         layout_ctl_btm.addWidget(top_row)
 
         label_joint_h2 = QLabel("JOINT POSITIONS")
@@ -145,6 +155,14 @@ class CentralBottomPanel(QFrame):
     @property
     def btn_teach_pos(self) -> QPushButton:
         return self._btn_teach_pos
+    
+    @property
+    def btn_run_seq(self) -> QPushButton:
+        return self._btn_run_seq
+    
+    @property
+    def btn_del_last(self) -> QPushButton:
+        return self._btn_del_last
 
     def set_joint_positions(self, values: list[float]):
         for i, val in enumerate(values):

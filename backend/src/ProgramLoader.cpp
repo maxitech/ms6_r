@@ -14,7 +14,9 @@ ProgramLoader::ProgramLoader(Homing* homingManager, std::vector<MotorConfig*>& c
     , _motorConfigs(configs)
     , _limitSwitches(limitSwitches)
     , _rbtDtaSender()
-    , _jogCtrl(new JogController(_motorConfigs, _rbtDtaSender)) {};
+    , _jogCtrl(new JogController(_motorConfigs, _rbtDtaSender))
+    , _moveCtrl(new MoveController(_motorConfigs, _rbtDtaSender))
+    , _trajExecutor(new TrajectoryExecutor(_motorConfigs)) {};
 
 ProgramLoader::~ProgramLoader()
 {
@@ -45,6 +47,12 @@ void ProgramLoader::handleCommand(const ProcessedData& processedDta)
         _jogSpeeds = processedDta.jogSpeeds.value();
     }
 
+    if (processedDta.targetPositions.has_value())
+    {
+        _targetPositions = processedDta.targetPositions.value();
+    }
+
+    // ========== PROGRAM CONTROL ==========
     if (_cmdId == CMD_LOAD && program)
     {
         _loadProgram(program.value());
@@ -63,7 +71,7 @@ void ProgramLoader::handleCommand(const ProcessedData& processedDta)
         {
             return;
         }
-        digitalWrite(_limitSwitches.getLedPin(), LOW); // Turn off the LED
+        digitalWrite(_limitSwitches.getLedPin(), LOW);
         _stop();
     }
     else if (_cmdId == CMD_IDLE)
@@ -74,20 +82,305 @@ void ProgramLoader::handleCommand(const ProcessedData& processedDta)
         }
         else
         {
-            _stop();                                       // Stop any running program and set to IDLE state
-            digitalWrite(_limitSwitches.getLedPin(), LOW); // Turn off the LED
+            _stop();
+            digitalWrite(_limitSwitches.getLedPin(), LOW);
             _setState(IDLE);
             _executionState = EXEC_IDLE;
         }
     }
+
+    // ========== MOTION COMMANDS (benötigen MAIN) ==========
     else if (_cmdId == CMD_JOG || _cmdId == CMD_MOVE_TO_POS)
     {
-        if (_currentProgramState != MAIN)
+        if (_currentProgramState != MAIN && _moveState != MoveState::MOVING)
         {
             _loadProgram(PRG_MAIN);
         }
     }
+
+    // ========== TRAJECTORY COMMANDS (laufen UNABHÄNGIG im ISR) ==========
+    else if (_cmdId == CMD_TRAJ_START)
+    {
+        if (processedDta.trajStartData.has_value())
+        {
+            auto [numPoints, totalTimeMs] = processedDta.trajStartData.value();
+            _trajExecutor->startUpload(numPoints, totalTimeMs);
+            Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_TRAJ_START_ACK);
+        }
+    }
+    else if (_cmdId == CMD_TRAJ_DATA)
+    {
+        if (processedDta.trajChunkData.has_value())
+        {
+            auto [chunkId, points] = processedDta.trajChunkData.value();
+            for (const auto& point : points)
+            {
+                auto [timeMs, stepsArray] = point;
+                _trajExecutor->addPoint(timeMs, stepsArray.data());
+            }
+            std::vector<uint8_t> responseData = {chunkId};
+            Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_TRAJ_CHUNK_ACK, responseData);
+        }
+    }
+    else if (_cmdId == CMD_TRAJ_END)
+    {
+        _trajExecutor->endUpload();
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_TRAJ_UPLOAD_COMPLETE);
+    }
+    else if (_cmdId == CMD_TRAJ_EXEC)
+    {
+        // KEIN MAIN laden! Die Trajektorie läuft im Timer-ISR
+        _trajExecutor->execute();
+        _executionState = EXEC_RUNNING;
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_TRAJ_EXEC_ACK);
+        // Serial.println("DEBUG: Trajectory execution started!");
+    }
+    else if (_cmdId == CMD_TRAJ_CANCEL)
+    {
+        _trajExecutor->cancel();
+
+        _executionState = EXEC_IDLE;
+        Utils::createAndSendPacket(_cmdId, STATUS_OK, DATA_NONE);
+    }
 }
+
+// !!!!!
+// void ProgramLoader::handleCommand(const ProcessedData& processedDta)
+// {
+//     if (processedDta.cmdId == NOP)
+//     {
+//         Utils::createAndSendPacket(processedDta.cmdId, STATUS_OK, WARN_NOP_IGNORED);
+//         LOG(LOG_WARN, "No operation command! No execution.");
+//         return;
+//     }
+
+//     _processedDta = processedDta;
+//     _cmdId        = processedDta.cmdId;
+
+//     // Optional payload data
+//     std::optional<uint8_t> program;
+//     if (processedDta.program.has_value())
+//     {
+//         program = processedDta.program.value();
+//     }
+
+//     if (processedDta.jogSpeeds.has_value())
+//     {
+//         _jogSpeeds = processedDta.jogSpeeds.value();
+//     }
+
+//     if (processedDta.targetPositions.has_value())
+//     {
+//         _targetPositions = processedDta.targetPositions.value();
+//     }
+
+//     if (_cmdId == CMD_LOAD && program)
+//     {
+//         _loadProgram(program.value());
+//     }
+//     else if (_cmdId == CMD_START)
+//     {
+//         if (_currentProgramState == MAIN)
+//         {
+//             return;
+//         }
+//         _start();
+//     }
+//     else if (_cmdId == CMD_STOP)
+//     {
+//         if (_currentProgramState == MAIN)
+//         {
+//             return;
+//         }
+//         digitalWrite(_limitSwitches.getLedPin(), LOW);
+//         _stop();
+//     }
+//     else if (_cmdId == CMD_IDLE)
+//     {
+//         if (_currentProgramState == IDLE)
+//         {
+//             return;
+//         }
+//         else
+//         {
+//             _stop();
+//             digitalWrite(_limitSwitches.getLedPin(), LOW);
+//             _setState(IDLE);
+//             _executionState = EXEC_IDLE;
+//         }
+//     }
+//     else if (_cmdId == CMD_JOG || _cmdId == CMD_MOVE_TO_POS)
+//     {
+//         if (_currentProgramState != MAIN && _moveState != MoveState::MOVING)
+//         {
+//             _loadProgram(PRG_MAIN);
+//         }
+//     }
+//     else if (_cmdId == CMD_TRAJ_START || _cmdId == CMD_TRAJ_DATA || _cmdId == CMD_TRAJ_END || _cmdId == CMD_TRAJ_EXEC)
+//     {
+//         // WICHTIG: Für Trajektorien auch MAIN program laden!
+//         if (_currentProgramState != MAIN)
+//         {
+//             _loadProgram(PRG_MAIN);
+//         }
+
+//         // Jetzt die spezifischen Trajektorien-Befehle
+//         if (_cmdId == CMD_TRAJ_START)
+//         {
+//             if (processedDta.trajStartData.has_value())
+//             {
+//                 auto [numPoints, totalTimeMs] = processedDta.trajStartData.value();
+//                 _trajExecutor->startUpload(numPoints, totalTimeMs);
+//                 Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_TRAJ_START_ACK);
+//             }
+//         }
+//         else if (_cmdId == CMD_TRAJ_DATA)
+//         {
+//             if (processedDta.trajChunkData.has_value())
+//             {
+//                 auto [chunkId, points] = processedDta.trajChunkData.value();
+//                 for (const auto& point : points)
+//                 {
+//                     auto [timeMs, stepsArray] = point;
+//                     _trajExecutor->addPoint(timeMs, stepsArray.data());
+//                 }
+//                 std::vector<uint8_t> responseData = {chunkId};
+//                 Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_TRAJ_CHUNK_ACK, responseData);
+//             }
+//         }
+//         else if (_cmdId == CMD_TRAJ_END)
+//         {
+//             _trajExecutor->endUpload();
+//             Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_TRAJ_UPLOAD_COMPLETE);
+//         }
+//         else if (_cmdId == CMD_TRAJ_EXEC)
+//         {
+//             _executionState = EXEC_RUNNING;
+//             _trajExecutor->execute();
+//             Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_TRAJ_EXEC_ACK);
+//         }
+//     }
+//     else if (_cmdId == CMD_TRAJ_CANCEL)
+//     {
+//         _trajExecutor->cancel();
+//         Utils::createAndSendPacket(_cmdId, STATUS_OK, DATA_NONE);
+//     }
+// }
+
+// !!!!!
+
+// void ProgramLoader::handleCommand(const ProcessedData& processedDta)
+// {
+//     if (processedDta.cmdId == NOP)
+//     {
+//         Utils::createAndSendPacket(processedDta.cmdId, STATUS_OK, WARN_NOP_IGNORED);
+//         LOG(LOG_WARN, "No operation command! No execution.");
+//         return;
+//     }
+
+//     _processedDta = processedDta;
+//     _cmdId        = processedDta.cmdId;
+
+//     // Optional payload data
+//     std::optional<uint8_t> program;
+//     if (processedDta.program.has_value())
+//     {
+//         program = processedDta.program.value();
+//     }
+
+//     if (processedDta.jogSpeeds.has_value())
+//     {
+//         _jogSpeeds = processedDta.jogSpeeds.value();
+//     }
+
+//     if (processedDta.targetPositions.has_value())
+//     {
+//         // if (_moveState == MoveState::MOVING)
+//         // {
+//         //     return;
+//         // }
+//         _targetPositions = processedDta.targetPositions.value();
+//     }
+//     //! trajectory data value check maybe later -; done in if case maybe do for above ones too
+
+//     if (_cmdId == CMD_LOAD && program)
+//     {
+//         _loadProgram(program.value());
+//     }
+//     else if (_cmdId == CMD_START)
+//     {
+//         if (_currentProgramState == MAIN)
+//         {
+//             return;
+//         }
+//         _start();
+//     }
+//     else if (_cmdId == CMD_STOP)
+//     {
+//         if (_currentProgramState == MAIN)
+//         {
+//             return;
+//         }
+//         digitalWrite(_limitSwitches.getLedPin(), LOW); // Turn off the LED
+//         _stop();
+//     }
+//     else if (_cmdId == CMD_IDLE)
+//     {
+//         if (_currentProgramState == IDLE)
+//         {
+//             return;
+//         }
+//         else
+//         {
+//             _stop();                                       // Stop any running program and set to IDLE state
+//             digitalWrite(_limitSwitches.getLedPin(), LOW); // Turn off the LED
+//             _setState(IDLE);
+//             _executionState = EXEC_IDLE;
+//         }
+//     }
+//     else if (_cmdId == CMD_JOG || _cmdId == CMD_MOVE_TO_POS)
+//     {
+//         if (_currentProgramState != MAIN && _moveState != MoveState::MOVING)
+//         {
+//             _loadProgram(PRG_MAIN);
+//         }
+//     }
+//     else if (_cmdId == CMD_TRAJ_START)
+//     {
+//         if (processedDta.trajStartData.has_value())
+//         {
+//             auto [numPoints, totalTimeMs] = processedDta.trajStartData.value();
+//             _trajExecutor->startUpload(numPoints, totalTimeMs);
+//             Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_TRAJ_START_ACK);
+//         }
+//     }
+//     else if (_cmdId == CMD_TRAJ_DATA)
+//     {
+//         if (processedDta.trajChunkData.has_value())
+//         {
+//             auto [chunkId, points] = processedDta.trajChunkData.value();
+//             for (const auto& point : points)
+//             {
+//                 auto [timeMs, stepsArray] = point;
+//                 _trajExecutor->addPoint(timeMs, stepsArray.data());
+//             }
+//             std::vector<uint8_t> responseData = {chunkId};
+//             Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_TRAJ_CHUNK_ACK, responseData);
+//             // !!
+//         }
+//     }
+//     else if (_cmdId == CMD_TRAJ_EXEC)
+//     {
+//         _executionState = EXEC_RUNNING;
+//         _trajExecutor->execute();
+//         Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_TRAJ_EXEC_ACK);
+//     }
+//     else if (_cmdId == CMD_TRAJ_CANCEL)
+//     {
+//         _trajExecutor->cancel();
+//         Utils::createAndSendPacket(_cmdId, STATUS_OK, DATA_NONE);
+//     }
+// }
 
 void ProgramLoader::_loadProgram(const uint8_t program)
 {
@@ -168,6 +461,18 @@ void ProgramLoader::run()
         return;
     }
 
+    _trajExecutor->update();
+
+    if (_trajExecutor->isRunning())
+    {
+        static unsigned long lastSendTime = 0;
+        if (Utils::nonBlockingDelay(50, lastSendTime))
+        {
+            _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
+        }
+        return;
+    }
+
     switch (_currentProgramState)
     {
     case PING:
@@ -224,6 +529,15 @@ void ProgramLoader::_home()
         {
             _isHomingDone = true; // Set homing done flag
 
+            for (MotorConfig* cfg : _motorConfigs)
+            {
+                if (cfg->motor != nullptr)
+                {
+                    cfg->motor->stop();
+                    cfg->motor->setSpeed(0); // Wichtig!
+                }
+            }
+
             // !!! Maybe reset homing state later
             uint8_t homedMask = _homingManager->getHomedMask();
             _rbtDtaSender.setHomedMask(homedMask);
@@ -246,18 +560,77 @@ void ProgramLoader::_home()
 
 void ProgramLoader::_main()
 {
-    static JogState currJogState = IDLE_JOG;
+    // static JogState currJogState = IDLE_JOG;
 
     if (_cmdId == CMD_JOG && _isHomingDone)
     {
-
         if (!_jogCtrl->jogJoint(_jogSpeeds))
         {
-            _setState(IDLE);
+            // _setState(IDLE);
             _cmdId = NOP;
         };
     }
+
+    // if (_cmdId == CMD_MOVE_TO_POS && _isHomingDone)
+    if (_cmdId == CMD_MOVE_TO_POS && _isHomingDone && _moveState == MoveState::IDLE)
+    {
+        _moveCtrl->reset();
+        _moveState = MoveState::MOVING;
+    }
+    if (_moveState == MoveState::MOVING)
+    {
+        if (!_targetPositions.has_value() || _targetPositions->empty())
+        {
+            return;
+        }
+
+        std::vector<int32_t> targetPositionsValid = _targetPositions.value();
+
+        if (targetPositionsValid.size() > _motorConfigs.size())
+        {
+            Utils::createAndSendPacket(CMD_MOVE_TO_POS, STATUS_ERROR, ERR_INDEX_OOB);
+            LOG(LOG_ERROR, "Vector '_targetPositions' too large.");
+            return;
+        }
+
+        _moveCtrl->runAllSimultaneously(targetPositionsValid[0], targetPositionsValid[1], targetPositionsValid[2], targetPositionsValid[3], targetPositionsValid[4], targetPositionsValid[5]);
+
+        static unsigned long lastSendTime = 0;
+        if (Utils::nonBlockingDelay(50, lastSendTime))
+        {
+            _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
+        }
+
+        if (_moveCtrl->motorsAtTarget())
+        {
+            _moveState = MoveState::REACHED;
+            Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_REACHED);
+            _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
+            _moveState = MoveState::IDLE;
+            _cmdId     = NOP;
+        }
+
+        // if (_moveState == MoveState::MOVING)
+        // {
+        //     static unsigned long lastSendTime = 0;
+        //     if (Utils::nonBlockingDelay(50, lastSendTime))
+        //     {
+        //         _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
+        //     }
+
+        //     if (_moveCtrl->motorsAtTarget())
+        //     {
+        //         _moveState = MoveState::REACHED;
+        //         Utils::createAndSendPacket(_cmdId, STATUS_OK, INFO_REACHED);
+        //         _rbtDtaSender.sendMotorPosInSteps(_motorConfigs);
+        //         _moveState = MoveState::IDLE;
+        //         // _setState(IDLE);
+        //         _cmdId = NOP;
+        //     }
+        // }
+    }
 }
+
 //  ******************************HELPER FUNCTIONS********************************
 
 void ProgramLoader::_stopMotors()

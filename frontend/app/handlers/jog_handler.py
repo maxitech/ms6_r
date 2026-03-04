@@ -2,10 +2,11 @@ from PySide6.QtWidgets import QPushButton
 from typing import TYPE_CHECKING
 
 from typing import Tuple
+from app.core.setup import Setup
 from app.core.serial_connection import SerialConnection
 from app.core.packet_builder import packet_builder
 from app.constants.ms6_r_constants import MS6_R_CONSTANTS as RC
-from app.constants.com_protocol import CMD_JOG
+from app.constants.com_protocol import CMD_JOG, CMD_MOVE_TO_POS
 from app.core.shared.shared_data import shared_data
 
 if TYPE_CHECKING:
@@ -18,8 +19,10 @@ class JogHandler:
         self._serial = serial
         self._helper = helper
         self._ui_manager = ui_manager
+        self._setup = Setup(ui_manager=self._ui_manager, ui=self._ui)
         self._slider_value = ui.left_panel.ctrl.jog_speed_slider_val
         self._serial_packet: bytes | None = None
+
 
     def setup_connections(self):
         """Setup jog-related connections"""
@@ -139,3 +142,4 @@ class JogHandler:
         self._ui.left_panel.ctrl.jog_speed_slider_val = rounded_val
         self._ui_manager.update_slider_label(rounded_val)
         self._slider_value = rounded_val
+        

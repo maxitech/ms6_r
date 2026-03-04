@@ -40,6 +40,64 @@ void CommandProcessor::processBinaryInput(const std::vector<uint8_t>& packet, ui
         _processedData.jogSpeeds       = jogSpeeds;
         break;
     }
+    case CMD_MOVE_TO_POS:
+    {
+        // decode target positions
+        std::vector<uint8_t> targetPosBytes(payload.begin() + 1, payload.begin() + 1 + 18);
+        std::vector<int32_t> targetPositions = _decodeSigned24BitValues(targetPosBytes);
+        _processedData.targetPositions       = targetPositions;
+        break;
+    }
+    case CMD_TRAJ_START:
+    {
+        if (payload.size() >= 9)
+        { // 4+4+1 Bytes
+            uint32_t numPoints, totalTimeMs;
+            memcpy(&numPoints, &payload[1], 4);
+            memcpy(&totalTimeMs, &payload[5], 4);
+
+            _processedData.trajStartData = std::make_tuple(numPoints, totalTimeMs);
+        }
+        break;
+    }
+    case CMD_TRAJ_DATA:
+    {
+        if (payload.size() >= 29)
+        { // 1 + 28 Bytes (mind. 1 Punkt)
+            uint8_t                                                   chunkId = payload[1];
+            std::vector<std::tuple<uint32_t, std::array<int32_t, 6>>> points;
+
+            size_t offset = 2;
+            while (offset + 28 <= payload.size())
+            {
+                uint32_t               timeMs;
+                std::array<int32_t, 6> steps;
+
+                memcpy(&timeMs, &payload[offset], 4);
+                offset += 4;
+
+                for (int i = 0; i < 6; i++)
+                {
+                    memcpy(&steps[i], &payload[offset], 4);
+                    offset += 4;
+                }
+
+                points.push_back(std::make_tuple(timeMs, steps));
+            }
+
+            _processedData.trajChunkData = std::make_tuple(chunkId, points);
+        }
+        break;
+    }
+
+    case CMD_TRAJ_EXEC:
+        // Keine Nutzlast nötig
+        break;
+
+    case CMD_TRAJ_CANCEL:
+        // Keine Nutzlast nötig
+        break;
+
     default:
         break;
     }

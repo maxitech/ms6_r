@@ -59,6 +59,30 @@ class PacketProcessor:
                     case _ if self._detail == INFO_PING:
                         self._log_rx("info", "[INFO] Ping OK.")
 
+                    case _ if self._detail == INFO_REACHED:
+                        shared_data.update_data_in(self._detail)
+                        self._log_rx("info", "[INFO] Position Reached.")
+
+                    case _ if self._detail == INFO_TRAJ_START_ACK:
+                        shared_data.update_data_in(self._detail)
+                        self._log_rx("info", "[INFO] Trajectory start acknowledged.")
+
+                    case _ if self._detail == INFO_TRAJ_CHUNK_ACK:
+                        # Optional: Chunk-ID aus payload extrahieren wenn nötig
+                        chunk_id = payload[3] if len(payload) > 3 else 0
+                        shared_data.update_data_in(self._detail)
+                        self._log_rx(
+                            "info", f"[INFO] Trajectory chunk {chunk_id} acknowledged."
+                        )
+
+                    case _ if self._detail == INFO_TRAJ_UPLOAD_COMPLETE:
+                        shared_data.update_data_in(self._detail)
+                        self._log_rx("info", "[INFO] Trajectory upload complete.")
+
+                    case _ if self._detail == INFO_TRAJ_EXEC_ACK:
+                        shared_data.update_data_in(self._detail)
+                        self._log_rx("info", "[INFO] Trajectory execution started.")
+
                     case _ if self._detail == WARN_NOP_IGNORED:
                         self._log_rx("warning", "[WARN] No operation ignored.")
 
